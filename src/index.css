@@ -1,0 +1,295 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Syne:wght@500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+/* ── Tailwind v4 Theme Extension ── */
+@theme {
+  --font-heading: 'Plus Jakarta Sans', 'Montserrat', 'Inter', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --color-gold: #d4af37;
+  --color-gold-hover: #e2b714;
+  --color-gold-glow: rgba(212, 175, 55, 0.25);
+  --color-bg-main: #0A0A0A;
+  --color-bg-surface: #0e1017;
+  --color-bg-card: rgba(18, 20, 30, 0.75);
+}
+
+:root {
+  --bg-main: #0A0A0A;
+  --bg-surface: #0e1017;
+  --bg-card: rgba(18, 20, 29, 0.75);
+  --bg-glass: rgba(255, 255, 255, 0.03);
+  
+  --accent-gold: #d4af37;
+  --accent-gold-hover: #e2b714;
+  --accent-gold-glow: rgba(212, 175, 55, 0.25);
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-gold: rgba(212, 175, 55, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Force horizontal overflow containment & full-width flex centering ── */
+#root {
+  overflow-x: hidden;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Custom Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-gold);
+}
+
+/* ── Text Selection ── */
+::selection {
+  background: var(--accent-gold);
+  color: #000000;
+}
+
+/* ── Typography: Clean, Powerful, Proportional Headings ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Plus Jakarta Sans', 'Montserrat', 'Inter', sans-serif;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  color: var(--text-primary);
+  font-style: normal;
+  font-stretch: normal;
+  transform: none;
+}
+
+/* ── Font Family Helpers ── */
+.font-syne, .font-heading {
+  font-family: 'Plus Jakarta Sans', 'Montserrat', 'Inter', sans-serif !important;
+  letter-spacing: 0.02em !important;
+  font-stretch: normal !important;
+}
+.font-inter {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+}
+.font-cinzel {
+  font-family: 'Cinzel', serif !important;
+}
+
+/* ── Glassmorphism & Custom Surfaces ── */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+}
+
+.glass-panel-gold {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(14, 16, 23, 0.9) 100%);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-gold);
+}
+
+/* ── Gold Gradient Text ── */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, #d4af37 60%, #e2b714 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gold-glow-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gold-glow-hover:hover {
+  box-shadow: 0 0 25px var(--accent-gold-glow);
+  border-color: var(--accent-gold);
+}
+
+/* ── Button Utilities ── */
+.btn-primary {
+  background: var(--text-primary);
+  color: #000000;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.btn-primary:hover {
+  background: var(--accent-gold);
+  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--accent-gold-glow);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #d4af37 0%, #e2b714 100%);
+  color: #000000;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.btn-gold:hover {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 13px 26px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.btn-secondary:hover {
+  border-color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Badge Pill Utilities ── */
+.badge-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.badge-gold {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--accent-gold);
+  border: 1px solid var(--border-gold);
+}
+.badge-dark {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ── Animation Keyframes ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-right {
+  animation: slideRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Responsive Product Grid ── */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 640px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* ── Hide scrollbar utility ── */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Accessibility: Respect Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,27 @@
+# VALKNUT Official Robots.txt
+# Controls crawler access for Googlebot, Bingbot, Yandex, DuckDuckBot, Applebot
+
+User-agent: *
+Allow: /
+Allow: /#/shop
+Allow: /#/shop/*
+Allow: /#/product/*
+Allow: /#/custom-studio
+Allow: /#/sri-lanka-streetwear
+Allow: /#/brand-story
+Allow: /#/lookbook
+Allow: /#/size-guide
+Allow: /#/shipping-returns
+
+# Disallow private user sessions & administrative views
+Disallow: /#/admin
+Disallow: /#/admin/*
+Disallow: /#/account
+Disallow: /#/account/*
+Disallow: /#/checkout
+Disallow: /#/cart
+Disallow: /api/
+
+# Host & Sitemap Location
+Host: https://valknutofficial.com
+Sitemap: https://valknutofficial.com/sitemap.xml

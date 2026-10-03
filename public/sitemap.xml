@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Core Brand & Home -->
+  <url>
+    <loc>https://valknutofficial.com/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>VALKNUT Official Dark Luxury Streetwear</image:title>
+      <image:caption>OWN YOUR MIND. CONTROL YOUR WORLD. Heavyweight 480GSM luxury streetwear made in Sri Lanka.</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Dedicated SEO Landing Page -->
+  <url>
+    <loc>https://valknutofficial.com/#/sri-lanka-streetwear</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Bespoke Custom Studio -->
+  <url>
+    <loc>https://valknutofficial.com/#/custom-studio</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>VALKNUT Custom Studio 3D Apparel Customizer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Complete Catalog / Shop All -->
+  <url>
+    <loc>https://valknutofficial.com/#/shop</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Primary Categories -->
+  <url>
+    <loc>https://valknutofficial.com/#/shop/men</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://valknutofficial.com/#/shop/women</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://valknutofficial.com/#/shop/essentials</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Subcategory Landing Views -->
+  <url>
+    <loc>https://valknutofficial.com/#/shop/men/hoodies</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://valknutofficial.com/#/shop/men/oversized-t-shirts</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://valknutofficial.com/#/shop/men/joggers</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://valknutofficial.com/#/shop/women/hoodies</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://valknutofficial.com/#/shop/essentials/accessories</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Product 1: Celestial Mountain Sovereign Hoodie -->
+  <url>
+    <loc>https://valknutofficial.com/#/product/valknut-celestial-mountain-sovereign-hoodie</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>VALKNUT Celestial Mountain 480GSM Sovereign Hoodie</image:title>
+    </image:image>
+  </url>
+
+  <!-- Product 2: Mind Control Heavyweight Oversized Tee -->
+  <url>
+    <loc>https://valknutofficial.com/#/product/mind-control-heavyweight-oversized-tee</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Mind Control Heavyweight Oversized Tee</image:title>
+    </image:image>
+  </url>
+
+  <!-- Product 3: Celestial Mountain Acid Wash Oversized Tee -->
+  <url>
+    <loc>https://valknutofficial.com/#/product/celestial-mountain-acid-wash-oversized-tee</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Celestial Mountain Acid Wash Oversized Tee</image:title>
+    </image:image>
+  </url>
+
+  <!-- Product 4: Stealth Tactical Utility Crossbody Bag -->
+  <url>
+    <loc>https://valknutofficial.com/#/product/valknut-stealth-tactical-crossbody-bag</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Valknut Stealth Tactical Utility Crossbody Bag</image:title>
+    </image:image>
+  </url>
+
+  <!-- Product 5: Monolith Insulated Tumbler -->
+  <url>
+    <loc>https://valknutofficial.com/#/product/valknut-monolith-insulated-tumbler</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1577705998148-6da4f3963bc8?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Valknut Monolith Double-Wall Insulated Tumbler</image:title>
+    </image:image>
+  </url>
+
+  <!-- Product 6: Saffiano Leather RFID Wallet -->
+  <url>
+    <loc>https://valknutofficial.com/#/product/valknut-saffiano-leather-rfid-wallet</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Valknut Saffiano Leather RFID Slim Bifold Wallet</image:title>
+    </image:image>
+  </url>
+
+  <!-- Product 7: Stealth Tech Tactical Joggers -->
+  <url>
+    <loc>https://valknutofficial.com/#/product/valknut-stealth-tech-tactical-joggers</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Valknut Stealth Tech Tactical Joggers</image:title>
+    </image:image>
+  </url>
+
+  <!-- Product 8: Femme Sculpted Crop Hoodie -->
+  <url>
+    <loc>https://valknutofficial.com/#/product/valknut-femme-sculpted-crop-hoodie</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>VALKNUT Femme Sculpted Crop Hoodie</image:title>
+    </image:image>
+  </url>
+
+  <!-- Product 9: Essential Oversized Boxy Gym Pump Cover -->
+  <url>
+    <loc>https://valknutofficial.com/#/product/essential-oversized-boxy-pump-cover</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Essential Oversized Boxy Gym Pump Cover</image:title>
+    </image:image>
+  </url>
+
+  <!-- Product 10: Monolith 3D Embroidered Snapback Cap -->
+  <url>
+    <loc>https://valknutofficial.com/#/product/valknut-monolith-snapback-cap</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>VALKNUT Monolith 3D Embroidered Snapback Cap</image:title>
+    </image:image>
+  </url>
+
+  <!-- Brand Content & Editorial Pages -->
+  <url>
+    <loc>https://valknutofficial.com/#/brand-story</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://valknutofficial.com/#/lookbook</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://valknutofficial.com/#/size-guide</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://valknutofficial.com/#/track-order</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://valknutofficial.com/#/shipping-returns</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+</urlset>
