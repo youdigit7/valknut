@@ -1,17 +1,17 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import './App.css';
 import { StoreProvider, useStore } from './context/StoreContext';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { SEOHead } from './components/common/SEOHead';
-import { 
-  getOrganizationSchema, 
-  getWebSiteSchema, 
-  getBreadcrumbSchema, 
-  getCustomStudioSEOMetadata, 
-  type SEOMetadata 
+import {
+  getOrganizationSchema,
+  getWebSiteSchema,
+  getBreadcrumbSchema,
+  getCustomStudioSEOMetadata,
+  type SEOMetadata
 } from './utils/seo';
 
-// Homepage Core 13 Sections (Eagerly loaded for instant First Contentful Paint / Hero render)
 import { HeroBanner } from './components/home/HeroBanner';
 import { BrandIntro } from './components/home/BrandIntro';
 import { NewCollectionSection } from './components/home/NewCollectionSection';
@@ -26,7 +26,6 @@ import { InstagramSection } from './components/home/InstagramSection';
 import { NewsletterSection } from './components/home/NewsletterSection';
 import { TrustBar } from './components/home/TrustBar';
 
-// Lazy-Loaded Views for High-Performance Code Splitting
 const CustomStudio = lazy(() => import('./components/customStudio/CustomStudio').then(m => ({ default: m.CustomStudio })));
 const ProductCatalog = lazy(() => import('./components/shop/ProductCatalog').then(m => ({ default: m.ProductCatalog })));
 const ProductDetailsPage = lazy(() => import('./components/shop/ProductDetailsPage').then(m => ({ default: m.ProductDetailsPage })));
@@ -35,7 +34,6 @@ const CheckoutPage = lazy(() => import('./components/checkout/CheckoutPage').the
 const AccountPage = lazy(() => import('./components/account/AccountPage').then(m => ({ default: m.AccountPage })));
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 
-// Lazy-Loaded Editorial & Content Pages
 const StreetwearSriLankaSEO = lazy(() => import('./components/pages/StreetwearSriLankaSEO').then(m => ({ default: m.StreetwearSriLankaSEO })));
 const BrandStoryPage = lazy(() => import('./components/pages/BrandStoryPage').then(m => ({ default: m.BrandStoryPage })));
 const LookbookPage = lazy(() => import('./components/pages/LookbookPage').then(m => ({ default: m.LookbookPage })));
@@ -43,16 +41,12 @@ const SizeGuidePage = lazy(() => import('./components/pages/SizeGuidePage').then
 const OrderTrackingPage = lazy(() => import('./components/pages/OrderTrackingPage').then(m => ({ default: m.OrderTrackingPage })));
 const ShippingPolicyPage = lazy(() => import('./components/pages/ShippingPolicyPage').then(m => ({ default: m.ShippingPolicyPage })));
 
-// Global Modals & Drawers
 import { ProductDetailModal } from './components/shop/ProductDetailModal';
 import { CartDrawer } from './components/cart/CartDrawer';
 import { CheckoutModal } from './components/checkout/CheckoutModal';
 import { CustomerAccountModal } from './components/account/CustomerAccountModal';
 import { NotificationToast } from './components/common/NotificationToast';
 
-/**
- * Premium Luxury Norse Loading Fallback
- */
 const PageLoadingFallback: React.FC = () => (
   <div className="w-full min-h-[60vh] flex flex-col items-center justify-center py-24 bg-[#0A0A0A]">
     <div className="relative w-16 h-16 flex items-center justify-center mb-6">
@@ -77,7 +71,6 @@ const MainApp: React.FC = () => {
       setCurrentRoute(hash);
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Handle category shortcuts
       if (hash.startsWith('#/category/men') || hash.startsWith('#/shop/men')) {
         setActiveCategory('MEN');
       } else if (hash.startsWith('#/category/women') || hash.startsWith('#/shop/women')) {
@@ -91,7 +84,6 @@ const MainApp: React.FC = () => {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [setActiveCategory]);
 
-  // Dynamic Root SEO Metadata
   const homeSEOMeta: SEOMetadata = {
     title: 'VALKNUT Official | Premium Streetwear & Oversized Apparel Sri Lanka',
     description: 'OWN YOUR MIND. CONTROL YOUR WORLD. Sri Lanka’s premier dark luxury streetwear brand. 480GSM heavyweight hoodies, oversized tees, bespoke Custom Studio, Koko BNPL & OnePay.',
@@ -242,67 +234,33 @@ const MainApp: React.FC = () => {
       );
     }
 
-    // Default: Complete 13-Section Production Homepage with Root SEO
     return (
-      <div className="w-full flex flex-col items-center justify-start">
+      <div className="w-full max-w-[100vw] overflow-x-hidden flex flex-col items-center justify-start">
         <SEOHead metadata={homeSEOMeta} />
-
-        {/* 1. Premium Hero */}
         <HeroBanner />
-
-        {/* 2. Brand introduction */}
         <BrandIntro />
-
-        {/* 3. Featured collection */}
         <NewCollectionSection />
-
-        {/* 4. New arrivals */}
         <NewArrivalsSection />
-
-        {/* 5. Best sellers */}
         <BestSellersSection />
-
-        {/* 6. Product categories */}
         <ShopByCategory />
-
-        {/* 7. Promotional / Editorial banner */}
         <EditorialBanner />
-
-        {/* 8. VALKNUT philosophy */}
         <BrandPhilosophy />
-
-        {/* 9. Brand story */}
         <ValknutStorySection />
-
-        {/* 10. Featured products */}
         <FeaturedProducts />
-
-        {/* 11. Social media / Instagram section */}
         <InstagramSection />
-
-        {/* 12. Newsletter */}
         <NewsletterSection />
-
-        {/* 13. Shipping / Payment trust section */}
         <TrustBar />
       </div>
     );
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0A0A0A] text-white flex flex-col selection:bg-[#d4af37] selection:text-black antialiased">
-      {/* Navbar */}
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#0A0A0A] text-white flex flex-col selection:bg-[#d4af37] selection:text-black antialiased">
       <Navbar />
-
-      {/* Main Content Sections */}
-      <main className="flex-1 w-full flex flex-col items-center">
+      <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden flex flex-col items-center">
         {renderCurrentView()}
       </main>
-
-      {/* Footer */}
       <Footer />
-
-      {/* Modals & Slide-out Panels */}
       <ProductDetailModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
       <CartDrawer />
       <CheckoutModal />

@@ -12,7 +12,7 @@ export const FeaturedProducts: React.FC = () => {
   if (featured.length === 0) return null;
 
   return (
-    <section className="min-h-[85vh] lg:min-h-screen py-20 sm:py-24 lg:py-28 bg-[#0E1017] w-full flex flex-col justify-center items-center border-b border-white/10 overflow-hidden">
+    <section className="py-14 sm:py-20 lg:py-24 bg-[#0E1017] w-full flex flex-col justify-center items-center border-b border-white/10 overflow-hidden">
       <Container size="default">
         
         {/* Centered Section Header */}
@@ -25,8 +25,8 @@ export const FeaturedProducts: React.FC = () => {
           linkHref="#/shop"
         />
 
-        {/* Product Grid with clean line spacing */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-7 w-full mx-auto">
+        {/* Responsive Product Grid */}
+        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6 w-full mx-auto">
           {featured.map((product) => (
             <ProductCard 
               key={product.id} 

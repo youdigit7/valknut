@@ -5,22 +5,22 @@ import { Button } from '../ui/Button';
 
 export const ValknutStorySection: React.FC = () => {
   return (
-    <section className="min-h-[85vh] lg:min-h-screen py-20 sm:py-24 lg:py-28 bg-[#0A0A0A] border-b border-white/10 w-full flex flex-col justify-center items-center overflow-hidden">
+    <section className="py-14 sm:py-20 lg:py-24 bg-[#0A0A0A] border-b border-white/10 w-full flex flex-col justify-center items-center overflow-hidden">
       <Container size="default">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           
           {/* Left - Text Content */}
-          <div className="space-y-7">
-            <span className="text-[#D4AF37] text-xs font-mono font-bold tracking-[0.3em] uppercase block">
+          <div className="space-y-4 sm:space-y-6">
+            <span className="text-[#D4AF37] text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase block">
               THE VALKNUT STORY
             </span>
             
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white uppercase font-heading tracking-tight leading-[1.15]">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white uppercase font-heading tracking-tight leading-[1.12] break-words">
               THREE KNOTS.<br />
               <span className="gold-gradient-text mt-1 inline-block">ONE VOW.</span>
             </h2>
             
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-normal">
+            <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
               The Valknut is an ancient mark of the bound — mind, body and will held in a single impenetrable form.
               We took that sacred geometry out of ancient stone and forged it into garments designed for individuals who build, lead, and conquer.
             </p>
@@ -36,6 +36,7 @@ export const ValknutStorySection: React.FC = () => {
                 size="md"
                 onClick={() => (window.location.hash = '#/brand-story')}
                 rightIcon={<ArrowRight size={16} />}
+                className="w-full sm:w-auto text-xs sm:text-sm font-extrabold"
               >
                 READ THE FULL STORY
               </Button>

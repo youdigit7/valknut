@@ -43,7 +43,7 @@ const SOCIAL_POSTS = [
 
 export const InstagramSection: React.FC = () => {
   return (
-    <section className="min-h-[85vh] lg:min-h-screen py-20 sm:py-24 lg:py-28 bg-[#0A0A0A] border-b border-white/10 w-full flex flex-col justify-center items-center overflow-hidden">
+    <section className="py-14 sm:py-20 lg:py-24 bg-[#0A0A0A] border-b border-white/10 w-full flex flex-col justify-center items-center overflow-hidden">
       <Container size="default">
         
         {/* Centered Section Header */}
@@ -56,8 +56,8 @@ export const InstagramSection: React.FC = () => {
           linkHref="https://instagram.com/valknutofficial1"
         />
 
-        {/* Social Media Visual Grid with generous spacing */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 w-full">
+        {/* Social Media Visual Grid (Photos untouched) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-4 lg:gap-6 w-full">
           {SOCIAL_POSTS.map((post, idx) => (
             <a 
               key={idx}

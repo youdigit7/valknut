@@ -31,22 +31,22 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
     : 'text-left items-start justify-between';
 
   return (
-    <div className={`flex flex-col ${alignContainer} mb-10 sm:mb-14 max-w-3xl ${isCenter ? 'mx-auto' : ''} ${className}`}>
+    <div className={`flex flex-col ${alignContainer} mb-7 sm:mb-10 lg:mb-12 max-w-3xl ${isCenter ? 'mx-auto' : ''} ${className}`}>
       {/* Eyebrow Tag */}
       {eyebrow && (
-        <span className="text-[#D4AF37] text-xs font-mono font-bold tracking-[0.3em] uppercase block mb-3.5">
+        <span className="text-[#D4AF37] text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase block mb-2 sm:mb-3">
           {eyebrow}
         </span>
       )}
 
-      {/* Main Headline with Generous Line Height */}
-      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white uppercase font-heading tracking-tight leading-[1.18] sm:leading-[1.2] max-w-3xl">
+      {/* Main Headline with Responsive Fluid Sizing */}
+      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white uppercase font-heading tracking-tight leading-[1.14] sm:leading-[1.18] max-w-3xl break-words">
         {title}
       </h2>
 
-      {/* Subtitle with Proper Spacing */}
+      {/* Subtitle with Adaptive Padding */}
       {subtitle && (
-        <p className="text-slate-300 text-sm sm:text-base mt-4 max-w-2xl leading-relaxed font-normal">
+        <p className="text-slate-300 text-xs sm:text-sm md:text-base mt-2.5 sm:mt-3.5 max-w-2xl leading-relaxed font-normal">
           {subtitle}
         </p>
       )}

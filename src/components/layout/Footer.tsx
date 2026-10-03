@@ -18,31 +18,31 @@ export const Footer: React.FC = () => {
     <footer className="bg-[#08090C] text-slate-400 border-t border-white/10 font-sans">
       
       {/* Top Editorial Banner */}
-      <div className="border-b border-white/5 py-12 px-5 sm:px-6 lg:px-8 bg-[#0A0C10] w-full">
-        <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
+      <div className="border-b border-white/5 py-8 sm:py-12 px-3.5 sm:px-6 lg:px-8 bg-[#0A0C10] w-full">
+        <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 text-center lg:text-left">
           <div>
-            <span className="text-[#D4AF37] text-[11px] font-mono font-bold tracking-[0.25em] uppercase block mb-2">
+            <span className="text-[#D4AF37] text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.2em] sm:tracking-[0.25em] uppercase block mb-1.5 sm:mb-2">
               THE VALKNUT CREED
             </span>
-            <h3 className="text-2xl sm:text-3xl font-black text-white uppercase font-syne tracking-tight">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-white uppercase font-syne tracking-tight break-words">
               &ldquo;OWN YOUR MIND. CONTROL YOUR WORLD.&rdquo;
             </h3>
           </div>
 
           {/* Newsletter Form */}
           <div className="w-full lg:w-auto">
-            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2 max-w-md w-full">
+            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2 max-w-md w-full mx-auto lg:mx-0">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="ENTER YOUR EMAIL FOR EARLY ACCESS"
                 required
-                className="bg-[#12141E] border border-white/15 px-4 py-3.5 text-xs text-white placeholder-slate-500 font-mono rounded-[2px] focus:outline-none focus:border-[#D4AF37] min-w-[280px]"
+                className="bg-[#12141E] border border-white/15 px-4 py-3 sm:py-3.5 text-xs text-white placeholder-slate-500 font-mono rounded-[2px] focus:outline-none focus:border-[#D4AF37] w-full min-w-0 sm:w-72 lg:w-80"
               />
               <button
                 type="submit"
-                className="bg-[#D4AF37] hover:bg-[#E2B714] text-black text-xs font-black uppercase tracking-[0.14em] px-6 py-3.5 rounded-[2px] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                className="bg-[#D4AF37] hover:bg-[#E2B714] text-black text-xs font-black uppercase tracking-[0.14em] px-5 sm:px-6 py-3 sm:py-3.5 rounded-[2px] transition-colors flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto shrink-0"
               >
                 {subscribed ? (
                   <>
@@ -67,11 +67,11 @@ export const Footer: React.FC = () => {
       </div>
 
       {/* Main Footer Links */}
-      <div className="max-w-[1800px] mx-auto px-5 sm:px-6 lg:px-8 py-16 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+      <div className="max-w-[1800px] mx-auto px-3.5 sm:px-6 lg:px-8 py-10 sm:py-16 w-full">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8 lg:gap-10">
           
           {/* Col 1: Brand & Socials */}
-          <div className="lg:col-span-1 space-y-4">
+          <div className="col-span-2 md:col-span-3 lg:col-span-1 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 border-[1.5px] border-[#D4AF37]/80 flex items-center justify-center rounded-[2px]">
                 <span className="text-[#D4AF37] font-syne text-base font-black">V</span>

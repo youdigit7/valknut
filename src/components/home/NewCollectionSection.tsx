@@ -13,7 +13,7 @@ export const NewCollectionSection: React.FC = () => {
   if (collectionProducts.length === 0) return null;
 
   return (
-    <section id="featured-collection-section" className="min-h-[85vh] lg:min-h-screen py-20 sm:py-24 lg:py-28 bg-[#0A0A0A] w-full flex flex-col justify-center items-center border-b border-white/10 overflow-hidden">
+    <section id="featured-collection-section" className="py-14 sm:py-20 lg:py-24 bg-[#0A0A0A] w-full flex flex-col justify-center items-center border-b border-white/10 overflow-hidden">
       <Container size="default">
         
         {/* Centered Section Header */}
@@ -26,8 +26,8 @@ export const NewCollectionSection: React.FC = () => {
           linkHref="#/shop"
         />
 
-        {/* Centered Product Grid with Balanced Spacing */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-7 w-full mx-auto">
+        {/* Responsive Product Grid */}
+        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6 w-full mx-auto">
           {collectionProducts.map((product) => (
             <ProductCard 
               key={product.id} 
