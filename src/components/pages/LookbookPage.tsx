@@ -3,6 +3,74 @@ import { ShoppingBag, Sparkles } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { SEOHead } from '../common/SEOHead';
 import { getBreadcrumbSchema } from '../../utils/seo';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Button, 
+  Container, Card, CardContent, Breadcrumbs, Link, Zoom, Fade, Chip
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0A0A', paper: '#0E1017' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h4: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    h5: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 700, textTransform: 'uppercase' },
+    body1: { fontFamily: '"JetBrains Mono", sans-serif' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+    button: { fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 800 },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          padding: '12px 24px',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        contained: {
+          color: '#000000',
+          background: 'linear-gradient(145deg, #e3bc3b, #bf9d31)',
+          boxShadow: '0 6px 20px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(0,0,0,0.2)',
+          '&:hover': {
+            background: 'linear-gradient(145deg, #f2c83e, #ccaa34)',
+            transform: 'translateY(-3px) scale(1.02)',
+            boxShadow: '0 8px 25px rgba(212, 175, 55, 0.4), inset 0 2px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.2)',
+          },
+          '&:active': {
+            transform: 'translateY(1px)',
+            boxShadow: '0 2px 10px rgba(212, 175, 55, 0.3), inset 0 2px 5px rgba(0,0,0,0.3)',
+          }
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+          border: '1px solid rgba(255,255,255,0.05)',
+          background: 'linear-gradient(145deg, #131520, #0E1017)',
+          boxShadow: '8px 8px 20px rgba(0,0,0,0.5), -4px -4px 15px rgba(255,255,255,0.02)',
+          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            transform: 'translateY(-12px)',
+            boxShadow: '15px 15px 40px rgba(0,0,0,0.8), -6px -6px 20px rgba(255,255,255,0.03), 0 0 25px rgba(212,175,55,0.25)',
+            borderColor: 'rgba(212,175,55,0.4)',
+          }
+        }
+      }
+    }
+  }
+});
 
 interface LookbookItem {
   id: string;
@@ -98,76 +166,92 @@ export const LookbookPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <SEOHead metadata={seoMetadata} />
-      {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-2 text-xs uppercase tracking-widest text-slate-400">
-          <li><a href="#/" className="hover:text-[#d4af37]">Home</a></li>
-          <li><span>/</span></li>
-          <li className="text-[#d4af37] font-semibold">Editorial Lookbook 2026</li>
-        </ol>
-      </nav>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+        <SEOHead metadata={seoMetadata} />
+        
+        {/* Ambient Background Effects */}
+        <Box sx={{ position: 'absolute', top: 0, right: -200, width: 600, height: 600, background: 'radial-gradient(circle, rgba(212,175,55,0.06) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(60px)', zIndex: 0 }} />
+        
+        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
+          
+          {/* Breadcrumbs */}
+          <Breadcrumbs separator={<Typography sx={{ color: 'text.secondary' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
+            <Link href="#/" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>Home</Link>
+            <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>Editorial Lookbook 2026</Typography>
+          </Breadcrumbs>
 
-      {/* Header */}
-      <div className="text-center max-w-3xl mx-auto mb-16">
-        <span className="badge-pill badge-gold mb-4">
-          <Sparkles size={12} /> CAMPAIGN 2026 • DARK SOVEREIGN
-        </span>
-        <h1 className="text-4xl sm:text-6xl font-black uppercase tracking-tight text-white mb-4 font-syne">
-          Editorial <span className="gold-gradient-text">Lookbook</span>
-        </h1>
-        <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-          Documenting the collision of dark architectural minimalism and Colombo streetwear culture. Shot on 35mm brutalist concrete backdrops.
-        </p>
-      </div>
+          {/* Header */}
+          <Fade in={true} timeout={800}>
+            <Box sx={{ textAlign: 'center', maxWidth: 'md', mx: 'auto', mb: { xs: 8, md: 12 } }}>
+              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: '20px', border: '1px solid rgba(212,175,55,0.3)', bgcolor: 'rgba(212,175,55,0.1)', color: 'primary.main', mb: 4 }}>
+                <Sparkles size={14} />
+                <Typography variant="caption" sx={{ fontWeight: 'bold', letterSpacing: '0.1em' }}>CAMPAIGN 2026 • DARK SOVEREIGN</Typography>
+              </Box>
+              
+              <Typography variant="h1" component="h1" sx={{ fontSize: { xs: '2.5rem', sm: '3.5rem', md: '5rem' }, mb: 4, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+                Editorial <Box component="span" sx={{ background: 'linear-gradient(to right, #D4AF37, #FFF5D1, #D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>Lookbook</Box>
+              </Typography>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {LOOKBOOK_ITEMS.map((item) => (
-          <div 
-            key={item.id}
-            className="group relative bg-[#0b0c10] rounded-sm overflow-hidden border border-white/10 hover:border-[#d4af37]/60 transition-all duration-500 flex flex-col"
-          >
-            <div className="relative aspect-[3/4] overflow-hidden bg-black">
-              <img 
-                src={item.image} 
-                alt={item.title} 
-                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 filter brightness-95 contrast-105"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '600px', mx: 'auto', lineHeight: 1.8 }}>
+                Documenting the collision of dark architectural minimalism and Colombo streetwear culture. Shot on 35mm brutalist concrete backdrops.
+              </Typography>
+            </Box>
+          </Fade>
 
-              {/* Tag */}
-              <div className="absolute top-4 left-4">
-                <span className="text-[10px] font-mono tracking-widest uppercase bg-black/80 backdrop-blur-md px-3 py-1 border border-white/10 text-white">
-                  {item.collection}
-                </span>
-              </div>
+          {/* Grid */}
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 6 }}>
+            {LOOKBOOK_ITEMS.map((item, index) => (
+              <Zoom in={true} style={{ transitionDelay: `${index * 150}ms` }} key={item.id}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative', '&:hover .lookbook-image': { transform: 'scale(1.08)' }, '&:hover .overlay-action': { opacity: 1, transform: 'translateY(0)' } }}>
+                  <Box sx={{ position: 'relative', pt: '133%', overflow: 'hidden', bgcolor: '#000' }}>
+                    <Box 
+                      component="img"
+                      src={item.image}
+                      alt={item.title}
+                      loading="lazy"
+                      className="lookbook-image"
+                      sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)', filter: 'brightness(0.95) contrast(1.1)' }}
+                    />
+                    
+                    {/* Dark gradient overlay */}
+                    <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.2) 40%, transparent 100%)', opacity: 0.8, transition: 'opacity 0.4s', '.MuiCard-root:hover &': { opacity: 0.95 } }} />
 
-              {/* Hover quick action */}
-              <div className="absolute bottom-4 left-4 right-4 translate-y-2 group-hover:translate-y-0 transition-transform">
-                <button
-                  onClick={() => handleOpenProduct(item.productId)}
-                  className="w-full btn-gold py-3 text-xs font-bold tracking-widest flex items-center justify-center gap-2"
-                >
-                  <ShoppingBag size={14} />
-                  <span>VIEW GARMENT — LKR {item.price.toLocaleString()}</span>
-                </button>
-              </div>
-            </div>
+                    {/* Collection Tag */}
+                    <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
+                      <Chip label={item.collection} size="small" sx={{ bgcolor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', fontFamily: 'monospace', letterSpacing: '0.1em', fontSize: '0.65rem', borderRadius: 1 }} />
+                    </Box>
 
-            <div className="p-5 border-t border-white/5 bg-[#0e1017]">
-              <h3 className="text-base font-bold text-white uppercase tracking-wider font-syne mb-1">
-                {item.title}
-              </h3>
-              <p className="text-xs text-[#d4af37] font-medium uppercase tracking-wider">
-                {item.productName}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+                    {/* Hover Action Button */}
+                    <Box className="overlay-action" sx={{ position: 'absolute', bottom: 20, left: 20, right: 20, opacity: 0, transform: 'translateY(15px)', transition: 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)' }}>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleOpenProduct(item.productId)}
+                        startIcon={<ShoppingBag size={18} />}
+                        sx={{ py: 1.5, fontSize: '0.75rem' }}
+                      >
+                        VIEW GARMENT — LKR {item.price.toLocaleString()}
+                      </Button>
+                    </Box>
+                  </Box>
+
+                  <CardContent sx={{ flexGrow: 1, bgcolor: 'background.paper', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <Typography variant="h6" sx={{ fontSize: '1rem', mb: 1, letterSpacing: '0.05em' }}>
+                      {item.title}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: 'primary.main', display: 'block', letterSpacing: '0.1em' }}>
+                      {item.productName}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Zoom>
+            ))}
+          </Box>
+          
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

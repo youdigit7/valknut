@@ -1,4 +1,7 @@
 import React, { useState, useRef } from 'react';
+import {
+  Box, Typography, Button, TextField, LinearProgress, Alert, IconButton
+} from '@mui/material';
 import { Upload, Trash2, RefreshCw, AlertCircle, Image as ImageIcon, X } from 'lucide-react';
 import { uploadMediaFile, validateImageFile, deleteMediaFile, ALLOWED_IMAGE_TYPES } from '../../services/mediaService';
 import type { MediaScope } from '../../services/mediaService';
@@ -11,6 +14,19 @@ interface SingleImageUploaderProps {
   label?: string;
   placeholder?: string;
 }
+
+const fieldSx = {
+  '& .MuiOutlinedInput-root': {
+    bgcolor: '#141620',
+    color: 'white',
+    fontSize: '0.6875rem',
+    fontFamily: '"JetBrains Mono", sans-serif',
+    '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
+    '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+    '&.Mui-focused fieldset': { borderColor: '#D4AF37' },
+  },
+  '& input::placeholder': { color: '#64748b' },
+};
 
 export const SingleImageUploader: React.FC<SingleImageUploaderProps> = ({
   imageUrl,
@@ -76,91 +92,91 @@ export const SingleImageUploader: React.FC<SingleImageUploaderProps> = ({
   };
 
   return (
-    <div className="space-y-2 font-mono text-xs">
-      <div className="flex items-center justify-between">
-        <label className="text-slate-300 font-bold block uppercase text-[10px] tracking-wider">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      {/* Label + Remove */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>
           {label}
-        </label>
+        </Typography>
         {imageUrl && (
-          <button
-            type="button"
+          <Button
+            size="small"
             onClick={handleRemove}
-            className="text-[10px] text-red-400 hover:text-red-300 flex items-center gap-1"
+            startIcon={<Trash2 size={11} />}
+            sx={{ fontSize: '0.625rem', color: '#f87171', minWidth: 'auto', p: 0, '&:hover': { color: '#fca5a5', bgcolor: 'transparent' } }}
           >
-            <Trash2 size={11} />
-            <span>Remove</span>
-          </button>
+            Remove
+          </Button>
         )}
-      </div>
+      </Box>
 
+      {/* Error Alert */}
       {errorMsg && (
-        <div className="p-2 bg-red-950/70 border border-red-500/40 rounded text-red-300 text-[11px] flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <AlertCircle size={13} className="text-red-400" />
-            <span>{errorMsg}</span>
-          </div>
-          <button onClick={() => setErrorMsg('')}><X size={12} /></button>
-        </div>
+        <Alert
+          severity="error"
+          action={<IconButton size="small" onClick={() => setErrorMsg('')}><X size={12} /></IconButton>}
+          icon={<AlertCircle size={13} />}
+          sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', bgcolor: 'rgba(127,29,29,0.7)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.4)', p: 1 }}
+        >
+          {errorMsg}
+        </Alert>
       )}
 
       {/* Upload Progress */}
       {isUploading && (
-        <div className="p-2.5 bg-[#141620] border border-[#D4AF37]/30 rounded space-y-1.5 animate-fade-in">
-          <div className="flex items-center justify-between text-[10px]">
-            <span className="text-slate-300 flex items-center gap-1.5">
-              <RefreshCw size={11} className="animate-spin text-[#D4AF37]" />
-              <span>Uploading to Firebase Storage...</span>
-            </span>
-            <span className="text-[#D4AF37] font-bold">{uploadProgress}%</span>
-          </div>
-          <div className="w-full bg-[#0E1017] rounded-full h-1.5 overflow-hidden">
-            <div className="bg-[#D4AF37] h-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
-          </div>
-        </div>
+        <Box sx={{ p: 1.5, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 0.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+            <Typography sx={{ display: 'flex', alignItems: 'center', gap: 0.75, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'rgba(255,255,255,0.8)' }}>
+              <RefreshCw size={11} style={{ color: '#D4AF37', animation: 'spin 1s linear infinite' }} />
+              Uploading to Firebase Storage...
+            </Typography>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: '#D4AF37' }}>
+              {uploadProgress}%
+            </Typography>
+          </Box>
+          <LinearProgress variant="determinate" value={uploadProgress} sx={{ height: 4, borderRadius: 2, bgcolor: '#0E1017', '& .MuiLinearProgress-bar': { bgcolor: '#D4AF37' } }} />
+        </Box>
       )}
 
-      <div className="flex items-center gap-3">
-        {/* Preview box */}
-        <div className="w-16 h-16 rounded bg-[#141620] border border-white/15 overflow-hidden flex-shrink-0 flex items-center justify-center relative group">
+      {/* Preview + URL Input */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        {/* Preview thumbnail */}
+        <Box sx={{ width: 64, height: 64, flexShrink: 0, borderRadius: 0.5, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {imageUrl ? (
-            <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+            <Box component="img" src={imageUrl} alt="Preview" sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
-            <ImageIcon size={20} className="text-slate-600" />
+            <ImageIcon size={20} color="#475569" />
           )}
-        </div>
+        </Box>
 
-        {/* URL Input & Upload Action */}
-        <div className="flex-1 space-y-2">
-          <input
-            type="text"
+        {/* URL + Upload Button */}
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <TextField
+            fullWidth
+            size="small"
             value={imageUrl}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
-            className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2 text-white text-[11px] focus:outline-none"
+            sx={fieldSx}
           />
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Button
+              size="small"
+              startIcon={<Upload size={11} />}
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              className="px-3 py-1 bg-white/5 hover:bg-white/15 border border-white/10 text-slate-300 hover:text-white rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer"
+              sx={{ px: 1.5, py: 0.75, bgcolor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.075em', '&:hover': { bgcolor: 'rgba(255,255,255,0.15)', color: 'white' } }}
             >
-              <Upload size={11} />
-              <span>Upload Local Image</span>
-            </button>
-            <span className="text-[10px] text-slate-500">JPG, PNG, WEBP (Max 10MB)</span>
-          </div>
-        </div>
-      </div>
+              Upload Local Image
+            </Button>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#64748b' }}>
+              JPG, PNG, WEBP (Max 10MB)
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept={ALLOWED_IMAGE_TYPES.join(',')}
-        onChange={handleFileChange}
-        className="hidden"
-      />
-    </div>
+      <input ref={fileInputRef} type="file" accept={ALLOWED_IMAGE_TYPES.join(',')} onChange={handleFileChange} style={{ display: 'none' }} />
+    </Box>
   );
 };

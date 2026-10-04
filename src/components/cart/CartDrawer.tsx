@@ -9,6 +9,15 @@ import {
   Sparkles, 
   Truck 
 } from 'lucide-react';
+import {
+  Drawer,
+  Box,
+  Typography,
+  IconButton,
+  Button,
+  TextField,
+  LinearProgress
+} from '@mui/material';
 
 export const CartDrawer: React.FC = () => {
   const { 
@@ -29,8 +38,6 @@ export const CartDrawer: React.FC = () => {
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState('');
 
-  if (!isCartOpen) return null;
-
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
     setCouponError('');
@@ -50,235 +57,263 @@ export const CartDrawer: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="absolute inset-0" onClick={() => setIsCartOpen(false)} />
+    <Drawer
+      anchor="right"
+      open={isCartOpen}
+      onClose={() => setIsCartOpen(false)}
+      sx={{
+        '& .MuiDrawer-paper': {
+          width: { xs: '100vw', sm: '400px', md: '450px' },
+          bgcolor: '#0e1017',
+          color: 'white',
+          borderLeft: '1px solid rgba(255,255,255,0.1)',
+          backgroundImage: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+        }
+      }}
+    >
+      {/* Header */}
+      <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5, alignItems: 'center' }}>
+          <ShoppingBag color="#d4af37" size={22} />
+          <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 1, fontFamily: 'Syne, sans-serif' }}>
+            YOUR SHOPPING BAG
+          </Typography>
+          <Box sx={{ bgcolor: '#d4af37', color: 'black', px: 1, py: 0.25, borderRadius: 10, fontSize: '0.75rem', fontWeight: 800 }}>
+            {cart.reduce((a, b) => a + b.quantity, 0)}
+          </Box>
+        </Box>
+        <IconButton onClick={() => setIsCartOpen(false)} sx={{ color: 'grey.500', '&:hover': { color: 'white' } }}>
+          <X size={20} />
+        </IconButton>
+      </Box>
 
-      <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-[#0e1017] border-l border-white/10 text-white shadow-2xl flex flex-col justify-between animate-slide-right">
-          
-          {/* Header */}
-          <div className="p-6 border-b border-white/10 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <ShoppingBag className="text-[#d4af37]" size={22} />
-              <h3 className="text-lg font-bold uppercase tracking-wider font-syne">
-                YOUR SHOPPING BAG
-              </h3>
-              <span className="text-xs bg-[#d4af37] text-black font-extrabold px-2 py-0.5 rounded-full">
-                {cart.reduce((a, b) => a + b.quantity, 0)}
-              </span>
-            </div>
+      {/* Free Shipping Progress Indicator */}
+      <Box sx={{ bgcolor: '#141620', px: 3, py: 1.5, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        {cartSubtotal >= 10000 ? (
+          <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#4ade80', display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Truck size={15} />
+            CONGRATULATIONS! YOU QUALIFY FOR FREE ISLANDWIDE SHIPPING
+          </Typography>
+        ) : (
+          <Box>
+            <Typography sx={{ fontSize: '0.6875rem', color: 'grey.300', fontWeight: 600, mb: 1 }}>
+              Add <strong style={{ color: '#d4af37' }}>LKR {(10000 - cartSubtotal).toLocaleString()}</strong> more for FREE Shipping!
+            </Typography>
+            <LinearProgress 
+              variant="determinate" 
+              value={Math.min(100, (cartSubtotal / 10000) * 100)} 
+              sx={{ 
+                height: 6, 
+                borderRadius: 3, 
+                bgcolor: 'rgba(255,255,255,0.1)',
+                '& .MuiLinearProgress-bar': {
+                  background: 'linear-gradient(to right, #d4af37, #e2b714)'
+                }
+              }} 
+            />
+          </Box>
+        )}
+      </Box>
 
-            <button 
-              onClick={() => setIsCartOpen(false)} 
-              className="text-slate-400 hover:text-white p-1 rounded"
-              aria-label="Close Shopping Bag"
+      {/* Cart Item List */}
+      <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 3 }}>
+        {cart.length === 0 ? (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', justifyContent: 'center', py: 10 }}>
+            <Box sx={{ width: 64, height: 64, borderRadius: '50%', bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'grey.500' }}>
+              <ShoppingBag size={28} />
+            </Box>
+            <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'grey.300' }}>Your shopping bag is currently empty.</Typography>
+            <Button 
+              variant="contained" 
+              onClick={() => setIsCartOpen(false)}
+              sx={{ 
+                bgcolor: '#d4af37', 
+                color: 'black', 
+                fontWeight: 'bold', 
+                '&:hover': { bgcolor: '#b5952f' },
+                px: 4, py: 1.5,
+                borderRadius: 1
+              }}
             >
-              <X size={20} />
-            </button>
-          </div>
-
-          {/* Free Shipping Progress Indicator */}
-          <div className="bg-[#141620] px-6 py-3 border-b border-white/5">
-            {cartSubtotal >= 10000 ? (
-              <p className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                <Truck size={15} />
-                <span>CONGRATULATIONS! YOU QUALIFY FOR FREE ISLANDWIDE SHIPPING</span>
-              </p>
-            ) : (
-              <div>
-                <p className="text-[11px] text-slate-300 font-semibold mb-1">
-                  Add <strong className="text-[#d4af37]">LKR {(10000 - cartSubtotal).toLocaleString()}</strong> more for FREE Shipping!
-                </p>
-                <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-to-r from-[#d4af37] to-[#e2b714] transition-all duration-300"
-                    style={{ width: `${Math.min(100, (cartSubtotal / 10000) * 100)}%` }}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Cart Item List */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-white/5">
-            {cart.length === 0 ? (
-              <div className="text-center py-20 space-y-4">
-                <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-slate-500">
-                  <ShoppingBag size={28} />
-                </div>
-                <p className="text-sm font-bold text-slate-300">Your shopping bag is currently empty.</p>
-                <button
-                  onClick={() => setIsCartOpen(false)}
-                  className="btn-gold text-xs py-2.5 px-6"
-                >
-                  START SHOPPING
-                </button>
-              </div>
-            ) : (
-              cart.map((item) => (
-                <div key={item.id} className="pt-4 first:pt-0 flex gap-4">
-                  {/* Thumbnail */}
-                  <img
-                    src={item.customization?.finalPreviewDataUrl || item.product.images[0]}
-                    alt={item.product.name}
-                    className="w-20 h-24 object-cover rounded bg-[#141620] border border-white/10 flex-shrink-0"
-                  />
-
-                  {/* Item Details */}
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="flex justify-between items-start">
-                        <h4 className="text-xs font-bold text-white line-clamp-1 pr-2">
-                          {item.product.name}
-                        </h4>
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-slate-500 hover:text-red-400 p-1"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-
-                      <div className="text-[11px] text-slate-400 mt-1 space-y-0.5">
-                        <p>Size: <strong className="text-white">{item.selectedSize}</strong> | Colour: <strong className="text-white">{item.selectedColor}</strong></p>
-                        
-                        {item.customization && (
-                          <div className="mt-1.5 p-2 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded text-[10px] text-[#D4AF37] space-y-0.5 font-mono">
-                            <div className="flex items-center gap-1 font-bold">
-                              <Sparkles size={11} />
-                              <span>Bespoke: {item.customization.printTechnique}</span>
-                            </div>
-                            <div className="text-slate-300 flex items-center justify-between text-[9px]">
-                              <span>Zone: {item.customization.placement.replace('_', ' ')}</span>
-                              {item.customization.customText && <span className="truncate max-w-[120px]">"{item.customization.customText}"</span>}
-                            </div>
-                            {item.customization.uploadedArtworkUrl && (
-                              <div className="text-[9px] text-emerald-400 flex items-center gap-1 pt-0.5">
-                                <span>✓ Custom Graphic Uploaded</span>
-                              </div>
-                            )}
-                          </div>
+              START SHOPPING
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            {cart.map((item, index) => (
+              <Box key={item.id} sx={{ display: 'flex', gap: 2, pt: index > 0 ? 2 : 0, mt: index > 0 ? 2 : 0, borderTop: index > 0 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                <Box 
+                  component="img" 
+                  src={item.customization?.finalPreviewDataUrl || item.product.images[0]}
+                  alt={item.product.name}
+                  sx={{ width: 80, height: 96, objectFit: 'cover', borderRadius: 1, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}
+                />
+                <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'white', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {item.product.name}
+                      </Typography>
+                      <IconButton onClick={() => removeFromCart(item.id)} sx={{ p: 0.5, color: 'grey.500', '&:hover': { color: '#f87171' } }}>
+                        <Trash2 size={14} />
+                      </IconButton>
+                    </Box>
+                    <Typography sx={{ fontSize: '0.6875rem', color: 'grey.400', mt: 0.5 }}>
+                      Size: <strong style={{ color: 'white' }}>{item.selectedSize}</strong> | Colour: <strong style={{ color: 'white' }}>{item.selectedColor}</strong>
+                    </Typography>
+                    {item.customization && (
+                      <Box sx={{ mt: 1, p: 1, bgcolor: 'rgba(212, 175, 55, 0.1)', border: '1px solid rgba(212, 175, 55, 0.3)', borderRadius: 1, color: '#D4AF37', fontFamily: 'monospace' }}>
+                        <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <Sparkles size={11} /> Bespoke: {item.customization.printTechnique}
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'grey.300', fontSize: '0.5625rem', mt: 0.5 }}>
+                          <span>Zone: {item.customization.placement.replace('_', ' ')}</span>
+                          {item.customization.customText && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 120 }}>"{item.customization.customText}"</span>}
+                        </Box>
+                        {item.customization.uploadedArtworkUrl && (
+                          <Typography sx={{ fontSize: '0.5625rem', color: '#4ade80', display: 'flex', alignItems: 'center', gap: 0.5, pt: 0.5 }}>
+                            ✓ Custom Graphic Uploaded
+                          </Typography>
                         )}
-                      </div>
-                    </div>
+                      </Box>
+                    )}
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, pt: 1, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 1, bgcolor: 'rgba(255,255,255,0.05)' }}>
+                      <IconButton onClick={() => updateCartQuantity(item.id, -1)} sx={{ width: 24, height: 24, p: 0, color: 'white', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}><Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>-</Typography></IconButton>
+                      <Typography sx={{ width: 28, textAlign: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: 'white' }}>{item.quantity}</Typography>
+                      <IconButton onClick={() => updateCartQuantity(item.id, 1)} sx={{ width: 24, height: 24, p: 0, color: 'white', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}><Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>+</Typography></IconButton>
+                    </Box>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 800, color: 'white' }}>
+                      LKR {(item.unitPrice * item.quantity).toLocaleString()}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        )}
+      </Box>
 
-                    {/* Quantity & Unit Price */}
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
-                      <div className="flex items-center border border-white/20 rounded bg-white/5">
-                        <button
-                          onClick={() => updateCartQuantity(item.id, -1)}
-                          className="w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-white/10"
-                        >
-                          -
-                        </button>
-                        <span className="w-7 text-center text-xs font-bold">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => updateCartQuantity(item.id, 1)}
-                          className="w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-white/10"
-                        >
-                          +
-                        </button>
-                      </div>
-
-                      <span className="text-xs font-extrabold text-white">
-                        LKR {(item.unitPrice * item.quantity).toLocaleString()}
-                      </span>
-                    </div>
-
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* Footer & Checkout Area */}
-          {cart.length > 0 && (
-            <div className="p-6 bg-[#08090d] border-t border-white/10 space-y-4">
-              
-              {/* Coupon Form */}
-              <div>
-                {appliedCoupon ? (
-                  <div className="p-2.5 bg-emerald-950/40 border border-emerald-500/40 rounded flex items-center justify-between text-xs text-emerald-400">
-                    <span className="flex items-center gap-1.5 font-bold">
-                      <Tag size={14} />
-                      <span>COUPON APPLIED: '{appliedCoupon.code}'</span>
-                    </span>
-                    <button onClick={removeCoupon} className="text-xs text-red-400 font-bold hover:underline">
-                      Remove
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleApplyCoupon} className="flex gap-2">
-                    <input
-                      type="text"
-                      value={couponInput}
-                      onChange={(e) => setCouponInput(e.target.value)}
-                      placeholder="Coupon Code (e.g. VALKNUT10)"
-                      className="flex-1 bg-[#141620] border border-white/20 rounded px-3 py-2 text-xs text-white uppercase placeholder-slate-500 focus:outline-none focus:border-[#d4af37]"
-                    />
-                    <button type="submit" className="btn-secondary py-2 px-4 text-xs font-bold">
-                      Apply
-                    </button>
-                  </form>
-                )}
-                {couponError && <p className="text-[11px] text-red-400 mt-1 font-semibold">{couponError}</p>}
-              </div>
-
-              {/* Price Totals Summary */}
-              <div className="space-y-1.5 text-xs text-slate-300 border-t border-white/10 pt-3">
-                <div className="flex justify-between">
-                  <span>Subtotal:</span>
-                  <span className="font-semibold text-white">LKR {cartSubtotal.toLocaleString()}</span>
-                </div>
-
-                {cartDiscount > 0 && (
-                  <div className="flex justify-between text-emerald-400">
-                    <span>Discount:</span>
-                    <span className="font-semibold">- LKR {cartDiscount.toLocaleString()}</span>
-                  </div>
-                )}
-
-                <div className="flex justify-between">
-                  <span>Estimated Shipping:</span>
-                  <span className="font-semibold text-white">
-                    {cartShipping === 0 ? 'FREE' : `LKR ${cartShipping.toLocaleString()}`}
-                  </span>
-                </div>
-
-                <div className="flex justify-between text-base font-extrabold text-white pt-2 border-t border-white/10">
-                  <span>TOTAL:</span>
-                  <span className="text-lg text-[#d4af37]">LKR {cartTotal.toLocaleString()}</span>
-                </div>
-              </div>
-
-              {/* Action Buttons: Proceed to Checkout & View Bag */}
-              <div className="space-y-2">
-                <button
-                  onClick={handleProceedToCheckout}
-                  className="w-full btn-gold py-4 text-xs font-extrabold flex items-center justify-center gap-2 cursor-pointer shadow-lg"
-                >
-                  <span>PROCEED TO CHECKOUT</span>
-                  <ArrowRight size={16} />
-                </button>
-
-                <button
-                  onClick={() => {
-                    setIsCartOpen(false);
-                    window.location.hash = '#/cart';
+      {/* Footer & Checkout Area */}
+      {cart.length > 0 && (
+        <Box sx={{ p: 3, bgcolor: '#08090d', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+          
+          {/* Coupon Form */}
+          <Box sx={{ mb: 2 }}>
+            {appliedCoupon ? (
+              <Box sx={{ p: 1.5, bgcolor: 'rgba(2, 44, 34, 0.4)', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontSize: '0.75rem', color: '#4ade80', display: 'flex', alignItems: 'center', gap: 1, fontWeight: 'bold' }}>
+                  <Tag size={14} /> COUPON APPLIED: '{appliedCoupon.code}'
+                </Typography>
+                <Button onClick={removeCoupon} sx={{ minWidth: 0, p: 0, fontSize: '0.75rem', color: '#f87171', fontWeight: 'bold', textTransform: 'none', '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}>
+                  Remove
+                </Button>
+              </Box>
+            ) : (
+              <Box component="form" onSubmit={handleApplyCoupon} sx={{ display: 'flex', gap: 1 }}>
+                <TextField 
+                  fullWidth
+                  value={couponInput}
+                  onChange={(e) => setCouponInput(e.target.value)}
+                  placeholder="Coupon Code (e.g. VALKNUT10)"
+                  variant="outlined"
+                  size="small"
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': { 
+                      bgcolor: '#141620', 
+                      color: 'white', 
+                      fontSize: '0.75rem',
+                      textTransform: 'uppercase',
+                      '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
+                      '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+                      '&.Mui-focused fieldset': { borderColor: '#d4af37' }
+                    },
+                    '& .MuiInputBase-input::placeholder': {
+                      color: 'grey.500',
+                      opacity: 1
+                    }
                   }}
-                  className="w-full py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-mono font-bold rounded-[2px] border border-white/10 transition-colors cursor-pointer text-center block"
-                >
-                  VIEW FULL SHOPPING BAG
-                </button>
-              </div>
+                />
+                <Button type="submit" variant="outlined" sx={{ borderColor: 'rgba(255,255,255,0.2)', color: 'white', fontSize: '0.75rem', fontWeight: 'bold', '&:hover': { borderColor: '#d4af37', color: '#d4af37' } }}>
+                  Apply
+                </Button>
+              </Box>
+            )}
+            {couponError && <Typography sx={{ fontSize: '0.6875rem', color: '#f87171', mt: 0.5, fontWeight: 600 }}>{couponError}</Typography>}
+          </Box>
 
-            </div>
-          )}
+          {/* Price Totals Summary */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, pt: 1.5, borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '0.75rem', color: 'grey.300' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ fontSize: 'inherit' }}>Subtotal:</Typography>
+              <Typography sx={{ fontSize: 'inherit', fontWeight: 600, color: 'white' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
+            </Box>
+            {cartDiscount > 0 && (
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', color: '#4ade80' }}>
+                <Typography sx={{ fontSize: 'inherit' }}>Discount:</Typography>
+                <Typography sx={{ fontSize: 'inherit', fontWeight: 600 }}>- LKR {cartDiscount.toLocaleString()}</Typography>
+              </Box>
+            )}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ fontSize: 'inherit' }}>Estimated Shipping:</Typography>
+              <Typography sx={{ fontSize: 'inherit', fontWeight: 600, color: 'white' }}>
+                {cartShipping === 0 ? 'FREE' : `LKR ${cartShipping.toLocaleString()}`}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 1, mt: 1, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <Typography sx={{ fontSize: '1rem', fontWeight: 800, color: 'white' }}>TOTAL:</Typography>
+              <Typography sx={{ fontSize: '1.125rem', fontWeight: 800, color: '#d4af37' }}>LKR {cartTotal.toLocaleString()}</Typography>
+            </Box>
+          </Box>
 
-        </div>
-      </div>
-    </div>
+          {/* Action Buttons: Proceed to Checkout & View Bag */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 2 }}>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={handleProceedToCheckout}
+              sx={{
+                bgcolor: '#d4af37',
+                color: 'black',
+                py: 1.5,
+                fontWeight: 800,
+                fontSize: '0.75rem',
+                boxShadow: '0 4px 14px 0 rgba(212,175,55,0.3)',
+                '&:hover': { bgcolor: '#b5952f', boxShadow: '0 6px 20px rgba(212,175,55,0.4)' }
+              }}
+              endIcon={<ArrowRight size={16} />}
+            >
+              PROCEED TO CHECKOUT
+            </Button>
+
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => {
+                setIsCartOpen(false);
+                window.location.hash = '#/cart';
+              }}
+              sx={{
+                borderColor: 'rgba(255,255,255,0.1)',
+                color: 'grey.300',
+                py: 1.25,
+                fontFamily: 'monospace',
+                fontWeight: 'bold',
+                fontSize: '0.75rem',
+                bgcolor: 'rgba(255,255,255,0.05)',
+                '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.2)', color: 'white' }
+              }}
+            >
+              VIEW FULL SHOPPING BAG
+            </Button>
+          </Box>
+
+        </Box>
+      )}
+    </Drawer>
   );
 };

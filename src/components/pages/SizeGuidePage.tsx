@@ -2,6 +2,80 @@ import React, { useState } from 'react';
 import { Ruler } from 'lucide-react';
 import { SEOHead } from '../common/SEOHead';
 import { getBreadcrumbSchema } from '../../utils/seo';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, 
+  Breadcrumbs, Link, Zoom, Fade, Paper, ToggleButton, ToggleButtonGroup, 
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0A0A', paper: '#0E1017' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h4: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    h5: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 700, textTransform: 'uppercase' },
+    body1: { fontFamily: '"JetBrains Mono", sans-serif' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+          backgroundImage: 'none',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 0 20px rgba(212,175,55,0.03)',
+          border: '1px solid rgba(255,255,255,0.05)',
+          background: 'linear-gradient(145deg, #11131c, #0a0c12)',
+        }
+      }
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Syne", sans-serif',
+          fontWeight: 700,
+          letterSpacing: '0.05em',
+          color: '#94a3b8',
+          border: '1px solid rgba(255,255,255,0.1)',
+          '&.Mui-selected': {
+            backgroundColor: 'rgba(212,175,55,0.15)',
+            color: '#D4AF37',
+            borderColor: 'rgba(212,175,55,0.5)',
+            boxShadow: 'inset 0 0 10px rgba(212,175,55,0.1)',
+            '&:hover': {
+              backgroundColor: 'rgba(212,175,55,0.25)',
+            }
+          }
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          padding: '16px',
+        },
+        head: {
+          color: '#94a3b8',
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          fontWeight: 700,
+          fontSize: '0.75rem',
+          backgroundColor: 'rgba(0,0,0,0.4)',
+        }
+      }
+    }
+  }
+});
 
 export const SizeGuidePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'OVERSIZED_TEE' | 'HOODIES' | 'JOGGERS'>('OVERSIZED_TEE');
@@ -23,242 +97,251 @@ export const SizeGuidePage: React.FC = () => {
     ]
   };
 
+  const handleTabChange = (_event: React.MouseEvent<HTMLElement>, newTab: 'OVERSIZED_TEE' | 'HOODIES' | 'JOGGERS' | null) => {
+    if (newTab !== null) {
+      setActiveTab(newTab);
+    }
+  };
+
+  const handleUnitChange = (_event: React.MouseEvent<HTMLElement>, newUnit: 'cm' | 'inches' | null) => {
+    if (newUnit !== null) {
+      setUnit(newUnit);
+    }
+  };
+
   return (
-    <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-      <SEOHead metadata={seoMetadata} />
-      {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-2 text-xs uppercase tracking-widest text-slate-400">
-          <li><a href="#/" className="hover:text-[#d4af37]">Home</a></li>
-          <li><span>/</span></li>
-          <li className="text-[#d4af37] font-semibold">Size Guide & Garment Care</li>
-        </ol>
-      </nav>
-
-      <div className="text-center max-w-3xl mx-auto mb-14">
-        <span className="badge-pill badge-gold mb-4">
-          <Ruler size={12} /> PRECISION TAILORING
-        </span>
-        <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white mb-4 font-syne">
-          Size Guide & <span className="gold-gradient-text">Care Standard</span>
-        </h1>
-        <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-          VALKNUT garments feature intentional boxy, dropped-shoulder silhouettes. Follow our dimensional charts to achieve your desired drape.
-        </p>
-      </div>
-
-      {/* Garment Selector */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-white/10">
-        <div className="flex gap-2">
-          <button
-            onClick={() => setActiveTab('OVERSIZED_TEE')}
-            className={`px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
-              activeTab === 'OVERSIZED_TEE'
-                ? 'bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20'
-                : 'bg-white/5 text-slate-300 hover:text-white hover:bg-white/10'
-            }`}
-          >
-            Oversized Tees (280-310 GSM)
-          </button>
-          <button
-            onClick={() => setActiveTab('HOODIES')}
-            className={`px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
-              activeTab === 'HOODIES'
-                ? 'bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20'
-                : 'bg-white/5 text-slate-300 hover:text-white hover:bg-white/10'
-            }`}
-          >
-            Sovereign Hoodies (480 GSM)
-          </button>
-          <button
-            onClick={() => setActiveTab('JOGGERS')}
-            className={`px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
-              activeTab === 'JOGGERS'
-                ? 'bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20'
-                : 'bg-white/5 text-slate-300 hover:text-white hover:bg-white/10'
-            }`}
-          >
-            Tactical Cargo Joggers
-          </button>
-        </div>
-
-        {/* Unit toggle */}
-        <div className="flex items-center gap-2 bg-white/5 p-1 rounded-sm border border-white/10 text-xs">
-          <button
-            onClick={() => setUnit('inches')}
-            className={`px-3 py-1 rounded-xs font-semibold ${
-              unit === 'inches' ? 'bg-[#d4af37] text-black' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Inches (in)
-          </button>
-          <button
-            onClick={() => setUnit('cm')}
-            className={`px-3 py-1 rounded-xs font-semibold ${
-              unit === 'cm' ? 'bg-[#d4af37] text-black' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Centimeters (cm)
-          </button>
-        </div>
-      </div>
-
-      {/* Measurement Table */}
-      <div className="glass-panel p-6 sm:p-8 rounded-sm mb-16 overflow-x-auto">
-        <table className="w-full text-left border-collapse text-sm">
-          <thead>
-            <tr className="border-b border-white/15 text-slate-400 uppercase tracking-widest text-xs font-semibold">
-              <th className="py-3 px-4">Size</th>
-              <th className="py-3 px-4">{activeTab === 'JOGGERS' ? 'Waist' : 'Chest Width'}</th>
-              <th className="py-3 px-4">{activeTab === 'JOGGERS' ? 'Outseam Length' : 'Body Length'}</th>
-              <th className="py-3 px-4">{activeTab === 'JOGGERS' ? 'Thigh' : 'Shoulder Width'}</th>
-              <th className="py-3 px-4">Recommended Height</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/5 text-slate-300 font-mono">
-            {activeTab === 'OVERSIZED_TEE' && (
-              <>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">S (Small)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '44"' : '112 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '28.5"' : '72 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '21"' : '53 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">5'4" - 5'7" (162-170cm)</td>
-                </tr>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">M (Medium)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '46"' : '117 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '29.5"' : '75 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '22"' : '56 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">5'8" - 5'11" (172-180cm)</td>
-                </tr>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">L (Large)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '48"' : '122 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '30.5"' : '77 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '23"' : '58 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">6'0" - 6'2" (182-188cm)</td>
-                </tr>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">XL (Extra Large)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '50"' : '127 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '31.5"' : '80 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '24"' : '61 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">6'2"+ (188cm+)</td>
-                </tr>
-              </>
-            )}
-
-            {activeTab === 'HOODIES' && (
-              <>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">S (Small)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '46"' : '117 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '27"' : '69 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '22"' : '56 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">5'4" - 5'7"</td>
-                </tr>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">M (Medium)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '48"' : '122 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '28"' : '71 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '23"' : '58 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">5'8" - 5'11"</td>
-                </tr>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">L (Large)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '50"' : '127 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '29"' : '74 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '24"' : '61 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">6'0" - 6'2"</td>
-                </tr>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">XL (Extra Large)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '52"' : '132 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '30"' : '76 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '25"' : '63 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">6'2"+</td>
-                </tr>
-              </>
-            )}
-
-            {activeTab === 'JOGGERS' && (
-              <>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">S (28-30)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '28-30"' : '71-76 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '39"' : '99 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '24"' : '61 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">Standard Fit</td>
-                </tr>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">M (31-33)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '31-33"' : '78-84 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '40"' : '101 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '25"' : '63 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">Standard Fit</td>
-                </tr>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-white">L (34-36)</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '34-36"' : '86-91 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '41"' : '104 cm'}</td>
-                  <td className="py-3.5 px-4">{unit === 'inches' ? '26"' : '66 cm'}</td>
-                  <td className="py-3.5 px-4 font-sans text-xs">Standard Fit</td>
-                </tr>
-              </>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Official Care Label (From PDF Page 6) */}
-      <div className="bg-[#0e1017] p-8 sm:p-10 rounded-sm border border-white/10 mb-16">
-        <div className="max-w-xl mx-auto border-2 border-white/20 p-6 sm:p-8 bg-black/40 text-center font-mono">
-          <div className="mb-4">
-            <span className="text-xl font-bold uppercase tracking-widest text-white font-syne">VALKNUT</span>
-            <div className="text-[10px] text-slate-400 tracking-widest uppercase">— ESSENTIAL —</div>
-          </div>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+        <SEOHead metadata={seoMetadata} />
+        
+        {/* Ambient Background Effects */}
+        <Box sx={{ position: 'absolute', top: 100, right: -100, width: 400, height: 400, background: 'radial-gradient(circle, rgba(212,175,55,0.06) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(50px)', zIndex: 0 }} />
+        
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
           
-          <div className="text-xs text-[#d4af37] uppercase tracking-widest font-semibold mb-6">
-            “OWN YOUR MIND. CONTROL YOUR WORLD.”
-          </div>
+          {/* Breadcrumbs */}
+          <Breadcrumbs separator={<Typography sx={{ color: 'text.secondary' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
+            <Link href="#/" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>Home</Link>
+            <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>Size Guide & Garment Care</Typography>
+          </Breadcrumbs>
 
-          <div className="py-3 border-y border-white/15 my-6 text-sm font-bold uppercase tracking-widest text-white">
-            100% COTTON • MADE IN SRI LANKA
-          </div>
+          {/* Header */}
+          <Fade in={true} timeout={800}>
+            <Box sx={{ textAlign: 'center', maxWidth: 'md', mx: 'auto', mb: { xs: 8, md: 12 } }}>
+              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: '20px', border: '1px solid rgba(212,175,55,0.3)', bgcolor: 'rgba(212,175,55,0.1)', color: 'primary.main', mb: 4 }}>
+                <Ruler size={14} />
+                <Typography variant="caption" sx={{ fontWeight: 'bold', letterSpacing: '0.1em' }}>PRECISION TAILORING</Typography>
+              </Box>
+              
+              <Typography variant="h1" component="h1" sx={{ fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' }, mb: 4, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+                Size Guide & <Box component="span" sx={{ background: 'linear-gradient(to right, #D4AF37, #FFF5D1, #D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>Care Standard</Box>
+              </Typography>
 
-          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4 font-sans">
-            CARE INSTRUCTIONS
-          </h3>
+              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '600px', mx: 'auto', lineHeight: 1.8 }}>
+                VALKNUT garments feature intentional boxy, dropped-shoulder silhouettes. Follow our dimensional charts to achieve your desired drape.
+              </Typography>
+            </Box>
+          </Fade>
 
-          <div className="grid grid-cols-2 gap-4 text-xs text-left text-slate-300 font-sans">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#d4af37]" />
-              <span>Machine Wash Cold (30°C)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#d4af37]" />
-              <span>Wash With Similar Colours</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#d4af37]" />
-              <span>Do Not Bleach</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#d4af37]" />
-              <span>Do Not Tumble Dry</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#d4af37]" />
-              <span>Iron Low Heat (Reverse)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#d4af37]" />
-              <span>Do Not Dry Clean</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          {/* Controls */}
+          <Fade in={true} timeout={1200}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 4, mb: 6, pb: 4, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+              <ToggleButtonGroup
+                value={activeTab}
+                exclusive
+                onChange={handleTabChange}
+                aria-label="garment category"
+                size="small"
+                sx={{ bgcolor: 'rgba(0,0,0,0.5)', '& .MuiToggleButton-root': { px: { xs: 2, md: 4 }, py: 1.5, fontSize: { xs: '0.7rem', md: '0.8rem' } } }}
+              >
+                <ToggleButton value="OVERSIZED_TEE" aria-label="oversized tees">
+                  Oversized Tees (280-310 GSM)
+                </ToggleButton>
+                <ToggleButton value="HOODIES" aria-label="hoodies">
+                  Sovereign Hoodies (480 GSM)
+                </ToggleButton>
+                <ToggleButton value="JOGGERS" aria-label="joggers">
+                  Tactical Cargo Joggers
+                </ToggleButton>
+              </ToggleButtonGroup>
+
+              <ToggleButtonGroup
+                value={unit}
+                exclusive
+                onChange={handleUnitChange}
+                aria-label="measurement unit"
+                size="small"
+                sx={{ bgcolor: 'rgba(0,0,0,0.5)', '& .MuiToggleButton-root': { px: 3, py: 1, fontFamily: 'monospace' } }}
+              >
+                <ToggleButton value="inches" aria-label="inches">
+                  Inches (in)
+                </ToggleButton>
+                <ToggleButton value="cm" aria-label="centimeters">
+                  Centimeters (cm)
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+          </Fade>
+
+          {/* Measurement Table */}
+          <Zoom in={true} timeout={600} key={activeTab + unit}>
+            <Paper elevation={12} sx={{ mb: 12, overflow: 'hidden' }}>
+              <TableContainer sx={{ bgcolor: 'rgba(255,255,255,0.01)' }}>
+                <Table aria-label="size guide table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Size</TableCell>
+                      <TableCell>{activeTab === 'JOGGERS' ? 'Waist' : 'Chest Width'}</TableCell>
+                      <TableCell>{activeTab === 'JOGGERS' ? 'Outseam Length' : 'Body Length'}</TableCell>
+                      <TableCell>{activeTab === 'JOGGERS' ? 'Thigh' : 'Shoulder Width'}</TableCell>
+                      <TableCell>Recommended Height</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {activeTab === 'OVERSIZED_TEE' && (
+                      <React.Fragment>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>S (Small)</TableCell>
+                          <TableCell>{unit === 'inches' ? '44"' : '112 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '28.5"' : '72 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '21"' : '53 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>5'4" - 5'7" (162-170cm)</TableCell>
+                        </TableRow>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>M (Medium)</TableCell>
+                          <TableCell>{unit === 'inches' ? '46"' : '117 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '29.5"' : '75 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '22"' : '56 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>5'8" - 5'11" (172-180cm)</TableCell>
+                        </TableRow>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>L (Large)</TableCell>
+                          <TableCell>{unit === 'inches' ? '48"' : '122 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '30.5"' : '77 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '23"' : '58 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>6'0" - 6'2" (182-188cm)</TableCell>
+                        </TableRow>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>XL (Extra Large)</TableCell>
+                          <TableCell>{unit === 'inches' ? '50"' : '127 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '31.5"' : '80 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '24"' : '61 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>6'2"+ (188cm+)</TableCell>
+                        </TableRow>
+                      </React.Fragment>
+                    )}
+
+                    {activeTab === 'HOODIES' && (
+                      <React.Fragment>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>S (Small)</TableCell>
+                          <TableCell>{unit === 'inches' ? '46"' : '117 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '27"' : '69 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '22"' : '56 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>5'4" - 5'7"</TableCell>
+                        </TableRow>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>M (Medium)</TableCell>
+                          <TableCell>{unit === 'inches' ? '48"' : '122 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '28"' : '71 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '23"' : '58 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>5'8" - 5'11"</TableCell>
+                        </TableRow>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>L (Large)</TableCell>
+                          <TableCell>{unit === 'inches' ? '50"' : '127 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '29"' : '74 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '24"' : '61 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>6'0" - 6'2"</TableCell>
+                        </TableRow>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>XL (Extra Large)</TableCell>
+                          <TableCell>{unit === 'inches' ? '52"' : '132 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '30"' : '76 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '25"' : '63 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>6'2"+</TableCell>
+                        </TableRow>
+                      </React.Fragment>
+                    )}
+
+                    {activeTab === 'JOGGERS' && (
+                      <React.Fragment>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>S (28-30)</TableCell>
+                          <TableCell>{unit === 'inches' ? '28-30"' : '71-76 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '39"' : '99 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '24"' : '61 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>Standard Fit</TableCell>
+                        </TableRow>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>M (31-33)</TableCell>
+                          <TableCell>{unit === 'inches' ? '31-33"' : '78-84 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '40"' : '101 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '25"' : '63 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>Standard Fit</TableCell>
+                        </TableRow>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>L (34-36)</TableCell>
+                          <TableCell>{unit === 'inches' ? '34-36"' : '86-91 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '41"' : '104 cm'}</TableCell>
+                          <TableCell>{unit === 'inches' ? '26"' : '66 cm'}</TableCell>
+                          <TableCell sx={{ color: 'text.secondary', fontFamily: 'sans-serif' }}>Standard Fit</TableCell>
+                        </TableRow>
+                      </React.Fragment>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          </Zoom>
+
+          {/* Official Care Label */}
+          <Fade in={true} timeout={1500}>
+            <Box sx={{ maxWidth: '600px', mx: 'auto', mb: 8 }}>
+              <Paper elevation={24} sx={{ p: 4, bgcolor: 'black', border: '2px solid rgba(255,255,255,0.15)', position: 'relative' }}>
+                <Box sx={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', bgcolor: 'primary.main', color: 'black', px: 2, py: 0.5, typography: 'caption', fontWeight: 'bold', letterSpacing: '0.2em' }}>
+                  CERTIFIED CARE
+                </Box>
+                <Box sx={{ textAlign: 'center', mb: 4, mt: 2 }}>
+                  <Typography variant="h4" sx={{ letterSpacing: '0.15em', mb: 1 }}>VALKNUT</Typography>
+                  <Typography variant="caption" sx={{ letterSpacing: '0.2em', color: 'text.secondary' }}>— ESSENTIAL —</Typography>
+                </Box>
+
+                <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', color: 'primary.main', letterSpacing: '0.1em', fontWeight: 'bold', mb: 4 }}>
+                  “OWN YOUR MIND. CONTROL YOUR WORLD.”
+                </Typography>
+
+                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', borderBottom: '1px solid rgba(255,255,255,0.1)', py: 2, mb: 4, textAlign: 'center' }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}>
+                    100% COTTON • MADE IN SRI LANKA
+                  </Typography>
+                </Box>
+
+                <Typography variant="caption" sx={{ display: 'block', fontWeight: 'bold', letterSpacing: '0.1em', color: 'text.secondary', mb: 3, fontFamily: 'sans-serif' }}>
+                  CARE INSTRUCTIONS
+                </Typography>
+
+                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, fontFamily: 'sans-serif' }}>
+                  {[
+                    'Machine Wash Cold (30°C)',
+                    'Wash With Similar Colours',
+                    'Do Not Bleach',
+                    'Do Not Tumble Dry',
+                    'Iron Low Heat (Reverse)',
+                    'Do Not Dry Clean'
+                  ].map((instruction, idx) => (
+                    <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'primary.main' }} />
+                      <Typography variant="caption" sx={{ color: 'text.secondary' }}>{instruction}</Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+            </Box>
+          </Fade>
+
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

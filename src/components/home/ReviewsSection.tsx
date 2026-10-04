@@ -1,5 +1,8 @@
 import React from 'react';
 import { Star } from 'lucide-react';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, Grid 
+} from '@mui/material';
 
 interface ReviewData {
   stars: number;
@@ -7,6 +10,7 @@ interface ReviewData {
   text: string;
   name: string;
   location: string;
+  image: string;
 }
 
 const reviews: ReviewData[] = [
@@ -15,85 +19,215 @@ const reviews: ReviewData[] = [
     title: 'HEAVIEST TEE I OWN',
     text: 'The 240 GSM feels like armour and the print hasn\'t cracked after 20 washes. Packaging alone feels like a luxury drop.',
     name: 'DINUK P.',
-    location: 'COLOMBO'
+    location: 'COLOMBO',
+    image: 'https://images.unsplash.com/photo-1550639525-c97d455acf70?auto=format&fit=crop&w=400&q=80'
   },
   {
     stars: 5,
     title: 'FIT IS UNREAL',
     text: 'Ordered from the UK, arrived in 6 days with tracking updates by SMS the whole way. Sizing guide was accurate.',
     name: 'SARA K.',
-    location: 'LONDON'
+    location: 'LONDON',
+    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=400&q=80'
   },
   {
     stars: 4,
     title: 'WORTH THE LIMITED RUN',
     text: 'The Ragnarok hoodie is the best fleece I\'ve bought this year. Only wish more colours dropped at once.',
     name: 'MARCUS V.',
-    location: 'MELBOURNE'
+    location: 'MELBOURNE',
+    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&q=80'
   }
 ];
 
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0A0A' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
+  }
+});
+
 const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
   return (
-    <div className="bg-[#12141e] border border-white/5 rounded p-6 space-y-4">
+    <Box 
+      sx={{ 
+        bgcolor: '#12141E', 
+        p: { xs: 3, sm: 4 }, 
+        borderRadius: 3, 
+        border: '1px solid rgba(255,255,255,0.05)',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          borderColor: 'rgba(212,175,55,0.4)',
+          boxShadow: '0 15px 40px rgba(0,0,0,0.8), 0 0 20px rgba(212,175,55,0.1)',
+          transform: 'translateY(-4px)'
+        }
+      }}
+    >
       {/* Stars */}
-      <div className="flex gap-0.5">
+      <Box sx={{ display: 'flex', gap: 0.5, mb: 2 }}>
         {Array.from({ length: 5 }).map((_, i) => (
           <Star 
             key={i} 
             size={16} 
-            className={i < review.stars ? 'text-[#d4af37] fill-[#d4af37]' : 'text-slate-600'} 
+            color={i < review.stars ? '#D4AF37' : '#334155'}
+            fill={i < review.stars ? '#D4AF37' : 'none'}
           />
         ))}
-      </div>
+      </Box>
       
       {/* Title */}
-      <h4 className="text-sm font-black text-white uppercase tracking-[0.1em] font-syne">
+      <Typography 
+        variant="h6" 
+        sx={{ 
+          fontSize: '1rem',
+          letterSpacing: '0.1em',
+          mb: 1.5,
+          color: 'white',
+          textShadow: '0 2px 10px rgba(0,0,0,0.5)'
+        }}
+      >
         {review.title}
-      </h4>
+      </Typography>
       
       {/* Text */}
-      <p className="text-slate-400 text-xs leading-relaxed">
-        {review.text}
-      </p>
+      <Typography 
+        sx={{ 
+          fontSize: '0.8125rem',
+          lineHeight: 1.7,
+          color: 'text.secondary',
+          mb: 3,
+          flexGrow: 1
+        }}
+      >
+        "{review.text}"
+      </Typography>
 
-      {/* Photo Placeholder */}
-      <div className="aspect-video bg-[#0e1017] border border-white/5 rounded flex flex-col items-center justify-center">
-        <span className="text-[#d4af37] text-[10px] tracking-[0.2em] uppercase font-bold mb-1">IMAGE</span>
-        <span className="text-slate-400 text-[10px] font-bold">Customer photo review (admin approved)</span>
-        <span className="text-slate-500 text-[9px] mt-1">Optional photo/video attached by the reviewer.</span>
-      </div>
+      {/* Actual Customer Photo */}
+      <Box 
+        sx={{ 
+          position: 'relative',
+          aspectRatio: '16/9', 
+          borderRadius: 2, 
+          overflow: 'hidden',
+          mb: 3,
+          border: '1px solid rgba(255,255,255,0.1)',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to top, rgba(0,0,0,0.4), transparent)'
+          }
+        }}
+      >
+        <Box 
+          component="img" 
+          src={review.image} 
+          alt={review.name}
+          loading="lazy"
+          sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <Box 
+          sx={{ 
+            position: 'absolute', 
+            top: 8, 
+            right: 8, 
+            bgcolor: 'rgba(0,0,0,0.6)', 
+            px: 1, 
+            py: 0.5, 
+            borderRadius: 1, 
+            backdropFilter: 'blur(4px)',
+            zIndex: 2 
+          }}
+        >
+          <Typography sx={{ color: 'white', fontSize: '0.55rem', fontWeight: 'bold', letterSpacing: '0.1em' }}>
+            VERIFIED BUYER
+          </Typography>
+        </Box>
+      </Box>
       
       {/* Attribution */}
-      <p className="text-slate-500 text-[11px] font-bold tracking-[0.15em] uppercase">
-        {review.name} · {review.location}
-      </p>
-    </div>
+      <Typography 
+        variant="caption" 
+        sx={{ 
+          color: 'primary.main', 
+          fontWeight: 'bold', 
+          letterSpacing: '0.15em', 
+          textTransform: 'uppercase',
+          fontSize: '0.6875rem' 
+        }}
+      >
+        {review.name} · <Box component="span" sx={{ color: 'text.secondary' }}>{review.location}</Box>
+      </Typography>
+    </Box>
   );
 };
 
 export const ReviewsSection: React.FC = () => {
   return (
-    <section className="py-16 bg-[#0A0A0A] border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="mb-10">
-          <span className="text-[#d4af37] text-[11px] font-bold tracking-[0.25em] uppercase block mb-2">
-            REAL REVIEWS
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-black text-white uppercase font-syne tracking-tight">
-            WHAT THEY SAY
-          </h2>
-        </div>
+    <ThemeProvider theme={theme}>
+      <Box 
+        component="section" 
+        sx={{ 
+          py: { xs: 8, sm: 12, lg: 16 }, 
+          bgcolor: 'background.default', 
+          borderTop: '1px solid rgba(255,255,255,0.05)',
+          width: '100%',
+          overflow: 'hidden'
+        }}
+      >
+        <Container maxWidth="xl">
+          
+          {/* Section Header */}
+          <Box sx={{ mb: { xs: 6, sm: 8 }, px: { xs: 1, sm: 2 } }}>
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                color: 'primary.main', 
+                fontWeight: 'bold', 
+                letterSpacing: '0.25em', 
+                display: 'block', 
+                mb: 1.5 
+              }}
+            >
+              REAL REVIEWS
+            </Typography>
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                fontSize: { xs: '2rem', sm: '3rem', md: '3.5rem' }, 
+                letterSpacing: '-0.02em',
+                textShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                color: 'white'
+              }}
+            >
+              WHAT THEY SAY
+            </Typography>
+          </Box>
 
-        {/* Reviews Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {reviews.map((review, index) => (
-            <ReviewCard key={index} review={review} />
-          ))}
-        </div>
-      </div>
-    </section>
+          {/* Reviews Grid */}
+          <Grid container spacing={{ xs: 3, md: 4 }}>
+            {reviews.map((review, index) => (
+              <Grid size={{ xs: 12, md: 4 }} key={index}>
+                <ReviewCard review={review} />
+              </Grid>
+            ))}
+          </Grid>
+          
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { PrintTechniqueType } from '../../types/ecommerce';
 import { Sparkles, Eye } from 'lucide-react';
+import { Box, Typography } from '@mui/material';
 
 interface StudioCanvasPreviewProps {
   garmentColorHex: string;
@@ -85,10 +86,23 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
   const isLightGarment = garmentColorHex.toLowerCase() === '#eaeaea' || garmentColorHex.toLowerCase() === '#eaeaeb' || garmentColorHex.toLowerCase() === '#f3f3f5' || garmentColorHex.toLowerCase() === '#ffffff';
 
   return (
-    <div className="flex flex-col items-center w-full space-y-4 font-mono">
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: 2, fontFamily: '"JetBrains Mono", sans-serif' }}>
       
       {/* 1. Perspective Switcher Tabs */}
-      <div className="flex items-center justify-center gap-1.5 p-1 bg-[#0E1017] rounded-md border border-white/10 w-full max-w-sm">
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          gap: 0.5, 
+          p: 0.5, 
+          bgcolor: '#0E1017', 
+          borderRadius: 2, 
+          border: '1px solid rgba(255,255,255,0.1)', 
+          width: '100%', 
+          maxWidth: '400px'
+        }}
+      >
         {(
           [
             { id: 'FRONT', label: 'FRONT CHEST' },
@@ -99,38 +113,86 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
         ).map((tab) => {
           const isActive = placement === tab.id;
           return (
-            <button
+            <Box
+              component="button"
               key={tab.id}
               onClick={() => onPlacementChange(tab.id)}
-              className={`flex-1 py-1.5 px-2 rounded text-[10px] font-bold tracking-wider transition-all uppercase cursor-pointer ${
-                isActive
-                  ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/20'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
-              }`}
+              sx={{
+                flex: 1,
+                py: 1,
+                px: 1,
+                borderRadius: 1,
+                fontSize: '0.625rem',
+                fontWeight: 'bold',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                border: 'none',
+                ...(isActive ? {
+                  bgcolor: '#D4AF37',
+                  color: 'black',
+                  boxShadow: '0 4px 10px rgba(212,175,55,0.3)',
+                } : {
+                  bgcolor: 'transparent',
+                  color: 'text.secondary',
+                  '&:hover': {
+                    color: 'white',
+                    bgcolor: 'rgba(255,255,255,0.05)'
+                  }
+                })
+              }}
             >
               {tab.label}
-            </button>
+            </Box>
           );
         })}
-      </div>
+      </Box>
 
       {/* 2. Layered Visual Garment Canvas */}
-      <div 
-        className="relative w-full max-w-[400px] aspect-[4/5] rounded-lg overflow-hidden border border-white/10 shadow-2xl flex items-center justify-center select-none transition-all duration-300"
-        style={{
+      <Box 
+        sx={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: '400px',
+          aspectRatio: '4/5',
+          borderRadius: 4,
+          overflow: 'hidden',
+          border: '1px solid rgba(255,255,255,0.1)',
+          boxShadow: '0 25px 50px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          userSelect: 'none',
+          transition: 'all 0.3s ease',
           background: `radial-gradient(circle at 50% 40%, ${garmentColorHex} 0%, #060709 100%)`
         }}
       >
         {/* Background Grid Pattern & Ambient Studio Lighting */}
-        <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none opacity-40" />
+        <Box 
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)',
+            backgroundSize: '16px 16px',
+            pointerEvents: 'none',
+            opacity: 0.4
+          }} 
+        />
 
         {/* Realistic SVG Garment Silhouette Layer */}
-        <div className="relative w-[86%] h-[86%] flex items-center justify-center">
+        <Box sx={{ position: 'relative', width: '86%', height: '86%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           
           {/* Vector Garment Body */}
-          <svg
+          <Box
+            component="svg"
             viewBox="0 0 400 480"
-            className="w-full h-full filter drop-shadow-2xl transition-all duration-300"
+            sx={{
+              width: '100%',
+              height: '100%',
+              filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.8))',
+              transition: 'all 0.3s ease'
+            }}
           >
             <defs>
               {/* Garment Fabric Gradient & Wrinkles */}
@@ -199,29 +261,55 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
                 <path d="M 140 435 L 260 435" stroke="#D4AF37" strokeWidth="1.5" opacity="0.6" />
               </g>
             )}
-          </svg>
+          </Box>
 
           {/* 3. Interactive Print Area Bounding Box */}
-          <div 
-            className={`absolute border border-dashed rounded transition-all pointer-events-none ${
-              placement === 'FRONT' 
-                ? 'inset-x-12 top-24 bottom-24 border-[#D4AF37]/40 bg-[#D4AF37]/5' 
+          <Box 
+            sx={{
+              position: 'absolute',
+              border: '1px dashed rgba(212,175,55,0.4)',
+              borderRadius: 1,
+              bgcolor: 'rgba(212,175,55,0.05)',
+              transition: 'all 0.3s ease',
+              pointerEvents: 'none',
+              ...(placement === 'FRONT' 
+                ? { left: 48, right: 48, top: 96, bottom: 96 } 
                 : placement === 'BACK' 
-                  ? 'inset-x-8 top-16 bottom-16 border-[#D4AF37]/40 bg-[#D4AF37]/5' 
-                  : 'inset-x-16 top-16 bottom-16 border-[#D4AF37]/40 bg-[#D4AF37]/5'
-            }`}
+                  ? { left: 32, right: 32, top: 64, bottom: 64 } 
+                  : { left: 64, right: 64, top: 64, bottom: 64 })
+            }}
           >
-            <div className="absolute top-1 left-2 text-[8px] font-bold text-[#D4AF37] uppercase tracking-widest flex items-center gap-1 opacity-70">
+            <Box 
+              sx={{ 
+                position: 'absolute', 
+                top: 4, 
+                left: 8, 
+                fontSize: '0.5rem', 
+                fontWeight: 'bold', 
+                color: 'primary.main', 
+                textTransform: 'uppercase', 
+                letterSpacing: '0.15em', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 0.5, 
+                opacity: 0.7 
+              }}
+            >
               <Sparkles size={8} />
               <span>{placement.replace('_', ' ')} PRINT ZONE</span>
-            </div>
-          </div>
+            </Box>
+          </Box>
 
           {/* 4. Layer: Uploaded Artwork / Sigil Preset */}
           {(uploadedArtworkUrl || sigilSvgPath) && (
-            <div
-              className="absolute pointer-events-none transition-transform duration-75 flex items-center justify-center"
-              style={{
+            <Box
+              sx={{
+                position: 'absolute',
+                pointerEvents: 'none',
+                transition: 'transform 0.075s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 left: `${artworkPos.x}%`,
                 top: `${artworkPos.y}%`,
                 width: `${artworkScale}%`,
@@ -230,14 +318,20 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
               }}
             >
               {uploadedArtworkUrl ? (
-                <img
+                <Box
+                  component="img"
                   src={uploadedArtworkUrl}
                   alt="Custom Artwork"
-                  className="w-full h-auto object-contain transition-all"
-                  style={{ filter: getArtworkEffectFilter() }}
+                  sx={{
+                    width: '100%',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    transition: 'all 0.3s ease',
+                    filter: getArtworkEffectFilter()
+                  }}
                 />
               ) : sigilSvgPath ? (
-                <svg viewBox="0 0 100 100" className="w-full h-auto">
+                <svg viewBox="0 0 100 100" style={{ width: '100%', height: 'auto' }}>
                   <path
                     d={sigilSvgPath}
                     fill={artworkEffect === 'gold_foil' ? '#D4AF37' : textColor}
@@ -248,14 +342,18 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
                   />
                 </svg>
               ) : null}
-            </div>
+            </Box>
           )}
 
           {/* 5. Layer: Custom Typography Text */}
           {customText.trim() !== '' && (
-            <div
-              className="absolute pointer-events-none text-center transition-all duration-75 select-none"
-              style={{
+            <Box
+              sx={{
+                position: 'absolute',
+                pointerEvents: 'none',
+                textAlign: 'center',
+                transition: 'all 0.075s ease',
+                userSelect: 'none',
                 left: `${textPos.x}%`,
                 top: `${textPos.y}%`,
                 transform: 'translate(-50%, -50%)',
@@ -270,24 +368,62 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
               }}
             >
               {customText}
-            </div>
+            </Box>
           )}
 
-        </div>
+        </Box>
 
         {/* Technique Badge on Preview */}
-        <div className="absolute bottom-3 left-3 px-2.5 py-1 bg-black/80 backdrop-blur-sm border border-[#D4AF37]/40 rounded text-[9px] text-[#D4AF37] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-lg">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
-          <span>{printTechnique}</span>
-        </div>
+        <Box 
+          sx={{ 
+            position: 'absolute', 
+            bottom: 12, 
+            left: 12, 
+            px: 1.5, 
+            py: 0.5, 
+            bgcolor: 'rgba(0,0,0,0.8)', 
+            backdropFilter: 'blur(4px)', 
+            border: '1px solid rgba(212,175,55,0.4)', 
+            borderRadius: 1, 
+            fontSize: '0.5625rem', 
+            color: 'primary.main', 
+            fontWeight: 'bold', 
+            textTransform: 'uppercase', 
+            letterSpacing: '0.1em', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 1, 
+            boxShadow: '0 4px 10px rgba(0,0,0,0.5)' 
+          }}
+        >
+          <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'primary.main', animation: 'pulse 2s infinite' }} />
+          <Typography component="span" sx={{ fontSize: 'inherit', fontWeight: 'inherit', letterSpacing: 'inherit' }}>
+            {printTechnique}
+          </Typography>
+        </Box>
 
         {/* Live Vector View Indicator */}
-        <div className="absolute bottom-3 right-3 text-[9px] text-slate-400 font-bold uppercase flex items-center gap-1">
-          <Eye size={12} className="text-[#D4AF37]" />
-          <span>2D LAYERED CAD</span>
-        </div>
-      </div>
+        <Box 
+          sx={{ 
+            position: 'absolute', 
+            bottom: 12, 
+            right: 12, 
+            fontSize: '0.5625rem', 
+            color: 'text.secondary', 
+            fontWeight: 'bold', 
+            textTransform: 'uppercase', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 0.5 
+          }}
+        >
+          <Eye size={12} color="#D4AF37" />
+          <Typography component="span" sx={{ fontSize: 'inherit', fontWeight: 'inherit' }}>
+            2D LAYERED CAD
+          </Typography>
+        </Box>
+      </Box>
 
-    </div>
+    </Box>
   );
 };

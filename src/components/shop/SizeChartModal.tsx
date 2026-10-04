@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Ruler } from 'lucide-react';
+import { Box, Typography, Modal, Backdrop, Fade, IconButton, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 interface SizeChartModalProps {
   isOpen: boolean;
@@ -9,8 +10,6 @@ interface SizeChartModalProps {
 export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose }) => {
   const [unit, setUnit] = useState<'CM' | 'INCHES'>('CM');
   const [activeTab, setActiveTab] = useState<'MEN' | 'WOMEN'>('MEN');
-
-  if (!isOpen) return null;
 
   const menSizes = [
     { size: 'S', chestCm: '106-112', lengthCm: '72', shoulderCm: '54', chestIn: '42-44', lengthIn: '28.3', shoulderIn: '21.2' },
@@ -29,102 +28,117 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
   const currentData = activeTab === 'MEN' ? menSizes : womenSizes;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-[#0e1017] border border-[#d4af37]/40 w-full max-w-2xl rounded-lg p-6 relative shadow-2xl space-y-6">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
-          <div className="flex items-center gap-3">
-            <Ruler className="text-[#d4af37]" size={24} />
-            <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider font-syne">
-                VALKNUT OFFICIAL SIZE GUIDE
-              </h3>
-              <p className="text-xs text-slate-400">Architectural Heavyweight Fit & Sizing Matrix</p>
-            </div>
-          </div>
-          <button 
-            onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-full bg-white/5"
-            aria-label="Close Size Guide"
-          >
-            <X size={20} />
-          </button>
-        </div>
+    <Modal
+      open={isOpen}
+      onClose={onClose}
+      closeAfterTransition
+      slots={{ backdrop: Backdrop }}
+      slotProps={{
+        backdrop: {
+          timeout: 500,
+          sx: { bgcolor: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)' }
+        },
+      }}
+    >
+      <Fade in={isOpen}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 672, bgcolor: '#0e1017', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', p: 4, outline: 'none', display: 'flex', flexDirection: 'column', gap: 3 }}>
+          
+          {/* Header */}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Ruler color="#d4af37" size={24} />
+              <Box>
+                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'white', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
+                  VALKNUT OFFICIAL SIZE GUIDE
+                </Typography>
+                <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>Architectural Heavyweight Fit & Sizing Matrix</Typography>
+              </Box>
+            </Box>
+            <IconButton onClick={onClose} sx={{ color: 'text.secondary', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+              <X size={20} />
+            </IconButton>
+          </Box>
 
-        {/* Tab & Unit Controls */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center bg-white/5 p-1 rounded border border-white/10">
-            <button
-              onClick={() => setActiveTab('MEN')}
-              className={`px-4 py-1.5 text-xs font-bold uppercase rounded transition-colors ${
-                activeTab === 'MEN' ? 'bg-[#d4af37] text-black' : 'text-slate-300'
-              }`}
-            >
-              MEN / UNISEX FIT
-            </button>
-            <button
-              onClick={() => setActiveTab('WOMEN')}
-              className={`px-4 py-1.5 text-xs font-bold uppercase rounded transition-colors ${
-                activeTab === 'WOMEN' ? 'bg-[#d4af37] text-black' : 'text-slate-300'
-              }`}
-            >
-              WOMEN'S FIT
-            </button>
-          </div>
+          {/* Tab & Unit Controls */}
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: 'rgba(255,255,255,0.05)', p: 0.5, borderRadius: 1, border: '1px solid rgba(255,255,255,0.1)' }}>
+              <Button
+                onClick={() => setActiveTab('MEN')}
+                sx={{
+                  px: 2, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif',
+                  ...(activeTab === 'MEN' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { color: 'text.secondary', '&:hover': { color: 'white' } })
+                }}
+              >
+                MEN / UNISEX FIT
+              </Button>
+              <Button
+                onClick={() => setActiveTab('WOMEN')}
+                sx={{
+                  px: 2, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif',
+                  ...(activeTab === 'WOMEN' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { color: 'text.secondary', '&:hover': { color: 'white' } })
+                }}
+              >
+                WOMEN'S FIT
+              </Button>
+            </Box>
 
-          <div className="flex items-center bg-white/5 p-1 rounded border border-white/10">
-            <button
-              onClick={() => setUnit('CM')}
-              className={`px-3 py-1 text-xs font-bold rounded transition-colors ${
-                unit === 'CM' ? 'bg-white text-black' : 'text-slate-400'
-              }`}
-            >
-              CM
-            </button>
-            <button
-              onClick={() => setUnit('INCHES')}
-              className={`px-3 py-1 text-xs font-bold rounded transition-colors ${
-                unit === 'INCHES' ? 'bg-white text-black' : 'text-slate-400'
-              }`}
-            >
-              INCHES
-            </button>
-          </div>
-        </div>
+            <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: 'rgba(255,255,255,0.05)', p: 0.5, borderRadius: 1, border: '1px solid rgba(255,255,255,0.1)' }}>
+              <Button
+                onClick={() => setUnit('CM')}
+                sx={{
+                  px: 1.5, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif', minWidth: 'auto',
+                  ...(unit === 'CM' ? { bgcolor: 'white', color: 'black', '&:hover': { bgcolor: '#f1f5f9' } } : { color: 'text.secondary', '&:hover': { color: 'white' } })
+                }}
+              >
+                CM
+              </Button>
+              <Button
+                onClick={() => setUnit('INCHES')}
+                sx={{
+                  px: 1.5, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif', minWidth: 'auto',
+                  ...(unit === 'INCHES' ? { bgcolor: 'white', color: 'black', '&:hover': { bgcolor: '#f1f5f9' } } : { color: 'text.secondary', '&:hover': { color: 'white' } })
+                }}
+              >
+                INCHES
+              </Button>
+            </Box>
+          </Box>
 
-        {/* Size Table */}
-        <div className="overflow-x-auto border border-white/10 rounded-lg">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-white/5 text-[#d4af37] uppercase tracking-wider font-semibold border-b border-white/10">
-              <tr>
-                <th className="py-3 px-4">Size</th>
-                <th className="py-3 px-4">Chest Circumference ({unit})</th>
-                <th className="py-3 px-4">Garment Length ({unit})</th>
-                <th className="py-3 px-4">Shoulder Width ({unit})</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5 text-slate-300">
-              {currentData.map((row) => (
-                <tr key={row.size} className="hover:bg-white/5 transition-colors">
-                  <td className="py-3 px-4 font-extrabold text-white">{row.size}</td>
-                  <td className="py-3 px-4">{unit === 'CM' ? row.chestCm : row.chestIn}</td>
-                  <td className="py-3 px-4">{unit === 'CM' ? row.lengthCm : row.lengthIn}</td>
-                  <td className="py-3 px-4">{unit === 'CM' ? row.shoulderCm : row.shoulderIn}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+          {/* Size Table */}
+          <TableContainer component={Paper} sx={{ bgcolor: 'transparent', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, backgroundImage: 'none' }}>
+            <Table sx={{ minWidth: 500 }} aria-label="size chart table">
+              <TableHead sx={{ bgcolor: 'rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                <TableRow>
+                  <TableCell sx={{ color: 'primary.main', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: 'none' }}>Size</TableCell>
+                  <TableCell sx={{ color: 'primary.main', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: 'none' }}>Chest ({unit})</TableCell>
+                  <TableCell sx={{ color: 'primary.main', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: 'none' }}>Length ({unit})</TableCell>
+                  <TableCell sx={{ color: 'primary.main', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: 'none' }}>Shoulder ({unit})</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {currentData.map((row) => (
+                  <TableRow key={row.size} sx={{ '&:last-child td, &:last-child th': { border: 0 }, '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' }, transition: 'background-color 0.3s' }}>
+                    <TableCell sx={{ color: 'white', fontSize: '0.75rem', fontWeight: 800, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{row.size}</TableCell>
+                    <TableCell sx={{ color: 'text.secondary', fontSize: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{unit === 'CM' ? row.chestCm : row.chestIn}</TableCell>
+                    <TableCell sx={{ color: 'text.secondary', fontSize: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{unit === 'CM' ? row.lengthCm : row.lengthIn}</TableCell>
+                    <TableCell sx={{ color: 'text.secondary', fontSize: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{unit === 'CM' ? row.shoulderCm : row.shoulderIn}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-        {/* Measuring Tip */}
-        <div className="bg-white/[0.03] p-3 rounded border border-white/5 text-[11px] text-slate-400 leading-relaxed">
-          <p className="font-semibold text-white mb-1">FIT NOTE:</p>
-          VALKNUT tops are cut in our signature signature relaxed/oversized drop-shoulder profile. 
-          If you prefer a closer tailored fit, we recommend selecting one size down.
-        </div>
+          {/* Measuring Tip */}
+          <Box sx={{ bgcolor: 'rgba(255,255,255,0.03)', p: 2, borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)' }}>
+            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 600, color: 'white', mb: 0.5, fontFamily: '"JetBrains Mono", sans-serif' }}>FIT NOTE:</Typography>
+            <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary', lineHeight: 1.6, fontFamily: '"JetBrains Mono", sans-serif' }}>
+              VALKNUT tops are cut in our signature signature relaxed/oversized drop-shoulder profile. 
+              If you prefer a closer tailored fit, we recommend selecting one size down.
+            </Typography>
+          </Box>
 
-      </div>
-    </div>
+        </Box>
+      </Fade>
+    </Modal>
   );
 };

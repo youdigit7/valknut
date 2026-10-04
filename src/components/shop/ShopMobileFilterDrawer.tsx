@@ -1,8 +1,8 @@
 import React from 'react';
-import { Drawer } from '../ui/Drawer';
+import { Drawer, Box, Button, Typography, IconButton } from '@mui/material';
 import { ShopSidebarFilters } from './ShopSidebarFilters';
 import type { FilterState } from './ShopSidebarFilters';
-import { ArrowRight, RotateCcw } from 'lucide-react';
+import { ArrowRight, RotateCcw, X, Filter } from 'lucide-react';
 
 interface ShopMobileFilterDrawerProps {
   isOpen: boolean;
@@ -25,32 +25,43 @@ export const ShopMobileFilterDrawer: React.FC<ShopMobileFilterDrawerProps> = ({
 }) => {
   return (
     <Drawer
-      isOpen={isOpen}
+      anchor="left"
+      open={isOpen}
       onClose={onClose}
-      title="FILTER & REFINE"
-      subtitle="Customize your streetwear selection"
-      position="left"
-      width="md"
-      footer={
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onReset}
-            className="px-4 py-3 bg-white/5 hover:bg-white/10 text-slate-300 rounded-[2px] text-xs font-mono font-bold flex items-center justify-center gap-1.5 border border-white/10"
-          >
-            <RotateCcw size={14} />
-            <span>Reset</span>
-          </button>
-          <button
-            onClick={onClose}
-            className="flex-1 py-3 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold text-xs tracking-widest uppercase rounded-[2px] flex items-center justify-center gap-2 shadow-lg shadow-[#D4AF37]/20 cursor-pointer"
-          >
-            <span>View {matchingCount} {matchingCount === 1 ? 'Piece' : 'Pieces'}</span>
-            <ArrowRight size={14} />
-          </button>
-        </div>
-      }
+      slotProps={{
+        backdrop: {
+          sx: { bgcolor: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }
+        },
+        paper: {
+          sx: {
+            width: { xs: '85vw', sm: 400 },
+            bgcolor: '#0A0A0A',
+            borderRight: '1px solid rgba(255,255,255,0.1)',
+            backgroundImage: 'none',
+            display: 'flex',
+            flexDirection: 'column'
+          }
+        }
+      }}
+      ModalProps={{
+        keepMounted: true, // Better open performance on mobile.
+      }}
     >
-      <div className="py-2">
+      <Box sx={{ p: 3, borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: '#0E1017' }}>
+        <Box>
+          <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'white', fontFamily: '"Syne", sans-serif', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Filter size={16} color="#D4AF37" /> FILTER & REFINE
+          </Typography>
+          <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif', mt: 0.5 }}>
+            Customize your streetwear selection
+          </Typography>
+        </Box>
+        <IconButton onClick={onClose} sx={{ color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+          <X size={20} />
+        </IconButton>
+      </Box>
+
+      <Box sx={{ flex: 1, overflowY: 'auto', p: 3, '&::-webkit-scrollbar': { width: 6 }, '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(255,255,255,0.2)', borderRadius: 3 } }}>
         <ShopSidebarFilters
           filters={filters}
           facets={facets}
@@ -58,7 +69,32 @@ export const ShopMobileFilterDrawer: React.FC<ShopMobileFilterDrawerProps> = ({
           onReset={onReset}
           isMobileDrawer={true}
         />
-      </div>
+      </Box>
+
+      <Box sx={{ p: 3, borderTop: '1px solid rgba(255,255,255,0.1)', bgcolor: '#0E1017', display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Button
+          onClick={onReset}
+          startIcon={<RotateCcw size={14} />}
+          sx={{
+            px: 3, py: 1.5, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1,
+            color: 'text.secondary', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold',
+            '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' }
+          }}
+        >
+          RESET
+        </Button>
+        <Button
+          onClick={onClose}
+          endIcon={<ArrowRight size={14} />}
+          sx={{
+            flex: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem',
+            textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)',
+            transition: 'all 0.3s', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' }
+          }}
+        >
+          VIEW {matchingCount} {matchingCount === 1 ? 'PIECE' : 'PIECES'}
+        </Button>
+      </Box>
     </Drawer>
   );
 };

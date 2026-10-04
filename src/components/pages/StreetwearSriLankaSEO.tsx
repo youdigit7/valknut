@@ -3,6 +3,68 @@ import { ShieldCheck, Zap, Sparkles, MapPin, ArrowRight, CheckCircle2 } from 'lu
 import { useStore } from '../../context/StoreContext';
 import { SEOHead } from '../common/SEOHead';
 import { getBreadcrumbSchema } from '../../utils/seo';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, 
+  Breadcrumbs, Link, Zoom, Fade, Paper, Button
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0A0A', paper: '#0E1017' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h4: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    h5: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 700, textTransform: 'uppercase' },
+    body1: { fontFamily: '"JetBrains Mono", sans-serif' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+          backgroundImage: 'none',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 0 20px rgba(212,175,55,0.03)',
+          border: '1px solid rgba(255,255,255,0.05)',
+          background: 'linear-gradient(145deg, #11131c, #0a0c12)',
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          padding: '12px 24px',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        contained: {
+          color: '#000000',
+          background: 'linear-gradient(145deg, #e3bc3b, #bf9d31)',
+          boxShadow: '0 6px 20px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(0,0,0,0.2)',
+          '&:hover': {
+            background: 'linear-gradient(145deg, #f2c83e, #ccaa34)',
+            transform: 'translateY(-3px) scale(1.02)',
+            boxShadow: '0 8px 25px rgba(212, 175, 55, 0.4), inset 0 2px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.2)',
+          },
+          '&:active': {
+            transform: 'translateY(1px)',
+            boxShadow: '0 2px 10px rgba(212, 175, 55, 0.3), inset 0 2px 5px rgba(0,0,0,0.3)',
+          }
+        },
+      }
+    }
+  }
+});
 
 export const StreetwearSriLankaSEO: React.FC = () => {
   const { setActiveCategory } = useStore();
@@ -29,135 +91,128 @@ export const StreetwearSriLankaSEO: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-      <SEOHead metadata={seoMetadata} />
-      {/* Breadcrumb for SEO */}
-      <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-2 text-xs uppercase tracking-widest text-slate-400">
-          <li>
-            <a href="#/" className="hover:text-[#d4af37] transition-colors">Home</a>
-          </li>
-          <li><span>/</span></li>
-          <li className="text-[#d4af37] font-semibold">Sri Lanka Streetwear Culture</li>
-        </ol>
-      </nav>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+        <SEOHead metadata={seoMetadata} />
+        
+        {/* Ambient Background Effects */}
+        <Box sx={{ position: 'absolute', top: 200, left: -200, width: 600, height: 600, background: 'radial-gradient(circle, rgba(212,175,55,0.05) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(70px)', zIndex: 0 }} />
+        
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+          
+          {/* Breadcrumbs for SEO */}
+          <Breadcrumbs separator={<Typography sx={{ color: 'text.secondary' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
+            <Link href="#/" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>Home</Link>
+            <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>Sri Lanka Streetwear Culture</Typography>
+          </Breadcrumbs>
 
-      {/* Hero Heading for SEO */}
-      <header className="mb-14 text-center max-w-3xl mx-auto">
-        <span className="badge-pill badge-gold mb-4">
-          <Sparkles size={12} /> COLOMBO STREETWEAR REVOLUTION
-        </span>
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white mb-6 leading-none font-syne">
-          The Ultimate <span className="gold-gradient-text">Streetwear & Oversized</span> Clothing Brand in Sri Lanka
-        </h1>
-        <p className="text-slate-300 text-base sm:text-lg leading-relaxed font-light">
-          Engineered in Colombo. Crafted from ultra-heavyweight 100% organic cotton (up to 480 GSM). 
-          VALKNUT Official redefines modern luxury streetwear with boxy silhouettes, dark aesthetics, and uncompromising discipline.
-        </p>
-      </header>
+          {/* Hero Heading for SEO */}
+          <Fade in={true} timeout={800}>
+            <Box component="header" sx={{ textAlign: 'center', maxWidth: 'md', mx: 'auto', mb: { xs: 8, md: 12 } }}>
+              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: '20px', border: '1px solid rgba(212,175,55,0.3)', bgcolor: 'rgba(212,175,55,0.1)', color: 'primary.main', mb: 4 }}>
+                <Sparkles size={14} />
+                <Typography variant="caption" sx={{ fontWeight: 'bold', letterSpacing: '0.1em' }}>COLOMBO STREETWEAR REVOLUTION</Typography>
+              </Box>
+              
+              <Typography variant="h1" component="h1" sx={{ fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' }, mb: 4, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+                The Ultimate <Box component="span" sx={{ background: 'linear-gradient(to right, #D4AF37, #FFF5D1, #D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>Streetwear & Oversized</Box> Clothing Brand in Sri Lanka
+              </Typography>
 
-      {/* Grid of Key Pillars */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div className="glass-panel p-8 rounded-sm border-l-2 border-l-[#d4af37] hover:border-white/20 transition-all">
-          <div className="w-12 h-12 rounded-full bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37] mb-6">
-            <Zap size={24} />
-          </div>
-          <h2 className="text-xl font-bold uppercase tracking-wider text-white mb-3 font-syne">
-            480 GSM Heavyweight Cotton
-          </h2>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            Unlike mass-market flimsy t-shirts, every VALKNUT garment is crafted using premium high-density Sri Lankan organic cotton, built for durability and structured boxy drape.
-          </p>
-        </div>
+              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '700px', mx: 'auto', lineHeight: 1.8 }}>
+                Engineered in Colombo. Crafted from ultra-heavyweight 100% organic cotton (up to 480 GSM). 
+                VALKNUT Official redefines modern luxury streetwear with boxy silhouettes, dark aesthetics, and uncompromising discipline.
+              </Typography>
+            </Box>
+          </Fade>
 
-        <div className="glass-panel p-8 rounded-sm border-l-2 border-l-[#d4af37] hover:border-white/20 transition-all">
-          <div className="w-12 h-12 rounded-full bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37] mb-6">
-            <MapPin size={24} />
-          </div>
-          <h2 className="text-xl font-bold uppercase tracking-wider text-white mb-3 font-syne">
-            Islandwide Delivery
-          </h2>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            Fast express courier delivery across Colombo, Kandy, Galle, Gampaha, Kurunegala, Jaffna, and all 25 districts in Sri Lanka with live AWB tracking and SMS alerts.
-          </p>
-        </div>
+          {/* Grid of Key Pillars */}
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 4, mb: 12 }}>
+            {[
+              { icon: Zap, title: '480 GSM Heavyweight Cotton', desc: 'Unlike mass-market flimsy t-shirts, every VALKNUT garment is crafted using premium high-density Sri Lankan organic cotton, built for durability and structured boxy drape.' },
+              { icon: MapPin, title: 'Islandwide Delivery', desc: 'Fast express courier delivery across Colombo, Kandy, Galle, Gampaha, Kurunegala, Jaffna, and all 25 districts in Sri Lanka with live AWB tracking and SMS alerts.' },
+              { icon: ShieldCheck, title: 'Buy Now Pay Later with Koko', desc: 'Split your order into 3 interest-free installments via Koko, or pay securely via OnePay, Visa/MasterCard, and Cash on Delivery.' }
+            ].map((pillar, idx) => (
+              <Zoom in={true} style={{ transitionDelay: `${200 + (idx * 150)}ms` }} key={idx}>
+                <Paper elevation={12} sx={{ p: 5, borderLeft: '3px solid #D4AF37', transition: 'all 0.3s', '&:hover': { transform: 'translateY(-8px)', boxShadow: '0 25px 50px rgba(0,0,0,0.8), inset 0 0 30px rgba(212,175,55,0.05)', borderColor: '#FFF5D1' } }}>
+                  <Box sx={{ width: 56, height: 56, borderRadius: '50%', bgcolor: 'rgba(212,175,55,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'primary.main', mb: 4, border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <pillar.icon size={28} />
+                  </Box>
+                  <Typography variant="h6" sx={{ mb: 2, letterSpacing: '0.05em' }}>{pillar.title}</Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>{pillar.desc}</Typography>
+                </Paper>
+              </Zoom>
+            ))}
+          </Box>
 
-        <div className="glass-panel p-8 rounded-sm border-l-2 border-l-[#d4af37] hover:border-white/20 transition-all">
-          <div className="w-12 h-12 rounded-full bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37] mb-6">
-            <ShieldCheck size={24} />
-          </div>
-          <h2 className="text-xl font-bold uppercase tracking-wider text-white mb-3 font-syne">
-            Buy Now Pay Later with Koko
-          </h2>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            Split your order into 3 interest-free installments via Koko, or pay securely via OnePay, Visa/MasterCard, and Cash on Delivery.
-          </p>
-        </div>
-      </div>
+          {/* SEO Long Form Content & Keywords */}
+          <Fade in={true} timeout={1200}>
+            <Paper elevation={24} sx={{ p: { xs: 4, sm: 8 }, mb: 12, bgcolor: 'rgba(0,0,0,0.4)' }}>
+              <Box component="section" sx={{ mb: 6 }}>
+                <Typography variant="h4" component="h2" sx={{ mb: 4, fontSize: { xs: '1.5rem', sm: '2rem' } }}>
+                  Why VALKNUT is Ranked #1 for Sri Lankan Dark Streetwear
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8, mb: 3 }}>
+                  Streetwear in Sri Lanka has evolved beyond fast-fashion graphics. Today’s discerning youth and fashion connoisseurs demand substantial fabric weight, architectural silhouettes, precision embroidery, and empowering philosophies. VALKNUT was founded on the Norse emblem of nine worlds and inner power, encapsulated in our decree: <Box component="strong" sx={{ color: 'white' }}>“OWN YOUR MIND. CONTROL YOUR WORLD.”</Box>
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+                  From our iconic <Box component="em" sx={{ color: 'primary.main', fontStyle: 'normal' }}>Celestial Mountain Vintage Washed Oversized Tees</Box> to the monolithic <Box component="em" sx={{ color: 'primary.main', fontStyle: 'normal' }}>480GSM Sovereign Hoodies</Box> and bespoke <Box component="em" sx={{ color: 'primary.main', fontStyle: 'normal' }}>Custom Studio</Box>, we guarantee world-class garment construction manufactured ethically right here in Sri Lanka.
+                </Typography>
+              </Box>
 
-      {/* SEO Long Form Content & Keywords */}
-      <div className="glass-panel p-8 sm:p-12 rounded-sm mb-16 space-y-8 text-slate-300">
-        <section>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white uppercase mb-4 font-syne">
-            Why VALKNUT is Ranked #1 for Sri Lankan Dark Streetwear
-          </h2>
-          <p className="leading-relaxed mb-4 text-sm sm:text-base">
-            Streetwear in Sri Lanka has evolved beyond fast-fashion graphics. Today’s discerning youth and fashion connoisseurs demand substantial fabric weight, architectural silhouettes, precision embroidery, and empowering philosophies. VALKNUT was founded on the Norse emblem of nine worlds and inner power, encapsulated in our decree: <strong>“OWN YOUR MIND. CONTROL YOUR WORLD.”</strong>
-          </p>
-          <p className="leading-relaxed text-sm sm:text-base">
-            From our iconic <em>Celestial Mountain Vintage Washed Oversized Tees</em> to the monolithic <em>480GSM Sovereign Hoodies</em> and bespoke <em>Custom Studio</em>, we guarantee world-class garment construction manufactured ethically right here in Sri Lanka.
-          </p>
-        </section>
+              <Box component="section" sx={{ pt: 6, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <Typography variant="h5" component="h3" sx={{ mb: 4 }}>
+                  Popular Streetwear Categories in Sri Lanka
+                </Typography>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 4 }}>
+                  {[
+                    { title: 'Oversized T-Shirts Sri Lanka', desc: 'Drop-shoulder boxy cuts with high-density puff rubber print and pre-shrunk cotton.' },
+                    { title: 'Heavyweight Winter & Rain Hoodies', desc: 'Double-lined hoods with metallic aglets and architectural drop cuffs.' },
+                    { title: 'Tactical Cargo Joggers', desc: 'Water-repellent technical weave with multi-zip utility pockets.' },
+                    { title: 'Gym Pump Covers & Activewear', desc: 'Breathable thermal-regulating mesh and ribbed crop tops.' }
+                  ].map((item, idx) => (
+                    <Box key={idx} sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                      <Box sx={{ mt: 0.5, color: 'primary.main' }}>
+                        <CheckCircle2 size={20} />
+                      </Box>
+                      <Box>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: 'white', mb: 0.5, textTransform: 'uppercase', fontFamily: 'monospace' }}>
+                          {item.title}:
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                          {item.desc}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Paper>
+          </Fade>
 
-        <section className="pt-6 border-t border-white/10">
-          <h3 className="text-xl font-bold text-white uppercase mb-4 font-syne">
-            Popular Streetwear Categories in Sri Lanka
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="text-[#d4af37] shrink-0 mt-0.5" size={18} />
-              <div>
-                <strong className="text-white">Oversized T-Shirts Sri Lanka:</strong> Drop-shoulder boxy cuts with high-density puff rubber print and pre-shrunk cotton.
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="text-[#d4af37] shrink-0 mt-0.5" size={18} />
-              <div>
-                <strong className="text-white">Heavyweight Winter & Rain Hoodies:</strong> Double-lined hoods with metallic aglets and architectural drop cuffs.
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="text-[#d4af37] shrink-0 mt-0.5" size={18} />
-              <div>
-                <strong className="text-white">Tactical Cargo Joggers:</strong> Water-repellent technical weave with multi-zip utility pockets.
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="text-[#d4af37] shrink-0 mt-0.5" size={18} />
-              <div>
-                <strong className="text-white">Gym Pump Covers & Activewear:</strong> Breathable thermal-regulating mesh and ribbed crop tops.
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
+          {/* Call to action */}
+          <Zoom in={true} timeout={1500}>
+            <Box sx={{ textAlign: 'center', p: { xs: 6, md: 10 }, borderRadius: 4, background: 'linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(10,10,10,0.8) 100%)', border: '1px solid rgba(212,175,55,0.3)', boxShadow: '0 0 40px rgba(212,175,55,0.05), inset 0 0 20px rgba(255,255,255,0.02)' }}>
+              <Typography variant="h3" component="h2" sx={{ mb: 3, fontSize: { xs: '2rem', sm: '2.5rem' } }}>
+                Ready to Elevate Your Wardrobe?
+              </Typography>
+              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '600px', mx: 'auto', mb: 6 }}>
+                Explore the latest 2026 drops, limited releases, and customize your own apparel in the VALKNUT Studio.
+              </Typography>
+              <Button 
+                onClick={handleShopNow}
+                variant="contained" 
+                color="primary" 
+                size="large"
+                endIcon={<ArrowRight />}
+                sx={{ px: 6, py: 2 }}
+              >
+                EXPLORE NEW ARRIVALS
+              </Button>
+            </Box>
+          </Zoom>
 
-      {/* Call to action */}
-      <div className="text-center bg-gradient-to-r from-[#12141d] via-[#1a1e2d] to-[#12141d] p-10 rounded-sm border border-[#d4af37]/30">
-        <h2 className="text-2xl sm:text-4xl font-black uppercase text-white mb-4 font-syne">
-          Ready to Elevate Your Wardrobe?
-        </h2>
-        <p className="text-slate-300 text-sm max-w-xl mx-auto mb-8">
-          Explore the latest 2026 drops, limited releases, and customize your own apparel in the VALKNUT Studio.
-        </p>
-        <button 
-          onClick={handleShopNow}
-          className="btn-gold px-8 py-4 text-sm font-bold tracking-widest inline-flex items-center gap-3"
-        >
-          <span>EXPLORE NEW ARRIVALS</span>
-          <ArrowRight size={18} />
-        </button>
-      </div>
-    </div>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

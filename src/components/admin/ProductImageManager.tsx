@@ -1,23 +1,11 @@
 import React, { useState, useRef } from 'react';
+import {
+  Box, Typography, Button, LinearProgress, Alert, IconButton, TextField
+} from '@mui/material';
 import { 
-  Upload, 
-  Trash2, 
-  ArrowLeft, 
-  ArrowRight, 
-  Star, 
-  RefreshCw, 
-  Plus, 
-  AlertCircle, 
-  Image as ImageIcon,
-  Eye,
-  X
+  Upload, Trash2, ArrowLeft, ArrowRight, Star, RefreshCw, Plus, AlertCircle, Image as ImageIcon, Eye, X
 } from 'lucide-react';
-import { 
-  uploadMediaFile, 
-  validateImageFile, 
-  deleteMediaFile, 
-  ALLOWED_IMAGE_TYPES 
-} from '../../services/mediaService';
+import { uploadMediaFile, validateImageFile, deleteMediaFile, ALLOWED_IMAGE_TYPES } from '../../services/mediaService';
 import { isFirebaseConfigured } from '../../lib/firebase';
 
 interface ProductImageManagerProps {
@@ -26,6 +14,18 @@ interface ProductImageManagerProps {
   onChange: (images: string[]) => void;
   maxImages?: number;
 }
+
+const fieldSx = {
+  '& .MuiOutlinedInput-root': {
+    bgcolor: '#141620',
+    color: 'white',
+    fontSize: '0.6875rem',
+    fontFamily: '"JetBrains Mono", sans-serif',
+    '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
+    '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+    '&.Mui-focused fieldset': { borderColor: '#D4AF37' },
+  },
+};
 
 export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
   productId = 'temp-product',
@@ -44,11 +44,9 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
   const [isDragOver, setIsDragOver] = useState(false);
   const [previewZoomUrl, setPreviewZoomUrl] = useState<string | null>(null);
 
-  // Manual URL Add state
   const [manualUrlInput, setManualUrlInput] = useState('');
   const [isAddingUrl, setIsAddingUrl] = useState(false);
 
-  // Handle Multi-file Upload
   const handleFilesSelected = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     setUploadError('');
@@ -59,8 +57,6 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
     }
 
     const fileArray = Array.from(files);
-
-    // Validate all files first
     for (const file of fileArray) {
       const validation = validateImageFile(file);
       if (!validation.isValid) {
@@ -105,7 +101,6 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
     }
   };
 
-  // Handle Single Image Replacement
   const handleReplaceFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || replacingIndex === null) return;
@@ -131,7 +126,6 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
         onProgress: (pct) => setUploadProgress(pct)
       });
 
-      // Cleanup old file from storage asynchronously
       if (oldUrl) deleteMediaFile(oldUrl);
 
       const updated = [...images];
@@ -151,7 +145,6 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
     }
   };
 
-  // Move image position
   const moveImage = (fromIdx: number, toIdx: number) => {
     if (toIdx < 0 || toIdx >= images.length) return;
     const copy = [...images];
@@ -160,30 +153,24 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
     onChange(copy);
   };
 
-  // Set as Primary (Index 0)
   const setPrimaryImage = (index: number) => {
     if (index === 0) return;
     moveImage(index, 0);
   };
 
-  // Delete image
   const removeImage = (index: number) => {
     const targetUrl = images[index];
     if (targetUrl) deleteMediaFile(targetUrl);
-    const updated = images.filter((_, i) => i !== index);
-    onChange(updated);
+    onChange(images.filter((_, i) => i !== index));
   };
 
-  // Add URL directly
   const handleAddManualUrl = (e: React.FormEvent) => {
     e.preventDefault();
     if (!manualUrlInput.trim()) return;
-
     if (!manualUrlInput.startsWith('http://') && !manualUrlInput.startsWith('https://') && !manualUrlInput.startsWith('data:')) {
       setUploadError('Please provide a valid web URL starting with https://');
       return;
     }
-
     onChange([...images, manualUrlInput.trim()]);
     setManualUrlInput('');
     setIsAddingUrl(false);
@@ -191,290 +178,210 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
   };
 
   return (
-    <div className="space-y-4 font-mono text-xs">
-      
-      {/* Header bar with Cloud Sync Status */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <ImageIcon className="text-[#D4AF37]" size={16} />
-          <span className="text-white font-bold tracking-wider uppercase">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+
+      {/* Header */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <ImageIcon size={16} color="#D4AF37" />
+          <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, letterSpacing: '0.15em', color: 'white', textTransform: 'uppercase' }}>
             PRODUCT MEDIA GALLERY ({images.length}/{maxImages})
-          </span>
-        </div>
+          </Typography>
+        </Box>
+        {isFirebaseConfigured ? (
+          <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, px: 1.5, py: 0.5, borderRadius: 10, bgcolor: 'rgba(6,78,59,0.6)', border: '1px solid rgba(52,211,153,0.3)' }}>
+            <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#34d399', animation: 'pulse 2s infinite' }} />
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#34d399' }}>Firebase Bucket Online</Typography>
+          </Box>
+        ) : (
+          <Box sx={{ px: 1.5, py: 0.5, borderRadius: 10, bgcolor: 'rgba(120,53,15,0.6)', border: '1px solid rgba(251,191,36,0.3)' }}>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#fbbf24' }}>Local High-Res Fallback</Typography>
+          </Box>
+        )}
+      </Box>
 
-        <div className="flex items-center gap-2">
-          {isFirebaseConfigured ? (
-            <span className="px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/30 text-[10px] text-emerald-400 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Firebase Bucket Online</span>
-            </span>
-          ) : (
-            <span className="px-2 py-0.5 rounded bg-amber-950/60 border border-amber-500/30 text-[10px] text-amber-400">
-              Local High-Res Fallback
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Upload Error Banner */}
+      {/* Upload Error */}
       {uploadError && (
-        <div className="p-3 bg-red-950/70 border border-red-500/50 rounded text-red-300 text-xs flex items-center justify-between gap-2 animate-fade-in">
-          <div className="flex items-center gap-2">
-            <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
-            <span>{uploadError}</span>
-          </div>
-          <button onClick={() => setUploadError('')} className="text-red-400 hover:text-white">
-            <X size={14} />
-          </button>
-        </div>
+        <Alert
+          severity="error"
+          action={<IconButton size="small" onClick={() => setUploadError('')}><X size={14} /></IconButton>}
+          icon={<AlertCircle size={16} />}
+          sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', bgcolor: 'rgba(127,29,29,0.7)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.5)' }}
+        >
+          {uploadError}
+        </Alert>
       )}
 
-      {/* Uploading Progress Bar */}
+      {/* Upload Progress */}
       {isUploading && (
-        <div className="p-3.5 bg-[#141620] border border-[#D4AF37]/40 rounded-md space-y-2 animate-fade-in">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-white font-bold flex items-center gap-2">
-              <RefreshCw size={13} className="animate-spin text-[#D4AF37]" />
-              <span>Uploading {activeUploadFile}...</span>
-            </span>
-            <span className="text-[#D4AF37] font-bold">{uploadProgress}%</span>
-          </div>
-
-          <div className="w-full bg-[#0E1017] rounded-full h-2 overflow-hidden border border-white/10">
-            <div 
-              className="bg-gradient-to-r from-[#D4AF37] to-[#E2B714] h-full transition-all duration-200 rounded-full"
-              style={{ width: `${uploadProgress}%` }}
-            />
-          </div>
-        </div>
+        <Box sx={{ p: 2, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 0.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+            <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: 'white' }}>
+              <RefreshCw size={13} style={{ color: '#D4AF37', animation: 'spin 1s linear infinite' }} />
+              Uploading {activeUploadFile}...
+            </Typography>
+            <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: '#D4AF37' }}>
+              {uploadProgress}%
+            </Typography>
+          </Box>
+          <LinearProgress variant="determinate" value={uploadProgress} sx={{ height: 6, borderRadius: 3, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { background: 'linear-gradient(90deg, #D4AF37, #E2B714)', borderRadius: 3 } }} />
+        </Box>
       )}
 
       {/* Current Images Grid */}
       {images.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(4, 1fr)' }, gap: 1.5 }}>
           {images.map((imgUrl, idx) => {
             const isPrimary = idx === 0;
             return (
-              <div 
+              <Box
                 key={`${imgUrl}-${idx}`}
-                className={`group relative bg-[#141620] rounded border transition-all overflow-hidden flex flex-col justify-between ${
-                  isPrimary ? 'border-[#D4AF37] ring-1 ring-[#D4AF37]/50' : 'border-white/10 hover:border-white/30'
-                }`}
+                sx={{
+                  position: 'relative', bgcolor: '#141620', borderRadius: 0.5, border: isPrimary ? '1px solid #D4AF37' : '1px solid rgba(255,255,255,0.1)',
+                  boxShadow: isPrimary ? '0 0 0 1px rgba(212,175,55,0.4)' : 'none', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+                  '&:hover': { borderColor: isPrimary ? '#D4AF37' : 'rgba(255,255,255,0.3)' }, transition: 'border-color 0.2s'
+                }}
               >
                 {/* Image Preview */}
-                <div className="h-36 w-full relative bg-[#0A0B0E] overflow-hidden">
-                  <img 
-                    src={imgUrl} 
-                    alt={`Product image ${idx + 1}`} 
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-                    loading={isPrimary ? 'eager' : 'lazy'}
-                  />
+                <Box sx={{ height: 144, position: 'relative', bgcolor: '#0A0B0E', overflow: 'hidden', '&:hover img': { transform: 'scale(1.05)' } }}>
+                  <Box component="img" src={imgUrl} alt={`Product image ${idx + 1}`} sx={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', transition: 'transform 0.3s' }} loading={isPrimary ? 'eager' : 'lazy'} />
 
-                  {/* Primary Badge */}
                   {isPrimary && (
-                    <div className="absolute top-2 left-2 z-10 px-2 py-0.5 bg-black/90 border border-[#D4AF37] rounded text-[9px] text-[#D4AF37] font-bold flex items-center gap-1 shadow-lg">
-                      <Star size={10} className="fill-[#D4AF37]" />
-                      <span>COVER</span>
-                    </div>
+                    <Box sx={{ position: 'absolute', top: 8, left: 8, zIndex: 10, px: 1, py: 0.25, bgcolor: 'rgba(0,0,0,0.9)', border: '1px solid #D4AF37', borderRadius: 0.25, display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <Star size={10} color="#D4AF37" fill="#D4AF37" />
+                      <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: '#D4AF37' }}>COVER</Typography>
+                    </Box>
                   )}
 
-                  {/* Zoom Preview Button */}
-                  <button
-                    type="button"
+                  <IconButton
+                    size="small"
                     onClick={() => setPreviewZoomUrl(imgUrl)}
-                    className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black text-slate-300 hover:text-white rounded opacity-0 group-hover:opacity-100 transition-opacity z-10"
                     title="Zoom View"
+                    sx={{ position: 'absolute', top: 6, right: 6, p: 0.75, bgcolor: 'rgba(0,0,0,0.7)', color: 'rgba(255,255,255,0.7)', opacity: 0, zIndex: 10, borderRadius: 0.25, '&:hover': { bgcolor: 'black', color: 'white' }, '.MuiBox-root:hover &': { opacity: 1 }, transition: 'opacity 0.2s' }}
                   >
                     <Eye size={12} />
-                  </button>
-                </div>
+                  </IconButton>
+                </Box>
 
                 {/* Controls Bar */}
-                <div className="p-2 bg-[#0E1017] border-t border-white/5 flex items-center justify-between gap-1">
-                  
-                  {/* Left / Right Position */}
-                  <div className="flex items-center gap-0.5">
-                    <button
-                      type="button"
-                      disabled={idx === 0}
-                      onClick={() => moveImage(idx, idx - 1)}
-                      className={`p-1 rounded ${idx === 0 ? 'text-slate-600 cursor-not-allowed' : 'text-slate-400 hover:text-white hover:bg-white/10'}`}
-                      title="Move Left"
-                    >
+                <Box sx={{ p: 1, bgcolor: '#0E1017', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 0.5 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
+                    <IconButton size="small" disabled={idx === 0} onClick={() => moveImage(idx, idx - 1)} title="Move Left" sx={{ p: 0.5, borderRadius: 0.25, color: idx === 0 ? '#334155' : 'rgba(148,163,184,0.8)', '&:hover': { bgcolor: idx === 0 ? 'transparent' : 'rgba(255,255,255,0.1)', color: idx === 0 ? '#334155' : 'white' } }}>
                       <ArrowLeft size={12} />
-                    </button>
-
-                    <button
-                      type="button"
-                      disabled={idx === images.length - 1}
-                      onClick={() => moveImage(idx, idx + 1)}
-                      className={`p-1 rounded ${idx === images.length - 1 ? 'text-slate-600 cursor-not-allowed' : 'text-slate-400 hover:text-white hover:bg-white/10'}`}
-                      title="Move Right"
-                    >
+                    </IconButton>
+                    <IconButton size="small" disabled={idx === images.length - 1} onClick={() => moveImage(idx, idx + 1)} title="Move Right" sx={{ p: 0.5, borderRadius: 0.25, color: idx === images.length - 1 ? '#334155' : 'rgba(148,163,184,0.8)', '&:hover': { bgcolor: idx === images.length - 1 ? 'transparent' : 'rgba(255,255,255,0.1)', color: idx === images.length - 1 ? '#334155' : 'white' } }}>
                       <ArrowRight size={12} />
-                    </button>
-                  </div>
+                    </IconButton>
+                  </Box>
 
-                  {/* Action Icons */}
-                  <div className="flex items-center gap-1">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     {!isPrimary && (
-                      <button
-                        type="button"
-                        onClick={() => setPrimaryImage(idx)}
-                        className="px-1.5 py-0.5 bg-white/5 hover:bg-[#D4AF37]/20 text-[#D4AF37] rounded text-[9px] font-bold"
-                        title="Set as Main Cover Image"
-                      >
+                      <Button size="small" onClick={() => setPrimaryImage(idx)} title="Set as Main Cover Image" sx={{ minWidth: 'auto', px: 0.75, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', color: '#D4AF37', fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, borderRadius: 0.25, '&:hover': { bgcolor: 'rgba(212,175,55,0.2)' } }}>
                         Set Cover
-                      </button>
+                      </Button>
                     )}
-
-                    {/* Replace Image */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setReplacingIndex(idx);
-                        replaceInputRef.current?.click();
-                      }}
-                      className="p-1 text-slate-400 hover:text-white hover:bg-white/10 rounded"
-                      title="Replace Image"
-                    >
+                    <IconButton size="small" onClick={() => { setReplacingIndex(idx); replaceInputRef.current?.click(); }} title="Replace Image" sx={{ p: 0.5, borderRadius: 0.25, color: 'rgba(148,163,184,0.8)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' } }}>
                       <RefreshCw size={12} />
-                    </button>
-
-                    {/* Delete Image */}
-                    <button
-                      type="button"
-                      onClick={() => removeImage(idx)}
-                      className="p-1 text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded"
-                      title="Delete Image"
-                    >
+                    </IconButton>
+                    <IconButton size="small" onClick={() => removeImage(idx)} title="Delete Image" sx={{ p: 0.5, borderRadius: 0.25, color: '#f87171', '&:hover': { bgcolor: 'rgba(127,29,29,0.4)', color: '#fca5a5' } }}>
                       <Trash2 size={12} />
-                    </button>
-                  </div>
-
-                </div>
-              </div>
+                    </IconButton>
+                  </Box>
+                </Box>
+              </Box>
             );
           })}
-        </div>
+        </Box>
       )}
 
       {/* Drag & Drop Upload Zone */}
       {images.length < maxImages && (
-        <div
-          onDragOver={(e) => {
-            e.preventDefault();
-            setIsDragOver(true);
-          }}
+        <Box
+          onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
           onDragLeave={() => setIsDragOver(false)}
-          onDrop={(e) => {
-            e.preventDefault();
-            setIsDragOver(false);
-            handleFilesSelected(e.dataTransfer.files);
-          }}
+          onDrop={(e) => { e.preventDefault(); setIsDragOver(false); handleFilesSelected(e.dataTransfer.files); }}
           onClick={() => fileInputRef.current?.click()}
-          className={`border-2 border-dashed rounded-md p-6 text-center cursor-pointer transition-all ${
-            isDragOver 
-              ? 'border-[#D4AF37] bg-[#D4AF37]/10' 
-              : 'border-white/15 hover:border-[#D4AF37]/60 bg-[#141620]/60 hover:bg-[#141620]'
-          }`}
+          sx={{
+            border: '2px dashed', borderRadius: 0.5, p: 4, textAlign: 'center', cursor: 'pointer', transition: 'all 0.2s',
+            borderColor: isDragOver ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+            bgcolor: isDragOver ? 'rgba(212,175,55,0.1)' : 'rgba(20,22,32,0.6)',
+            '&:hover': { borderColor: 'rgba(212,175,55,0.6)', bgcolor: '#141620' }
+          }}
         >
-          <div className="flex flex-col items-center justify-center space-y-2">
-            <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-[#D4AF37] flex items-center justify-center">
-              <Upload size={18} />
-            </div>
-
-            <div className="space-y-0.5">
-              <p className="text-white font-bold">
-                Drop high-resolution images here or <span className="text-[#D4AF37] underline">Browse</span>
-              </p>
-              <p className="text-slate-400 text-[11px]">
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1.5 }}>
+            <Box sx={{ width: 40, height: 40, borderRadius: '50%', bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Upload size={18} color="#D4AF37" />
+            </Box>
+            <Box>
+              <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: 'white' }}>
+                Drop high-resolution images here or{' '}
+                <Box component="span" sx={{ color: '#D4AF37', textDecoration: 'underline' }}>Browse</Box>
+              </Typography>
+              <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#64748b', mt: 0.5 }}>
                 Supports JPG, JPEG, PNG, WEBP (Up to 10MB per file)
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 pt-1 text-[10px] text-slate-500">
-              <span>Automatic dimension scaling</span>
-              <span>•</span>
-              <span>Direct Firebase CDN Delivery</span>
-            </div>
-          </div>
-        </div>
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#334155' }}>
+              <Typography sx={{ fontSize: 'inherit', fontFamily: 'inherit', color: 'inherit' }}>Automatic dimension scaling</Typography>
+              <Typography sx={{ fontSize: 'inherit', fontFamily: 'inherit', color: 'inherit' }}>•</Typography>
+              <Typography sx={{ fontSize: 'inherit', fontFamily: 'inherit', color: 'inherit' }}>Direct Firebase CDN Delivery</Typography>
+            </Box>
+          </Box>
+        </Box>
       )}
 
-      {/* Alternate: Paste Direct URL */}
-      <div className="flex items-center justify-between pt-1">
+      {/* Paste External URL */}
+      <Box sx={{ display: 'flex', alignItems: 'center', pt: 0.5 }}>
         {isAddingUrl ? (
-          <form onSubmit={handleAddManualUrl} className="flex items-center gap-2 w-full animate-fade-in">
-            <input
-              type="text"
+          <Box component="form" onSubmit={handleAddManualUrl} sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+            <TextField
+              fullWidth
+              size="small"
               value={manualUrlInput}
               onChange={(e) => setManualUrlInput(e.target.value)}
               placeholder="Paste direct HTTPS image link (e.g. https://images.unsplash.com/...)"
-              className="flex-1 bg-[#141620] border border-white/15 rounded p-2 text-white text-[11px] focus:outline-none focus:border-[#D4AF37]"
+              autoFocus
+              sx={fieldSx}
             />
-            <button
-              type="submit"
-              className="px-3 py-2 bg-[#D4AF37] text-black font-bold rounded text-[11px] uppercase tracking-wider"
-            >
+            <Button type="submit" sx={{ px: 2, py: 1, bgcolor: '#D4AF37', color: 'black', fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 0.5, flexShrink: 0, '&:hover': { bgcolor: '#E2B714' } }}>
               Add Link
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsAddingUrl(false)}
-              className="p-2 text-slate-400 hover:text-white"
-            >
+            </Button>
+            <IconButton size="small" onClick={() => setIsAddingUrl(false)} sx={{ color: '#64748b', '&:hover': { color: 'white' } }}>
               <X size={14} />
-            </button>
-          </form>
+            </IconButton>
+          </Box>
         ) : (
-          <button
-            type="button"
+          <Button
             onClick={() => setIsAddingUrl(true)}
-            className="text-[11px] text-[#D4AF37] hover:underline flex items-center gap-1.5 cursor-pointer"
+            startIcon={<Plus size={12} />}
+            sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#D4AF37', p: 0, minWidth: 'auto', '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}
           >
-            <Plus size={12} />
-            <span>Or paste external image URL</span>
-          </button>
+            Or paste external image URL
+          </Button>
         )}
-      </div>
+      </Box>
 
       {/* Hidden File Inputs */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        multiple
-        accept={ALLOWED_IMAGE_TYPES.join(',')}
-        onChange={(e) => handleFilesSelected(e.target.files)}
-        className="hidden"
-      />
-
-      <input
-        ref={replaceInputRef}
-        type="file"
-        accept={ALLOWED_IMAGE_TYPES.join(',')}
-        onChange={handleReplaceFileSelected}
-        className="hidden"
-      />
+      <input ref={fileInputRef} type="file" multiple accept={ALLOWED_IMAGE_TYPES.join(',')} onChange={(e) => handleFilesSelected(e.target.files)} style={{ display: 'none' }} />
+      <input ref={replaceInputRef} type="file" accept={ALLOWED_IMAGE_TYPES.join(',')} onChange={handleReplaceFileSelected} style={{ display: 'none' }} />
 
       {/* Full Preview Zoom Modal */}
       {previewZoomUrl && (
-        <div 
+        <Box
           onClick={() => setPreviewZoomUrl(null)}
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out animate-fade-in"
+          sx={{ position: 'fixed', inset: 0, zIndex: 9999, bgcolor: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2, cursor: 'zoom-out' }}
         >
-          <div className="relative max-w-4xl max-h-[85vh] overflow-hidden rounded border border-white/20 shadow-2xl">
-            <img src={previewZoomUrl} alt="Zoom Preview" className="w-full h-full object-contain" />
-            <button
+          <Box sx={{ position: 'relative', maxWidth: '56rem', maxHeight: '85vh', overflow: 'hidden', borderRadius: 0.5, border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 25px 50px rgba(0,0,0,0.8)' }}>
+            <Box component="img" src={previewZoomUrl} alt="Zoom Preview" sx={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            <IconButton
               onClick={() => setPreviewZoomUrl(null)}
-              className="absolute top-3 right-3 p-2 bg-black/80 text-white rounded-full hover:bg-black"
+              sx={{ position: 'absolute', top: 12, right: 12, p: 1, bgcolor: 'rgba(0,0,0,0.8)', color: 'white', borderRadius: '50%', '&:hover': { bgcolor: 'black' } }}
             >
               <X size={18} />
-            </button>
-          </div>
-        </div>
+            </IconButton>
+          </Box>
+        </Box>
       )}
-
-    </div>
+    </Box>
   );
 };

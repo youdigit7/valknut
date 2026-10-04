@@ -2,6 +2,43 @@ import React from 'react';
 import { Truck, RefreshCw, CreditCard } from 'lucide-react';
 import { SEOHead } from '../common/SEOHead';
 import { getBreadcrumbSchema } from '../../utils/seo';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, 
+  Breadcrumbs, Link, Zoom, Fade, Paper, Divider 
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0A0A', paper: '#0E1017' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h4: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    h5: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 700, textTransform: 'uppercase' },
+    body1: { fontFamily: '"JetBrains Mono", sans-serif' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+          backgroundImage: 'none',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 0 20px rgba(212,175,55,0.03)',
+          border: '1px solid rgba(255,255,255,0.05)',
+          background: 'linear-gradient(145deg, #11131c, #0a0c12)',
+        }
+      }
+    }
+  }
+});
 
 export const ShippingPolicyPage: React.FC = () => {
   const seoMetadata = {
@@ -21,109 +58,122 @@ export const ShippingPolicyPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-      <SEOHead metadata={seoMetadata} />
-      {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-2 text-xs uppercase tracking-widest text-slate-400">
-          <li><a href="#/" className="hover:text-[#d4af37]">Home</a></li>
-          <li><span>/</span></li>
-          <li className="text-[#d4af37] font-semibold">Shipping, Payments & Returns</li>
-        </ol>
-      </nav>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+        <SEOHead metadata={seoMetadata} />
+        
+        {/* Ambient Background Effects */}
+        <Box sx={{ position: 'absolute', top: '10%', left: '-10%', width: 500, height: 500, background: 'radial-gradient(circle, rgba(212,175,55,0.05) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(60px)', zIndex: 0 }} />
+        
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+          
+          {/* Breadcrumbs */}
+          <Breadcrumbs separator={<Typography sx={{ color: 'text.secondary' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
+            <Link href="#/" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>Home</Link>
+            <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>Shipping, Payments & Returns</Typography>
+          </Breadcrumbs>
 
-      <div className="text-center max-w-3xl mx-auto mb-16">
-        <span className="badge-pill badge-gold mb-4">
-          <Truck size={12} /> ISLANDWIDE LOGISTICS
-        </span>
-        <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white mb-4 font-syne">
-          Shipping, Payments & <span className="gold-gradient-text">Exchange Policy</span>
-        </h1>
-        <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-          Transparent, secure, and expedited. We partner with Sri Lanka’s premier courier fleets to ensure your package arrives in pristine condition.
-        </p>
-      </div>
+          {/* Header */}
+          <Fade in={true} timeout={800}>
+            <Box sx={{ textAlign: 'center', maxWidth: 'md', mx: 'auto', mb: { xs: 8, md: 12 } }}>
+              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: '20px', border: '1px solid rgba(212,175,55,0.3)', bgcolor: 'rgba(212,175,55,0.1)', color: 'primary.main', mb: 4 }}>
+                <Truck size={14} />
+                <Typography variant="caption" sx={{ fontWeight: 'bold', letterSpacing: '0.1em' }}>ISLANDWIDE LOGISTICS</Typography>
+              </Box>
+              
+              <Typography variant="h1" component="h1" sx={{ fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' }, mb: 4, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+                Shipping, Payments & <Box component="span" sx={{ background: 'linear-gradient(to right, #D4AF37, #FFF5D1, #D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>Exchange Policy</Box>
+              </Typography>
 
-      <div className="space-y-8">
-        {/* Shipping Rates */}
-        <div className="glass-panel p-8 rounded-sm border border-white/10">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37]">
-              <Truck size={20} />
-            </div>
-            <h2 className="text-xl font-bold uppercase text-white font-syne">
-              1. Delivery Timelines & Rates
-            </h2>
-          </div>
+              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '600px', mx: 'auto', lineHeight: 1.8 }}>
+                Transparent, secure, and expedited. We partner with Sri Lanka’s premier courier fleets to ensure your package arrives in pristine condition.
+              </Typography>
+            </Box>
+          </Fade>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300">
-            <div className="bg-[#0b0c10] p-6 rounded-sm border border-white/5">
-              <h3 className="font-bold text-white uppercase mb-2 text-base">Greater Colombo & Suburbs</h3>
-              <p className="text-slate-400 mb-3">1 to 2 business days</p>
-              <div className="text-xs font-mono text-[#d4af37]">Standard Rate: LKR 450 | FREE above LKR 10,000</div>
-            </div>
-            <div className="bg-[#0b0c10] p-6 rounded-sm border border-white/5">
-              <h3 className="font-bold text-white uppercase mb-2 text-base">All Islandwide Outstations</h3>
-              <p className="text-slate-400 mb-3">2 to 4 business days</p>
-              <div className="text-xs font-mono text-[#d4af37]">Standard Rate: LKR 450 | FREE above LKR 10,000</div>
-            </div>
-          </div>
-        </div>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            
+            {/* 1. Delivery Timelines & Rates */}
+            <Zoom in={true} style={{ transitionDelay: '200ms' }}>
+              <Paper elevation={12} sx={{ p: { xs: 4, sm: 6 } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+                  <Box sx={{ width: 48, height: 48, borderRadius: '50%', bgcolor: 'rgba(212,175,55,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'primary.main', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <Truck size={24} />
+                  </Box>
+                  <Typography variant="h5" sx={{ letterSpacing: '0.05em' }}>1. Delivery Timelines & Rates</Typography>
+                </Box>
+                
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
+                  <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', p: 4, borderRadius: 2 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold', textTransform: 'uppercase', mb: 1 }}>Greater Colombo & Suburbs</Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>1 to 2 business days</Typography>
+                    <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)', mb: 3 }} />
+                    <Typography variant="caption" sx={{ color: 'primary.main', fontFamily: 'monospace', fontWeight: 'bold' }}>Standard Rate: LKR 450 | FREE above LKR 10,000</Typography>
+                  </Paper>
+                  
+                  <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', p: 4, borderRadius: 2 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold', textTransform: 'uppercase', mb: 1 }}>All Islandwide Outstations</Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>2 to 4 business days</Typography>
+                    <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)', mb: 3 }} />
+                    <Typography variant="caption" sx={{ color: 'primary.main', fontFamily: 'monospace', fontWeight: 'bold' }}>Standard Rate: LKR 450 | FREE above LKR 10,000</Typography>
+                  </Paper>
+                </Box>
+              </Paper>
+            </Zoom>
 
-        {/* Payment Methods */}
-        <div className="glass-panel p-8 rounded-sm border border-white/10">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37]">
-              <CreditCard size={20} />
-            </div>
-            <h2 className="text-xl font-bold uppercase text-white font-syne">
-              2. Approved Payment Options
-            </h2>
-          </div>
+            {/* 2. Approved Payment Options */}
+            <Zoom in={true} style={{ transitionDelay: '350ms' }}>
+              <Paper elevation={12} sx={{ p: { xs: 4, sm: 6 } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+                  <Box sx={{ width: 48, height: 48, borderRadius: '50%', bgcolor: 'rgba(212,175,55,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'primary.main', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <CreditCard size={24} />
+                  </Box>
+                  <Typography variant="h5" sx={{ letterSpacing: '0.05em' }}>2. Approved Payment Options</Typography>
+                </Box>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
-            <div className="bg-[#0b0c10] p-6 rounded-sm border border-white/5">
-              <div className="text-lg font-bold text-emerald-400 mb-2 font-syne">Koko BNPL</div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Split your total bill into 3 equal monthly payments with 0% interest and zero hidden charges using your debit or credit card.
-              </p>
-            </div>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 4 }}>
+                  <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', p: 4, borderRadius: 2 }}>
+                    <Typography variant="h6" sx={{ color: '#4ade80', mb: 2, fontSize: '1.1rem' }}>Koko BNPL</Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>Split your total bill into 3 equal monthly payments with 0% interest and zero hidden charges using your debit or credit card.</Typography>
+                  </Paper>
+                  
+                  <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', p: 4, borderRadius: 2 }}>
+                    <Typography variant="h6" sx={{ color: '#60a5fa', mb: 2, fontSize: '1.1rem' }}>OnePay Gateway</Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>Bank-grade 256-bit encrypted card processing for Visa, MasterCard, UnionPay, and direct LankaQR instant mobile payments.</Typography>
+                  </Paper>
+                  
+                  <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', p: 4, borderRadius: 2 }}>
+                    <Typography variant="h6" sx={{ color: '#e2e8f0', mb: 2, fontSize: '1.1rem' }}>Cash on Delivery</Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>Pay in cash directly to the courier agent upon receiving and inspecting your parcel packaging.</Typography>
+                  </Paper>
+                </Box>
+              </Paper>
+            </Zoom>
 
-            <div className="bg-[#0b0c10] p-6 rounded-sm border border-white/5">
-              <div className="text-lg font-bold text-blue-400 mb-2 font-syne">OnePay Gateway</div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Bank-grade 256-bit encrypted card processing for Visa, MasterCard, UnionPay, and direct LankaQR instant mobile payments.
-              </p>
-            </div>
+            {/* 3. Exchanges */}
+            <Zoom in={true} style={{ transitionDelay: '500ms' }}>
+              <Paper elevation={12} sx={{ p: { xs: 4, sm: 6 } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+                  <Box sx={{ width: 48, height: 48, borderRadius: '50%', bgcolor: 'rgba(212,175,55,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'primary.main', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <RefreshCw size={24} />
+                  </Box>
+                  <Typography variant="h5" sx={{ letterSpacing: '0.05em' }}>3. 7-Day Size Exchange Guarantee</Typography>
+                </Box>
+                
+                <Box sx={{ maxWidth: '800px' }}>
+                  <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8, mb: 3 }}>
+                    If your chosen size does not fit your desired drape, you can request an exchange within 7 days of delivery. The item must be unwashed, unworn, with all original VALKNUT hangtags and packaging intact.
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#94a3b8', fontStyle: 'italic', display: 'block' }}>
+                    *Customized products created in the VALKNUT Studio are non-refundable unless manufacturing defects occur.
+                  </Typography>
+                </Box>
+              </Paper>
+            </Zoom>
 
-            <div className="bg-[#0b0c10] p-6 rounded-sm border border-white/5">
-              <div className="text-lg font-bold text-slate-200 mb-2 font-syne">Cash on Delivery</div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Pay in cash directly to the courier agent upon receiving and inspecting your parcel packaging.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Exchanges */}
-        <div className="glass-panel p-8 rounded-sm border border-white/10">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37]">
-              <RefreshCw size={20} />
-            </div>
-            <h2 className="text-xl font-bold uppercase text-white font-syne">
-              3. 7-Day Size Exchange Guarantee
-            </h2>
-          </div>
-
-          <p className="text-slate-300 text-sm leading-relaxed mb-4">
-            If your chosen size does not fit your desired drape, you can request an exchange within 7 days of delivery. The item must be unwashed, unworn, with all original VALKNUT hangtags and packaging intact.
-          </p>
-          <p className="text-xs text-slate-400">
-            *Customized products created in the VALKNUT Studio are non-refundable unless manufacturing defects occur.
-          </p>
-        </div>
-      </div>
-    </div>
+          </Box>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

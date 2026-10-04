@@ -2,32 +2,33 @@ import React, { useState } from 'react';
 import { useStore } from '../../context/StoreContext';
 import { ProductCard } from '../ui/ProductCard';
 import { EmptyState } from '../ui/EmptyState';
-import { 
-  Trash2, 
-  Plus, 
-  Minus, 
-  Tag, 
-  ArrowRight, 
-  Truck, 
-  ShieldCheck, 
-  Sparkles, 
-  ChevronRight, 
+import {
+  Trash2,
+  Plus,
+  Minus,
+  Tag,
+  ArrowRight,
+  Truck,
+  ShieldCheck,
+  Sparkles,
+  ChevronRight,
   ArrowLeft,
   CheckCircle
 } from 'lucide-react';
+import { Box, Typography, Button, IconButton, LinearProgress, InputBase, Grid } from '@mui/material';
 
 export const CartPage: React.FC = () => {
-  const { 
-    cart, 
-    removeFromCart, 
-    updateCartQuantity, 
-    appliedCoupon, 
-    applyCoupon, 
-    removeCoupon, 
-    cartSubtotal, 
-    cartDiscount, 
-    cartShipping, 
-    cartTotal, 
+  const {
+    cart,
+    removeFromCart,
+    updateCartQuantity,
+    appliedCoupon,
+    applyCoupon,
+    removeCoupon,
+    cartSubtotal,
+    cartDiscount,
+    cartShipping,
+    cartTotal,
     products,
     setSelectedProduct,
     addToCart
@@ -65,41 +66,41 @@ export const CartPage: React.FC = () => {
     .slice(0, 4);
 
   return (
-    <div className="w-full min-h-screen bg-[#0A0A0A] py-8 sm:py-12 border-b border-white/10">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        
+    <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: '#0A0A0A', py: { xs: 4, sm: 6 }, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+      <Box sx={{ maxWidth: 1600, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
+
         {/* Breadcrumb Hierarchy */}
-        <nav className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-6">
-          <a href="#/" className="hover:text-white transition-colors">Home</a>
-          <ChevronRight size={12} className="text-slate-600" />
-          <a href="#/shop" className="hover:text-white transition-colors">Shop</a>
-          <ChevronRight size={12} className="text-slate-600" />
-          <span className="text-[#D4AF37] font-bold">Shopping Bag ({totalItemCount})</span>
-        </nav>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'text.secondary', mb: 3 }}>
+          <Box component="a" href="#/" sx={{ color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'white' }, transition: 'color 0.3s' }}>Home</Box>
+          <ChevronRight size={12} />
+          <Box component="a" href="#/shop" sx={{ color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'white' }, transition: 'color 0.3s' }}>Shop</Box>
+          <ChevronRight size={12} />
+          <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'primary.main', fontFamily: 'inherit' }}>Shopping Bag ({totalItemCount})</Typography>
+        </Box>
 
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-white/10 pb-6 mb-8 gap-4">
-          <div>
-            <span className="text-xs font-mono font-bold tracking-[0.3em] text-[#D4AF37] uppercase block mb-1">
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { sm: 'flex-end' }, justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 3, mb: 4, gap: 2 }}>
+          <Box>
+            <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5 }}>
               YOUR SELECTED PIECES
-            </span>
-            <h1 className="text-3xl sm:text-4xl font-black uppercase text-white font-syne tracking-tight">
+            </Typography>
+            <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'white', fontFamily: '"Syne", sans-serif', letterSpacing: '-0.02em' }}>
               SHOPPING BAG
-            </h1>
-          </div>
+            </Typography>
+          </Box>
 
-          <a
+          <Button
             href="#/shop"
-            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-slate-300 hover:text-[#D4AF37] transition-colors"
+            startIcon={<ArrowLeft size={14} />}
+            sx={{ color: 'text.secondary', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', p: 0, minWidth: 'auto', '&:hover': { bgcolor: 'transparent', color: 'primary.main' } }}
           >
-            <ArrowLeft size={14} />
-            <span>CONTINUE EXPLORING</span>
-          </a>
-        </div>
+            CONTINUE EXPLORING
+          </Button>
+        </Box>
 
         {/* Empty State */}
         {cart.length === 0 ? (
-          <div className="py-16 bg-[#0E1017] border border-white/10 rounded-md p-8 text-center space-y-6">
+          <Box sx={{ py: 8, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 3, alignItems: 'center' }}>
             <EmptyState
               title="YOUR SHOPPING BAG IS EMPTY"
               description="Looks like you haven't added any luxury streetwear garments or bespoke items to your bag yet."
@@ -111,293 +112,284 @@ export const CartPage: React.FC = () => {
 
             {/* Quick Best Sellers Suggestion */}
             {recommendedDrops.length > 0 && (
-              <div className="pt-12 border-t border-white/10 text-left max-w-5xl mx-auto space-y-6">
-                <h3 className="text-sm font-black uppercase tracking-widest text-white font-syne">
+              <Box sx={{ pt: 6, mt: 3, borderTop: '1px solid rgba(255,255,255,0.1)', width: '100%', maxWidth: 1000, textAlign: 'left' }}>
+                <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'white', fontFamily: '"Syne", sans-serif', mb: 3 }}>
                   TRENDING VALKNUT DROPS
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                </Typography>
+                <Grid container spacing={2}>
                   {recommendedDrops.map((p) => (
-                    <ProductCard
-                      key={p.id}
-                      product={p}
-                      onQuickView={(prod) => setSelectedProduct(prod)}
-                      onAddToCart={() => {
-                        const fv = p.variants[0] || { size: 'M', color: 'Onyx Black', colorHex: '#000000' };
-                        addToCart(p, fv.size as any, fv.color, fv.colorHex, 1);
-                      }}
-                    />
+                    <Grid size={{ xs: 12, md: 6 }} key={p.id}>
+                      <ProductCard
+                        product={p}
+                        onQuickView={(prod) => setSelectedProduct(prod)}
+                        onAddToCart={() => {
+                          const fv = p.variants[0] || { size: 'M', color: 'Onyx Black', colorHex: '#000000' };
+                          addToCart(p, fv.size as any, fv.color, fv.colorHex, 1);
+                        }}
+                      />
+                    </Grid>
                   ))}
-                </div>
-              </div>
+                </Grid>
+              </Box>
             )}
-          </div>
+          </Box>
         ) : (
           /* Main Cart Content: 2-Column Grid */
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12 items-start">
-            
+          <Grid container spacing={{ xs: 4, lg: 6 }} sx={{ alignItems: 'flex-start' }}>
+
             {/* Left Column (8 Cols): Items List & Free Shipping Meter */}
-            <div className="lg:col-span-8 space-y-6">
-              
-              {/* Free Shipping Progress Meter */}
-              <div className="p-4 sm:p-5 bg-[#0E1017] border border-white/10 rounded-md space-y-2.5">
-                <div className="flex items-center justify-between text-xs font-mono font-bold">
-                  <span className="flex items-center gap-2 text-white">
-                    <Truck size={16} className="text-[#D4AF37]" />
-                    {cartSubtotal >= FREE_SHIPPING_LIMIT ? (
-                      <span className="text-emerald-400">YOU QUALIFY FOR FREE ISLANDWIDE SHIPPING!</span>
-                    ) : (
-                      <span>
-                        Add <strong className="text-[#D4AF37]">LKR {(FREE_SHIPPING_LIMIT - cartSubtotal).toLocaleString()}</strong> more for FREE Shipping!
-                      </span>
-                    )}
-                  </span>
-                  <span className="text-slate-400 font-normal">
-                    Target: LKR {FREE_SHIPPING_LIMIT.toLocaleString()}
-                  </span>
-                </div>
+            <Grid size={{ xs: 12, lg: 8 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
 
-                <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-[#D4AF37] to-[#E2B714] transition-all duration-500 rounded-full"
-                    style={{ width: `${progressPercent}%` }}
-                  />
-                </div>
-              </div>
+                {/* Free Shipping Progress Meter */}
+                <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1.5, boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'white' }}>
+                      <Truck size={16} color="#D4AF37" />
+                      {cartSubtotal >= FREE_SHIPPING_LIMIT ? (
+                        <Box component="span" sx={{ color: 'success.main' }}>YOU QUALIFY FOR FREE ISLANDWIDE SHIPPING!</Box>
+                      ) : (
+                        <Box component="span">
+                          Add <Box component="strong" sx={{ color: 'primary.main' }}>LKR {(FREE_SHIPPING_LIMIT - cartSubtotal).toLocaleString()}</Box> more for FREE Shipping!
+                        </Box>
+                      )}
+                    </Box>
+                    <Box component="span" sx={{ color: 'text.secondary', fontWeight: 'normal', display: { xs: 'none', sm: 'inline' } }}>
+                      Target: LKR {FREE_SHIPPING_LIMIT.toLocaleString()}
+                    </Box>
+                  </Box>
 
-              {/* Items List Card */}
-              <div className="bg-[#0E1017] border border-white/10 rounded-md divide-y divide-white/5 overflow-hidden shadow-xl">
-                {cart.map((item) => (
-                  <div key={item.id} className="p-4 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center justify-between">
-                    
-                    {/* Item Thumbnail & Basic Info */}
-                    <div className="flex gap-4 items-center flex-1 min-w-0">
-                      <a
-                        href={`#/product/${item.product.slug}`}
-                        className="w-20 h-24 sm:w-24 sm:h-28 rounded-[2px] overflow-hidden bg-[#141620] border border-white/10 flex-shrink-0 relative block group"
-                      >
-                        <img
-                          src={item.customization?.finalPreviewDataUrl || item.product.images[0]}
-                          alt={item.product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </a>
+                  <LinearProgress variant="determinate" value={progressPercent} sx={{ height: 8, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { background: 'linear-gradient(to right, #D4AF37, #E2B714)', borderRadius: 4 } }} />
+                </Box>
 
-                      <div className="space-y-1 min-w-0 flex-1">
-                        <span className="text-[10px] font-mono font-bold tracking-widest text-[#D4AF37] uppercase block">
-                          {item.product.subCategory}
-                        </span>
+                {/* Items List Card */}
+                <Box sx={{ bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+                  {cart.map((item, idx) => (
+                    <Box key={item.id} sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 2, sm: 3 }, alignItems: { sm: 'center' }, justifyContent: 'space-between', borderBottom: idx < cart.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
 
-                        <a
+                      {/* Item Thumbnail & Basic Info */}
+                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flex: 1, minWidth: 0 }}>
+                        <Box
+                          component="a"
                           href={`#/product/${item.product.slug}`}
-                          className="text-sm sm:text-base font-bold text-white uppercase font-heading hover:text-[#D4AF37] transition-colors truncate block"
+                          sx={{ width: { xs: 80, sm: 96 }, height: { xs: 96, sm: 112 }, borderRadius: 1, overflow: 'hidden', bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', flexShrink: 0, position: 'relative', display: 'block', '&:hover img': { transform: 'scale(1.05)' } }}
                         >
-                          {item.product.name}
-                        </a>
+                          <Box
+                            component="img"
+                            src={item.customization?.finalPreviewDataUrl || item.product.images[0]}
+                            alt={item.product.name}
+                            sx={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s ease' }}
+                          />
+                        </Box>
 
-                        <div className="flex items-center gap-3 text-xs font-mono text-slate-400 pt-0.5 flex-wrap">
-                          <span>Size: <strong className="text-white">{item.selectedSize}</strong></span>
-                          <span>•</span>
-                          <span className="flex items-center gap-1.5">
-                            Colour: <strong className="text-white">{item.selectedColor}</strong>
-                            <span
-                              className="w-2.5 h-2.5 rounded-full border border-white/30 inline-block"
-                              style={{ backgroundColor: item.selectedColorHex }}
-                            />
-                          </span>
-                        </div>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, minWidth: 0, flex: 1 }}>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.1em', color: 'primary.main', textTransform: 'uppercase' }}>
+                            {item.product.subCategory}
+                          </Typography>
 
-                        {/* Custom Studio Label */}
-                        {item.customization && (
-                          <div className="mt-2 p-2 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-[2px] text-[11px] font-mono text-[#D4AF37] space-y-1">
-                            <div className="flex items-center gap-1.5 font-bold">
-                              <Sparkles size={12} />
-                              <span>Bespoke: {item.customization.printTechnique} ({item.customization.placement.replace('_', ' ')})</span>
-                            </div>
-                            <div className="text-slate-300 text-[10px] flex flex-wrap gap-x-4">
-                              {item.customization.customText && <span>Text: "{item.customization.customText}"</span>}
-                              {item.customization.textFont && <span>Font: {item.customization.textFont}</span>}
-                              {item.customization.uploadedArtworkUrl && <span className="text-emerald-400">✓ Custom Artwork Attached</span>}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                          <Typography
+                            component="a"
+                            href={`#/product/${item.product.slug}`}
+                            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, fontWeight: 'bold', color: 'white', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif', textDecoration: 'none', transition: 'color 0.3s', '&:hover': { color: 'primary.main' }, display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                          >
+                            {item.product.name}
+                          </Typography>
 
-                    {/* Quantity & Item Subtotal */}
-                    <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-4 pt-3 sm:pt-0 border-t sm:border-t-0 border-white/5">
-                      {/* Quantity Controller */}
-                      <div className="flex items-center bg-[#131520] border border-white/15 rounded-[2px] p-0.5">
-                        <button
-                          onClick={() => updateCartQuantity(item.id, -1)}
-                          className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
-                          aria-label="Decrease quantity"
-                        >
-                          <Minus size={13} />
-                        </button>
-                        <span className="w-8 text-center text-xs font-mono font-bold text-white">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => updateCartQuantity(item.id, 1)}
-                          className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
-                          aria-label="Increase quantity"
-                        >
-                          <Plus size={13} />
-                        </button>
-                      </div>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', flexWrap: 'wrap' }}>
+                            <Typography sx={{ fontSize: 'inherit' }}>Size: <Box component="strong" sx={{ color: 'white' }}>{item.selectedSize}</Box></Typography>
+                            <Typography sx={{ fontSize: 'inherit' }}>•</Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography sx={{ fontSize: 'inherit' }}>Colour: <Box component="strong" sx={{ color: 'white' }}>{item.selectedColor}</Box></Typography>
+                              <Box sx={{ width: 10, height: 10, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.3)', bgcolor: item.selectedColorHex }} />
+                            </Box>
+                          </Box>
 
-                      {/* Total and Trash */}
-                      <div className="flex items-center gap-3">
-                        <div className="text-right">
-                          <span className="text-sm sm:text-base font-black font-mono text-white block">
-                            LKR {(item.unitPrice * item.quantity).toLocaleString()}
-                          </span>
-                          {item.quantity > 1 && (
-                            <span className="text-[10px] font-mono text-slate-500 block">
-                              LKR {item.unitPrice.toLocaleString()} each
-                            </span>
+                          {/* Custom Studio Label */}
+                          {item.customization && (
+                            <Box sx={{ mt: 1, p: 1, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 1, color: 'primary.main', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontWeight: 'bold', fontSize: '0.6875rem' }}>
+                                <Sparkles size={12} />
+                                <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit' }}>Bespoke: {item.customization.printTechnique} ({item.customization.placement.replace('_', ' ')})</Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, color: 'text.secondary', fontSize: '0.625rem', mt: 0.5 }}>
+                                {item.customization.customText && <Typography sx={{ fontSize: 'inherit' }}>Text: "{item.customization.customText}"</Typography>}
+                                {item.customization.textFont && <Typography sx={{ fontSize: 'inherit' }}>Font: {item.customization.textFont}</Typography>}
+                                {item.customization.uploadedArtworkUrl && <Typography sx={{ fontSize: 'inherit', color: 'success.main' }}>✓ Custom Artwork Attached</Typography>}
+                              </Box>
+                            </Box>
                           )}
-                        </div>
+                        </Box>
+                      </Box>
 
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="p-2 text-slate-500 hover:text-red-400 hover:bg-white/5 rounded-[2px] transition-colors"
-                          title="Remove item"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </div>
+                      {/* Quantity & Item Subtotal */}
+                      <Box sx={{ display: 'flex', flexDirection: { xs: 'row', sm: 'column' }, alignItems: { xs: 'center', sm: 'flex-end' }, justifyContent: 'space-between', width: { xs: '100%', sm: 'auto' }, gap: 2, pt: { xs: 2, sm: 0 }, borderTop: { xs: '1px solid rgba(255,255,255,0.05)', sm: 'none' } }}>
+                        {/* Quantity Controller */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: '#131520', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 0.25 }}>
+                          <IconButton onClick={() => updateCartQuantity(item.id, -1)} sx={{ width: 28, height: 28, borderRadius: 0, color: 'text.secondary', '&:hover': { color: 'white' } }}>
+                            <Minus size={13} />
+                          </IconButton>
+                          <Typography sx={{ width: 32, textAlign: 'center', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'white' }}>
+                            {item.quantity}
+                          </Typography>
+                          <IconButton onClick={() => updateCartQuantity(item.id, 1)} sx={{ width: 28, height: 28, borderRadius: 0, color: 'text.secondary', '&:hover': { color: 'white' } }}>
+                            <Plus size={13} />
+                          </IconButton>
+                        </Box>
 
-                  </div>
-                ))}
-              </div>
+                        {/* Total and Trash */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Box sx={{ textAlign: 'right' }}>
+                            <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif', color: 'white' }}>
+                              LKR {(item.unitPrice * item.quantity).toLocaleString()}
+                            </Typography>
+                            {item.quantity > 1 && (
+                              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                                LKR {item.unitPrice.toLocaleString()} each
+                              </Typography>
+                            )}
+                          </Box>
 
-              {/* Trust Features Bar */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3.5 bg-[#0E1017] border border-white/5 rounded-[2px] flex items-center gap-2.5 text-xs font-mono text-slate-300">
-                  <Truck size={16} className="text-[#D4AF37]" />
-                  <span>Fast 2-3 Day Colombo Delivery</span>
-                </div>
-                <div className="p-3.5 bg-[#0E1017] border border-white/5 rounded-[2px] flex items-center gap-2.5 text-xs font-mono text-slate-300">
-                  <ShieldCheck size={16} className="text-[#D4AF37]" />
-                  <span>100% Guaranteed Heavy Cotton</span>
-                </div>
-                <div className="p-3.5 bg-[#0E1017] border border-white/5 rounded-[2px] flex items-center gap-2.5 text-xs font-mono text-slate-300">
-                  <CheckCircle size={16} className="text-[#D4AF37]" />
-                  <span>7-Day Hassle-Free Exchange</span>
-                </div>
-              </div>
+                          <IconButton onClick={() => removeFromCart(item.id)} sx={{ p: 1, color: 'text.secondary', '&:hover': { color: 'error.main', bgcolor: 'rgba(255,255,255,0.05)' }, borderRadius: 1 }}>
+                            <Trash2 size={16} />
+                          </IconButton>
+                        </Box>
+                      </Box>
 
-            </div>
+                    </Box>
+                  ))}
+                </Box>
+
+                {/* Trust Features Bar */}
+                <Grid container spacing={1.5}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <Box sx={{ p: 1.5, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                      <Truck size={16} color="#D4AF37" />
+                      <Typography sx={{ fontSize: 'inherit' }}>Fast 2-3 Day Colombo Delivery</Typography>
+                    </Box>
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <Box sx={{ p: 1.5, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                      <ShieldCheck size={16} color="#D4AF37" />
+                      <Typography sx={{ fontSize: 'inherit' }}>100% Guaranteed Heavy Cotton</Typography>
+                    </Box>
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <Box sx={{ p: 1.5, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                      <CheckCircle size={16} color="#D4AF37" />
+                      <Typography sx={{ fontSize: 'inherit' }}>7-Day Hassle-Free Exchange</Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+
+              </Box>
+            </Grid>
 
             {/* Right Column (4 Cols): Order Summary & Checkout Panel */}
-            <div className="lg:col-span-4 sticky top-28 space-y-6">
-              <div className="bg-[#0E1017] border border-white/10 rounded-md p-6 sm:p-7 shadow-2xl space-y-6">
-                
-                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-white font-syne border-b border-white/10 pb-4">
+            <Grid size={{ xs: 12, lg: 4 }} sx={{ position: { lg: 'sticky' }, top: { lg: 112 } }}>
+              <Box sx={{ bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 4 }, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
+
+                <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'white', fontFamily: '"Syne", sans-serif', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                   ORDER SUMMARY
-                </h3>
+                </Typography>
 
                 {/* Promo Code Applicator */}
-                <div className="space-y-2">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-300 block font-bold">
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'text.secondary', fontWeight: 'bold' }}>
                     PROMO CODE
-                  </span>
+                  </Typography>
 
                   {appliedCoupon ? (
-                    <div className="p-2.5 bg-emerald-950/40 border border-emerald-500/40 rounded-[2px] flex items-center justify-between text-xs text-emerald-400 font-mono">
-                      <span className="flex items-center gap-1.5 font-bold">
+                    <Box sx={{ p: 1.5, bgcolor: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.4)', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'success.main', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontWeight: 'bold' }}>
                         <Tag size={14} />
-                        <span>'{appliedCoupon.code}' APPLIED</span>
-                      </span>
-                      <button
+                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>'{appliedCoupon.code}' APPLIED</Typography>
+                      </Box>
+                      <Button
                         onClick={removeCoupon}
-                        className="text-xs text-red-400 font-bold hover:underline cursor-pointer"
+                        sx={{ fontSize: '0.75rem', color: 'error.main', fontWeight: 'bold', minWidth: 'auto', p: 0, '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}
                       >
                         Remove
-                      </button>
-                    </div>
+                      </Button>
+                    </Box>
                   ) : (
-                    <form onSubmit={handleApplyCoupon} className="flex gap-2">
-                      <input
-                        type="text"
+                    <Box component="form" onSubmit={handleApplyCoupon} sx={{ display: 'flex', gap: 1 }}>
+                      <InputBase
                         value={couponCodeInput}
                         onChange={(e) => setCouponCodeInput(e.target.value)}
                         placeholder="e.g. VALKNUT10"
-                        className="flex-1 bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-[2px] px-3 py-2 text-xs font-mono uppercase text-white placeholder-slate-500 focus:outline-none"
+                        sx={{ flex: 1, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, px: 2, py: 1, color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', '& input::placeholder': { color: 'text.secondary', textTransform: 'none' }, '&.Mui-focused': { borderColor: 'primary.main' } }}
                       />
-                      <button
+                      <Button
                         type="submit"
-                        className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-mono font-bold rounded-[2px] transition-colors cursor-pointer"
+                        sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.1)', color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', borderRadius: 1, '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
                       >
                         Apply
-                      </button>
-                    </form>
+                      </Button>
+                    </Box>
                   )}
 
                   {couponMsg && (
-                    <p className={`text-[11px] font-mono ${couponMsg.isError ? 'text-red-400' : 'text-emerald-400'}`}>
+                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: couponMsg.isError ? 'error.main' : 'success.main' }}>
                       {couponMsg.text}
-                    </p>
+                    </Typography>
                   )}
-                </div>
+                </Box>
 
                 {/* Price Breakdown */}
-                <div className="space-y-2.5 text-xs font-mono text-slate-300 border-t border-white/10 pt-4">
-                  <div className="flex justify-between">
-                    <span>Bag Subtotal:</span>
-                    <strong className="text-white font-bold">LKR {cartSubtotal.toLocaleString()}</strong>
-                  </div>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: 'inherit' }}>Bag Subtotal:</Typography>
+                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'white' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
+                  </Box>
 
                   {cartDiscount > 0 && (
-                    <div className="flex justify-between text-emerald-400">
-                      <span>Discount Coupon:</span>
-                      <strong>- LKR {cartDiscount.toLocaleString()}</strong>
-                    </div>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'success.main' }}>
+                      <Typography sx={{ fontSize: 'inherit' }}>Discount Coupon:</Typography>
+                      <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold' }}>- LKR {cartDiscount.toLocaleString()}</Typography>
+                    </Box>
                   )}
 
-                  <div className="flex justify-between">
-                    <span>Estimated Shipping:</span>
-                    <strong className={cartShipping === 0 ? 'text-emerald-400' : 'text-white'}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: 'inherit' }}>Estimated Shipping:</Typography>
+                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: cartShipping === 0 ? 'success.main' : 'white' }}>
                       {cartShipping === 0 ? 'FREE' : `LKR ${cartShipping.toLocaleString()}`}
-                    </strong>
-                  </div>
+                    </Typography>
+                  </Box>
 
-                  <div className="flex justify-between text-base font-black text-white pt-4 border-t border-white/10 font-mono">
-                    <span className="font-syne uppercase">ESTIMATED TOTAL:</span>
-                    <span className="text-lg text-[#D4AF37]">LKR {cartTotal.toLocaleString()}</span>
-                  </div>
-                </div>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                    <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Syne", sans-serif', color: 'white' }}>ESTIMATED TOTAL:</Typography>
+                    <Typography sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'primary.main', fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
+                  </Box>
+                </Box>
 
                 {/* Checkout CTA */}
-                <button
+                <Button
                   onClick={handleProceedCheckout}
-                  className="w-full py-4 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold text-xs uppercase tracking-[0.2em] rounded-[2px] transition-all flex items-center justify-center gap-2 shadow-xl shadow-[#D4AF37]/20 cursor-pointer"
+                  endIcon={<ArrowRight size={16} />}
+                  sx={{ width: '100%', py: 2, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', borderRadius: 1, boxShadow: '0 4px 20px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)', boxShadow: '0 6px 25px rgba(212,175,55,0.3)' } }}
                 >
-                  <span>PROCEED TO CHECKOUT</span>
-                  <ArrowRight size={16} />
-                </button>
+                  PROCEED TO CHECKOUT
+                </Button>
 
                 {/* Payment Options Supported */}
-                <div className="pt-2 text-center space-y-2 border-t border-white/5">
-                  <span className="text-[10px] font-mono uppercase text-slate-500 tracking-wider block">
+                <Box sx={{ pt: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 1, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                  <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', color: 'text.secondary', letterSpacing: '0.05em' }}>
                     ACCEPTED PAYMENT GATEWAYS
-                  </span>
-                  <div className="flex items-center justify-center gap-2 flex-wrap text-[10px] font-mono text-slate-400">
-                    <span className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-[2px]">Koko BNPL (3x 0%)</span>
-                    <span className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-[2px]">OnePay</span>
-                    <span className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-[2px]">Cash on Delivery</span>
-                  </div>
-                </div>
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', gap: 1, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                    <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5 }}>Koko BNPL (3x 0%)</Box>
+                    <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5 }}>OnePay</Box>
+                    <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5 }}>Cash on Delivery</Box>
+                  </Box>
+                </Box>
 
-              </div>
-            </div>
+              </Box>
+            </Grid>
 
-          </div>
+          </Grid>
         )}
 
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

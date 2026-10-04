@@ -11,12 +11,14 @@ import { ShopMobileFilterDrawer } from './ShopMobileFilterDrawer';
 import { SearchModal } from './SearchModal';
 import { queryShopProducts, calculateFacets } from '../../services/productService';
 import { getShopSEOMetadata, applySEOMetadata } from '../../utils/seo';
-import { 
-  ArrowUpDown, 
-  Search, 
-  X, 
-  LayoutGrid, 
-  Grid3X3, 
+
+import { Box, Typography, Button, TextField, Select, MenuItem, InputAdornment, IconButton, Chip, Container } from '@mui/material';
+import {
+  ArrowUpDown,
+  Search,
+  X,
+  LayoutGrid,
+  Grid3X3,
   RotateCcw,
   ChevronRight,
   Filter
@@ -184,11 +186,11 @@ function syncFiltersToUrl(filters: FilterState, sortBy: string, page: number) {
 }
 
 export const ProductCatalog: React.FC = () => {
-  const { 
-    products: allCachedProducts, 
-    setSelectedProduct, 
+  const {
+    products: allCachedProducts,
+    setSelectedProduct,
     addToCart,
-    showToast 
+    showToast
   } = useStore();
 
   // Wishlist state (stored in localStorage)
@@ -443,309 +445,216 @@ export const ProductCatalog: React.FC = () => {
   }
 
   return (
-    <section id="valknut-shop-page" className="w-full min-h-screen bg-[#0A0A0A] py-8 sm:py-12 border-b border-white/10">
-      <div className="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8">
-        
+    <Box id="valknut-shop-page" sx={{ width: '100%', minHeight: '100vh', bgcolor: '#0A0A0A', py: { xs: 4, sm: 6 }, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+      <Container maxWidth="xl">
+
         {/* 1. Breadcrumbs & SEO Header */}
-        <div className="mb-6 sm:mb-10 pb-6 border-b border-white/10">
-          <nav className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-3">
-            <a href="#/" className="hover:text-white transition-colors">Home</a>
-            <ChevronRight size={12} className="text-slate-600" />
-            <a href="#/shop" className={filters.category === 'ALL' ? 'text-[#D4AF37] font-bold' : 'hover:text-white transition-colors'}>Shop</a>
+        <Box sx={{ mb: { xs: 3, sm: 5 }, pb: 3, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'text.secondary', mb: 3 }}>
+            <Box component="a" href="#/" sx={{ color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'white' }, transition: 'color 0.3s' }}>Home</Box>
+            <ChevronRight size={12} />
+            <Box component="a" href="#/shop" sx={{ textDecoration: 'none', transition: 'color 0.3s', color: filters.category === 'ALL' ? 'primary.main' : 'text.secondary', fontWeight: filters.category === 'ALL' ? 'bold' : 'normal', '&:hover': { color: 'white' } }}>Shop</Box>
             {filters.category !== 'ALL' && (
               <>
-                <ChevronRight size={12} className="text-slate-600" />
-                <a href={`#/shop/${filters.category.toLowerCase()}`} className={filters.subCategory === 'ALL' ? 'text-[#D4AF37] font-bold' : 'hover:text-white transition-colors'}>
+                <ChevronRight size={12} />
+                <Box component="a" href={`#/shop/${filters.category.toLowerCase()}`} sx={{ textDecoration: 'none', transition: 'color 0.3s', color: filters.subCategory === 'ALL' ? 'primary.main' : 'text.secondary', fontWeight: filters.subCategory === 'ALL' ? 'bold' : 'normal', '&:hover': { color: 'white' } }}>
                   {filters.category}
-                </a>
+                </Box>
               </>
             )}
             {filters.subCategory !== 'ALL' && (
               <>
-                <ChevronRight size={12} className="text-slate-600" />
-                <span className="text-[#D4AF37] font-bold truncate">{filters.subCategory}</span>
+                <ChevronRight size={12} />
+                <Typography sx={{ fontSize: 'inherit', color: 'primary.main', fontWeight: 'bold' }}>{filters.subCategory}</Typography>
               </>
             )}
-          </nav>
+          </Box>
 
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <span className="text-xs font-mono font-black tracking-[0.3em] text-[#D4AF37] uppercase block mb-1">
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'flex-end' }, justifyContent: 'space-between', gap: 2 }}>
+            <Box>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', display: 'block', mb: 0.5 }}>
                 VALKNUT ARCHITECTURAL STREETWEAR
-              </span>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black uppercase text-white tracking-tight font-syne">
-                {filters.subCategory !== 'ALL' 
+              </Typography>
+              <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem', lg: '3rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'white', letterSpacing: '-0.02em', fontFamily: '"Syne", sans-serif' }}>
+                {filters.subCategory !== 'ALL'
                   ? `${filters.category !== 'ALL' ? filters.category + ' ' : ''}${filters.subCategory}`
-                  : filters.category === 'ALL' 
-                  ? 'ALL COLLECTIONS' 
-                  : `${filters.category} COLLECTION`}
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-400 max-w-2xl mt-2 font-sans">
-                Engineered from 480GSM ultra-heavyweight combed organic cotton and military-spec Cordura. Designed in Colombo, Sri Lanka.
-              </p>
-            </div>
+                  : filters.category === 'ALL'
+                    ? 'ALL COLLECTIONS'
+                    : `${filters.category} COLLECTION`}
+              </Typography>
+            </Box>
+            <Box sx={{ textAlign: { md: 'right' } }}>
+              <Typography sx={{ fontSize: '1rem', fontWeight: 'bold', color: 'white', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                {totalProductsCount}
+              </Typography>
+              <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                Total Pieces
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
 
-            {/* Product Counter Badge */}
-            <div className="flex items-center gap-3">
-              <span className="px-3 py-1.5 bg-[#12141F] border border-white/10 rounded-[2px] text-xs font-mono font-bold text-slate-300">
-                <strong className="text-[#D4AF37]">{totalProductsCount}</strong> {totalProductsCount === 1 ? 'PRODUCT' : 'PRODUCTS'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* 2. Top Quick Category Bar */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none border-b border-white/5">
-          {(['ALL', 'MEN', 'WOMEN', 'ESSENTIALS'] as const).map((cat) => (
-            <button
-              key={cat}
-              onClick={() => {
-                handleFilterChange({ category: cat, subCategory: 'ALL' });
-              }}
-              className={`px-5 py-2.5 rounded-[2px] text-xs font-bold font-syne uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer flex-shrink-0 ${
-                filters.category === cat
-                  ? 'bg-[#D4AF37] text-black shadow-lg shadow-[#D4AF37]/20 font-black'
-                  : 'bg-[#12141F] text-slate-300 hover:text-white hover:bg-white/10 border border-white/10'
-              }`}
-            >
-              <span>{cat === 'ALL' ? 'SHOP ALL' : cat}</span>
-              <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-[2px] ${
-                filters.category === cat ? 'bg-black/20 text-black font-black' : 'bg-white/5 text-slate-400'
-              }`}>
-                {cat === 'ALL' ? initialFacets.categories.ALL : initialFacets.categories[cat] || 0}
-              </span>
-            </button>
-          ))}
-        </div>
+        {/* 2. Top-Level Category Sub-Navigation */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 4, pb: 1, overflowX: 'auto', '&::-webkit-scrollbar': { display: 'none' }, msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+          {(['ALL', 'MEN', 'WOMEN', 'ESSENTIALS'] as const).map((cat) => {
+            const isActive = filters.category === cat;
+            return (
+              <Button
+                key={cat}
+                onClick={() => handleFilterChange({ category: cat as CategoryType | 'ALL', subCategory: 'ALL' })}
+                sx={{
+                  px: 2.5, py: 1.25, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Syne", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.3s', flexShrink: 0,
+                  ...(isActive ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 4px 15px rgba(212,175,55,0.2)' } : { bgcolor: '#12141F', color: 'text.secondary', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' } })
+                }}
+              >
+                {cat === 'ALL' ? 'SHOP ALL' : cat}
+                <Box component="span" sx={{ ml: 1, px: 0.75, py: 0.25, borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', ...(isActive ? { bgcolor: 'rgba(0,0,0,0.2)', color: 'black' } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary' }) }}>
+                  {cat === 'ALL' ? initialFacets.categories.ALL : initialFacets.categories[cat] || 0}
+                </Box>
+              </Button>
+            );
+          })}
+        </Box>
 
         {/* 3. Controls & Action Bar */}
-        <div className="bg-[#0E1017] border border-white/10 rounded-md p-3.5 sm:p-4 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
-          
-          {/* Left: Mobile Drawer Trigger & Search Input */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-1">
-            {/* Mobile Filter Button */}
-            <button
+        <Box sx={{ bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 1.5, sm: 2 }, mb: 4, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'center' }, justifyContent: 'space-between', gap: 2, boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flex: 1 }}>
+            <Button
               onClick={() => setIsMobileFilterOpen(true)}
-              className="lg:hidden px-4 py-2.5 bg-[#D4AF37] hover:bg-[#E2B714] text-black text-xs font-extrabold tracking-wider uppercase rounded-[2px] flex items-center gap-2 shadow-md cursor-pointer flex-shrink-0"
+              sx={{ display: { lg: 'none' }, px: 2, py: 1.25, bgcolor: 'primary.main', color: 'black', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', borderRadius: 0.5, flexShrink: 0, boxShadow: '0 2px 10px rgba(212,175,55,0.2)', '&:hover': { bgcolor: 'primary.dark' } }}
             >
-              <Filter size={14} />
-              <span>Filters</span>
+              <Filter size={14} style={{ marginRight: 6 }} /> Filters
               {activeChips.length > 0 && (
-                <span className="w-5 h-5 rounded-full bg-black text-[#D4AF37] text-[10px] font-mono font-black flex items-center justify-center">
+                <Box component="span" sx={{ ml: 1, width: 20, height: 20, borderRadius: '50%', bgcolor: 'black', color: 'primary.main', fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {activeChips.length}
-                </span>
+                </Box>
               )}
-            </button>
-
-            {/* Search Box */}
-            <div className="relative flex-1 max-w-md">
-              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                value={filters.search}
-                onChange={(e) => handleFilterChange({ search: e.target.value })}
-                placeholder="Search name, SKU, tags..."
-                className="w-full bg-[#131520] border border-white/10 hover:border-white/20 focus:border-[#D4AF37] rounded-[2px] py-2 pl-10 pr-9 text-xs font-mono text-white placeholder-slate-500 focus:outline-none transition-colors"
-              />
-              {filters.search && (
-                <button
-                  onClick={() => handleFilterChange({ search: '' })}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
-                >
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Right: Sort & Grid Layout */}
-          <div className="flex items-center gap-3 sm:gap-4 justify-between md:justify-end">
-            
-            {/* Sort Dropdown */}
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-mono font-bold text-slate-400 uppercase hidden sm:inline flex items-center gap-1">
-                <ArrowUpDown size={13} className="text-[#D4AF37]" />
-                Sort:
-              </span>
-              <select
+            </Button>
+            <TextField
+              fullWidth
+              placeholder="Search name, SKU, tags..."
+              value={filters.search}
+              onChange={(e) => handleFilterChange({ search: e.target.value })}
+              variant="outlined"
+              size="small"
+              sx={{ maxWidth: 400, '& .MuiOutlinedInput-root': { bgcolor: '#131520', color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' }, '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.2)' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
+              slotProps={{
+                input: {
+                  startAdornment: <InputAdornment position="start"><Search size={16} color="#64748b" /></InputAdornment>,
+                  endAdornment: filters.search ? (
+                    <InputAdornment position="end">
+                      <IconButton size="small" onClick={() => handleFilterChange({ search: '' })} sx={{ color: 'text.secondary', '&:hover': { color: 'white' } }}><X size={14} /></IconButton>
+                    </InputAdornment>
+                  ) : null
+                }
+              }}
+            />
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'space-between', flexDirection: { xs: 'row', md: 'row' } }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 0.5, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'text.secondary', textTransform: 'uppercase' }}>
+                <ArrowUpDown size={13} color="#D4AF37" /> Sort:
+              </Typography>
+              <Select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-[#131520] border border-white/15 rounded-[2px] py-2 px-3 text-xs font-mono font-semibold text-white focus:outline-none focus:border-[#D4AF37] cursor-pointer"
+                onChange={(e) => setSortBy(e.target.value)}
+                size="small"
+                sx={{ bgcolor: '#131520', color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.15)' }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.3)' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' } }}
               >
-                <option value="latest">Latest Drop Arrivals</option>
-                <option value="popular">Best Sellers (Popularity)</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-              </select>
-            </div>
-
-            {/* Grid Density Switches (Desktop) */}
-            <div className="hidden lg:flex items-center gap-1 bg-[#131520] border border-white/10 p-1 rounded-[2px]">
-              <button
-                onClick={() => setGridColumns(3)}
-                className={`p-1.5 rounded-[2px] transition-colors ${
-                  gridColumns === 3 ? 'bg-[#D4AF37] text-black' : 'text-slate-400 hover:text-white'
-                }`}
-                title="3 Columns Grid"
-              >
+                <MenuItem value="latest" sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>Latest Drop Arrivals</MenuItem>
+                <MenuItem value="popular" sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>Best Sellers (Popularity)</MenuItem>
+                <MenuItem value="price-low" sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>Price: Low to High</MenuItem>
+                <MenuItem value="price-high" sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>Price: High to Low</MenuItem>
+              </Select>
+            </Box>
+            <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 0.5, bgcolor: '#131520', border: '1px solid rgba(255,255,255,0.1)', p: 0.5, borderRadius: 0.5 }}>
+              <IconButton onClick={() => setGridColumns(3)} size="small" sx={{ borderRadius: 0.5, p: 0.5, bgcolor: gridColumns === 3 ? 'primary.main' : 'transparent', color: gridColumns === 3 ? 'black' : 'text.secondary', '&:hover': { bgcolor: gridColumns === 3 ? 'primary.main' : 'rgba(255,255,255,0.1)', color: gridColumns === 3 ? 'black' : 'white' } }}>
                 <LayoutGrid size={15} />
-              </button>
-              <button
-                onClick={() => setGridColumns(4)}
-                className={`p-1.5 rounded-[2px] transition-colors ${
-                  gridColumns === 4 ? 'bg-[#D4AF37] text-black' : 'text-slate-400 hover:text-white'
-                }`}
-                title="4 Columns Grid"
-              >
+              </IconButton>
+              <IconButton onClick={() => setGridColumns(4)} size="small" sx={{ borderRadius: 0.5, p: 0.5, bgcolor: gridColumns === 4 ? 'primary.main' : 'transparent', color: gridColumns === 4 ? 'black' : 'text.secondary', '&:hover': { bgcolor: gridColumns === 4 ? 'primary.main' : 'rgba(255,255,255,0.1)', color: gridColumns === 4 ? 'black' : 'white' } }}>
                 <Grid3X3 size={15} />
-              </button>
-            </div>
-          </div>
-        </div>
+              </IconButton>
+            </Box>
+          </Box>
+        </Box>
 
         {/* 4. Removable Active Filter Chips */}
         {activeChips.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap mb-6 p-3 bg-[#0E1017]/60 border border-white/5 rounded-[2px]">
-            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mr-1">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mb: 4, p: 1.5, bgcolor: 'rgba(14,16,23,0.6)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 0.5 }}>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', mr: 1 }}>
               Active Filters:
-            </span>
+            </Typography>
             {activeChips.map((chip, idx) => (
-              <span
+              <Chip
                 key={idx}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#141724] border border-[#D4AF37]/30 text-white text-xs font-mono"
-              >
-                <span>{chip.label}</span>
-                <button
-                  onClick={chip.onRemove}
-                  className="text-slate-400 hover:text-[#D4AF37] ml-0.5 p-0.5"
-                  title="Remove filter"
-                >
-                  <X size={12} />
-                </button>
-              </span>
+                label={chip.label}
+                onDelete={chip.onRemove}
+                deleteIcon={<X size={12} />}
+                sx={{ bgcolor: '#141724', border: '1px solid rgba(212,175,55,0.3)', color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', borderRadius: 0.5, height: 24, '& .MuiChip-deleteIcon': { color: 'text.secondary', '&:hover': { color: 'primary.main' } } }}
+              />
             ))}
-            <button
-              onClick={handleResetFilters}
-              className="text-xs font-mono font-bold text-[#D4AF37] hover:underline ml-2 flex items-center gap-1 cursor-pointer"
-            >
-              <RotateCcw size={12} />
-              <span>Clear All</span>
-            </button>
-          </div>
+            <Button onClick={handleResetFilters} startIcon={<RotateCcw size={12} />} sx={{ minWidth: 'auto', p: 0, ml: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main', '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}>
+              Clear All
+            </Button>
+          </Box>
         )}
 
-        {/* 5. Main 2-Column Layout: Sidebar + Product Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-8 items-start">
-          
+        {/* 5. Main 2-Column Layout */}
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: { xs: 0, lg: 4 } }}>
+
           {/* Left Desktop Filter Sidebar */}
-          <div className="hidden lg:block lg:col-span-1 bg-[#0E1017] border border-white/10 rounded-md p-5 sticky top-28 max-h-[85vh] overflow-y-auto scrollbar-thin shadow-2xl">
-            <ShopSidebarFilters
-              filters={filters}
-              facets={currentFacets}
-              onChange={handleFilterChange}
-              onReset={handleResetFilters}
-            />
-          </div>
+          <Box sx={{ display: { xs: 'none', lg: 'block' }, width: 280, flexShrink: 0, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: 3, position: 'sticky', top: 112, maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 25px 50px rgba(0,0,0,0.5)', '&::-webkit-scrollbar': { width: 6 }, '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(255,255,255,0.2)', borderRadius: 3 } }}>
+            <ShopSidebarFilters filters={filters} facets={currentFacets} onChange={handleFilterChange} onReset={handleResetFilters} />
+          </Box>
 
           {/* Right Product Grid Column */}
-          <div className="lg:col-span-3 xl:col-span-4 space-y-8">
-            
-            {/* Loading Skeletons */}
+          <Box sx={{ flex: 1, minWidth: 0 }}>
             {isLoading ? (
-              <div className={`grid grid-cols-2 md:grid-cols-3 ${gridColumns === 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-3'} gap-4 sm:gap-6`}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)', xl: gridColumns === 4 ? 'repeat(4, 1fr)' : 'repeat(3, 1fr)' }, gap: { xs: 2, sm: 3 } }}>
                 <LoadingSkeleton variant="card" count={itemsPerPage} />
-              </div>
+              </Box>
             ) : displayProducts.length === 0 ? (
-              /* Empty Results State */
-              <div className="py-16 bg-[#0E1017] border border-white/10 rounded-md">
-                <EmptyState
-                  title="NO MATCHING VALKNUT PIECES"
-                  description="We couldn't find any products matching your current filters and keywords. Try adjusting your filters or search terms."
-                  actionText="RESET ALL FILTERS"
-                  onAction={handleResetFilters}
-                />
-              </div>
+              <Box sx={{ py: 8, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1 }}>
+                <EmptyState title="NO MATCHING VALKNUT PIECES" description="We couldn't find any products matching your current filters and keywords. Try adjusting your filters or search terms." actionText="RESET ALL FILTERS" onAction={handleResetFilters} />
+              </Box>
             ) : (
-              /* Product Grid */
-              <div className={`grid grid-cols-2 md:grid-cols-3 ${gridColumns === 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-3'} gap-4 sm:gap-6`}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)', xl: gridColumns === 4 ? 'repeat(4, 1fr)' : 'repeat(3, 1fr)' }, gap: { xs: 2, sm: 3 } }}>
                 {displayProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onQuickView={(p) => setSelectedProduct(p)}
-                    onAddToCart={handleQuickAddProduct}
-                    onToggleWishlist={toggleWishlist}
-                    isWishlisted={wishlist.includes(product.id)}
-                  />
+                  <ProductCard key={product.id} product={product} onQuickView={(p) => setSelectedProduct(p)} onAddToCart={handleQuickAddProduct} onToggleWishlist={toggleWishlist} isWishlisted={wishlist.includes(product.id)} />
                 ))}
-              </div>
+              </Box>
             )}
 
             {/* Pagination Controls */}
             {!isLoading && totalProductsCount > 0 && (
-              <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="text-xs font-mono text-slate-400">
-                  Showing <strong className="text-white">{(currentPage - 1) * itemsPerPage + 1}</strong> to{' '}
-                  <strong className="text-white">{Math.min(currentPage * itemsPerPage, totalProductsCount)}</strong> of{' '}
-                  <strong className="text-[#D4AF37]">{totalProductsCount}</strong> pieces
-                </div>
+              <Box sx={{ pt: 4, mt: 4, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+                <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                  Showing <Box component="strong" sx={{ color: 'white' }}>{(currentPage - 1) * itemsPerPage + 1}</Box> to <Box component="strong" sx={{ color: 'white' }}>{Math.min(currentPage * itemsPerPage, totalProductsCount)}</Box> of <Box component="strong" sx={{ color: 'primary.main' }}>{totalProductsCount}</Box> pieces
+                </Typography>
 
-                <div className="flex items-center gap-4">
-                  {/* Items per page selector */}
-                  <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
                     <span>Show:</span>
-                    <select
-                      value={itemsPerPage}
-                      onChange={(e) => {
-                        setItemsPerPage(Number(e.target.value));
-                        setCurrentPage(1);
-                      }}
-                      className="bg-[#131520] border border-white/10 rounded-[2px] py-1 px-2 text-xs font-mono text-white focus:outline-none focus:border-[#D4AF37] cursor-pointer"
-                    >
-                      <option value={8}>8 / page</option>
-                      <option value={12}>12 / page</option>
-                      <option value={24}>24 / page</option>
-                      <option value={36}>36 / page</option>
-                    </select>
-                  </div>
-
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={(page) => {
-                      setCurrentPage(page);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                  />
-                </div>
-              </div>
+                    <Select value={itemsPerPage} onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} size="small" sx={{ bgcolor: '#131520', color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.1)' } }}>
+                      <MenuItem value={8}>8 / page</MenuItem>
+                      <MenuItem value={12}>12 / page</MenuItem>
+                      <MenuItem value={24}>24 / page</MenuItem>
+                      <MenuItem value={36}>36 / page</MenuItem>
+                    </Select>
+                  </Box>
+                  <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(page) => { setCurrentPage(page); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+                </Box>
+              </Box>
             )}
-
-          </div>
-
-        </div>
-
-      </div>
+          </Box>
+        </Box>
+      </Container>
 
       {/* Mobile Filters Drawer */}
-      <ShopMobileFilterDrawer
-        isOpen={isMobileFilterOpen}
-        onClose={() => setIsMobileFilterOpen(false)}
-        filters={filters}
-        facets={currentFacets}
-        onChange={handleFilterChange}
-        onReset={handleResetFilters}
-        matchingCount={totalProductsCount}
-      />
+      <ShopMobileFilterDrawer isOpen={isMobileFilterOpen} onClose={() => setIsMobileFilterOpen(false)} filters={filters} facets={currentFacets} onChange={handleFilterChange} onReset={handleResetFilters} matchingCount={totalProductsCount} />
 
       {/* Search Overlay Modal */}
-      <SearchModal
-        isOpen={isSearchModalOpen}
-        onClose={() => setIsSearchModalOpen(false)}
-        onNavigateToShop={(term) => {
-          handleFilterChange({ search: term });
-        }}
-      />
-    </section>
+      <SearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)} onNavigateToShop={(term) => handleFilterChange({ search: term })} />
+    </Box>
   );
 };

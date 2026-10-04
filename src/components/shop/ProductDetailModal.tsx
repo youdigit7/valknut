@@ -12,6 +12,7 @@ import {
   Share2, 
   ShieldCheck 
 } from 'lucide-react';
+import { Box, Typography, Modal, Backdrop, Fade, IconButton, Button, Chip } from '@mui/material';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -19,27 +20,27 @@ interface ProductDetailModalProps {
 }
 
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product, onClose }) => {
-  if (!product) return null;
 
   const { addToCart, setIsCartOpen, setIsCheckoutOpen, setCustomStudioProduct, showToast } = useStore();
 
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | 'XL' | 'XXL'>('M');
-  const [selectedColor, setSelectedColor] = useState(product.variants[0]?.color || 'Onyx Black');
+  const [selectedColor, setSelectedColor] = useState(product?.variants[0]?.color || 'Onyx Black');
   const [quantity, setQuantity] = useState(1);
   const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
 
-  const selectedVariant = product.variants.find(
+  const selectedVariant = product?.variants.find(
     v => v.size === selectedSize && v.color === selectedColor
-  ) || product.variants[0];
+  ) || product?.variants[0];
 
   const selectedColorHex = selectedVariant?.colorHex || '#000000';
   const stockCount = selectedVariant?.stock ?? 10;
   const isOutOfStock = stockCount <= 0;
 
-  const availableColors = Array.from(new Set(product.variants.map(v => v.color)));
-  const availableSizes = Array.from(new Set(product.variants.map(v => v.size)));
+  const availableColors = Array.from(new Set(product?.variants.map(v => v.color) || []));
+  const availableSizes = Array.from(new Set(product?.variants.map(v => v.size) || []));
 
+  if (!product) return null;
   const handleAddToCart = () => {
     addToCart(
       product,
@@ -79,259 +80,256 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
 
   return (
     <>
-      <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-fade-in">
-        <div className="bg-[#0e1017] border border-white/10 w-full max-w-5xl rounded-lg overflow-hidden relative shadow-2xl my-auto max-h-[92vh] flex flex-col md:flex-row">
-          
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 z-20 p-2 text-slate-400 hover:text-white bg-black/60 rounded-full border border-white/10 backdrop-blur-md transition-colors"
-            aria-label="Close modal"
-          >
-            <X size={20} />
-          </button>
+      <Modal
+        open={!!product}
+        onClose={onClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+            sx: { bgcolor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)' }
+          },
+        }}
+      >
+        <Fade in={!!product}>
+          <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 1000, maxHeight: '92vh', bgcolor: '#0e1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: { xs: 'column', md: 'row' }, overflow: 'hidden', outline: 'none' }}>
+            
+            {/* Close Button */}
+            <IconButton
+              onClick={onClose}
+              sx={{ position: 'absolute', top: 16, right: 16, zIndex: 20, bgcolor: 'rgba(0,0,0,0.6)', color: 'text.secondary', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', '&:hover': { color: 'white', bgcolor: 'rgba(0,0,0,0.8)' } }}
+              aria-label="Close modal"
+            >
+              <X size={20} />
+            </IconButton>
 
-          {/* Left Column: Image Gallery */}
-          <div className="w-full md:w-1/2 bg-[#141620] p-4 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10">
-            {/* Main Featured Image */}
-            <div className="relative w-full aspect-[4/5] rounded overflow-hidden mb-3">
-              <img
-                src={product.images[activeImgIndex] || product.images[0]}
-                alt={product.name}
-                className="w-full h-full object-cover object-center"
-              />
-            </div>
+            {/* Left Column: Image Gallery */}
+            <Box sx={{ width: { xs: '100%', md: '50%' }, bgcolor: '#141620', p: { xs: 2, md: 4 }, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderBottom: { xs: '1px solid rgba(255,255,255,0.1)', md: 'none' }, borderRight: { md: '1px solid rgba(255,255,255,0.1)' } }}>
+              {/* Main Featured Image */}
+              <Box sx={{ position: 'relative', width: '100%', aspectRatio: '4/5', borderRadius: 1, overflow: 'hidden', mb: 2 }}>
+                <Box
+                  component="img"
+                  src={product.images[activeImgIndex] || product.images[0]}
+                  alt={product.name}
+                  sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </Box>
 
-            {/* Thumbnails row */}
-            {product.images.length > 1 && (
-              <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                {product.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImgIndex(idx)}
-                    className={`relative w-16 h-16 rounded overflow-hidden border-2 transition-all flex-shrink-0 ${
-                      activeImgIndex === idx ? 'border-[#d4af37]' : 'border-transparent opacity-60 hover:opacity-100'
-                    }`}
-                  >
-                    <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Right Column: Details & Actions */}
-          <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-between overflow-y-auto max-h-[85vh] space-y-6">
-            <div>
-              {/* Collection / Subcategory */}
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-extrabold tracking-[0.25em] text-[#d4af37] uppercase">
-                  {product.collection || product.category}
-                </span>
-
-                <button 
-                  onClick={handleShare} 
-                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-white"
-                >
-                  <Share2 size={14} />
-                  <span>Share</span>
-                </button>
-              </div>
-
-              {/* Title & Price */}
-              <h2 
-                onClick={() => {
-                  onClose();
-                  window.location.hash = `#/product/${product.slug}`;
-                }}
-                className="text-2xl font-extrabold text-white tracking-tight font-syne uppercase mb-3 hover:text-[#d4af37] transition-colors cursor-pointer"
-              >
-                {product.name}
-              </h2>
-
-              <div className="flex items-baseline gap-3 mb-4">
-                <span className="text-2xl font-black text-white">
-                  LKR {(product.salePrice ?? product.price).toLocaleString()}
-                </span>
-                {product.salePrice && (
-                  <span className="text-sm text-slate-500 line-through">
-                    LKR {product.price.toLocaleString()}
-                  </span>
-                )}
-                {product.salePrice && (
-                  <span className="badge-pill bg-red-950 text-red-400 border border-red-500/40">
-                    SAVE LKR {(product.price - product.salePrice).toLocaleString()}
-                  </span>
-                )}
-              </div>
-
-              {/* Stock Status Badge */}
-              <div className="flex items-center gap-2 mb-6">
-                <span className={`w-2.5 h-2.5 rounded-full ${
-                  isOutOfStock ? 'bg-red-500' : stockCount <= 5 ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'
-                }`} />
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                  {isOutOfStock 
-                    ? 'Out of Stock' 
-                    : stockCount <= 5 
-                    ? `Low Stock — Only ${stockCount} Left!` 
-                    : 'In Stock & Ready to Ship'}
-                </span>
-              </div>
-
-              {/* Description */}
-              <p className="text-xs text-slate-300 leading-relaxed mb-6 font-light">
-                {product.description}
-              </p>
-
-              {/* Color Selector */}
-              <div className="mb-5">
-                <label className="text-xs font-bold uppercase text-slate-300 tracking-wider block mb-2">
-                  Select Colour: <span className="text-[#d4af37]">{selectedColor}</span>
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {availableColors.map((colorName) => {
-                    const variantMatch = product.variants.find(v => v.color === colorName);
-                    const hex = variantMatch?.colorHex || '#000000';
-                    const isSelected = selectedColor === colorName;
-
-                    return (
-                      <button
-                        key={colorName}
-                        onClick={() => setSelectedColor(colorName)}
-                        className={`px-3 py-1.5 rounded border text-xs font-bold flex items-center gap-2 transition-all ${
-                          isSelected 
-                            ? 'border-[#d4af37] bg-[#d4af37]/10 text-white' 
-                            : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/30'
-                        }`}
-                      >
-                        <span className="w-3 h-3 rounded-full border border-white/40" style={{ backgroundColor: hex }} />
-                        <span>{colorName}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Size Selector + Size Chart Link */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-bold uppercase text-slate-300 tracking-wider">
-                    Select Size: <span className="text-[#d4af37]">{selectedSize}</span>
-                  </label>
-                  <button
-                    onClick={() => setIsSizeChartOpen(true)}
-                    className="flex items-center gap-1 text-xs text-[#d4af37] hover:underline font-bold uppercase"
-                  >
-                    <Ruler size={14} />
-                    <span>Size Guide</span>
-                  </button>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {availableSizes.map((sz) => {
-                    const isSelected = selectedSize === sz;
-                    return (
-                      <button
-                        key={sz}
-                        onClick={() => setSelectedSize(sz as any)}
-                        className={`w-12 h-12 rounded font-black text-xs uppercase flex items-center justify-center border transition-all ${
-                          isSelected
-                            ? 'border-[#d4af37] bg-[#d4af37] text-black shadow-lg scale-105'
-                            : 'border-white/10 bg-white/5 text-slate-200 hover:border-white/40'
-                        }`}
-                      >
-                        {sz}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Quantity Stepper */}
-              <div className="mb-6 flex items-center gap-4">
-                <label className="text-xs font-bold uppercase text-slate-300 tracking-wider">
-                  Quantity:
-                </label>
-                <div className="flex items-center border border-white/20 rounded bg-white/5">
-                  <button
-                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="w-9 h-9 flex items-center justify-center text-white hover:bg-white/10 font-bold"
-                  >
-                    -
-                  </button>
-                  <span className="w-10 text-center font-bold text-xs text-white">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity(q => q + 1)}
-                    className="w-9 h-9 flex items-center justify-center text-white hover:bg-white/10 font-bold"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* Custom Studio Promo if Product is Customizable */}
-              {product.isCustomizable && (
-                <div className="p-3 bg-gradient-to-r from-[#d4af37]/20 to-transparent border border-[#d4af37]/40 rounded mb-6 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#d4af37]">
-                    <Sparkles size={16} />
-                    <span>WANT TO ADD YOUR OWN LOGO OR TEXT?</span>
-                  </div>
-                  <button
-                    onClick={handleOpenStudio}
-                    className="px-3 py-1 bg-[#d4af37] text-black font-extrabold text-[10px] uppercase rounded hover:scale-105 transition-transform"
-                  >
-                    CUSTOM STUDIO
-                  </button>
-                </div>
+              {/* Thumbnails row */}
+              {product.images.length > 1 && (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, overflowX: 'auto', pb: 1, '&::-webkit-scrollbar': { display: 'none' }, msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+                  {product.images.map((img, idx) => (
+                    <Box
+                      component="button"
+                      key={idx}
+                      onClick={() => setActiveImgIndex(idx)}
+                      sx={{
+                        position: 'relative', width: 64, height: 64, borderRadius: 1, overflow: 'hidden', border: '2px solid', transition: 'all 0.3s ease', flexShrink: 0, cursor: 'pointer',
+                        ...(activeImgIndex === idx ? { borderColor: 'primary.main', opacity: 1 } : { borderColor: 'transparent', opacity: 0.6, '&:hover': { opacity: 1 } })
+                      }}
+                    >
+                      <Box component="img" src={img} alt={`Thumbnail ${idx}`} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </Box>
+                  ))}
+                </Box>
               )}
+            </Box>
 
-              {/* Primary Action Buttons */}
-              <div className="space-y-3">
-                <button
-                  onClick={handleAddToCart}
-                  disabled={isOutOfStock}
-                  className="w-full btn-gold py-4 text-xs font-extrabold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            {/* Right Column: Details & Actions */}
+            <Box sx={{ width: { xs: '100%', md: '50%' }, p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflowY: 'auto', maxHeight: { xs: '50vh', md: '92vh' }, gap: 3 }}>
+              <Box>
+                {/* Collection / Subcategory */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography sx={{ fontSize: '0.6875rem', fontWeight: 900, letterSpacing: '0.25em', color: 'primary.main', textTransform: 'uppercase', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                    {product.collection || product.category}
+                  </Typography>
+
+                  <Button 
+                    onClick={handleShare} 
+                    startIcon={<Share2 size={14} />}
+                    sx={{ color: 'text.secondary', fontSize: '0.75rem', p: 0, minWidth: 'auto', textTransform: 'none', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
+                  >
+                    Share
+                  </Button>
+                </Box>
+
+                {/* Title & Price */}
+                <Typography 
+                  variant="h2"
+                  onClick={() => {
+                    onClose();
+                    window.location.hash = `#/product/${product.slug}`;
+                  }}
+                  sx={{ fontSize: '1.5rem', fontWeight: 900, color: 'white', letterSpacing: '-0.02em', textTransform: 'uppercase', mb: 2, cursor: 'pointer', transition: 'color 0.3s ease', '&:hover': { color: 'primary.main' } }}
                 >
-                  <ShoppingBag size={18} />
-                  <span>{isOutOfStock ? 'OUT OF STOCK' : 'ADD TO BAG'}</span>
-                </button>
+                  {product.name}
+                </Typography>
 
-                <button
-                  onClick={handleBuyNow}
-                  disabled={isOutOfStock}
-                  className="w-full btn-primary py-3.5 text-xs font-extrabold flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  <span>BUY IT NOW</span>
-                </button>
-              </div>
+                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, mb: 2 }}>
+                  <Typography sx={{ fontSize: '1.5rem', fontWeight: 900, color: 'white' }}>
+                    LKR {(product.salePrice ?? product.price).toLocaleString()}
+                  </Typography>
+                  {product.salePrice && (
+                    <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary', textDecoration: 'line-through' }}>
+                      LKR {product.price.toLocaleString()}
+                    </Typography>
+                  )}
+                  {product.salePrice && (
+                    <Chip label={`SAVE LKR ${(product.price - product.salePrice).toLocaleString()}`} sx={{ bgcolor: 'rgba(220,38,38,0.2)', color: '#f87171', border: '1px solid rgba(220,38,38,0.4)', fontSize: '0.6875rem', fontWeight: 'bold', height: 24, ml: 1 }} />
+                  )}
+                </Box>
 
-            </div>
+                {/* Stock Status Badge */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+                  <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: isOutOfStock ? 'error.main' : stockCount <= 5 ? 'warning.main' : 'success.main', animation: stockCount <= 5 && !isOutOfStock ? 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' : 'none' }} />
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'text.secondary' }}>
+                    {isOutOfStock ? 'Out of Stock' : stockCount <= 5 ? `Low Stock — Only ${stockCount} Left!` : 'In Stock & Ready to Ship'}
+                  </Typography>
+                </Box>
 
-            {/* Specs & Shipping Accordions */}
-            <div className="border-t border-white/10 pt-4 space-y-3 text-xs text-slate-400">
-              <div className="flex items-center gap-2 text-slate-300">
-                <ShieldCheck size={16} className="text-[#d4af37]" />
-                <span><strong>Material:</strong> {product.material}</span>
-              </div>
+                {/* Description */}
+                <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', lineHeight: 1.6, mb: 3, fontWeight: 300 }}>
+                  {product.description}
+                </Typography>
 
-              <div className="flex items-center gap-2 text-slate-300">
-                <Truck size={16} className="text-[#d4af37]" />
-                <span><strong>Shipping:</strong> Islandwide Express Delivery (1-3 Days)</span>
-              </div>
+                {/* Color Selector */}
+                <Box sx={{ mb: 2.5 }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'text.secondary', letterSpacing: '0.05em', mb: 1 }}>
+                    Select Colour: <Box component="span" sx={{ color: 'primary.main' }}>{selectedColor}</Box>
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                    {availableColors.map((colorName) => {
+                      const variantMatch = product.variants.find(v => v.color === colorName);
+                      const hex = variantMatch?.colorHex || '#000000';
+                      const isSelected = selectedColor === colorName;
 
-              <div className="flex items-center gap-2 text-slate-300">
-                <RefreshCw size={16} className="text-[#d4af37]" />
-                <span><strong>Returns:</strong> 7-Day Hassle Free Exchanges Guaranteed</span>
-              </div>
-            </div>
+                      return (
+                        <Button
+                          key={colorName}
+                          onClick={() => setSelectedColor(colorName)}
+                          sx={{
+                            px: 1.5, py: 0.75, borderRadius: 1, border: '1px solid', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 1, transition: 'all 0.3s ease', textTransform: 'none',
+                            ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } })
+                          }}
+                        >
+                          <Box sx={{ width: 12, height: 12, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.4)', bgcolor: hex }} />
+                          <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: '"JetBrains Mono", sans-serif' }}>{colorName}</Typography>
+                        </Button>
+                      );
+                    })}
+                  </Box>
+                </Box>
 
-          </div>
+                {/* Size Selector + Size Chart Link */}
+                <Box sx={{ mb: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'text.secondary', letterSpacing: '0.05em' }}>
+                      Select Size: <Box component="span" sx={{ color: 'primary.main' }}>{selectedSize}</Box>
+                    </Typography>
+                    <Button
+                      onClick={() => setIsSizeChartOpen(true)}
+                      startIcon={<Ruler size={14} />}
+                      sx={{ color: 'primary.main', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', p: 0, minWidth: 'auto', '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' } }}
+                    >
+                      Size Guide
+                    </Button>
+                  </Box>
 
-        </div>
-      </div>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                    {availableSizes.map((sz) => {
+                      const isSelected = selectedSize === sz;
+                      return (
+                        <Button
+                          key={sz}
+                          onClick={() => setSelectedSize(sz as any)}
+                          sx={{
+                            width: 48, height: 48, borderRadius: 1, fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid', transition: 'all 0.3s ease', minWidth: 'auto', p: 0,
+                            ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'primary.main', color: 'black', boxShadow: '0 10px 15px rgba(212,175,55,0.3)', transform: 'scale(1.05)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.4)' } })
+                          }}
+                        >
+                          {sz}
+                        </Button>
+                      );
+                    })}
+                  </Box>
+                </Box>
+
+                {/* Quantity Stepper */}
+                <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'text.secondary', letterSpacing: '0.05em' }}>
+                    Quantity:
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 1, bgcolor: 'rgba(255,255,255,0.05)' }}>
+                    <IconButton onClick={() => setQuantity(q => Math.max(1, q - 1))} sx={{ width: 36, height: 36, color: 'white', borderRadius: 0, '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}>
+                      <Typography sx={{ fontSize: '1rem', fontWeight: 'bold' }}>-</Typography>
+                    </IconButton>
+                    <Typography sx={{ width: 40, textAlign: 'center', fontWeight: 'bold', fontSize: '0.75rem', color: 'white' }}>
+                      {quantity}
+                    </Typography>
+                    <IconButton onClick={() => setQuantity(q => q + 1)} sx={{ width: 36, height: 36, color: 'white', borderRadius: 0, '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}>
+                      <Typography sx={{ fontSize: '1rem', fontWeight: 'bold' }}>+</Typography>
+                    </IconButton>
+                  </Box>
+                </Box>
+
+                {/* Custom Studio Promo if Product is Customizable */}
+                {product.isCustomizable && (
+                  <Box sx={{ p: 1.5, background: 'linear-gradient(to right, rgba(212,175,55,0.2), transparent)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 1, mb: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'primary.main' }}>
+                      <Sparkles size={16} />
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif' }}>WANT TO ADD YOUR OWN LOGO OR TEXT?</Typography>
+                    </Box>
+                    <Button onClick={handleOpenStudio} sx={{ px: 1.5, py: 0.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.625rem', textTransform: 'uppercase', borderRadius: 1, transition: 'transform 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'scale(1.05)' } }}>
+                      CUSTOM STUDIO
+                    </Button>
+                  </Box>
+                )}
+
+                {/* Primary Action Buttons */}
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                  <Button
+                    onClick={handleAddToCart}
+                    disabled={isOutOfStock}
+                    startIcon={<ShoppingBag size={18} />}
+                    sx={{ width: '100%', py: 2, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 1, letterSpacing: '0.1em', transition: 'all 0.3s ease', boxShadow: '0 10px 25px rgba(212,175,55,0.3)', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' }, '&.Mui-disabled': { bgcolor: 'rgba(255,255,255,0.1)', color: 'text.disabled' } }}
+                  >
+                    {isOutOfStock ? 'OUT OF STOCK' : 'ADD TO BAG'}
+                  </Button>
+
+                  <Button
+                    onClick={handleBuyNow}
+                    disabled={isOutOfStock}
+                    sx={{ width: '100%', py: 1.5, bgcolor: 'white', color: 'black', fontWeight: 900, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 1, letterSpacing: '0.1em', transition: 'all 0.3s ease', '&:hover': { bgcolor: '#e2e8f0' }, '&.Mui-disabled': { opacity: 0.5 } }}
+                  >
+                    BUY IT NOW
+                  </Button>
+                </Box>
+              </Box>
+
+              {/* Specs & Shipping Accordions */}
+              <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary' }}>
+                  <ShieldCheck size={16} color="#d4af37" />
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}><Box component="strong" sx={{ color: 'white' }}>Material:</Box> {product.material}</Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary' }}>
+                  <Truck size={16} color="#d4af37" />
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}><Box component="strong" sx={{ color: 'white' }}>Shipping:</Box> Islandwide Express Delivery (1-3 Days)</Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary' }}>
+                  <RefreshCw size={16} color="#d4af37" />
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}><Box component="strong" sx={{ color: 'white' }}>Returns:</Box> 7-Day Hassle Free Exchanges Guaranteed</Typography>
+                </Box>
+              </Box>
+
+            </Box>
+
+          </Box>
+        </Fade>
+      </Modal>
 
       {/* Size Chart Modal Component */}
       <SizeChartModal isOpen={isSizeChartOpen} onClose={() => setIsSizeChartOpen(false)} />

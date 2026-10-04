@@ -22,6 +22,54 @@ import {
   STUDIO_TEXT_COLORS
 } from './studioAssets';
 import type { SigilPreset } from './studioAssets';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, Grid, Button, Slider, Select, MenuItem
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#08090D', paper: '#0E1017' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
+  },
+  components: {
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#141620',
+          fontFamily: '"JetBrains Mono", sans-serif',
+          fontSize: '0.75rem',
+          color: 'white',
+          borderRadius: 4,
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'rgba(255,255,255,0.15)',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#D4AF37',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#D4AF37',
+          }
+        }
+      }
+    },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          color: '#D4AF37',
+        }
+      }
+    }
+  }
+});
 
 type StudioControlTab = 'ARTWORK' | 'TYPOGRAPHY' | 'TECHNIQUE';
 
@@ -31,16 +79,13 @@ export const CustomStudio: React.FC = () => {
   const customizableProducts = products.filter(p => p.isCustomizable);
   const activeProduct = customStudioProduct || customizableProducts[0] || products[0];
 
-  // Active UI Control Sub-tab
   const [activeControlTab, setActiveControlTab] = useState<StudioControlTab>('ARTWORK');
 
-  // Garment Attributes
   const [selectedColor, setSelectedColor] = useState(activeProduct.variants[0]?.color || 'Onyx Black');
   const [selectedColorHex, setSelectedColorHex] = useState(activeProduct.variants[0]?.colorHex || '#0A0B0E');
   const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | 'XL' | 'XXL'>('M');
   const [placement, setPlacement] = useState<'FRONT' | 'BACK' | 'LEFT_SLEEVE' | 'RIGHT_SLEEVE'>('FRONT');
 
-  // Custom Typography
   const [customText, setCustomText] = useState('VALKNUT SQUAD');
   const [textColor, setTextColor] = useState('#D4AF37');
   const [textFont, setTextFont] = useState('Syne');
@@ -48,7 +93,6 @@ export const CustomStudio: React.FC = () => {
   const [textUppercase, setTextUppercase] = useState(true);
   const [textPos, setTextPos] = useState({ x: 50, y: 38 });
 
-  // Artwork & Sigil
   const [uploadedArtworkUrl, setUploadedArtworkUrl] = useState<string | undefined>(undefined);
   const [artworkName, setArtworkName] = useState<string | undefined>(undefined);
   const [selectedSigil, setSelectedSigil] = useState<SigilPreset | null>(VALKNUT_SIGIL_PRESETS[0]);
@@ -57,23 +101,19 @@ export const CustomStudio: React.FC = () => {
   const [artworkPos, setArtworkPos] = useState({ x: 50, y: 56 });
   const [artworkEffect, setArtworkEffect] = useState<'original' | 'monochrome' | 'gold_foil' | 'invert'>('gold_foil');
 
-  // Print Technique
   const [printTechnique, setPrintTechnique] = useState<PrintTechniqueType>('High-Density 3D Puff Rubber');
 
-  // Uploading state
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState('');
 
-  // Placement Fee Calculation (e.g. Sleeves have a small precision placement fee)
   const placementFee = placement === 'LEFT_SLEEVE' || placement === 'RIGHT_SLEEVE' ? 450 : 0;
   const selectedTechniqueObj = PRINT_TECHNIQUES.find(t => t.id === printTechnique) || PRINT_TECHNIQUES[0];
   const techniqueFee = selectedTechniqueObj.fee;
   const basePrice = activeProduct.salePrice ?? activeProduct.price;
   const totalCustomPrice = basePrice + techniqueFee + placementFee;
 
-  // File Upload Handler (Firebase Storage with Client Validation)
   const handleArtworkUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -100,7 +140,7 @@ export const CustomStudio: React.FC = () => {
 
       setUploadedArtworkUrl(result.url);
       setArtworkName(file.name);
-      setSelectedSigil(null); // Clear preset if user uploaded their own
+      setSelectedSigil(null);
       setArtworkEffect('original');
       setUploadProgress(100);
       showToast(`Artwork "${file.name}" uploaded to studio canvas.`, 'success');
@@ -190,621 +230,695 @@ export const CustomStudio: React.FC = () => {
   };
 
   return (
-    <div className="w-full py-10 bg-[#08090D] text-white antialiased">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        
-        {/* Studio Title & Badge */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-2">
-              <Sparkles size={13} />
-              <span>VALKNUT BESPOKE APPAREL STUDIO</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-black uppercase text-white font-syne tracking-tight">
-              INTERACTIVE <span className="text-[#D4AF37]">CUSTOM STUDIO</span>
-            </h1>
-            <p className="text-slate-400 text-xs font-mono mt-1">
-              Select luxury garment silhouette, upload high-res graphics, configure typography, and inspect live 2D CAD layer preview.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleResetCustomization}
-              className="px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white rounded text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <RotateCcw size={13} />
-              <span>Reset Studio</span>
-            </button>
-
-            <a
-              href="#/shop"
-              className="px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white rounded text-xs font-mono transition-colors"
-            >
-              Back to Catalog
-            </a>
-          </div>
-        </div>
-
-        {/* Main 3-Column Studio Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <ThemeProvider theme={theme}>
+      <Box sx={{ width: '100%', py: { xs: 5, sm: 8, lg: 10 }, bgcolor: 'background.default', color: 'white', WebkitFontSmoothing: 'antialiased' }}>
+        <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 4, md: 6 } }}>
           
-          {/* COL 1: BASE PRODUCT & GARMENT SELECTION (3 cols) */}
-          <div className="lg:col-span-3 bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-6 shadow-xl font-mono text-xs">
-            
-            {/* 1. Base Product Selector */}
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider block">
-                1. BASE GARMENT SILHOUETTE
-              </span>
-              <select
-                value={activeProduct.id}
-                onChange={(e) => {
-                  const found = products.find(p => p.id === e.target.value);
-                  if (found) {
-                    setCustomStudioProduct(found);
-                    setSelectedColor(found.variants[0]?.color || 'Onyx Black');
-                    setSelectedColorHex(found.variants[0]?.colorHex || '#0A0B0E');
-                  }
+          {/* Studio Title & Badge */}
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'flex-end' }, justifyContent: 'space-between', gap: 3, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 4 }}>
+            <Box>
+              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: 5, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: 'primary.main', fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase', mb: 2 }}>
+                <Sparkles size={13} />
+                <span>VALKNUT BESPOKE APPAREL STUDIO</span>
+              </Box>
+              <Typography variant="h3" sx={{ fontSize: { xs: '1.875rem', sm: '2.5rem' }, letterSpacing: '-0.02em', mb: 1, textShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>
+                INTERACTIVE <Box component="span" sx={{ color: 'primary.main' }}>CUSTOM STUDIO</Box>
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem', display: 'block', maxWidth: '600px' }}>
+                Select luxury garment silhouette, upload high-res graphics, configure typography, and inspect live 2D CAD layer preview.
+              </Typography>
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Button
+                onClick={handleResetCustomization}
+                startIcon={<RotateCcw size={13} />}
+                sx={{
+                  bgcolor: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'text.secondary',
+                  fontSize: '0.75rem',
+                  fontFamily: '"JetBrains Mono", sans-serif',
+                  px: 2,
+                  py: 1,
+                  textTransform: 'none',
+                  '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' }
                 }}
-                className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-xs text-white focus:outline-none"
               >
-                {customizableProducts.map(p => (
-                  <option key={p.id} value={p.id}>
-                    {p.name} — LKR {(p.salePrice ?? p.price).toLocaleString()}
-                  </option>
-                ))}
-              </select>
-            </div>
+                Reset Studio
+              </Button>
 
-            {/* 2. Color Palette */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider">
-                  2. GARMENT FABRIC SHADE
-                </span>
-                <span className="text-white font-bold text-[11px]">{selectedColor}</span>
-              </div>
+              <Button
+                href="#/shop"
+                sx={{
+                  bgcolor: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'text.secondary',
+                  fontSize: '0.75rem',
+                  fontFamily: '"JetBrains Mono", sans-serif',
+                  px: 2,
+                  py: 1,
+                  textTransform: 'none',
+                  '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' }
+                }}
+              >
+                Back to Catalog
+              </Button>
+            </Box>
+          </Box>
 
-              <div className="grid grid-cols-3 gap-2">
-                {STUDIO_COLORS.map(c => {
-                  const isSelected = selectedColor === c.name;
-                  return (
-                    <button
-                      key={c.name}
-                      onClick={() => {
-                        setSelectedColor(c.name);
-                        setSelectedColorHex(c.hex);
-                      }}
-                      className={`p-2 rounded border flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
-                        isSelected 
-                          ? 'border-[#D4AF37] bg-[#D4AF37]/15 text-white' 
-                          : 'border-white/10 bg-[#141620] text-slate-400 hover:border-white/30'
-                      }`}
-                    >
-                      <span 
-                        className="w-5 h-5 rounded-full border border-white/30 shadow-inner" 
-                        style={{ backgroundColor: c.hex }} 
-                      />
-                      <span className="text-[9px] truncate w-full text-center">{c.name.split(' ')[0]}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* 3. Size Selector */}
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider block">
-                3. SELECT SIZE
-              </span>
-              <div className="grid grid-cols-5 gap-1.5">
-                {(['S', 'M', 'L', 'XL', 'XXL'] as const).map(sz => {
-                  const isSelected = selectedSize === sz;
-                  return (
-                    <button
-                      key={sz}
-                      onClick={() => setSelectedSize(sz)}
-                      className={`py-2 rounded text-xs font-bold border transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-[#D4AF37] text-black border-[#D4AF37]'
-                          : 'bg-[#141620] text-slate-300 border-white/10 hover:border-white/30'
-                      }`}
-                    >
-                      {sz}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* 4. Placement Selector */}
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider block">
-                4. PRINT PLACEMENT ZONE
-              </span>
-              <div className="grid grid-cols-2 gap-2">
-                {(
-                  [
-                    { id: 'FRONT', label: 'Front Chest' },
-                    { id: 'BACK', label: 'Back Full' },
-                    { id: 'LEFT_SLEEVE', label: 'Left Sleeve (+450)' },
-                    { id: 'RIGHT_SLEEVE', label: 'Right Sleeve (+450)' }
-                  ] as const
-                ).map(loc => {
-                  const isSelected = placement === loc.id;
-                  return (
-                    <button
-                      key={loc.id}
-                      onClick={() => setPlacement(loc.id)}
-                      className={`p-2 rounded text-[10px] font-bold border text-center transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-[#D4AF37]/20 border-[#D4AF37] text-[#D4AF37]'
-                          : 'bg-[#141620] border-white/10 text-slate-400 hover:border-white/30'
-                      }`}
-                    >
-                      {loc.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Fabric Specs Badge */}
-            <div className="p-3 bg-[#141620] rounded border border-white/5 space-y-1 text-[11px] text-slate-400">
-              <span className="text-[9px] text-[#D4AF37] font-bold uppercase block">GARMENT SPECIFICATION</span>
-              <p className="text-white font-bold">{activeProduct.material}</p>
-              <p>Heavyweight dropped-shoulder boxy fit with pre-shrunk anti-pilling wash.</p>
-            </div>
-
-          </div>
-
-          {/* COL 2: LIVE 2D LAYERED CAD PREVIEW (5 cols) */}
-          <div className="lg:col-span-5 bg-[#0E1017] border border-white/10 rounded-md p-6 flex flex-col items-center justify-between shadow-2xl min-h-[580px]">
+          {/* Main 3-Column Studio Layout */}
+          <Grid container spacing={{ xs: 4, lg: 4 }} sx={{ alignItems: 'flex-start' }}>
             
-            {/* Component Preview */}
-            <StudioCanvasPreview
-              garmentColorHex={selectedColorHex}
-              placement={placement}
-              onPlacementChange={setPlacement}
-              customText={customText}
-              textColor={textColor}
-              textFont={textFont}
-              textSize={textSize}
-              textPos={textPos}
-              textUppercase={textUppercase}
-              uploadedArtworkUrl={uploadedArtworkUrl}
-              sigilSvgPath={selectedSigil?.svgPath}
-              artworkScale={artworkScale}
-              artworkRotation={artworkRotation}
-              artworkPos={artworkPos}
-              artworkEffect={artworkEffect}
-              printTechnique={printTechnique}
-            />
+            {/* COL 1: BASE PRODUCT & GARMENT SELECTION (3 cols) */}
+            <Grid size={{ xs: 12, lg: 3 }}>
+              <Box sx={{ bgcolor: 'background.paper', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 4, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                
+                {/* 1. Base Product Selector */}
+                <Box>
+                  <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>
+                    1. BASE GARMENT SILHOUETTE
+                  </Typography>
+                  <Select
+                    fullWidth
+                    value={activeProduct.id}
+                    onChange={(e) => {
+                      const found = products.find(p => p.id === e.target.value);
+                      if (found) {
+                        setCustomStudioProduct(found);
+                        setSelectedColor(found.variants[0]?.color || 'Onyx Black');
+                        setSelectedColorHex(found.variants[0]?.colorHex || '#0A0B0E');
+                      }
+                    }}
+                  >
+                    {customizableProducts.map(p => (
+                      <MenuItem key={p.id} value={p.id} sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                        {p.name} — LKR {(p.salePrice ?? p.price).toLocaleString()}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
 
-            {/* Quick Summary Strip */}
-            <div className="w-full mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>View: <strong className="text-white">{placement.replace('_', ' ')}</strong></span>
-              <span>Technique: <strong className="text-[#D4AF37]">{printTechnique}</strong></span>
-            </div>
-          </div>
+                {/* 2. Color Palette */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      2. GARMENT FABRIC SHADE
+                    </Typography>
+                    <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '0.6875rem' }}>{selectedColor}</Typography>
+                  </Box>
 
-          {/* COL 3: CUSTOMIZATION CONTROLS & PRICING (4 cols) */}
-          <div className="lg:col-span-4 space-y-6">
-            
-            {/* Sub-Tabs: Artwork / Typography / Technique */}
-            <div className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-5 shadow-xl font-mono text-xs">
-              
-              <div className="flex items-center gap-1 border-b border-white/10 pb-3">
-                {(
-                  [
-                    { id: 'ARTWORK', label: '1. ARTWORK', icon: Upload },
-                    { id: 'TYPOGRAPHY', label: '2. TEXT', icon: Type },
-                    { id: 'TECHNIQUE', label: '3. CRAFT', icon: Layers }
-                  ] as const
-                ).map(tab => {
-                  const Icon = tab.icon;
-                  const isActive = activeControlTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveControlTab(tab.id)}
-                      className={`flex-1 py-2 px-2 rounded text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                        isActive
-                          ? 'bg-[#D4AF37] text-black shadow-md'
-                          : 'bg-[#141620] text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      <Icon size={13} />
-                      <span>{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* TAB 1: ARTWORK & NORSE SIGILS */}
-              {activeControlTab === 'ARTWORK' && (
-                <div className="space-y-4 animate-fade-in">
-                  
-                  {/* File Upload Zone */}
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider block">
-                      UPLOAD CUSTOM GRAPHIC / LOGO
-                    </span>
-
-                    {uploadError && (
-                      <div className="p-2 bg-red-950/60 border border-red-500/40 rounded text-red-300 text-[10px]">
-                        {uploadError}
-                      </div>
-                    )}
-
-                    {isUploading ? (
-                      <div className="p-4 bg-[#141620] border border-[#D4AF37]/30 rounded text-center space-y-2">
-                        <div className="flex items-center justify-between text-[11px]">
-                          <span className="flex items-center gap-2 text-white font-bold">
-                            <RefreshCw size={12} className="animate-spin text-[#D4AF37]" />
-                            <span>Uploading to Firebase Cloud...</span>
-                          </span>
-                          <span className="text-[#D4AF37] font-bold">{uploadProgress}%</span>
-                        </div>
-                        <div className="w-full bg-[#0E1017] rounded-full h-1.5 overflow-hidden">
-                          <div className="bg-[#D4AF37] h-full transition-all" style={{ width: `${uploadProgress}%` }} />
-                        </div>
-                      </div>
-                    ) : (
-                      <div
-                        onClick={() => fileInputRef.current?.click()}
-                        className="border border-dashed border-white/20 hover:border-[#D4AF37] bg-[#141620] p-4 rounded text-center cursor-pointer transition-all"
-                      >
-                        <Upload size={18} className="mx-auto text-[#D4AF37] mb-1.5" />
-                        <p className="text-white font-bold text-xs">
-                          {uploadedArtworkUrl ? 'Replace Custom Artwork' : 'Upload Vector / PNG / JPG'}
-                        </p>
-                        <p className="text-slate-400 text-[10px]">Max 10MB • Auto-centered on {placement}</p>
-                      </div>
-                    )}
-
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp,image/svg+xml"
-                      onChange={handleArtworkUpload}
-                      className="hidden"
-                    />
-                  </div>
-
-                  {/* Norse Sigils Preset Library */}
-                  <div className="space-y-2 pt-2 border-t border-white/10">
-                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider block">
-                      OR SELECT NORSE HERALDRY PRESET
-                    </span>
-
-                    <div className="grid grid-cols-5 gap-2">
-                      {VALKNUT_SIGIL_PRESETS.map(s => {
-                        const isSelected = selectedSigil?.id === s.id;
-                        return (
-                          <button
-                            key={s.id}
-                            onClick={() => handleSelectPresetSigil(s)}
-                            className={`p-2 rounded border flex flex-col items-center justify-center transition-all cursor-pointer ${
-                              isSelected
-                                ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-[#D4AF37]'
-                                : 'border-white/10 bg-[#141620] text-slate-400 hover:border-white/30'
-                            }`}
-                            title={s.description}
-                          >
-                            <svg viewBox="0 0 100 100" className="w-6 h-6">
-                              <path d={s.svgPath} fill="currentColor" />
-                            </svg>
-                            <span className="text-[8px] truncate w-full text-center mt-1">{s.name.split(' ')[0]}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Artwork Transformation Sliders */}
-                  {(uploadedArtworkUrl || selectedSigil) && (
-                    <div className="p-3 bg-[#141620] rounded border border-white/10 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] text-[#D4AF37] font-bold uppercase">ARTWORK ADJUSTMENTS</span>
-                        <button
-                          onClick={handleRemoveArtwork}
-                          className="text-[10px] text-red-400 hover:text-red-300 flex items-center gap-1"
-                        >
-                          <Trash2 size={11} />
-                          <span>Remove</span>
-                        </button>
-                      </div>
-
-                      {/* Scale */}
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-[10px]">
-                          <span className="text-slate-400">Scale:</span>
-                          <span className="text-white">{artworkScale}%</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="20"
-                          max="90"
-                          value={artworkScale}
-                          onChange={(e) => setArtworkScale(Number(e.target.value))}
-                          className="w-full accent-[#D4AF37]"
-                        />
-                      </div>
-
-                      {/* Rotation */}
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-[10px]">
-                          <span className="text-slate-400">Rotation:</span>
-                          <span className="text-white">{artworkRotation}°</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="0"
-                          max="360"
-                          value={artworkRotation}
-                          onChange={(e) => setArtworkRotation(Number(e.target.value))}
-                          className="w-full accent-[#D4AF37]"
-                        />
-                      </div>
-
-                      {/* Position Y */}
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-[10px]">
-                          <span className="text-slate-400">Vertical Position (Y):</span>
-                          <span className="text-white">{artworkPos.y}%</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="20"
-                          max="80"
-                          value={artworkPos.y}
-                          onChange={(e) => setArtworkPos({ ...artworkPos, y: Number(e.target.value) })}
-                          className="w-full accent-[#D4AF37]"
-                        />
-                      </div>
-
-                      {/* Effect Filter */}
-                      <div className="space-y-1 pt-1">
-                        <span className="text-slate-400 text-[10px] block">Visual Shader Effect:</span>
-                        <div className="grid grid-cols-4 gap-1 text-[9px]">
-                          {(
-                            [
-                              { id: 'original', label: 'Original' },
-                              { id: 'gold_foil', label: 'Gold Foil' },
-                              { id: 'monochrome', label: 'Mono B/W' },
-                              { id: 'invert', label: 'Invert' }
-                            ] as const
-                          ).map(eff => (
-                            <button
-                              key={eff.id}
-                              onClick={() => setArtworkEffect(eff.id)}
-                              className={`py-1 rounded border transition-all ${
-                                artworkEffect === eff.id
-                                  ? 'bg-[#D4AF37] text-black font-bold border-[#D4AF37]'
-                                  : 'bg-[#0E1017] text-slate-400 border-white/10'
-                              }`}
-                            >
-                              {eff.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                </div>
-              )}
-
-              {/* TAB 2: CUSTOM TYPOGRAPHY */}
-              {activeControlTab === 'TYPOGRAPHY' && (
-                <div className="space-y-4 animate-fade-in">
-                  
-                  {/* Text Input */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <label className="text-[10px] font-bold text-[#D4AF37] uppercase">Custom Typography Text</label>
-                      <button
-                        onClick={() => setTextUppercase(!textUppercase)}
-                        className={`text-[9px] px-1.5 py-0.5 rounded border ${
-                          textUppercase ? 'bg-[#D4AF37]/20 border-[#D4AF37] text-[#D4AF37]' : 'bg-white/5 border-white/10 text-slate-400'
-                        }`}
-                      >
-                        ALL CAPS
-                      </button>
-                    </div>
-
-                    <input
-                      type="text"
-                      value={customText}
-                      onChange={(e) => setCustomText(e.target.value)}
-                      placeholder="ENTER MOTTO OR SQUAD NAME"
-                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white font-bold text-xs"
-                    />
-                  </div>
-
-                  {/* Font Choice */}
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase block">Select Typeface</span>
-                    <div className="space-y-1.5">
-                      {STUDIO_FONTS.map(f => {
-                        const isSelected = textFont === f.id || textFont === f.fontFamily;
-                        return (
-                          <button
-                            key={f.id}
-                            onClick={() => setTextFont(f.fontFamily)}
-                            className={`w-full p-2.5 rounded border text-left flex items-center justify-between transition-all cursor-pointer ${
-                              isSelected
-                                ? 'border-[#D4AF37] bg-[#D4AF37]/15 text-white'
-                                : 'border-white/10 bg-[#141620] text-slate-400 hover:border-white/30'
-                            }`}
-                          >
-                            <span style={{ fontFamily: f.fontFamily }} className="text-sm font-bold text-white">
-                              {f.sample}
-                            </span>
-                            <span className="text-[9px] text-slate-500">{f.name}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Text Color Swatches */}
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase block">Ink / Thread Color</span>
-                    <div className="flex flex-wrap gap-2">
-                      {STUDIO_TEXT_COLORS.map(tc => {
-                        const isSelected = textColor === tc.hex;
-                        return (
-                          <button
-                            key={tc.name}
-                            onClick={() => setTextColor(tc.hex)}
-                            className={`p-1.5 rounded-full border transition-all ${
-                              isSelected ? 'border-[#D4AF37] ring-2 ring-[#D4AF37]/40' : 'border-white/20'
-                            }`}
-                            title={tc.name}
-                          >
-                            <span className="w-5 h-5 rounded-full block" style={{ backgroundColor: tc.hex }} />
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Font Size & Position Sliders */}
-                  <div className="p-3 bg-[#141620] rounded border border-white/10 space-y-3">
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-[10px]">
-                        <span className="text-slate-400">Font Size:</span>
-                        <span className="text-white">{textSize}px</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="14"
-                        max="44"
-                        value={textSize}
-                        onChange={(e) => setTextSize(Number(e.target.value))}
-                        className="w-full accent-[#D4AF37]"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-[10px]">
-                        <span className="text-slate-400">Vertical Position (Y):</span>
-                        <span className="text-white">{textPos.y}%</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="15"
-                        max="85"
-                        value={textPos.y}
-                        onChange={(e) => setTextPos({ ...textPos, y: Number(e.target.value) })}
-                        className="w-full accent-[#D4AF37]"
-                      />
-                    </div>
-                  </div>
-
-                </div>
-              )}
-
-              {/* TAB 3: CRAFT & TECHNIQUE */}
-              {activeControlTab === 'TECHNIQUE' && (
-                <div className="space-y-3 animate-fade-in">
-                  <span className="text-[10px] font-bold text-[#D4AF37] uppercase block">
-                    CHOOSE MANUFACTURING TECHNIQUE
-                  </span>
-
-                  <div className="space-y-2">
-                    {PRINT_TECHNIQUES.map(tech => {
-                      const isSelected = printTechnique === tech.id;
+                  <Grid container spacing={1}>
+                    {STUDIO_COLORS.map(c => {
+                      const isSelected = selectedColor === c.name;
                       return (
-                        <div
-                          key={tech.id}
-                          onClick={() => setPrintTechnique(tech.id)}
-                          className={`p-3 rounded border cursor-pointer transition-all space-y-1 ${
-                            isSelected
-                              ? 'border-[#D4AF37] bg-[#D4AF37]/15'
-                              : 'border-white/10 bg-[#141620] hover:border-white/30'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <strong className="text-white text-xs">{tech.name}</strong>
-                            <span className="px-2 py-0.5 rounded bg-black/60 text-[#D4AF37] text-[9px] font-bold">
-                              {tech.fee === 0 ? 'Included' : `+ LKR ${tech.fee.toLocaleString()}`}
-                            </span>
-                          </div>
-                          <p className="text-slate-400 text-[10px] leading-relaxed">{tech.description}</p>
-                        </div>
+                        <Grid size={{ xs: 4 }} key={c.name}>
+                          <Box
+                            component="button"
+                            onClick={() => {
+                              setSelectedColor(c.name);
+                              setSelectedColorHex(c.hex);
+                            }}
+                            sx={{
+                              width: '100%',
+                              p: 1.5,
+                              borderRadius: 1,
+                              border: '1px solid',
+                              borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)',
+                              bgcolor: isSelected ? 'rgba(212,175,55,0.15)' : '#141620',
+                              color: isSelected ? 'white' : 'text.secondary',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              gap: 1,
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease',
+                              '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                            }}
+                          >
+                            <Box sx={{ width: 20, height: 20, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.3)', bgcolor: c.hex, boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)' }} />
+                            <Typography sx={{ fontSize: '0.5625rem', textAlign: 'center', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {c.name.split(' ')[0]}
+                            </Typography>
+                          </Box>
+                        </Grid>
                       );
                     })}
-                  </div>
-                </div>
-              )}
+                  </Grid>
+                </Box>
 
-            </div>
+                {/* 3. Size Selector */}
+                <Box>
+                  <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>
+                    3. SELECT SIZE
+                  </Typography>
+                  <Grid container spacing={1}>
+                    {(['S', 'M', 'L', 'XL', 'XXL'] as const).map(sz => {
+                      const isSelected = selectedSize === sz;
+                      return (
+                        <Grid size={{ xs: 2.4 }} key={sz}>
+                          <Box
+                            component="button"
+                            onClick={() => setSelectedSize(sz)}
+                            sx={{
+                              width: '100%',
+                              py: 1,
+                              borderRadius: 1,
+                              border: '1px solid',
+                              borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)',
+                              bgcolor: isSelected ? 'primary.main' : '#141620',
+                              color: isSelected ? 'black' : 'text.secondary',
+                              fontWeight: 'bold',
+                              fontSize: '0.75rem',
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease',
+                              '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                            }}
+                          >
+                            {sz}
+                          </Box>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </Box>
 
-            {/* Price Breakdown Matrix & Add To Cart CTA */}
-            <div className="bg-[#0E1017] border border-[#D4AF37]/40 rounded-md p-5 space-y-4 shadow-2xl font-mono text-xs">
-              
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider">
-                  BESPOKE ORDER VALUATION
-                </span>
-                <span className="text-emerald-400 text-[10px] font-bold flex items-center gap-1">
-                  <ShieldCheck size={12} />
-                  <span>CRAFT VERIFIED</span>
-                </span>
-              </div>
+                {/* 4. Placement Selector */}
+                <Box>
+                  <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>
+                    4. PRINT PLACEMENT ZONE
+                  </Typography>
+                  <Grid container spacing={1}>
+                    {(
+                      [
+                        { id: 'FRONT', label: 'Front Chest' },
+                        { id: 'BACK', label: 'Back Full' },
+                        { id: 'LEFT_SLEEVE', label: 'Left Sleeve (+450)' },
+                        { id: 'RIGHT_SLEEVE', label: 'Right Sleeve (+450)' }
+                      ] as const
+                    ).map(loc => {
+                      const isSelected = placement === loc.id;
+                      return (
+                        <Grid size={{ xs: 6 }} key={loc.id}>
+                          <Box
+                            component="button"
+                            onClick={() => setPlacement(loc.id)}
+                            sx={{
+                              width: '100%',
+                              p: 1.5,
+                              borderRadius: 1,
+                              border: '1px solid',
+                              borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)',
+                              bgcolor: isSelected ? 'rgba(212,175,55,0.2)' : '#141620',
+                              color: isSelected ? 'primary.main' : 'text.secondary',
+                              fontWeight: 'bold',
+                              fontSize: '0.625rem',
+                              textAlign: 'center',
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease',
+                              '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                            }}
+                          >
+                            {loc.label}
+                          </Box>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </Box>
 
-              {/* Line Items Formula */}
-              <div className="space-y-2 text-[11px]">
-                <div className="flex justify-between text-slate-400">
-                  <span>Base Heavyweight Garment:</span>
-                  <span className="text-white">LKR {basePrice.toLocaleString()}</span>
-                </div>
+                {/* Fabric Specs Badge */}
+                <Box sx={{ p: 2, bgcolor: '#141620', borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  <Typography sx={{ fontSize: '0.5625rem', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase' }}>GARMENT SPECIFICATION</Typography>
+                  <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '0.6875rem' }}>{activeProduct.material}</Typography>
+                  <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>Heavyweight dropped-shoulder boxy fit with pre-shrunk anti-pilling wash.</Typography>
+                </Box>
 
-                <div className="flex justify-between text-slate-400">
-                  <span>{printTechnique}:</span>
-                  <span className="text-[#D4AF37]">
-                    {techniqueFee === 0 ? 'Free' : `+ LKR ${techniqueFee.toLocaleString()}`}
-                  </span>
-                </div>
+              </Box>
+            </Grid>
 
-                {placementFee > 0 && (
-                  <div className="flex justify-between text-slate-400">
-                    <span>Precision Sleeve Setup:</span>
-                    <span className="text-[#D4AF37]">+ LKR {placementFee.toLocaleString()}</span>
-                  </div>
-                )}
+            {/* COL 2: LIVE 2D LAYERED CAD PREVIEW (5 cols) */}
+            <Grid size={{ xs: 12, lg: 5 }}>
+              <Box sx={{ bgcolor: 'background.paper', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 25px 50px rgba(0,0,0,0.6)', minHeight: '580px' }}>
+                
+                {/* Component Preview */}
+                <StudioCanvasPreview
+                  garmentColorHex={selectedColorHex}
+                  placement={placement}
+                  onPlacementChange={setPlacement}
+                  customText={customText}
+                  textColor={textColor}
+                  textFont={textFont}
+                  textSize={textSize}
+                  textPos={textPos}
+                  textUppercase={textUppercase}
+                  uploadedArtworkUrl={uploadedArtworkUrl}
+                  sigilSvgPath={selectedSigil?.svgPath}
+                  artworkScale={artworkScale}
+                  artworkRotation={artworkRotation}
+                  artworkPos={artworkPos}
+                  artworkEffect={artworkEffect}
+                  printTechnique={printTechnique}
+                />
 
-                <div className="pt-2 border-t border-white/10 flex justify-between items-baseline">
-                  <span className="text-xs font-bold text-white uppercase font-syne">TOTAL BESPOKE PIECE:</span>
-                  <span className="text-xl font-black text-[#D4AF37]">
-                    LKR {totalCustomPrice.toLocaleString()}
-                  </span>
-                </div>
-              </div>
+                {/* Quick Summary Strip */}
+                <Box sx={{ w: '100%', width: '100%', mt: 3, pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                  <Typography sx={{ fontSize: 'inherit' }}>View: <Box component="strong" sx={{ color: 'white' }}>{placement.replace('_', ' ')}</Box></Typography>
+                  <Typography sx={{ fontSize: 'inherit' }}>Technique: <Box component="strong" sx={{ color: 'primary.main' }}>{printTechnique}</Box></Typography>
+                </Box>
+              </Box>
+            </Grid>
 
-              {/* Add to Cart Button */}
-              <button
-                onClick={handleAddToCart}
-                className="w-full py-4 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold text-xs uppercase tracking-[0.2em] rounded-[2px] transition-all flex items-center justify-center gap-2 shadow-xl shadow-[#D4AF37]/20 cursor-pointer"
-              >
-                <ShoppingBag size={16} />
-                <span>ADD BESPOKE ITEM TO BAG</span>
-              </button>
+            {/* COL 3: CUSTOMIZATION CONTROLS & PRICING (4 cols) */}
+            <Grid size={{ xs: 12, lg: 4 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                
+                {/* Sub-Tabs */}
+                <Box sx={{ bgcolor: 'background.paper', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                    {(
+                      [
+                        { id: 'ARTWORK', label: '1. ARTWORK', icon: Upload },
+                        { id: 'TYPOGRAPHY', label: '2. TEXT', icon: Type },
+                        { id: 'TECHNIQUE', label: '3. CRAFT', icon: Layers }
+                      ] as const
+                    ).map(tab => {
+                      const Icon = tab.icon;
+                      const isActive = activeControlTab === tab.id;
+                      return (
+                        <Box
+                          component="button"
+                          key={tab.id}
+                          onClick={() => setActiveControlTab(tab.id)}
+                          sx={{
+                            flex: 1,
+                            py: 1,
+                            px: 1,
+                            borderRadius: 1,
+                            fontSize: '0.6875rem',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 1,
+                            border: 'none',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            ...(isActive ? {
+                              bgcolor: 'primary.main',
+                              color: 'black',
+                              boxShadow: '0 4px 10px rgba(212,175,55,0.3)'
+                            } : {
+                              bgcolor: '#141620',
+                              color: 'text.secondary',
+                              '&:hover': { color: 'white' }
+                            })
+                          }}
+                        >
+                          <Icon size={13} />
+                          <span>{tab.label}</span>
+                        </Box>
+                      );
+                    })}
+                  </Box>
 
-              <p className="text-[10px] text-slate-500 text-center">
-                Custom garments are precision manufactured & dispatched in 3–5 working days islandwide.
-              </p>
-            </div>
+                  {/* TAB 1: ARTWORK */}
+                  {activeControlTab === 'ARTWORK' && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                      
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                        <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                          UPLOAD CUSTOM GRAPHIC / LOGO
+                        </Typography>
 
-          </div>
+                        {uploadError && (
+                          <Box sx={{ p: 1.5, bgcolor: 'rgba(220,38,38,0.2)', border: '1px solid rgba(220,38,38,0.4)', borderRadius: 1, color: 'error.main', fontSize: '0.625rem' }}>
+                            {uploadError}
+                          </Box>
+                        )}
 
-        </div>
+                        {isUploading ? (
+                          <Box sx={{ p: 2, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.6875rem' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'white', fontWeight: 'bold' }}>
+                                <Box sx={{ animation: 'spin 2s linear infinite', display: 'flex' }}><RefreshCw size={12} color="#D4AF37" /></Box>
+                                <span>Uploading to Cloud...</span>
+                              </Box>
+                              <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>{uploadProgress}%</Typography>
+                            </Box>
+                            <Box sx={{ width: '100%', bgcolor: '#0E1017', borderRadius: 4, height: 6, overflow: 'hidden' }}>
+                              <Box sx={{ bgcolor: 'primary.main', height: '100%', transition: 'width 0.3s', width: `${uploadProgress}%` }} />
+                            </Box>
+                          </Box>
+                        ) : (
+                          <Box
+                            onClick={() => fileInputRef.current?.click()}
+                            sx={{
+                              border: '1px dashed rgba(255,255,255,0.2)',
+                              bgcolor: '#141620',
+                              p: 2,
+                              borderRadius: 1,
+                              textAlign: 'center',
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease',
+                              '&:hover': { borderColor: 'primary.main' }
+                            }}
+                          >
+                            <Upload size={18} color="#D4AF37" style={{ margin: '0 auto 6px' }} />
+                            <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '0.75rem' }}>
+                              {uploadedArtworkUrl ? 'Replace Custom Artwork' : 'Upload Vector / PNG / JPG'}
+                            </Typography>
+                            <Typography sx={{ color: 'text.secondary', fontSize: '0.625rem', mt: 0.5 }}>Max 10MB • Auto-centered on {placement}</Typography>
+                          </Box>
+                        )}
 
-      </div>
-    </div>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                          onChange={handleArtworkUpload}
+                          style={{ display: 'none' }}
+                        />
+                      </Box>
+
+                      <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                        <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                          OR SELECT NORSE HERALDRY PRESET
+                        </Typography>
+
+                        <Grid container spacing={1}>
+                          {VALKNUT_SIGIL_PRESETS.map(s => {
+                            const isSelected = selectedSigil?.id === s.id;
+                            return (
+                              <Grid size={{ xs: 2.4 }} key={s.id}>
+                                <Box
+                                  component="button"
+                                  onClick={() => handleSelectPresetSigil(s)}
+                                  title={s.description}
+                                  sx={{
+                                    width: '100%',
+                                    p: 1,
+                                    borderRadius: 1,
+                                    border: '1px solid',
+                                    borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)',
+                                    bgcolor: isSelected ? 'rgba(212,175,55,0.2)' : '#141620',
+                                    color: isSelected ? 'primary.main' : 'text.secondary',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                                  }}
+                                >
+                                  <svg viewBox="0 0 100 100" style={{ width: 24, height: 24, fill: 'currentColor' }}>
+                                    <path d={s.svgPath} />
+                                  </svg>
+                                  <Typography sx={{ fontSize: '0.5rem', textAlign: 'center', width: '100%', mt: 0.5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {s.name.split(' ')[0]}
+                                  </Typography>
+                                </Box>
+                              </Grid>
+                            );
+                          })}
+                        </Grid>
+                      </Box>
+
+                      {(uploadedArtworkUrl || selectedSigil) && (
+                        <Box sx={{ p: 2, bgcolor: '#141620', borderRadius: 1, border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                          <Box sx={{ display: 'flex', itemsCenter: 'center', justifyContent: 'space-between' }}>
+                            <Typography sx={{ fontSize: '0.625rem', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase' }}>ARTWORK ADJUSTMENTS</Typography>
+                            <Box component="button" onClick={handleRemoveArtwork} sx={{ fontSize: '0.625rem', color: '#f87171', display: 'flex', alignItems: 'center', gap: 0.5, border: 'none', bgcolor: 'transparent', cursor: 'pointer', '&:hover': { color: '#fca5a5' } }}>
+                              <Trash2 size={11} /> <span>Remove</span>
+                            </Box>
+                          </Box>
+
+                          <Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
+                              <Typography sx={{ color: 'text.secondary', fontSize: 'inherit' }}>Scale:</Typography>
+                              <Typography sx={{ color: 'white', fontSize: 'inherit' }}>{artworkScale}%</Typography>
+                            </Box>
+                            <Slider value={artworkScale} min={20} max={90} onChange={(_, v) => setArtworkScale(v as number)} size="small" />
+                          </Box>
+                          
+                          <Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
+                              <Typography sx={{ color: 'text.secondary', fontSize: 'inherit' }}>Rotation:</Typography>
+                              <Typography sx={{ color: 'white', fontSize: 'inherit' }}>{artworkRotation}°</Typography>
+                            </Box>
+                            <Slider value={artworkRotation} min={0} max={360} onChange={(_, v) => setArtworkRotation(v as number)} size="small" />
+                          </Box>
+                          
+                          <Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
+                              <Typography sx={{ color: 'text.secondary', fontSize: 'inherit' }}>Vertical Position (Y):</Typography>
+                              <Typography sx={{ color: 'white', fontSize: 'inherit' }}>{artworkPos.y}%</Typography>
+                            </Box>
+                            <Slider value={artworkPos.y} min={20} max={80} onChange={(_, v) => setArtworkPos({ ...artworkPos, y: v as number })} size="small" />
+                          </Box>
+
+                          <Box sx={{ pt: 1 }}>
+                            <Typography sx={{ color: 'text.secondary', fontSize: '0.625rem', display: 'block', mb: 1 }}>Visual Shader Effect:</Typography>
+                            <Grid container spacing={1}>
+                              {(
+                                [
+                                  { id: 'original', label: 'Original' },
+                                  { id: 'gold_foil', label: 'Gold Foil' },
+                                  { id: 'monochrome', label: 'Mono B/W' },
+                                  { id: 'invert', label: 'Invert' }
+                                ] as const
+                              ).map(eff => (
+                                <Grid size={{ xs: 3 }} key={eff.id}>
+                                  <Box
+                                    component="button"
+                                    onClick={() => setArtworkEffect(eff.id)}
+                                    sx={{
+                                      width: '100%',
+                                      py: 0.5,
+                                      borderRadius: 1,
+                                      border: '1px solid',
+                                      borderColor: artworkEffect === eff.id ? 'primary.main' : 'rgba(255,255,255,0.1)',
+                                      bgcolor: artworkEffect === eff.id ? 'primary.main' : '#0E1017',
+                                      color: artworkEffect === eff.id ? 'black' : 'text.secondary',
+                                      fontWeight: artworkEffect === eff.id ? 'bold' : 'normal',
+                                      fontSize: '0.5625rem',
+                                      cursor: 'pointer',
+                                      transition: 'all 0.3s ease'
+                                    }}
+                                  >
+                                    {eff.label}
+                                  </Box>
+                                </Grid>
+                              ))}
+                            </Grid>
+                          </Box>
+                        </Box>
+                      )}
+
+                    </Box>
+                  )}
+
+                  {/* TAB 2: TYPOGRAPHY */}
+                  {activeControlTab === 'TYPOGRAPHY' && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                      
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase' }}>Custom Typography Text</Typography>
+                          <Box 
+                            component="button" 
+                            onClick={() => setTextUppercase(!textUppercase)} 
+                            sx={{ fontSize: '0.5625rem', px: 1, py: 0.5, borderRadius: 1, border: '1px solid', borderColor: textUppercase ? 'primary.main' : 'rgba(255,255,255,0.1)', bgcolor: textUppercase ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)', color: textUppercase ? 'primary.main' : 'text.secondary', cursor: 'pointer' }}
+                          >
+                            ALL CAPS
+                          </Box>
+                        </Box>
+                        <Box
+                          component="input"
+                          type="text"
+                          value={customText}
+                          onChange={(e: any) => setCustomText(e.target.value)}
+                          placeholder="ENTER MOTTO OR SQUAD NAME"
+                          sx={{
+                            width: '100%', bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 1.5, color: 'white', fontWeight: 'bold', fontSize: '0.75rem', outline: 'none', fontFamily: '"JetBrains Mono", sans-serif',
+                            '&:focus': { borderColor: 'primary.main' }
+                          }}
+                        />
+                      </Box>
+
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase' }}>Select Typeface</Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          {STUDIO_FONTS.map(f => {
+                            const isSelected = textFont === f.id || textFont === f.fontFamily;
+                            return (
+                              <Box
+                                component="button"
+                                key={f.id}
+                                onClick={() => setTextFont(f.fontFamily)}
+                                sx={{
+                                  width: '100%', p: 1.5, borderRadius: 1, border: '1px solid', borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)', bgcolor: isSelected ? 'rgba(212,175,55,0.15)' : '#141620', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', transition: 'all 0.3s ease',
+                                  '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                                }}
+                              >
+                                <Typography sx={{ fontFamily: f.fontFamily, fontSize: '0.875rem', fontWeight: 'bold', color: 'white' }}>{f.sample}</Typography>
+                                <Typography sx={{ fontSize: '0.5625rem', color: 'text.secondary' }}>{f.name}</Typography>
+                              </Box>
+                            );
+                          })}
+                        </Box>
+                      </Box>
+
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase' }}>Ink / Thread Color</Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                          {STUDIO_TEXT_COLORS.map(tc => {
+                            const isSelected = textColor === tc.hex;
+                            return (
+                              <Box
+                                component="button"
+                                key={tc.name}
+                                onClick={() => setTextColor(tc.hex)}
+                                title={tc.name}
+                                sx={{
+                                  p: 0.5, borderRadius: '50%', border: '1px solid', borderColor: 'rgba(255,255,255,0.2)', cursor: 'pointer', transition: 'all 0.3s ease', bgcolor: 'transparent',
+                                  ...(isSelected ? { borderColor: 'primary.main', boxShadow: '0 0 0 2px rgba(212,175,55,0.4)' } : {})
+                                }}
+                              >
+                                <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: tc.hex }} />
+                              </Box>
+                            );
+                          })}
+                        </Box>
+                      </Box>
+
+                      <Box sx={{ p: 2, bgcolor: '#141620', borderRadius: 1, border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
+                            <Typography sx={{ color: 'text.secondary', fontSize: 'inherit' }}>Font Size:</Typography>
+                            <Typography sx={{ color: 'white', fontSize: 'inherit' }}>{textSize}px</Typography>
+                          </Box>
+                          <Slider value={textSize} min={14} max={44} onChange={(_, v) => setTextSize(v as number)} size="small" />
+                        </Box>
+                        
+                        <Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
+                            <Typography sx={{ color: 'text.secondary', fontSize: 'inherit' }}>Vertical Position (Y):</Typography>
+                            <Typography sx={{ color: 'white', fontSize: 'inherit' }}>{textPos.y}%</Typography>
+                          </Box>
+                          <Slider value={textPos.y} min={15} max={85} onChange={(_, v) => setTextPos({ ...textPos, y: v as number })} size="small" />
+                        </Box>
+                      </Box>
+
+                    </Box>
+                  )}
+
+                  {/* TAB 3: TECHNIQUE */}
+                  {activeControlTab === 'TECHNIQUE' && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase' }}>CHOOSE MANUFACTURING TECHNIQUE</Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                        {PRINT_TECHNIQUES.map(tech => {
+                          const isSelected = printTechnique === tech.id;
+                          return (
+                            <Box
+                              component="div"
+                              key={tech.id}
+                              onClick={() => setPrintTechnique(tech.id)}
+                              sx={{
+                                p: 2, borderRadius: 1, border: '1px solid', borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)', bgcolor: isSelected ? 'rgba(212,175,55,0.15)' : '#141620', cursor: 'pointer', transition: 'all 0.3s ease', display: 'flex', flexDirection: 'column', gap: 1,
+                                '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                              }}
+                            >
+                              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <Typography sx={{ color: 'white', fontSize: '0.75rem', fontWeight: 'bold' }}>{tech.name}</Typography>
+                                <Box sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: 'rgba(0,0,0,0.6)', color: 'primary.main', fontSize: '0.5625rem', fontWeight: 'bold' }}>
+                                  {tech.fee === 0 ? 'Included' : `+ LKR ${tech.fee.toLocaleString()}`}
+                                </Box>
+                              </Box>
+                              <Typography sx={{ color: 'text.secondary', fontSize: '0.625rem', lineHeight: 1.6 }}>{tech.description}</Typography>
+                            </Box>
+                          );
+                        })}
+                      </Box>
+                    </Box>
+                  )}
+
+                </Box>
+
+                {/* Price Breakdown Matrix & Add To Cart CTA */}
+                <Box sx={{ bgcolor: 'background.paper', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 25px 50px rgba(0,0,0,0.8)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                    <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em' }}>BESPOKE ORDER VALUATION</Typography>
+                    <Box sx={{ color: '#34d399', fontSize: '0.625rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <ShieldCheck size={12} /> <span>CRAFT VERIFIED</span>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.6875rem' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'text.secondary' }}>
+                      <span>Base Heavyweight Garment:</span>
+                      <Typography sx={{ color: 'white', fontSize: 'inherit' }}>LKR {basePrice.toLocaleString()}</Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'text.secondary' }}>
+                      <span>{printTechnique}:</span>
+                      <Typography sx={{ color: 'primary.main', fontSize: 'inherit' }}>{techniqueFee === 0 ? 'Free' : `+ LKR ${techniqueFee.toLocaleString()}`}</Typography>
+                    </Box>
+
+                    {placementFee > 0 && (
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'text.secondary' }}>
+                        <span>Precision Sleeve Setup:</span>
+                        <Typography sx={{ color: 'primary.main', fontSize: 'inherit' }}>+ LKR {placementFee.toLocaleString()}</Typography>
+                      </Box>
+                    )}
+
+                    <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'white', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>TOTAL BESPOKE PIECE:</Typography>
+                      <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, color: 'primary.main' }}>LKR {totalCustomPrice.toLocaleString()}</Typography>
+                    </Box>
+                  </Box>
+
+                  <Button
+                    onClick={handleAddToCart}
+                    sx={{
+                      w: '100%',
+                      py: 2,
+                      background: 'linear-gradient(90deg, #e6c042, #D4AF37, #aa8010)',
+                      color: 'black',
+                      fontWeight: 900,
+                      fontSize: '0.75rem',
+                      letterSpacing: '0.2em',
+                      borderRadius: 1,
+                      boxShadow: '0 10px 25px rgba(212,175,55,0.3), inset 0 1px 1px rgba(255,255,255,0.7)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 1,
+                      transition: 'all 0.3s',
+                      '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 15px 35px rgba(212,175,55,0.5), inset 0 1px 1px rgba(255,255,255,0.7)'
+                      }
+                    }}
+                  >
+                    <ShoppingBag size={16} /> ADD BESPOKE ITEM TO BAG
+                  </Button>
+
+                  <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', textAlign: 'center' }}>
+                    Custom garments are precision manufactured & dispatched in 3–5 working days islandwide.
+                  </Typography>
+                </Box>
+
+              </Box>
+            </Grid>
+
+          </Grid>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

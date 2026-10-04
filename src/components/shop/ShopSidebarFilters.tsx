@@ -12,6 +12,9 @@ import {
   Palette,
   Maximize2
 } from 'lucide-react';
+import {
+  Box, Typography, Button, Checkbox, Slider, Collapse
+} from '@mui/material';
 
 export interface FilterState {
   category: CategoryType | 'ALL';
@@ -54,7 +57,8 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
   facets,
   onChange,
   onReset,
-  className = ''
+  className = '',
+  isMobileDrawer = false,
 }) => {
   // Accordion open/collapse states
   const [openSections, setOpenSections] = useState({
@@ -116,377 +120,368 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
   ].filter(Boolean).length;
 
   return (
-    <aside className={`space-y-6 ${className}`}>
+    <Box component="aside" className={className} sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: isMobileDrawer ? 2 : 0 }}>
       {/* Filters Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-white/10">
-        <div className="flex items-center gap-2">
-          <SlidersHorizontal size={16} className="text-[#D4AF37]" />
-          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white font-syne">
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pb: 2, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <SlidersHorizontal size={16} color="#D4AF37" />
+          <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', fontFamily: '"Syne", sans-serif', color: 'white' }}>
             FILTERS
-          </h3>
+          </Typography>
           {activeFilterCount > 0 && (
-            <span className="w-5 h-5 rounded-full bg-[#D4AF37] text-black text-[10px] font-mono font-black flex items-center justify-center">
+            <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: 'primary.main', color: 'black', fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {activeFilterCount}
-            </span>
+            </Box>
           )}
-        </div>
+        </Box>
 
         {hasActiveFilters && (
-          <button
+          <Button
             onClick={onReset}
-            className="text-[11px] font-mono font-bold text-[#D4AF37] hover:underline flex items-center gap-1 cursor-pointer transition-colors"
+            variant="text"
+            startIcon={<RotateCcw size={12} />}
+            sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main', p: 0, minWidth: 'auto', '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' } }}
           >
-            <RotateCcw size={12} />
-            <span>Reset All</span>
-          </button>
+            Reset All
+          </Button>
         )}
-      </div>
+      </Box>
 
       {/* 1. Category & Subcategory Filter */}
-      <div className="border-b border-white/10 pb-5">
-        <button
+      <Box sx={{ borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+        <Button
+          fullWidth
           onClick={() => toggleSection('categories')}
-          className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-200 hover:text-white mb-3"
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
         >
-          <span className="flex items-center gap-1.5 font-heading">
-            <Tag size={13} className="text-[#D4AF37]" />
-            <span>Category & Department</span>
-          </span>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Tag size={13} color="#D4AF37" />
+            <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Category & Department</Typography>
+          </Box>
           {openSections.categories ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-        </button>
+        </Button>
 
-        {openSections.categories && (
-          <div className="space-y-3 pt-1">
+        <Collapse in={openSections.categories}>
+          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* Top Categories */}
-            <div className="grid grid-cols-2 gap-1.5">
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
               {(['ALL', 'MEN', 'WOMEN', 'ESSENTIALS'] as const).map((cat) => {
                 const isSelected = filters.category === cat;
                 const count = cat === 'ALL' ? facets.categories.ALL : facets.categories[cat] || 0;
                 return (
-                  <button
+                  <Button
                     key={cat}
-                    onClick={() => {
-                      onChange({
-                        category: cat,
-                        subCategory: 'ALL'
-                      });
+                    onClick={() => onChange({ category: cat, subCategory: 'ALL' })}
+                    sx={{
+                      justifyContent: 'space-between', py: 1, px: 1.5, borderRadius: 1, textTransform: 'none', border: '1px solid',
+                      ...(isSelected ? {
+                        bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main', boxShadow: '0 2px 5px rgba(212,175,55,0.3)'
+                      } : {
+                        bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', borderColor: 'rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' }
+                      })
                     }}
-                    className={`px-3 py-2 text-left rounded-[2px] text-xs font-mono font-bold transition-all flex items-center justify-between cursor-pointer border ${
-                      isSelected
-                        ? 'bg-[#D4AF37] text-black border-[#D4AF37] shadow-sm'
-                        : 'bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 border-white/5'
-                    }`}
                   >
-                    <span>{cat}</span>
-                    <span className={`text-[10px] ${isSelected ? 'text-black/80 font-black' : 'text-slate-500'}`}>
-                      {count}
-                    </span>
-                  </button>
+                    <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold' }}>{cat}</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', color: isSelected ? 'rgba(0,0,0,0.8)' : 'text.disabled', fontWeight: isSelected ? 'bold' : 'normal' }}>{count}</Typography>
+                  </Button>
                 );
               })}
-            </div>
+            </Box>
 
             {/* Subcategories */}
             {Object.keys(facets.subCategories).length > 0 && (
-              <div className="pt-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 block mb-2">
-                  SUBCATEGORY
-                </span>
-                <div className="space-y-1 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
-                  <button
+              <Box>
+                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'text.disabled', mb: 1 }}>SUBCATEGORY</Typography>
+                <Box sx={{ maxHeight: 200, overflowY: 'auto', pr: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  <Button
                     onClick={() => onChange({ subCategory: 'ALL' })}
-                    className={`w-full text-left px-2.5 py-1.5 rounded-[2px] text-xs font-sans transition-colors flex items-center justify-between ${
-                      filters.subCategory === 'ALL'
-                        ? 'text-[#D4AF37] font-bold bg-[#D4AF37]/10'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5'
-                    }`}
+                    sx={{
+                      justifyContent: 'space-between', py: 0.5, px: 1, borderRadius: 1, textTransform: 'none',
+                      ...(filters.subCategory === 'ALL' ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } })
+                    }}
                   >
-                    <span>All Subcategories</span>
-                  </button>
+                    <Typography sx={{ fontSize: '0.75rem' }}>All Subcategories</Typography>
+                  </Button>
                   {Object.entries(facets.subCategories).map(([subCat, count]) => {
                     const isSelected = filters.subCategory.toLowerCase() === subCat.toLowerCase();
                     return (
-                      <button
+                      <Button
                         key={subCat}
                         onClick={() => onChange({ subCategory: isSelected ? 'ALL' : subCat })}
-                        className={`w-full text-left px-2.5 py-1.5 rounded-[2px] text-xs font-sans transition-colors flex items-center justify-between ${
-                          isSelected
-                            ? 'text-[#D4AF37] font-bold bg-[#D4AF37]/10'
-                            : 'text-slate-400 hover:text-white hover:bg-white/5'
-                        }`}
+                        sx={{
+                          justifyContent: 'space-between', py: 0.5, px: 1, borderRadius: 1, textTransform: 'none',
+                          ...(isSelected ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } })
+                        }}
                       >
-                        <span className="truncate">{subCat}</span>
-                        <span className="text-[10px] font-mono text-slate-600">({count})</span>
-                      </button>
+                        <Typography sx={{ fontSize: '0.75rem', }}>{subCat}</Typography>
+                        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.disabled' }}>({count})</Typography>
+                      </Button>
                     );
                   })}
-                </div>
-              </div>
+                </Box>
+              </Box>
             )}
-          </div>
-        )}
-      </div>
+          </Box>
+        </Collapse>
+      </Box>
 
       {/* 2. Collection Filters */}
       {Object.keys(facets.collections).length > 0 && (
-        <div className="border-b border-white/10 pb-5">
-          <button
+        <Box sx={{ borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+          <Button
+            fullWidth
             onClick={() => toggleSection('collections')}
-            className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-200 hover:text-white mb-3"
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
           >
-            <span className="flex items-center gap-1.5 font-heading">
-              <Sparkles size={13} className="text-[#D4AF37]" />
-              <span>Capsule Collections</span>
-            </span>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Sparkles size={13} color="#D4AF37" />
+              <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Capsule Collections</Typography>
+            </Box>
             {openSections.collections ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-          </button>
+          </Button>
 
-          {openSections.collections && (
-            <div className="space-y-1.5 pt-1">
-              <button
+          <Collapse in={openSections.collections}>
+            <Box sx={{ pt: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+              <Button
                 onClick={() => onChange({ collection: 'ALL' })}
-                className={`w-full text-left px-2.5 py-1.5 rounded-[2px] text-xs font-sans transition-colors flex items-center justify-between ${
-                  filters.collection === 'ALL'
-                    ? 'text-[#D4AF37] font-bold bg-[#D4AF37]/10'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
+                sx={{
+                  justifyContent: 'space-between', py: 0.5, px: 1, borderRadius: 1, textTransform: 'none',
+                  ...(filters.collection === 'ALL' ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } })
+                }}
               >
-                <span>All Collections</span>
-              </button>
+                <Typography sx={{ fontSize: '0.75rem' }}>All Collections</Typography>
+              </Button>
               {Object.entries(facets.collections).map(([col, count]) => {
                 const isSelected = filters.collection.toLowerCase() === col.toLowerCase();
                 return (
-                  <button
+                  <Button
                     key={col}
                     onClick={() => onChange({ collection: isSelected ? 'ALL' : col })}
-                    className={`w-full text-left px-2.5 py-1.5 rounded-[2px] text-xs font-mono font-medium transition-colors flex items-center justify-between ${
-                      isSelected
-                        ? 'text-[#D4AF37] font-bold bg-[#D4AF37]/10'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5'
-                    }`}
+                    sx={{
+                      justifyContent: 'space-between', py: 0.5, px: 1, borderRadius: 1, textTransform: 'uppercase',
+                      ...(isSelected ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } })
+                    }}
                   >
-                    <span className="truncate uppercase">{col}</span>
-                    <span className="text-[10px] text-slate-600 font-mono">({count})</span>
-                  </button>
+                    <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', }}>{col}</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.disabled' }}>({count})</Typography>
+                  </Button>
                 );
               })}
-            </div>
-          )}
-        </div>
+            </Box>
+          </Collapse>
+        </Box>
       )}
 
       {/* 3. Price Filter (Dual Slider & Preset Chips) */}
-      <div className="border-b border-white/10 pb-5">
-        <button
+      <Box sx={{ borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+        <Button
+          fullWidth
           onClick={() => toggleSection('price')}
-          className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-200 hover:text-white mb-3"
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
         >
-          <span className="flex items-center gap-1.5 font-heading">
-            <DollarSign size={13} className="text-[#D4AF37]" />
-            <span>Price Range (LKR)</span>
-          </span>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <DollarSign size={13} color="#D4AF37" />
+            <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Price Range (LKR)</Typography>
+          </Box>
           {openSections.price ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-        </button>
+        </Button>
 
-        {openSections.price && (
-          <div className="space-y-3 pt-1">
-            {/* Range readout */}
-            <div className="flex items-center justify-between text-xs font-mono font-bold text-white bg-black/40 p-2 border border-white/10 rounded-[2px]">
-              <span className="text-[#D4AF37]">LKR {filters.priceRange[0].toLocaleString()}</span>
-              <span className="text-slate-500">—</span>
-              <span className="text-[#D4AF37]">LKR {filters.priceRange[1].toLocaleString()}</span>
-            </div>
+        <Collapse in={openSections.price}>
+          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: 'rgba(0,0,0,0.4)', p: 1, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1 }}>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main' }}>LKR {filters.priceRange[0].toLocaleString()}</Typography>
+              <Typography sx={{ fontSize: '0.75rem', color: 'text.disabled' }}>—</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main' }}>LKR {filters.priceRange[1].toLocaleString()}</Typography>
+            </Box>
 
-            {/* Slider */}
-            <div className="space-y-2 pt-1">
-              <input
-                type="range"
-                min={facets.priceRange.min || 0}
-                max={facets.priceRange.max || 30000}
-                step={500}
-                value={filters.priceRange[1]}
-                onChange={(e) => {
-                  const val = Number(e.target.value);
-                  onChange({ priceRange: [filters.priceRange[0], Math.max(val, filters.priceRange[0])] });
-                }}
-                className="w-full accent-[#D4AF37] cursor-pointer"
-              />
-            </div>
+            <Slider
+              min={facets.priceRange.min || 0}
+              max={facets.priceRange.max || 30000}
+              step={500}
+              value={filters.priceRange[1]}
+              onChange={(_, newValue) => {
+                const val = newValue as number;
+                onChange({ priceRange: [filters.priceRange[0], Math.max(val, filters.priceRange[0])] });
+              }}
+              color="primary"
+              sx={{ py: 1 }}
+            />
 
-            {/* Quick Price Presets */}
-            <div className="flex flex-wrap gap-1.5 pt-1">
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {[
                 { label: '< 6K', min: 0, max: 6000 },
                 { label: '6K - 10K', min: 6000, max: 10000 },
                 { label: '10K - 15K', min: 10000, max: 15000 },
                 { label: '15K+', min: 15000, max: 30000 }
               ].map((bracket) => {
-                const isActive =
-                  filters.priceRange[0] === bracket.min && filters.priceRange[1] === bracket.max;
+                const isActive = filters.priceRange[0] === bracket.min && filters.priceRange[1] === bracket.max;
                 return (
-                  <button
+                  <Button
                     key={bracket.label}
                     onClick={() => onChange({ priceRange: [bracket.min, bracket.max] })}
-                    className={`px-2.5 py-1 rounded-[2px] text-[10px] font-mono font-bold transition-colors ${
-                      isActive
-                        ? 'bg-[#D4AF37] text-black'
-                        : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 border border-white/5'
-                    }`}
+                    sx={{
+                      py: 0.5, px: 1, borderRadius: 1, minWidth: 'auto', border: '1px solid',
+                      ...(isActive ? { bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main' } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', borderColor: 'rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' } })
+                    }}
                   >
-                    {bracket.label}
-                  </button>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold' }}>{bracket.label}</Typography>
+                  </Button>
                 );
               })}
-            </div>
-          </div>
-        )}
-      </div>
+            </Box>
+          </Box>
+        </Collapse>
+      </Box>
 
       {/* 4. Size Filter (S, M, L, XL, XXL) */}
-      <div className="border-b border-white/10 pb-5">
-        <button
+      <Box sx={{ borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+        <Button
+          fullWidth
           onClick={() => toggleSection('sizes')}
-          className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-200 hover:text-white mb-3"
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
         >
-          <span className="flex items-center gap-1.5 font-heading">
-            <Maximize2 size={13} className="text-[#D4AF37]" />
-            <span>Size Selection</span>
-          </span>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Maximize2 size={13} color="#D4AF37" />
+            <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Size Selection</Typography>
+          </Box>
           {openSections.sizes ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-        </button>
+        </Button>
 
-        {openSections.sizes && (
-          <div className="grid grid-cols-5 gap-1.5 pt-1">
+        <Collapse in={openSections.sizes}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 1, pt: 2 }}>
             {ALL_SIZES.map((size) => {
               const isSelected = filters.sizes.includes(size);
               const count = facets.sizes[size] || 0;
               return (
-                <button
+                <Box
+                  component="button"
                   key={size}
                   onClick={() => toggleSize(size)}
-                  className={`py-2 px-1 rounded-[2px] text-xs font-mono font-black transition-all flex flex-col items-center justify-center border cursor-pointer ${
-                    isSelected
-                      ? 'bg-[#D4AF37] text-black border-[#D4AF37] shadow-sm scale-105'
-                      : 'bg-white/5 text-slate-300 hover:text-white hover:border-white/20 border-white/5'
-                  }`}
+                  sx={{
+                    py: 1, px: 0.5, borderRadius: 1, border: '1px solid', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.3s ease',
+                    ...(isSelected ? {
+                      bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main', boxShadow: '0 5px 15px rgba(212,175,55,0.3)', transform: 'scale(1.05)'
+                    } : {
+                      bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', borderColor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'white', borderColor: 'rgba(255,255,255,0.2)' }
+                    })
+                  }}
                 >
-                  <span>{size}</span>
-                  <span className={`text-[9px] font-normal ${isSelected ? 'text-black/80' : 'text-slate-500'}`}>
-                    {count}
-                  </span>
-                </button>
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900 }}>{size}</Typography>
+                  <Typography sx={{ fontSize: '0.5625rem', color: isSelected ? 'rgba(0,0,0,0.8)' : 'text.disabled' }}>{count}</Typography>
+                </Box>
               );
             })}
-          </div>
-        )}
-      </div>
+          </Box>
+        </Collapse>
+      </Box>
 
       {/* 5. Color Swatches Filter */}
       {Object.keys(facets.colors).length > 0 && (
-        <div className="border-b border-white/10 pb-5">
-          <button
+        <Box sx={{ borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+          <Button
+            fullWidth
             onClick={() => toggleSection('colors')}
-            className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-200 hover:text-white mb-3"
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
           >
-            <span className="flex items-center gap-1.5 font-heading">
-              <Palette size={13} className="text-[#D4AF37]" />
-              <span>Colour Palette</span>
-            </span>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Palette size={13} color="#D4AF37" />
+              <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Colour Palette</Typography>
+            </Box>
             {openSections.colors ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-          </button>
+          </Button>
 
-          {openSections.colors && (
-            <div className="space-y-2 pt-1">
-              <div className="grid grid-cols-2 gap-2">
-                {Object.entries(facets.colors).map(([colorName, { count, hex }]) => {
-                  const isSelected = filters.colors.includes(colorName);
-                  return (
-                    <button
-                      key={colorName}
-                      onClick={() => toggleColor(colorName)}
-                      className={`p-2 rounded-[2px] text-left text-xs font-mono transition-all flex items-center gap-2 border cursor-pointer ${
-                        isSelected
-                          ? 'bg-[#D4AF37]/15 border-[#D4AF37] text-white font-bold'
-                          : 'bg-white/5 border-white/5 text-slate-400 hover:text-white hover:bg-white/10'
-                      }`}
+          <Collapse in={openSections.colors}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, pt: 2 }}>
+              {Object.entries(facets.colors).map(([colorName, { count, hex }]) => {
+                const isSelected = filters.colors.includes(colorName);
+                return (
+                  <Box
+                    component="button"
+                    key={colorName}
+                    onClick={() => toggleColor(colorName)}
+                    sx={{
+                      p: 1, borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', textAlign: 'left',
+                      ...(isSelected ? {
+                        bgcolor: 'rgba(212,175,55,0.15)', borderColor: 'primary.main', color: 'white'
+                      } : {
+                        bgcolor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' }
+                      })
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 14, height: 14, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.3)', bgcolor: hex, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }}
                     >
-                      <span
-                        className="w-3.5 h-3.5 rounded-full border border-white/30 flex items-center justify-center flex-shrink-0"
-                        style={{ backgroundColor: hex }}
-                      >
-                        {isSelected && (
-                          <Check size={9} className={hex.toLowerCase().includes('fff') || hex.toLowerCase().includes('ede') ? 'text-black' : 'text-white'} />
-                        )}
-                      </span>
-                      <span className="truncate text-[11px] flex-1">{colorName}</span>
-                      <span className="text-[10px] text-slate-600">({count})</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
+                      {isSelected && <Check size={10} color={hex.toLowerCase().includes('fff') || hex.toLowerCase().includes('ede') ? 'black' : 'white'} />}
+                    </Box>
+                    <Typography sx={{ fontSize: '0.6875rem', flex: 1,  fontFamily: '"JetBrains Mono", sans-serif', fontWeight: isSelected ? 'bold' : 'normal' }}>{colorName}</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', color: 'text.disabled' }}>({count})</Typography>
+                  </Box>
+                );
+              })}
+            </Box>
+          </Collapse>
+        </Box>
       )}
 
       {/* 6. Availability & Special States */}
-      <div className="border-b border-white/10 pb-5 space-y-3">
-        <button
+      <Box sx={{ borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+        <Button
+          fullWidth
           onClick={() => toggleSection('availability')}
-          className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-200 hover:text-white"
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
         >
-          <span className="font-heading">Stock & Drops</span>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Stock & Drops</Typography>
+          </Box>
           {openSections.availability ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-        </button>
+        </Button>
 
-        {openSections.availability && (
-          <div className="space-y-2 pt-1">
+        <Collapse in={openSections.availability}>
+          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
             {/* In Stock Only */}
-            <label className="flex items-center gap-2.5 text-xs text-slate-300 hover:text-white cursor-pointer select-none">
-              <input
-                type="checkbox"
+            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'white' } }}>
+              <Checkbox
                 checked={filters.inStockOnly}
                 onChange={(e) => onChange({ inStockOnly: e.target.checked })}
-                className="w-4 h-4 rounded-[2px] accent-[#D4AF37] bg-white/5 border-white/20"
+                sx={{ p: 0.5, color: 'rgba(255,255,255,0.2)', '&.Mui-checked': { color: 'primary.main' } }}
               />
-              <span className="font-mono">In Stock Ready to Ship ({facets.totalInStock})</span>
-            </label>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>In Stock Ready to Ship ({facets.totalInStock})</Typography>
+            </Box>
 
             {/* Sale Items Only */}
-            <label className="flex items-center gap-2.5 text-xs text-slate-300 hover:text-white cursor-pointer select-none">
-              <input
-                type="checkbox"
+            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'white' } }}>
+              <Checkbox
                 checked={filters.isSaleOnly}
                 onChange={(e) => onChange({ isSaleOnly: e.target.checked })}
-                className="w-4 h-4 rounded-[2px] accent-[#D4AF37] bg-white/5 border-white/20"
+                sx={{ p: 0.5, color: 'rgba(255,255,255,0.2)', '&.Mui-checked': { color: 'primary.main' } }}
               />
-              <span className="font-mono text-red-400 font-semibold">Special Offers & Sale ({facets.totalOnSale})</span>
-            </label>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'error.main', fontWeight: 'bold' }}>Special Offers & Sale ({facets.totalOnSale})</Typography>
+            </Box>
 
             {/* New Arrivals Only */}
-            <label className="flex items-center gap-2.5 text-xs text-slate-300 hover:text-white cursor-pointer select-none">
-              <input
-                type="checkbox"
+            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'white' } }}>
+              <Checkbox
                 checked={filters.isNewOnly}
                 onChange={(e) => onChange({ isNewOnly: e.target.checked })}
-                className="w-4 h-4 rounded-[2px] accent-[#D4AF37] bg-white/5 border-white/20"
+                sx={{ p: 0.5, color: 'rgba(255,255,255,0.2)', '&.Mui-checked': { color: 'primary.main' } }}
               />
-              <span className="font-mono text-[#D4AF37]">New Drop Arrivals Only</span>
-            </label>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main' }}>New Drop Arrivals Only</Typography>
+            </Box>
 
             {/* Best Sellers */}
-            <label className="flex items-center gap-2.5 text-xs text-slate-300 hover:text-white cursor-pointer select-none">
-              <input
-                type="checkbox"
+            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'white' } }}>
+              <Checkbox
                 checked={filters.isBestSellerOnly}
                 onChange={(e) => onChange({ isBestSellerOnly: e.target.checked })}
-                className="w-4 h-4 rounded-[2px] accent-[#D4AF37] bg-white/5 border-white/20"
+                sx={{ p: 0.5, color: 'rgba(255,255,255,0.2)', '&.Mui-checked': { color: 'primary.main' } }}
               />
-              <span className="font-mono">Best Sellers Restocked</span>
-            </label>
-          </div>
-        )}
-      </div>
-    </aside>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>Best Sellers Restocked</Typography>
+            </Box>
+          </Box>
+        </Collapse>
+      </Box>
+    </Box>
   );
 };

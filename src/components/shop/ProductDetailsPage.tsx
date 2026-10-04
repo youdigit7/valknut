@@ -15,7 +15,6 @@ import {
   RefreshCw, 
   Share2, 
   ShieldCheck, 
-  Check, 
   Minus, 
   Plus, 
   ChevronRight, 
@@ -23,6 +22,26 @@ import {
   Copy, 
   MessageCircle 
 } from 'lucide-react';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, Grid, Button, IconButton, Chip, Divider
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0A0A', paper: '#0E1017' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
+  },
+});
 
 interface ProductDetailsPageProps {
   slug: string;
@@ -71,7 +90,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
     if (product && product.variants && product.variants.length > 0) {
       const firstVar = product.variants[0];
       setSelectedColor(firstVar.color);
-      setSelectedSize(firstVar.size);
+      setSelectedSize(firstVar.size as any);
       setQuantity(1);
     }
   }, [product]);
@@ -86,18 +105,20 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
 
   if (!product) {
     return (
-      <div className="w-full min-h-[70vh] flex items-center justify-center py-20 px-4 bg-[#0A0A0A]">
-        <div className="max-w-md w-full bg-[#0E1017] p-8 border border-white/10 rounded-md text-center">
-          <EmptyState
-            title="PRODUCT NOT FOUND"
-            description="The streetwear piece you are looking for might have sold out or been moved to a new collection."
-            actionText="EXPLORE ALL PRODUCTS"
-            onAction={() => {
-              window.location.hash = '#/shop';
-            }}
-          />
-        </div>
-      </div>
+      <ThemeProvider theme={theme}>
+        <Box sx={{ width: '100%', minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', py: 10, px: 2, bgcolor: 'background.default' }}>
+          <Box sx={{ maxWidth: 450, width: '100%', bgcolor: 'background.paper', p: 4, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, textAlign: 'center' }}>
+            <EmptyState
+              title="PRODUCT NOT FOUND"
+              description="The streetwear piece you are looking for might have sold out or been moved to a new collection."
+              actionText="EXPLORE ALL PRODUCTS"
+              onAction={() => {
+                window.location.hash = '#/shop';
+              }}
+            />
+          </Box>
+        </Box>
+      </ThemeProvider>
     );
   }
 
@@ -119,7 +140,6 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
   // Variant stock & availability status
   const currentStock = activeVariant?.stock ?? activeVariant?.stockCount ?? 0;
   const isOutOfStock = !activeVariant || currentStock <= 0;
-  const isLowStock = !isOutOfStock && currentStock <= 8;
 
   // Pricing (Support variant-specific price or base product price)
   const currentPrice = activeVariant?.price ?? product.price;
@@ -198,434 +218,319 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#0A0A0A] py-8 sm:py-12 border-b border-white/10">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Breadcrumb Hierarchy */}
-        <nav className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-8 overflow-x-auto pb-2 scrollbar-none">
-          <a href="#/" className="hover:text-white transition-colors">Home</a>
-          <ChevronRight size={12} className="text-slate-600 flex-shrink-0" />
-          <a href="#/shop" className="hover:text-white transition-colors">Shop</a>
-          <ChevronRight size={12} className="text-slate-600 flex-shrink-0" />
-          <a href={`#/shop/${product.category.toLowerCase()}`} className="hover:text-white transition-colors">
-            {product.category}
-          </a>
-          <ChevronRight size={12} className="text-slate-600 flex-shrink-0" />
-          <span className="text-slate-400">{product.subCategory}</span>
-          <ChevronRight size={12} className="text-slate-600 flex-shrink-0" />
-          <span className="text-[#D4AF37] font-bold truncate max-w-xs">{product.name}</span>
-        </nav>
-
-        {/* Product Hero: Two Column Sticky Gallery & Purchase Panel */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-14 items-start mb-20">
+    <ThemeProvider theme={theme}>
+      <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: 'background.default', py: { xs: 4, md: 8 }, WebkitFontSmoothing: 'antialiased' }}>
+        <Container maxWidth="xl">
           
-          {/* Left Column: Image Gallery */}
-          <div className="lg:col-span-7 xl:col-span-7 sticky top-28">
-            <ProductImageGallery
-              images={product.images}
-              productName={product.name}
-              isCustomizable={product.isCustomizable}
-              onOpenCustomStudio={handleOpenCustomStudio}
-            />
-          </div>
+          {/* Breadcrumbs */}
+          <Box component="nav" sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'text.secondary', mb: 4, pb: 4, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+            <Box component="a" href="#/" sx={{ color: 'inherit', textDecoration: 'none', '&:hover': { color: 'white' } }}>Home</Box>
+            <ChevronRight size={12} />
+            <Box component="a" href="#/shop" sx={{ color: 'inherit', textDecoration: 'none', '&:hover': { color: 'white' } }}>Shop</Box>
+            <ChevronRight size={12} />
+            <Box component="a" href={`#/shop/${product.category.toLowerCase()}`} sx={{ color: 'inherit', textDecoration: 'none', '&:hover': { color: 'white' } }}>{product.category}</Box>
+            <ChevronRight size={12} />
+            <Typography component="span" sx={{ color: 'primary.main', fontWeight: 'bold', fontSize: 'inherit' }}>{product.name}</Typography>
+          </Box>
 
-          {/* Right Column: Product Details, Variant Selectors & Buy Buttons */}
-          <div className="lg:col-span-5 xl:col-span-5 space-y-6 bg-[#0D0E15] border border-white/10 rounded-md p-6 sm:p-8 shadow-2xl">
+          <Grid container spacing={{ xs: 6, lg: 10 }}>
             
-            {/* Header / Badges */}
-            <div className="space-y-2 border-b border-white/10 pb-5">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="px-2.5 py-0.5 bg-[#161825] border border-white/10 rounded-[2px] text-[10px] font-mono font-bold tracking-widest text-[#D4AF37] uppercase">
-                    {product.category} • {product.subCategory}
-                  </span>
-                  {product.collection && (
-                    <span className="px-2.5 py-0.5 bg-[#161825] border border-[#D4AF37]/30 rounded-[2px] text-[10px] font-mono text-slate-300 uppercase">
-                      {product.collection}
-                    </span>
-                  )}
-                  {hasSale && (
-                    <span className="px-2 py-0.5 bg-red-950/80 border border-red-500/40 text-red-400 text-[10px] font-mono font-black rounded-[2px] uppercase">
-                      SALE {discountPercent}% OFF
-                    </span>
-                  )}
-                  {product.isNewArrival && (
-                    <span className="px-2 py-0.5 bg-[#D4AF37]/15 border border-[#D4AF37] text-[#D4AF37] text-[10px] font-mono font-black rounded-[2px] uppercase">
-                      NEW DROP
-                    </span>
-                  )}
-                </div>
+            {/* Left: Image Gallery */}
+            <Grid size={{ xs: 12, lg: 7 }}>
+              <ProductImageGallery
+                images={product.images}
+                productName={product.name}
+                activeColorImage={activeVariant?.image}
+              />
+            </Grid>
 
-                {/* Wishlist Button */}
-                <button
-                  onClick={handleToggleWishlist}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all cursor-pointer ${
-                    isWishlisted
-                      ? 'bg-red-600 text-white border-red-600 shadow-lg'
-                      : 'bg-white/5 border-white/10 text-slate-400 hover:text-white hover:border-white/30'
-                  }`}
-                  aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-                >
-                  <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} />
-                </button>
-              </div>
-
-              {/* Product Title */}
-              <h1 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight font-syne leading-tight">
-                {product.name}
-              </h1>
-
-              {/* SKU display */}
-              <div className="flex items-center gap-3 text-[11px] font-mono text-slate-400 pt-1">
-                <span>SKU: <strong className="text-slate-300">{activeSku}</strong></span>
-                <span>•</span>
-                <span>ORIGIN: <strong className="text-slate-300">COLOMBO, LK</strong></span>
-              </div>
-            </div>
-
-            {/* Price Row */}
-            <div className="flex items-baseline gap-3">
-              <span className="text-2xl sm:text-3xl font-black font-mono text-white tracking-tight">
-                LKR {displayPrice.toLocaleString()}
-              </span>
-              {hasSale && (
-                <span className="text-base font-mono text-slate-500 line-through">
-                  LKR {currentPrice.toLocaleString()}
-                </span>
-              )}
-              {hasSale && (
-                <span className="text-xs font-mono font-bold text-red-400">
-                  (Save LKR {(currentPrice - (currentSalePrice || 0)).toLocaleString()})
-                </span>
-              )}
-            </div>
-
-            {/* Stock Availability Indicator */}
-            <div className="p-3 rounded-[2px] bg-[#12141F] border border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {isOutOfStock ? (
-                  <>
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
-                    <span className="text-xs font-mono font-bold text-red-400 uppercase tracking-wider">
-                      Currently Out of Stock
-                    </span>
-                  </>
-                ) : isLowStock ? (
-                  <>
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
-                    <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-                      Low Stock: Only {currentStock} Left Ready to Ship
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                    <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-                      In Stock — Dispatched within 24 Hours
-                    </span>
-                  </>
-                )}
-              </div>
-              <span className="text-[10px] font-mono text-slate-500 hidden sm:inline">
-                AUTHENTIC VALKNUT
-              </span>
-            </div>
-
-            {/* 1. Colour Selector */}
-            {availableColors.length > 0 && (
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-mono font-bold uppercase tracking-wider text-slate-300">
-                    Colour: <strong className="text-white">{selectedColor}</strong>
-                  </span>
-                  <span className="text-[10px] font-mono text-slate-500">{availableColors.length} Options</span>
-                </div>
-
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  {availableColors.map((col) => {
-                    const isSelected = selectedColor.toLowerCase() === col.color.toLowerCase();
-                    return (
-                      <button
-                        key={col.color}
-                        onClick={() => setSelectedColor(col.color)}
-                        className={`px-3 py-2 rounded-[2px] flex items-center gap-2 border transition-all cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#181B2B] border-[#D4AF37] ring-1 ring-[#D4AF37]/50 shadow-md'
-                            : 'bg-[#12141F] border-white/10 hover:border-white/30 text-slate-400'
-                        }`}
-                        title={col.color}
-                      >
-                        <span
-                          className="w-3.5 h-3.5 rounded-full border border-white/30 flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: col.colorHex }}
-                        >
-                          {isSelected && (
-                            <Check size={9} className={col.colorHex.toLowerCase().includes('fff') || col.colorHex.toLowerCase().includes('ede') ? 'text-black' : 'text-white'} />
-                          )}
-                        </span>
-                        <span className="text-xs font-mono font-medium text-white">{col.color}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* 2. Size Selector with Size Guide Trigger */}
-            <div className="space-y-2.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-mono font-bold uppercase tracking-wider text-slate-300">
-                  Select Size: <strong className="text-white">{selectedSize}</strong>
-                </span>
+            {/* Right: Product Info & Actions */}
+            <Grid size={{ xs: 12, lg: 5 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, position: 'sticky', top: 120 }}>
                 
-                {/* Size Chart Modal Trigger */}
-                <button
-                  onClick={() => setIsSizeChartOpen(true)}
-                  className="text-[#D4AF37] hover:underline flex items-center gap-1 font-mono font-bold text-[11px] uppercase tracking-wider cursor-pointer"
-                >
-                  <Ruler size={13} />
-                  <span>Size Guide</span>
-                </button>
-              </div>
+                {/* Header & Badges */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+                    {hasSale && <Chip label="SALE" sx={{ bgcolor: 'rgba(220,38,38,0.2)', border: '1px solid rgba(220,38,38,0.4)', color: '#f87171', fontSize: '0.625rem', fontWeight: 'bold', height: 24 }} />}
+                    {product.isBestSeller && <Chip label="BEST SELLER" sx={{ bgcolor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.625rem', fontWeight: 'bold', height: 24 }} />}
+                    {product.isNewArrival && <Chip label="NEW DROP" sx={{ bgcolor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontSize: '0.625rem', fontWeight: 'bold', height: 24 }} />}
+                  </Box>
 
-              <div className="grid grid-cols-5 gap-2">
-                {allPossibleSizes.map((sz) => {
-                  const variantForSize = product.variants.find(
-                    (v) => v.color.toLowerCase() === selectedColor.toLowerCase() && v.size === sz
-                  );
-                  const isAvailableForSize = variantForSize && (variantForSize.stock ?? variantForSize.stockCount ?? 0) > 0;
-                  const isSelected = selectedSize === sz;
+                  <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', color: 'primary.main', textTransform: 'uppercase', mb: 1 }}>
+                    {product.subCategory}
+                  </Typography>
 
-                  return (
-                    <button
-                      key={sz}
-                      disabled={!isAvailableForSize}
-                      onClick={() => {
-                        setSelectedSize(sz);
-                        setQuantity(1);
+                  <Typography variant="h2" sx={{ fontSize: { xs: '2rem', sm: '2.5rem' }, mb: 2, color: 'white' }}>
+                    {product.name}
+                  </Typography>
+
+                  <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2, mb: 3 }}>
+                    <Typography sx={{ fontSize: '1.5rem', fontWeight: 900, color: 'white' }}>
+                      LKR {displayPrice.toLocaleString()}
+                    </Typography>
+                    {hasSale && (
+                      <>
+                        <Typography sx={{ fontSize: '1rem', color: 'text.secondary', textDecoration: 'line-through', mb: 0.5 }}>
+                          LKR {currentPrice.toLocaleString()}
+                        </Typography>
+                        <Chip label={`SAVE ${discountPercent}%`} sx={{ bgcolor: 'rgba(212,175,55,0.2)', color: 'primary.main', fontSize: '0.625rem', fontWeight: 'bold', height: 20, mb: 1 }} />
+                      </>
+                    )}
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', display: 'flex', alignItems: 'center', gap: 1 }}>
+                      SKU: <Box component="strong" sx={{ color: 'white' }}>{activeSku}</Box>
+                    </Typography>
+                    <IconButton 
+                      onClick={handleToggleWishlist}
+                      sx={{ color: isWishlisted ? 'error.main' : 'text.secondary', transition: 'all 0.3s ease', '&:hover': { color: 'error.main', transform: 'scale(1.1)' } }}
+                    >
+                      <Heart size={20} fill={isWishlisted ? 'currentColor' : 'none'} />
+                    </IconButton>
+                  </Box>
+                </Box>
+
+                <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+
+                {/* 1. Color Selector */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'white' }}>
+                      Color: <Box component="span" sx={{ color: 'text.secondary', fontWeight: 'normal', ml: 0.5 }}>{selectedColor}</Box>
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
+                    {availableColors.map((c) => {
+                      const isSelected = selectedColor === c.color;
+                      return (
+                        <Box
+                          component="button"
+                          key={c.color}
+                          onClick={() => setSelectedColor(c.color)}
+                          title={c.color}
+                          sx={{
+                            width: 40, height: 40, borderRadius: '50%', p: 0.5, border: '1px solid',
+                            borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.2)',
+                            cursor: 'pointer', transition: 'all 0.3s ease', bgcolor: 'transparent',
+                            ...(isSelected && { boxShadow: '0 0 10px rgba(212,175,55,0.4)' }),
+                            '&:hover': { borderColor: isSelected ? 'primary.main' : 'white' }
+                          }}
+                        >
+                          <Box sx={{ width: '100%', height: '100%', borderRadius: '50%', bgcolor: c.colorHex, border: '1px solid rgba(255,255,255,0.1)' }} />
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                </Box>
+
+                {/* 2. Size Selector */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'white' }}>
+                      Size: <Box component="span" sx={{ color: 'text.secondary', fontWeight: 'normal', ml: 0.5 }}>{selectedSize}</Box>
+                    </Typography>
+                    <Button
+                      onClick={() => setIsSizeChartOpen(true)}
+                      sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', p: 0, minWidth: 'auto', display: 'flex', alignItems: 'center', gap: 0.5, '&:hover': { color: 'primary.main', bgcolor: 'transparent' } }}
+                    >
+                      <Ruler size={12} /> Size Guide
+                    </Button>
+                  </Box>
+                  <Grid container spacing={1}>
+                    {allPossibleSizes.map((sz) => {
+                      const isAvailableForSize = product.variants.some((v) => v.color === selectedColor && v.size === sz && (v.stock > 0 || v.stockCount! > 0));
+                      const isSelected = selectedSize === sz;
+                      return (
+                        <Grid size={{ xs: 2.4 }} key={sz}>
+                          <Box
+                            component="button"
+                            disabled={!isAvailableForSize}
+                            onClick={() => { setSelectedSize(sz); setQuantity(1); }}
+                            sx={{
+                              width: '100%', py: 1.5, borderRadius: 1, border: '1px solid', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5, cursor: isAvailableForSize ? 'pointer' : 'not-allowed', transition: 'all 0.3s ease', position: 'relative', overflow: 'hidden',
+                              ...(isSelected ? {
+                                bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main', boxShadow: '0 10px 20px rgba(212,175,55,0.3)', transform: 'scale(1.02)'
+                              } : isAvailableForSize ? {
+                                bgcolor: '#12141F', color: 'white', borderColor: 'rgba(255,255,255,0.1)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' }
+                              } : {
+                                bgcolor: 'rgba(255,255,255,0.02)', color: 'text.disabled', borderColor: 'rgba(255,255,255,0.05)', textDecoration: 'line-through'
+                              })
+                            }}
+                          >
+                            <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif' }}>{sz}</Typography>
+                            <Typography sx={{ fontSize: '0.5rem', fontFamily: '"JetBrains Mono", sans-serif', color: isSelected ? 'rgba(0,0,0,0.7)' : isAvailableForSize ? 'text.secondary' : 'error.main', fontWeight: 'bold' }}>
+                              {isAvailableForSize ? 'IN STOCK' : 'OUT'}
+                            </Typography>
+                          </Box>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </Box>
+
+                {/* 3. Quantity & Action Buttons */}
+                <Box sx={{ pt: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                    
+                    {/* Quantity Control */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: '#12141F', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 0.5 }}>
+                      <IconButton
+                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                        disabled={quantity <= 1 || isOutOfStock}
+                        sx={{ width: 32, height: 32, color: 'text.secondary', '&:hover': { color: 'white' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.1)' } }}
+                      >
+                        <Minus size={14} />
+                      </IconButton>
+                      <Typography sx={{ width: 40, textAlign: 'center', fontSize: '0.875rem', fontWeight: 'bold', color: 'white', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                        {quantity}
+                      </Typography>
+                      <IconButton
+                        onClick={() => setQuantity((q) => Math.min(Math.min(currentStock || 10, 10), q + 1))}
+                        disabled={quantity >= (currentStock || 10) || isOutOfStock}
+                        sx={{ width: 32, height: 32, color: 'text.secondary', '&:hover': { color: 'white' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.1)' } }}
+                      >
+                        <Plus size={14} />
+                      </IconButton>
+                    </Box>
+
+                    {/* Add to Cart CTA */}
+                    <Button
+                      onClick={handleAddToCart}
+                      disabled={isOutOfStock}
+                      sx={{
+                        flex: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', letterSpacing: '0.2em', textTransform: 'uppercase', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, transition: 'all 0.3s ease', boxShadow: '0 10px 25px rgba(212,175,55,0.3)',
+                        '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)', boxShadow: '0 15px 35px rgba(212,175,55,0.4)' },
+                        '&.Mui-disabled': { bgcolor: 'rgba(255,255,255,0.1)', color: 'text.disabled' }
                       }}
-                      className={`py-3 rounded-[2px] text-xs font-mono font-black uppercase transition-all flex flex-col items-center justify-center border cursor-pointer relative ${
-                        isSelected
-                          ? 'bg-[#D4AF37] text-black border-[#D4AF37] shadow-lg shadow-[#D4AF37]/20 scale-105'
-                          : isAvailableForSize
-                          ? 'bg-[#12141F] border-white/10 hover:border-white/30 text-white'
-                          : 'bg-white/[0.02] border-white/5 text-slate-600 opacity-40 cursor-not-allowed line-through'
-                      }`}
                     >
-                      <span>{sz}</span>
-                      <span className={`text-[8px] font-normal ${isSelected ? 'text-black/80 font-bold' : isAvailableForSize ? 'text-slate-500' : 'text-red-500/70'}`}>
-                        {isAvailableForSize ? 'IN STOCK' : 'OUT'}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+                      <ShoppingBag size={16} />
+                      {isOutOfStock ? 'OUT OF STOCK' : 'ADD TO BAG'}
+                    </Button>
+                  </Box>
 
-            {/* 3. Quantity & Action Buttons */}
-            <div className="space-y-3 pt-2">
-              <div className="flex items-center gap-3">
-                {/* Quantity Control */}
-                <div className="flex items-center bg-[#12141F] border border-white/15 rounded-[2px] p-1">
-                  <button
-                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    disabled={quantity <= 1 || isOutOfStock}
-                    className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-colors"
-                    aria-label="Decrease quantity"
-                  >
-                    <Minus size={14} />
-                  </button>
-                  <span className="w-10 text-center text-xs font-mono font-bold text-white">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity((q) => Math.min(Math.min(currentStock || 10, 10), q + 1))}
-                    disabled={quantity >= (currentStock || 10) || isOutOfStock}
-                    className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-colors"
-                    aria-label="Increase quantity"
-                  >
-                    <Plus size={14} />
-                  </button>
-                </div>
-
-                {/* Add to Cart CTA */}
-                <button
-                  onClick={handleAddToCart}
-                  disabled={isOutOfStock}
-                  className="flex-1 py-3.5 px-6 bg-[#D4AF37] hover:bg-[#E2B714] disabled:bg-white/10 disabled:text-slate-500 disabled:cursor-not-allowed text-black font-black text-xs uppercase tracking-[0.2em] rounded-[2px] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#D4AF37]/20 cursor-pointer"
-                >
-                  <ShoppingBag size={16} />
-                  <span>{isOutOfStock ? 'OUT OF STOCK' : 'ADD TO BAG'}</span>
-                </button>
-              </div>
-
-              {/* Buy Now Direct CTA */}
-              {!isOutOfStock && (
-                <button
-                  onClick={handleBuyNow}
-                  className="w-full py-3.5 px-6 bg-white hover:bg-slate-200 text-black font-black text-xs uppercase tracking-[0.2em] rounded-[2px] transition-all flex items-center justify-center gap-2 shadow-xl cursor-pointer"
-                >
-                  <CreditCard size={16} />
-                  <span>BUY IT NOW</span>
-                </button>
-              )}
-
-              {/* Bespoke Custom Studio Entry if available */}
-              {product.isCustomizable && (
-                <button
-                  onClick={handleOpenCustomStudio}
-                  className="w-full py-2.5 px-4 bg-transparent hover:bg-[#D4AF37]/10 border border-[#D4AF37]/50 text-[#D4AF37] font-mono font-bold text-xs uppercase tracking-wider rounded-[2px] transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Sparkles size={14} />
-                  <span>CUSTOMIZE GRAPHICS IN 3D STUDIO (+LKR 1,500)</span>
-                </button>
-              )}
-            </div>
-
-            {/* Sharing & Trust Strip */}
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400">
-              <div className="flex items-center gap-1.5 text-slate-300">
-                <ShieldCheck size={16} className="text-[#D4AF37]" />
-                <span>100% Guaranteed Authentic</span>
-              </div>
-
-              {/* Share Menu */}
-              <div className="relative">
-                <button
-                  onClick={() => setIsShareDropdownOpen(!isShareDropdownOpen)}
-                  className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  <Share2 size={14} />
-                  <span>Share Drop</span>
-                </button>
-
-                {isShareDropdownOpen && (
-                  <div className="absolute right-0 bottom-full mb-2 bg-[#12141F] border border-white/15 rounded-[2px] shadow-2xl p-2 min-w-[170px] space-y-1 z-30 animate-fade-in">
-                    <button
-                      onClick={handleCopyLink}
-                      className="w-full text-left px-3 py-1.5 rounded-[2px] hover:bg-white/10 text-xs font-mono flex items-center gap-2 text-slate-200 hover:text-white"
+                  {/* Buy Now Direct CTA */}
+                  {!isOutOfStock && (
+                    <Button
+                      onClick={handleBuyNow}
+                      sx={{
+                        w: '100%', width: '100%', py: 1.5, bgcolor: 'white', color: 'black', fontWeight: 900, fontSize: '0.75rem', letterSpacing: '0.2em', textTransform: 'uppercase', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, transition: 'all 0.3s ease', mb: 2,
+                        '&:hover': { bgcolor: '#e2e8f0' }
+                      }}
                     >
-                      <Copy size={13} />
-                      <span>Copy Link</span>
-                    </button>
-                    <button
-                      onClick={handleShareWhatsApp}
-                      className="w-full text-left px-3 py-1.5 rounded-[2px] hover:bg-white/10 text-xs font-mono flex items-center gap-2 text-slate-200 hover:text-white"
+                      <CreditCard size={16} /> BUY IT NOW
+                    </Button>
+                  )}
+
+                  {/* Bespoke Custom Studio Entry if available */}
+                  {product.isCustomizable && (
+                    <Button
+                      onClick={handleOpenCustomStudio}
+                      sx={{
+                        w: '100%', width: '100%', py: 1.5, bgcolor: 'transparent', color: 'primary.main', border: '1px solid rgba(212,175,55,0.5)', fontWeight: 'bold', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, transition: 'all 0.3s ease',
+                        '&:hover': { bgcolor: 'rgba(212,175,55,0.1)' }
+                      }}
                     >
-                      <MessageCircle size={13} />
-                      <span>WhatsApp</span>
-                    </button>
-                    <button
-                      onClick={handleShareTwitter}
-                      className="w-full text-left px-3 py-1.5 rounded-[2px] hover:bg-white/10 text-xs font-mono flex items-center gap-2 text-slate-200 hover:text-white"
+                      <Sparkles size={14} /> CUSTOMIZE GRAPHICS IN 3D STUDIO (+LKR 1,500)
+                    </Button>
+                  )}
+                </Box>
+
+                {/* Sharing & Trust Strip */}
+                <Box sx={{ pt: 3, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <ShieldCheck size={14} color="#D4AF37" /> 100% Guaranteed Authentic
+                  </Typography>
+
+                  {/* Share Menu */}
+                  <Box sx={{ position: 'relative' }}>
+                    <Button
+                      onClick={() => setIsShareDropdownOpen(!isShareDropdownOpen)}
+                      sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', minWidth: 'auto', p: 0, textTransform: 'none', display: 'flex', alignItems: 'center', gap: 0.5, '&:hover': { color: 'white', bgcolor: 'transparent' } }}
                     >
-                      <Share2 size={13} />
-                      <span>X / Twitter</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+                      <Share2 size={12} /> Share Drop
+                    </Button>
 
-            {/* Accordion Specs: Description, Material, Shipping, Returns */}
-            <div className="pt-4 border-t border-white/10 space-y-3">
-              {/* 1. Description */}
-              <div className="space-y-1.5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 font-heading">
-                  Product Overview & Story
-                </h4>
-                <p className="text-xs text-slate-400 leading-relaxed font-sans">
-                  {product.description}
-                </p>
-              </div>
+                    {isShareDropdownOpen && (
+                      <Box sx={{ position: 'absolute', right: 0, bottom: '100%', mb: 1, bgcolor: '#12141F', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 1, minWidth: 170, boxShadow: '0 25px 50px rgba(0,0,0,0.8)', zIndex: 30, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                        <Button onClick={handleCopyLink} sx={{ justifyContent: 'flex-start', color: 'text.secondary', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', p: 1, textTransform: 'none', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }} startIcon={<Copy size={12} />}>Copy Link</Button>
+                        <Button onClick={handleShareWhatsApp} sx={{ justifyContent: 'flex-start', color: 'text.secondary', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', p: 1, textTransform: 'none', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }} startIcon={<MessageCircle size={12} />}>WhatsApp</Button>
+                        <Button onClick={handleShareTwitter} sx={{ justifyContent: 'flex-start', color: 'text.secondary', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', p: 1, textTransform: 'none', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }} startIcon={<Share2 size={12} />}>X / Twitter</Button>
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
 
-              {/* 2. Material & Care */}
-              <div className="space-y-1.5 pt-2 border-t border-white/5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 font-heading">
-                  Material & Care Instructions
-                </h4>
-                <p className="text-xs text-slate-400 leading-relaxed font-mono">
-                  <strong className="text-white">Fabric:</strong> {product.material}
-                </p>
-                <p className="text-xs text-slate-400 leading-relaxed font-mono">
-                  <strong className="text-white">Care:</strong> {product.careInstructions}
-                </p>
-              </div>
+                {/* Accordion Specs: Description, Material, Shipping, Returns */}
+                <Box sx={{ pt: 3, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <Box>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'white', mb: 1 }}>Product Overview & Story</Typography>
+                    <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary', lineHeight: 1.6 }}>{product.description}</Typography>
+                  </Box>
 
-              {/* 3. Delivery & Returns Info */}
-              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-white/5">
-                <div className="p-3 bg-white/[0.02] border border-white/5 rounded-[2px] space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-white">
-                    <Truck size={14} className="text-[#D4AF37]" />
-                    <span>DELIVERY</span>
-                  </div>
-                  <p className="text-[10px] text-slate-400 font-mono">
-                    2-3 days in Colombo. Islandwide 3-5 days. Free over LKR 25,000.
-                  </p>
-                </div>
+                  <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'white', mb: 1 }}>Material & Care Instructions</Typography>
+                    <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', mb: 0.5 }}><Box component="strong" sx={{ color: 'white' }}>Fabric:</Box> {product.material}</Typography>
+                    <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}><Box component="strong" sx={{ color: 'white' }}>Care:</Box> {product.careInstructions}</Typography>
+                  </Box>
 
-                <div className="p-3 bg-white/[0.02] border border-white/5 rounded-[2px] space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-white">
-                    <RefreshCw size={14} className="text-[#D4AF37]" />
-                    <span>7-DAY RETURN</span>
-                  </div>
-                  <p className="text-[10px] text-slate-400 font-mono">
-                    Hassle-free size exchange within 7 days of delivery.
-                  </p>
-                </div>
-              </div>
+                  <Grid container spacing={2} sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <Grid size={{ xs: 6 }}>
+                      <Box sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1 }}>
+                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'white', display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}><Truck size={14} color="#D4AF37" /> DELIVERY</Typography>
+                        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>2-3 days in Colombo. Islandwide 3-5 days. Free over LKR 25,000.</Typography>
+                      </Box>
+                    </Grid>
+                    <Grid size={{ xs: 6 }}>
+                      <Box sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1 }}>
+                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'white', display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}><RefreshCw size={14} color="#D4AF37" /> 7-DAY RETURN</Typography>
+                        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>Hassle-free size exchange within 7 days of delivery.</Typography>
+                      </Box>
+                    </Grid>
+                  </Grid>
 
-            </div>
+                </Box>
 
-          </div>
+              </Box>
+            </Grid>
 
-        </div>
+          </Grid>
 
-        {/* Related Drops & Recommended Streetwear */}
-        {displayRecommendations.length > 0 && (
-          <div className="pt-12 border-t border-white/10 space-y-8">
-            <div className="flex items-end justify-between">
-              <div>
-                <span className="text-[10px] font-mono font-bold tracking-[0.3em] text-[#D4AF37] uppercase block mb-1">
-                  COMPLETE YOUR WARDROBE
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-black uppercase text-white font-syne">
-                  RELATED PIECES & CAPSULES
-                </h2>
-              </div>
+          {/* Related Drops & Recommended Streetwear */}
+          {displayRecommendations.length > 0 && (
+            <Box sx={{ pt: { xs: 8, md: 12 }, mt: { xs: 8, md: 12 }, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', mb: 4 }}>
+                <Box>
+                  <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mb: 1 }}>
+                    COMPLETE YOUR WARDROBE
+                  </Typography>
+                  <Typography variant="h2" sx={{ fontSize: { xs: '1.5rem', sm: '2rem' }, color: 'white' }}>
+                    RELATED PIECES & CAPSULES
+                  </Typography>
+                </Box>
 
-              <a
-                href="#/shop"
-                className="hidden sm:flex items-center gap-1 text-xs font-mono font-bold text-[#D4AF37] hover:underline"
-              >
-                <span>Browse All Shop</span>
-                <ChevronRight size={14} />
-              </a>
-            </div>
+                <Button href="#/shop" sx={{ display: { xs: 'none', sm: 'flex' }, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main', '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' } }} endIcon={<ChevronRight size={14} />}>
+                  Browse All Shop
+                </Button>
+              </Box>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-              {displayRecommendations.map((rec) => (
-                <ProductCard
-                  key={rec.id}
-                  product={rec}
-                  onQuickView={(p) => setSelectedProduct(p)}
-                  onAddToCart={() => {
-                    const fv = rec.variants[0] || { size: 'M', color: 'Onyx Black', colorHex: '#000000' };
-                    addToCart(rec, fv.size as any, fv.color, fv.colorHex, 1);
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+              <Grid container spacing={{ xs: 2, sm: 3 }}>
+                {displayRecommendations.map((rec) => (
+                  <Grid size={{ xs: 6, md: 3 }} key={rec.id}>
+                    <ProductCard product={rec} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          )}
 
-      </div>
+        </Container>
 
-      {/* Size Chart Modal */}
-      <SizeChartModal
-        isOpen={isSizeChartOpen}
-        onClose={() => setIsSizeChartOpen(false)}
-      />
-    </div>
+        <SizeChartModal
+          isOpen={isSizeChartOpen}
+          onClose={() => setIsSizeChartOpen(false)}
+        />
+      </Box>
+    </ThemeProvider>
   );
 };

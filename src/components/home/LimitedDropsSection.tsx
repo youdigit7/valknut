@@ -1,9 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../../context/StoreContext';
-import { Heart } from 'lucide-react';
+import { ProductCard } from '../ui/ProductCard';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, Grid
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0A0A' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
+  }
+});
 
 export const LimitedDropsSection: React.FC = () => {
-  const { products, setSelectedProduct } = useStore();
+  const { products, setSelectedProduct, addToCart, showToast } = useStore();
   
   const limitedProducts = products.filter(p => p.isLimitedEdition).slice(0, 2);
   
@@ -28,83 +47,196 @@ export const LimitedDropsSection: React.FC = () => {
   if (limitedProducts.length === 0) return null;
 
   return (
-    <section className="py-16 bg-[#0A0A0A] border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          
-          {/* Left - Text + Countdown */}
-          <div className="space-y-6">
-            <span className="text-[#d4af37] text-[11px] font-bold tracking-[0.25em] uppercase block">
-              NUMBERED RUNS
-            </span>
+    <ThemeProvider theme={theme}>
+      <Box 
+        component="section" 
+        sx={{ 
+          py: { xs: 8, sm: 12, lg: 16 }, 
+          bgcolor: 'background.default', 
+          borderTop: '1px solid rgba(255,255,255,0.05)',
+          width: '100%',
+          overflow: 'hidden'
+        }}
+      >
+        <Container maxWidth="xl">
+          <Grid container spacing={{ xs: 6, lg: 12 }} sx={{ alignItems: 'center' }}>
             
-            <h2 className="text-4xl sm:text-5xl font-black text-white uppercase font-syne tracking-tight leading-[0.95]">
-              LIMITED DROPS
-            </h2>
-            
-            <p className="text-slate-400 text-sm leading-relaxed max-w-md">
-              Made once, never repeated. Club members get 24 hours of early access before public release.
-            </p>
-            
-            {/* Countdown Timer */}
-            <div className="flex gap-3 pt-4">
-              {[
-                { val: timeLeft.days.toString().padStart(2, '0'), label: 'DAYS' },
-                { val: timeLeft.hours.toString().padStart(2, '0'), label: 'HOURS' },
-                { val: timeLeft.mins.toString().padStart(2, '0'), label: 'MINS' },
-                { val: timeLeft.secs.toString().padStart(2, '0'), label: 'SECS' },
-              ].map(({ val, label }) => (
-                <div key={label} className="w-16 h-20 bg-[#12141e] border border-white/10 rounded flex flex-col items-center justify-center">
-                  <span className="text-[#d4af37] text-2xl font-black font-syne">{val}</span>
-                  <span className="text-slate-500 text-[9px] font-bold tracking-[0.15em] uppercase">{label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+            {/* Left - Text + Countdown */}
+            <Grid size={{ xs: 12, lg: 5 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                
+                <Box>
+                  <Typography 
+                    variant="caption" 
+                    sx={{ 
+                      color: 'primary.main', 
+                      fontWeight: 'bold', 
+                      letterSpacing: '0.25em', 
+                      display: 'block', 
+                      mb: 2 
+                    }}
+                  >
+                    NUMBERED RUNS
+                  </Typography>
+                  
+                  <Typography 
+                    variant="h3" 
+                    sx={{ 
+                      fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' }, 
+                      letterSpacing: '-0.02em',
+                      lineHeight: 0.95,
+                      mb: 3,
+                      textShadow: '0 4px 20px rgba(0,0,0,0.5)'
+                    }}
+                  >
+                    LIMITED DROPS
+                  </Typography>
+                  
+                  <Typography 
+                    variant="body2" 
+                    sx={{ 
+                      color: 'text.secondary', 
+                      maxWidth: '400px', 
+                      lineHeight: 1.8,
+                      mb: 4
+                    }}
+                  >
+                    Made once, never repeated. Club members get 24 hours of early access before public release.
+                  </Typography>
+                </Box>
+                
+                {/* 3D Countdown Timer */}
+                <Box sx={{ display: 'flex', gap: { xs: 1.5, sm: 2 } }}>
+                  {[
+                    { val: timeLeft.days.toString().padStart(2, '0'), label: 'DAYS' },
+                    { val: timeLeft.hours.toString().padStart(2, '0'), label: 'HOURS' },
+                    { val: timeLeft.mins.toString().padStart(2, '0'), label: 'MINS' },
+                    { val: timeLeft.secs.toString().padStart(2, '0'), label: 'SECS' },
+                  ].map(({ val, label }) => (
+                    <Box 
+                      key={label} 
+                      sx={{ 
+                        width: { xs: 64, sm: 80 }, 
+                        height: { xs: 80, sm: 100 }, 
+                        bgcolor: '#12141E', 
+                        border: '1px solid rgba(255,255,255,0.1)', 
+                        borderTop: '1px solid rgba(255,255,255,0.2)',
+                        borderRadius: 2, 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        boxShadow: '0 10px 25px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.05)',
+                        background: 'linear-gradient(180deg, rgba(24,26,40,1) 0%, rgba(16,18,29,1) 100%)',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {/* Glass glare effect */}
+                      <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%)' }} />
+                      
+                      <Typography 
+                        sx={{ 
+                          color: 'primary.main', 
+                          fontSize: { xs: '1.75rem', sm: '2.5rem' }, 
+                          fontWeight: 900, 
+                          fontFamily: '"Syne", sans-serif',
+                          lineHeight: 1,
+                          textShadow: '0 4px 10px rgba(212,175,55,0.3)',
+                          zIndex: 1
+                        }}
+                      >
+                        {val}
+                      </Typography>
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
+                          color: 'text.secondary', 
+                          fontSize: { xs: '0.55rem', sm: '0.65rem' }, 
+                          fontWeight: 'bold', 
+                          letterSpacing: '0.15em', 
+                          textTransform: 'uppercase',
+                          mt: 1,
+                          zIndex: 1
+                        }}
+                      >
+                        {label}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Grid>
 
-          {/* Right - Limited Product Cards */}
-          <div className="grid grid-cols-2 gap-4">
-            {limitedProducts.map((product) => {
-              const uniqueColors = [...new Set(product.variants.map(v => v.color))].slice(0, 3);
-              const totalStock = product.variants.reduce((acc, v) => acc + (v.stock ?? v.stockCount ?? 0), 0);
-              const stockLabel = totalStock === 0 ? 'SOLD OUT' : totalStock < 10 ? 'LOW STOCK' : null;
-              
-              return (
-                <div key={product.id} className="group cursor-pointer" onClick={() => setSelectedProduct(product)}>
-                  <div className="relative aspect-[3/4] bg-[#12141e] border border-white/5 rounded overflow-hidden mb-3">
-                    <div className="absolute top-3 left-3 z-10 bg-purple-600 text-white px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase rounded-sm">
-                      LIMITED DROP
-                    </div>
-                    <button className="absolute top-3 right-3 z-10 p-1.5 text-slate-500 hover:text-[#d4af37] transition-colors" onClick={(e) => e.stopPropagation()}>
-                      <Heart size={16} />
-                    </button>
-                    <div className="w-full h-full flex flex-col items-center justify-center text-center p-4">
-                      <span className="text-[#d4af37] text-[10px] tracking-[0.2em] uppercase font-bold mb-2">IMAGE</span>
-                      <span className="text-slate-400 text-xs text-center">{product.name} — front on model</span>
-                      <span className="text-slate-500 text-[10px] mt-1">Hover swaps to back-view shot</span>
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-start justify-between gap-1">
-                      <h3 className="text-xs font-bold text-white group-hover:text-[#d4af37] transition-colors leading-tight">{product.name}</h3>
-                      {stockLabel && <span className="text-red-400 text-[9px] font-bold tracking-[0.1em] uppercase whitespace-nowrap">{stockLabel}</span>}
-                    </div>
-                    <p className="text-slate-500 text-[10px] tracking-wide">{product.subCategory} · {product.category}</p>
-                    <span className="text-white text-sm font-bold block">Rs{product.price.toLocaleString()}</span>
-                    {uniqueColors.length > 0 && (
-                      <div className="flex flex-wrap gap-1 pt-0.5">
-                        {uniqueColors.map(color => (
-                          <span key={color} className="px-2 py-0.5 text-[8px] font-semibold tracking-wider text-slate-400 border border-white/10 rounded-sm uppercase">{color}</span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </section>
+            {/* Right - Limited Product Cards using proper ProductCard component */}
+            <Grid size={{ xs: 12, lg: 7 }}>
+              <Grid container spacing={{ xs: 2, sm: 3, lg: 4 }}>
+                {limitedProducts.map((product) => (
+                  <Grid size={{ xs: 12, sm: 6 }} key={product.id}>
+                    <Box 
+                      sx={{ 
+                        position: 'relative',
+                        '&::before': {
+                          content: '""',
+                          position: 'absolute',
+                          inset: -8,
+                          background: 'linear-gradient(135deg, rgba(212,175,55,0.2), transparent 50%)',
+                          borderRadius: 4,
+                          zIndex: 0,
+                          opacity: 0,
+                          transition: 'opacity 0.3s'
+                        },
+                        '&:hover::before': {
+                          opacity: 1
+                        }
+                      }}
+                    >
+                      {/* Floating Limited Badge */}
+                      <Box 
+                        sx={{ 
+                          position: 'absolute', 
+                          top: 12, 
+                          left: 12, 
+                          zIndex: 20, 
+                          background: 'linear-gradient(90deg, #9333ea, #7e22ce)', 
+                          color: 'white', 
+                          px: 1.5, 
+                          py: 0.5, 
+                          fontSize: '0.65rem', 
+                          fontWeight: 900, 
+                          letterSpacing: '0.12em', 
+                          textTransform: 'uppercase', 
+                          borderRadius: 1,
+                          boxShadow: '0 4px 12px rgba(147,51,234,0.4)',
+                          fontFamily: '"JetBrains Mono", sans-serif'
+                        }}
+                      >
+                        LIMITED DROP
+                      </Box>
+                      
+                      <Box sx={{ position: 'relative', zIndex: 10 }}>
+                        <ProductCard 
+                          product={product}
+                          onQuickView={(p) => setSelectedProduct(p)}
+                          onAddToCart={(p) => {
+                            const firstVariant = p.variants[0] || { size: 'M', color: 'Onyx Black', colorHex: '#000000' };
+                            addToCart(p, firstVariant.size as any, firstVariant.color, firstVariant.colorHex, 1);
+                            showToast(`Added ${p.name} to your bag!`);
+                          }}
+                          onToggleWishlist={(p) => {
+                            showToast(`Added ${p.name} to your wishlist!`);
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+
+          </Grid>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

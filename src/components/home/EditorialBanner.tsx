@@ -1,62 +1,182 @@
 import React from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { Container } from '../ui/Container';
-import { Button } from '../ui/Button';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, Button 
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0A0A' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
+  }
+});
 
 export const EditorialBanner: React.FC = () => {
   return (
-    <section className="relative py-16 sm:py-24 lg:py-32 w-full overflow-hidden bg-[#0A0A0A] flex flex-col justify-center items-center border-b border-white/10">
-      {/* Background Graphic & Texture (Photo untouched) */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=2000&q=85"
-          alt="VALKNUT Custom Studio Craftsmanship"
-          loading="lazy"
-          className="w-full h-full object-cover object-center filter brightness-[0.25] contrast-125"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/70 to-[#0A0A0A]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-[#0A0A0A]" />
-      </div>
+    <ThemeProvider theme={theme}>
+      <Box 
+        component="section" 
+        sx={{ 
+          position: 'relative',
+          py: { xs: 12, sm: 16, lg: 24 },
+          width: '100%',
+          overflow: 'hidden',
+          bgcolor: 'background.default',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        {/* Background Graphic & Texture (Photo untouched) */}
+        <Box sx={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          <Box
+            component="img"
+            src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=2000&q=85"
+            alt="VALKNUT Custom Studio Craftsmanship"
+            loading="lazy"
+            sx={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover', 
+              objectPosition: 'center', 
+              filter: 'brightness(0.25) contrast(1.25)' 
+            }}
+          />
+          <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #0A0A0A, rgba(10,10,10,0.7), #0A0A0A)' }} />
+          <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0A0A0A, transparent, #0A0A0A)' }} />
+        </Box>
 
-      <Container size="default" className="relative z-10">
-        <div className="max-w-3xl space-y-4 sm:space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-full">
-            <Sparkles size={13} className="text-[#D4AF37]" />
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.2em] text-[#D4AF37] uppercase">
-              BESPOKE APPAREL ENGINEERING
-            </span>
-          </div>
-
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white uppercase font-heading tracking-tight leading-[1.12] break-words">
-            MAKE IT YOUR ARMOR.<br />
-            <span className="gold-gradient-text mt-1 inline-block">CUSTOM STUDIO LIVE.</span>
-          </h2>
-
-          <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-xl font-normal">
-            Upload your signature graphics or render high-density puff rubber lettering on our 480GSM heavy blanks. Live real-time placement, multiple print techniques, and local master craftsmanship.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-3 sm:pt-4">
-            <Button
-              variant="gold"
-              size="lg"
-              onClick={() => (window.location.hash = '#/custom-studio')}
-              rightIcon={<ArrowRight size={16} />}
-              className="w-full sm:w-auto min-w-0 sm:min-w-[210px] text-xs sm:text-sm font-extrabold"
+        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 10 }}>
+          <Box sx={{ maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: { xs: 3, sm: 4 } }}>
+            
+            <Box 
+              sx={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: 1.5, 
+                px: 2, 
+                py: 1, 
+                bgcolor: 'rgba(212,175,55,0.1)', 
+                border: '1px solid rgba(212,175,55,0.3)', 
+                borderRadius: '50px',
+                alignSelf: 'flex-start',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 0 20px rgba(212,175,55,0.15)'
+              }}
             >
-              LAUNCH CUSTOM STUDIO
-            </Button>
-            <Button
-              variant="secondary"
-              size="lg"
-              onClick={() => (window.location.hash = '#/lookbook')}
-              className="w-full sm:w-auto min-w-0 sm:min-w-[190px] text-xs sm:text-sm font-extrabold"
+              <Sparkles size={14} color="#D4AF37" />
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  color: 'primary.main', 
+                  fontWeight: 'bold', 
+                  letterSpacing: '0.2em',
+                  fontSize: { xs: '0.625rem', sm: '0.6875rem' }
+                }}
+              >
+                BESPOKE APPAREL ENGINEERING
+              </Typography>
+            </Box>
+
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                fontSize: { xs: '2.25rem', sm: '3.5rem', lg: '4.5rem' }, 
+                lineHeight: 1.1,
+                letterSpacing: '-0.02em',
+                textShadow: '0 10px 30px rgba(0,0,0,0.8)'
+              }}
             >
-              VIEW LOOKBOOK
-            </Button>
-          </div>
-        </div>
-      </Container>
-    </section>
+              MAKE IT YOUR ARMOR.<br />
+              <Box 
+                component="span" 
+                sx={{ 
+                  display: 'inline-block',
+                  mt: 1,
+                  background: 'linear-gradient(to right, #f3e5ab, #D4AF37, #e2b714)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  filter: 'drop-shadow(0 4px 15px rgba(212,175,55,0.3))'
+                }}
+              >
+                CUSTOM STUDIO LIVE.
+              </Box>
+            </Typography>
+
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'text.secondary', 
+                fontSize: { xs: '0.875rem', sm: '1rem', md: '1.125rem' }, 
+                lineHeight: 1.8,
+                maxWidth: '600px',
+                fontWeight: 300
+              }}
+            >
+              Upload your signature graphics or render high-density puff rubber lettering on our 480GSM heavy blanks. Live real-time placement, multiple print techniques, and local master craftsmanship.
+            </Typography>
+
+            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 2, sm: 3 }, pt: 2 }}>
+              <Button
+                onClick={() => (window.location.hash = '#/custom-studio')}
+                sx={{
+                  px: { xs: 4, sm: 5 }, py: { xs: 2, sm: 2.5 },
+                  background: 'linear-gradient(90deg, #e2b714, #D4AF37, #aa8010)',
+                  color: 'black',
+                  fontWeight: 900,
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  letterSpacing: '0.16em',
+                  borderRadius: 3,
+                  boxShadow: '0 12px 30px rgba(212,175,55,0.45), inset 0 1px 1px rgba(255,255,255,0.6)',
+                  transition: 'all 0.3s',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 16px 35px rgba(212,175,55,0.6), inset 0 1px 1px rgba(255,255,255,0.6)',
+                  }
+                }}
+              >
+                LAUNCH CUSTOM STUDIO <Box component="span" sx={{ ml: 1, display: 'flex' }}><ArrowRight size={17} /></Box>
+              </Button>
+              <Button
+                onClick={() => (window.location.hash = '#/lookbook')}
+                sx={{
+                  px: { xs: 4, sm: 5 }, py: { xs: 2, sm: 2.5 },
+                  bgcolor: 'rgba(255,255,255,0.08)',
+                  color: 'white',
+                  fontWeight: 900,
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  letterSpacing: '0.16em',
+                  borderRadius: 3,
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(20px)',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2)',
+                  transition: 'all 0.3s',
+                  '&:hover': {
+                    bgcolor: 'rgba(255,255,255,0.14)',
+                    borderColor: 'rgba(212,175,55,0.5)',
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 14px 30px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.2)',
+                  }
+                }}
+              >
+                VIEW LOOKBOOK
+              </Button>
+            </Box>
+
+          </Box>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

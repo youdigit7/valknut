@@ -1,7 +1,54 @@
 import React, { useState } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
-import { Container } from '../ui/Container';
-import { Button } from '../ui/Button';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, Button, TextField, CircularProgress
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0E1017' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            backgroundColor: '#12141E',
+            fontFamily: '"JetBrains Mono", sans-serif',
+            fontSize: '0.875rem',
+            borderRadius: 8,
+            transition: 'all 0.3s',
+            '& fieldset': {
+              borderColor: 'rgba(255,255,255,0.15)',
+              borderWidth: '1px',
+            },
+            '&:hover fieldset': {
+              borderColor: 'rgba(212,175,55,0.5)',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#D4AF37',
+              borderWidth: '1px',
+              boxShadow: '0 0 15px rgba(212,175,55,0.2)'
+            },
+            '& input': {
+              padding: '16px 20px',
+            }
+          }
+        }
+      }
+    }
+  }
+});
 
 export const NewsletterSection: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -21,54 +68,163 @@ export const NewsletterSection: React.FC = () => {
   };
 
   return (
-    <section className="py-14 sm:py-20 lg:py-24 bg-gradient-to-b from-[#0E1017] to-[#0A0A0A] border-b border-white/10 w-full flex flex-col justify-center items-center overflow-hidden">
-      <Container size="narrow">
-        <div className="text-center space-y-4 sm:space-y-6">
-          <span className="text-[#D4AF37] text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase block">
-            THE INNER CIRCLE
-          </span>
-          
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white uppercase font-heading tracking-tight leading-[1.15] break-words">
-            BE FIRST WHEN LIMITED DROPS GO LIVE.
-          </h2>
-          
-          <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-xl mx-auto font-normal px-2">
-            Numbered garments sell out in hours. Receive private 24-hour early access codes, member-only editorial previews, and exclusive sizing reservations.
-          </p>
-
-          {subscribed ? (
-            <div className="inline-flex items-center gap-3 px-6 py-4 sm:px-8 sm:py-5 bg-[#D4AF37]/10 border border-[#D4AF37]/40 rounded-[2px] text-[#D4AF37] text-xs font-mono font-bold tracking-wider uppercase animate-fade-in max-w-full">
-              <Check size={18} className="shrink-0" />
-              <span className="truncate">YOUR EMAIL IS RESERVED ON THE VIP DROP LIST</span>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 max-w-lg mx-auto pt-2 sm:pt-4 w-full px-2 sm:px-0">
-              <input 
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="ENTER YOUR EMAIL FOR EARLY ACCESS"
-                required
-                className="w-full min-w-0 flex-1 px-4 py-3 sm:px-5 sm:py-3.5 bg-[#12141E] border border-white/15 text-white text-xs sm:text-sm font-mono placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors rounded-[2px]"
-              />
-              <Button
-                variant="gold"
-                size="lg"
-                type="submit"
-                isLoading={isLoading}
-                rightIcon={<ArrowRight size={16} />}
-                className="w-full sm:w-auto shrink-0 text-xs sm:text-sm font-extrabold"
+    <ThemeProvider theme={theme}>
+      <Box 
+        component="section" 
+        sx={{ 
+          py: { xs: 10, sm: 14, lg: 16 }, 
+          background: 'linear-gradient(to bottom, #0E1017, #0A0A0A)', 
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          width: '100%',
+          overflow: 'hidden'
+        }}
+      >
+        <Container maxWidth="md">
+          <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: { xs: 2, sm: 3 } }}>
+            
+            <Box>
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  color: 'primary.main', 
+                  fontWeight: 'bold', 
+                  letterSpacing: '0.3em', 
+                  display: 'block', 
+                  mb: 2 
+                }}
               >
-                JOIN CLUB
-              </Button>
-            </form>
-          )}
+                THE INNER CIRCLE
+              </Typography>
+              
+              <Typography 
+                variant="h3" 
+                sx={{ 
+                  fontSize: { xs: '2rem', sm: '2.5rem', md: '3.5rem' }, 
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.15,
+                  mb: 3,
+                  textShadow: '0 4px 20px rgba(0,0,0,0.5)'
+                }}
+              >
+                BE FIRST WHEN LIMITED DROPS GO LIVE.
+              </Typography>
+              
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: 'text.secondary', 
+                  maxWidth: '650px', 
+                  mx: 'auto',
+                  lineHeight: 1.8,
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}
+              >
+                Numbered garments sell out in hours. Receive private 24-hour early access codes, member-only editorial previews, and exclusive sizing reservations.
+              </Typography>
+            </Box>
 
-          <p className="text-slate-500 text-[10px] sm:text-[11px] font-mono uppercase tracking-widest pt-2 sm:pt-3">
-            No spam. No promotional noise. Unsubscribe at any time.
-          </p>
-        </div>
-      </Container>
-    </section>
+            <Box sx={{ mt: 2, mb: 2 }}>
+              {subscribed ? (
+                <Box 
+                  sx={{ 
+                    display: 'inline-flex', 
+                    alignItems: 'center', 
+                    gap: 2, 
+                    px: { xs: 3, sm: 4 }, 
+                    py: 2.5, 
+                    bgcolor: 'rgba(212,175,55,0.1)', 
+                    border: '1px solid rgba(212,175,55,0.4)', 
+                    borderRadius: 2,
+                    boxShadow: '0 10px 25px rgba(212,175,55,0.15)',
+                    backdropFilter: 'blur(10px)',
+                    animation: 'fadeIn 0.5s ease-out'
+                  }}
+                >
+                  <Check size={20} color="#D4AF37" />
+                  <Typography 
+                    variant="caption" 
+                    sx={{ 
+                      color: 'primary.main', 
+                      fontWeight: 'bold', 
+                      letterSpacing: '0.1em',
+                      textTransform: 'uppercase',
+                      fontSize: { xs: '0.65rem', sm: '0.75rem' }
+                    }}
+                  >
+                    YOUR EMAIL IS RESERVED ON THE VIP DROP LIST
+                  </Typography>
+                </Box>
+              ) : (
+                <Box 
+                  component="form" 
+                  onSubmit={handleSubmit} 
+                  sx={{ 
+                    display: 'flex', 
+                    flexDirection: { xs: 'column', sm: 'row' }, 
+                    gap: { xs: 2, sm: 2 }, 
+                    maxWidth: '600px', 
+                    mx: 'auto',
+                    width: '100%' 
+                  }}
+                >
+                  <TextField 
+                    fullWidth
+                    variant="outlined"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="ENTER YOUR EMAIL FOR EARLY ACCESS"
+                    required
+                    sx={{ flexGrow: 1 }}
+                  />
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    sx={{
+                      minWidth: { xs: '100%', sm: '180px' },
+                      height: '56px',
+                      background: 'linear-gradient(90deg, #e6c042, #D4AF37, #aa8010)',
+                      color: 'black',
+                      fontWeight: 900,
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      letterSpacing: '0.18em',
+                      borderRadius: 2,
+                      boxShadow: '0 12px 30px rgba(212,175,55,0.4), inset 0 1px 1px rgba(255,255,255,0.7)',
+                      transition: 'all 0.3s',
+                      '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 16px 35px rgba(212,175,55,0.6), inset 0 1px 1px rgba(255,255,255,0.7)',
+                      },
+                      '&:disabled': {
+                        background: '#333',
+                        color: '#666',
+                        boxShadow: 'none'
+                      }
+                    }}
+                  >
+                    {isLoading ? <CircularProgress size={24} sx={{ color: 'black' }} /> : (
+                      <>JOIN CLUB <Box component="span" sx={{ ml: 1.5, display: 'flex' }}><ArrowRight size={17} /></Box></>
+                    )}
+                  </Button>
+                </Box>
+              )}
+            </Box>
+
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                color: 'text.secondary', 
+                fontSize: { xs: '0.625rem', sm: '0.6875rem' }, 
+                letterSpacing: '0.2em', 
+                textTransform: 'uppercase' 
+              }}
+            >
+              No spam. No promotional noise. Unsubscribe at any time.
+            </Typography>
+
+          </Box>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

@@ -1,8 +1,25 @@
 import React from 'react';
 import { useStore } from '../../context/StoreContext';
-import { Container } from '../ui/Container';
-import { SectionHeading } from '../ui/SectionHeading';
 import { ProductCard } from '../ui/ProductCard';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, Grid, Button
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0A0A' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
+  }
+});
 
 export const NewCollectionSection: React.FC = () => {
   const { products, setSelectedProduct, addToCart, showToast } = useStore();
@@ -13,38 +30,102 @@ export const NewCollectionSection: React.FC = () => {
   if (collectionProducts.length === 0) return null;
 
   return (
-    <section id="featured-collection-section" className="py-14 sm:py-20 lg:py-24 bg-[#0A0A0A] w-full flex flex-col justify-center items-center border-b border-white/10 overflow-hidden">
-      <Container size="default">
-        
-        {/* Centered Section Header */}
-        <SectionHeading
-          align="center"
-          eyebrow="DROP 04 / EXCLUSIVE"
-          title="FEATURED COLLECTION"
-          subtitle="Twelve pieces built around weight, drape, and restraint. Each carries the sigil in sacred geometry."
-          linkText="VIEW ALL NEW ARRIVALS"
-          linkHref="#/shop"
-        />
+    <ThemeProvider theme={theme}>
+      <Box 
+        component="section" 
+        id="featured-collection-section"
+        sx={{ 
+          py: { xs: 7, sm: 10, lg: 12 }, 
+          bgcolor: 'background.default', 
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          width: '100%',
+          overflow: 'hidden'
+        }}
+      >
+        <Container maxWidth="xl">
+          
+          {/* Centered Section Header with 3D Aesthetic */}
+          <Box sx={{ textAlign: 'center', mb: { xs: 6, sm: 8 } }}>
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                color: 'primary.main', 
+                fontWeight: 'bold', 
+                letterSpacing: '0.25em', 
+                display: 'block', 
+                mb: 2 
+              }}
+            >
+              DROP 04 / EXCLUSIVE
+            </Typography>
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                fontSize: { xs: '2rem', sm: '3rem', md: '4rem' }, 
+                letterSpacing: '-0.02em',
+                mb: 2,
+                textShadow: '0 4px 20px rgba(0,0,0,0.5)'
+              }}
+            >
+              FEATURED COLLECTION
+            </Typography>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'text.secondary', 
+                maxWidth: '600px', 
+                mx: 'auto',
+                mb: 4,
+                lineHeight: 1.8
+              }}
+            >
+              Twelve pieces built around weight, drape, and restraint. Each carries the sigil in sacred geometry.
+            </Typography>
+            <Button 
+              href="#/shop"
+              sx={{ 
+                color: 'text.primary',
+                borderBottom: '1px solid',
+                borderColor: 'primary.main',
+                pb: 0.5,
+                borderRadius: 0,
+                fontSize: '0.8rem',
+                letterSpacing: '0.15em',
+                fontWeight: 'bold',
+                fontFamily: '"JetBrains Mono", sans-serif',
+                '&:hover': {
+                  bgcolor: 'transparent',
+                  color: 'primary.main',
+                  boxShadow: '0 4px 15px rgba(212,175,55,0.2)'
+                }
+              }}
+            >
+              VIEW ALL NEW ARRIVALS
+            </Button>
+          </Box>
 
-        {/* Responsive Product Grid */}
-        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6 w-full mx-auto">
-          {collectionProducts.map((product) => (
-            <ProductCard 
-              key={product.id} 
-              product={product}
-              onQuickView={(p) => setSelectedProduct(p)}
-              onAddToCart={(p) => {
-                const firstVariant = p.variants[0] || { size: 'M', color: 'Onyx Black', colorHex: '#000000' };
-                addToCart(p, firstVariant.size as any, firstVariant.color, firstVariant.colorHex, 1);
-                showToast(`Added ${p.name} to your bag!`);
-              }}
-              onToggleWishlist={(p) => {
-                showToast(`Added ${p.name} to your wishlist!`);
-              }}
-            />
-          ))}
-        </div>
-      </Container>
-    </section>
+          {/* Responsive Product Grid */}
+          <Grid container spacing={{ xs: 2, sm: 3, lg: 4 }}>
+            {collectionProducts.map((product) => (
+              <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={product.id}>
+                <ProductCard 
+                  product={product}
+                  onQuickView={(p) => setSelectedProduct(p)}
+                  onAddToCart={(p) => {
+                    const firstVariant = p.variants[0] || { size: 'M', color: 'Onyx Black', colorHex: '#000000' };
+                    addToCart(p, firstVariant.size as any, firstVariant.color, firstVariant.colorHex, 1);
+                    showToast(`Added ${p.name} to your bag!`);
+                  }}
+                  onToggleWishlist={(p) => {
+                    showToast(`Added ${p.name} to your wishlist!`);
+                  }}
+                />
+              </Grid>
+            ))}
+          </Grid>
+
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

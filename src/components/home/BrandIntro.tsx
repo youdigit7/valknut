@@ -1,150 +1,284 @@
 import React from 'react';
 import { Layers, Sparkles, Truck, CheckCircle2, ArrowRight, Compass } from 'lucide-react';
-import { Container } from '../ui/Container';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, Grid, Button
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0A0A', paper: '#10121D' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
+  }
+});
 
 export const BrandIntro: React.FC = () => {
   return (
-    <section className="py-20 sm:py-28 bg-[#0A0A0A] border-b border-white/10 w-full flex flex-col justify-center items-center overflow-hidden">
-      <Container size="default">
-        <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
-
-          {/* Eyebrow Tag with 3D Pill */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-gradient-to-r from-[#D4AF37]/15 via-black/40 to-[#D4AF37]/15 border border-[#D4AF37]/40 rounded-full mb-5 backdrop-blur-md shadow-[0_0_20px_rgba(212,175,55,0.15)]">
-            <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-            <span className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] sm:tracking-[0.25em] text-[#D4AF37] uppercase">
-              THE ARCHITECTURE OF VALKNUT
-            </span>
-          </div>
-
-          {/* Headline with 3D Depth */}
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white uppercase font-heading tracking-tight leading-[1.12] max-w-4xl break-words drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]">
-            BUILT FOR THOSE WHO COMMAND RESPECT THROUGH RESTRAINT.
-          </h2>
-
-          {/* Narrative Body */}
-          <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed font-light mt-4 max-w-2xl px-2 sm:px-0">
-            Rooted in the ancient Norse geometry of the bound knot and engineered in Colombo.
-            VALKNUT creates high-density garments for individuals who choose substance over noise.
-            No synthetic blends. No cheap prints. Pure heavyweight cotton tailored with uncompromising structure.
-          </p>
-
-          {/* 4 Feature Architecture Cards - 3D Floating Glass Slabs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full mt-12 sm:mt-16 text-left">
-
-            {/* Card 1: 480 GSM */}
-            <div className="p-6 rounded-2xl bg-gradient-to-b from-[#181a28]/85 via-[#10121d]/90 to-[#0b0c14] border border-white/15 border-t-white/30 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.15)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_30px_rgba(212,175,55,0.25)] hover:border-[#D4AF37]/60 hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-2xl sm:text-3xl lg:text-4xl font-black font-heading tracking-tight gold-gradient-text drop-shadow-[0_4px_12px_rgba(212,175,55,0.4)]">
-                    480 GSM
-                  </span>
-                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#D4AF37]/25 to-black/60 border border-[#D4AF37]/50 shadow-[0_0_20px_rgba(212,175,55,0.25)] flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Layers size={19} className="text-[#D4AF37]" />
-                  </div>
-                </div>
-                <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-slate-400 block mb-1">
-                  FABRIC WEIGHT
-                </span>
-                <h3 className="text-sm font-bold text-white uppercase font-heading">
-                  HEAVY FRENCH TERRY
-                </h3>
-              </div>
-              <p className="text-xs text-slate-400 mt-4 pt-3 border-t border-white/10 leading-relaxed font-light">
-                Ultra-dense combed cotton with permanent structural drape.
-              </p>
-            </div>
-
-            {/* Card 2: 100% Cotton */}
-            <div className="p-6 rounded-2xl bg-gradient-to-b from-[#181a28]/85 via-[#10121d]/90 to-[#0b0c14] border border-white/15 border-t-white/30 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.15)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_30px_rgba(212,175,55,0.25)] hover:border-[#D4AF37]/60 hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-2xl sm:text-3xl lg:text-4xl font-black font-heading tracking-tight gold-gradient-text drop-shadow-[0_4px_12px_rgba(212,175,55,0.4)]">
-                    100%
-                  </span>
-                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#D4AF37]/25 to-black/60 border border-[#D4AF37]/50 shadow-[0_0_20px_rgba(212,175,55,0.25)] flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <CheckCircle2 size={19} className="text-[#D4AF37]" />
-                  </div>
-                </div>
-                <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-slate-400 block mb-1">
-                  PURITY GRADE
-                </span>
-                <h3 className="text-sm font-bold text-white uppercase font-heading">
-                  COMBED COTTON
-                </h3>
-              </div>
-              <p className="text-xs text-slate-400 mt-4 pt-3 border-t border-white/10 leading-relaxed font-light">
-                Zero synthetic polyester blends. Breathable and pre-shrunk.
-              </p>
-            </div>
-
-            {/* Card 3: Custom Studio */}
-            <div className="p-6 rounded-2xl bg-gradient-to-b from-[#181a28]/85 via-[#10121d]/90 to-[#0b0c14] border border-white/15 border-t-white/30 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.15)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_30px_rgba(212,175,55,0.25)] hover:border-[#D4AF37]/60 hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-2xl sm:text-3xl lg:text-4xl font-black font-heading tracking-tight gold-gradient-text drop-shadow-[0_4px_12px_rgba(212,175,55,0.4)]">
-                    CUSTOM
-                  </span>
-                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#D4AF37]/25 to-black/60 border border-[#D4AF37]/50 shadow-[0_0_20px_rgba(212,175,55,0.25)] flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Sparkles size={19} className="text-[#D4AF37]" />
-                  </div>
-                </div>
-                <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-slate-400 block mb-1">
-                  STUDIO GRAPHICS
-                </span>
-                <h3 className="text-sm font-bold text-white uppercase font-heading">
-                  HIGH-DENSITY EMBROIDERY
-                </h3>
-              </div>
-              <p className="text-xs text-slate-400 mt-4 pt-3 border-t border-white/10 leading-relaxed font-light">
-                Bespoke 3D puff rubber and metallic thread application.
-              </p>
-            </div>
-
-            {/* Card 4: Colombo Dispatch */}
-            <div className="p-6 rounded-2xl bg-gradient-to-b from-[#181a28]/85 via-[#10121d]/90 to-[#0b0c14] border border-white/15 border-t-white/30 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.15)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_30px_rgba(212,175,55,0.25)] hover:border-[#D4AF37]/60 hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-2xl sm:text-3xl lg:text-4xl font-black font-heading tracking-tight gold-gradient-text drop-shadow-[0_4px_12px_rgba(212,175,55,0.4)]">
-                    COLOMBO
-                  </span>
-                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#D4AF37]/25 to-black/60 border border-[#D4AF37]/50 shadow-[0_0_20px_rgba(212,175,55,0.25)] flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Truck size={19} className="text-[#D4AF37]" />
-                  </div>
-                </div>
-                <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-slate-400 block mb-1">
-                  ISLANDWIDE DISPATCH
-                </span>
-                <h3 className="text-sm font-bold text-white uppercase font-heading">
-                  1-3 DAYS DELIVERY
-                </h3>
-              </div>
-              <p className="text-xs text-slate-400 mt-4 pt-3 border-t border-white/10 leading-relaxed font-light">
-                Tracked courier service across all 25 districts in Sri Lanka.
-              </p>
-            </div>
-
-          </div>
-
-          {/* Action Triggers with Modern 3D Buttons & Generous Breathing Room */}
-          <div className="pt-12 sm:pt-16 pb-4 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-            <button
-              onClick={() => (window.location.hash = '#/shop')}
-              className="w-full sm:w-auto px-8 py-3.5 sm:py-4 bg-gradient-to-r from-[#e2b714] via-[#D4AF37] to-[#aa8010] text-black font-extrabold text-xs sm:text-sm tracking-[0.16em] uppercase rounded-xl shadow-[0_12px_30px_rgba(212,175,55,0.45),inset_0_1px_1px_rgba(255,255,255,0.6)] hover:-translate-y-1 hover:shadow-[0_16px_35px_rgba(212,175,55,0.6)] active:translate-y-0.5 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+    <ThemeProvider theme={theme}>
+      <Box 
+        component="section" 
+        sx={{ 
+          py: { xs: 10, sm: 14 }, 
+          bgcolor: 'background.default', 
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          overflow: 'hidden'
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', mx: 'auto' }}>
+            
+            {/* Eyebrow Tag with 3D Pill */}
+            <Box 
+              sx={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: 1.5, 
+                px: 2, 
+                py: 0.75, 
+                background: 'linear-gradient(90deg, rgba(212,175,55,0.15), rgba(0,0,0,0.4), rgba(212,175,55,0.15))',
+                border: '1px solid rgba(212,175,55,0.4)',
+                borderRadius: '50px',
+                mb: 4,
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 0 20px rgba(212,175,55,0.15)'
+              }}
             >
-              <span>EXPLORE APPAREL</span>
-              <ArrowRight size={17} />
-            </button>
-            <button
-              onClick={() => (window.location.hash = '#/custom-studio')}
-              className="w-full sm:w-auto px-8 py-3.5 sm:py-4 bg-white/[0.08] hover:bg-white/[0.14] text-white font-extrabold text-xs sm:text-sm tracking-[0.16em] uppercase rounded-xl border border-white/20 hover:border-[#D4AF37]/50 backdrop-blur-xl shadow-[0_10px_25px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:-translate-y-1 active:translate-y-0.5 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
-            >
-              <Compass size={17} />
-              <span>CUSTOMIZE IN STUDIO</span>
-            </button>
-          </div>
+              <Box sx={{ w: 8, h: 8, borderRadius: '50%', bgcolor: 'primary.main', width: 8, height: 8, animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} />
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  color: 'primary.main', 
+                  fontWeight: 'bold', 
+                  letterSpacing: { xs: '0.2em', sm: '0.25em' },
+                  fontSize: { xs: '0.65rem', sm: '0.75rem' }
+                }}
+              >
+                THE ARCHITECTURE OF VALKNUT
+              </Typography>
+            </Box>
 
-        </div>
-      </Container>
-    </section>
+            {/* Headline with 3D Depth */}
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                fontSize: { xs: '1.75rem', sm: '2.5rem', lg: '3.5rem' }, 
+                letterSpacing: '-0.02em',
+                lineHeight: 1.12,
+                maxWidth: '900px',
+                mb: 3,
+                textShadow: '0 4px 20px rgba(0,0,0,0.9)'
+              }}
+            >
+              BUILT FOR THOSE WHO COMMAND RESPECT THROUGH RESTRAINT.
+            </Typography>
+
+            {/* Narrative Body */}
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'text.secondary', 
+                maxWidth: '700px', 
+                mx: 'auto',
+                mb: 8,
+                lineHeight: 1.8,
+                fontWeight: 300,
+                fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' },
+                px: { xs: 2, sm: 0 }
+              }}
+            >
+              Rooted in the ancient Norse geometry of the bound knot and engineered in Colombo.
+              VALKNUT creates high-density garments for individuals who choose substance over noise.
+              No synthetic blends. No cheap prints. Pure heavyweight cotton tailored with uncompromising structure.
+            </Typography>
+
+            {/* 4 Feature Architecture Cards - 3D Floating Glass Slabs */}
+            <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ width: '100%', textAlign: 'left', mb: 8 }}>
+              
+              {[
+                { 
+                  title: '480 GSM', 
+                  subtitle: 'FABRIC WEIGHT', 
+                  desc: 'HEAVY FRENCH TERRY', 
+                  body: 'Ultra-dense combed cotton with permanent structural drape.',
+                  icon: <Layers size={19} color="#D4AF37" />
+                },
+                { 
+                  title: '100%', 
+                  subtitle: 'PURITY GRADE', 
+                  desc: 'COMBED COTTON', 
+                  body: 'Zero synthetic polyester blends. Breathable and pre-shrunk.',
+                  icon: <CheckCircle2 size={19} color="#D4AF37" />
+                },
+                { 
+                  title: 'CUSTOM', 
+                  subtitle: 'STUDIO GRAPHICS', 
+                  desc: 'HIGH-DENSITY EMBROIDERY', 
+                  body: 'Bespoke 3D puff rubber and metallic thread application.',
+                  icon: <Sparkles size={19} color="#D4AF37" />
+                },
+                { 
+                  title: 'COLOMBO', 
+                  subtitle: 'ISLANDWIDE DISPATCH', 
+                  desc: '1-3 DAYS DELIVERY', 
+                  body: 'Tracked courier service across all 25 districts in Sri Lanka.',
+                  icon: <Truck size={19} color="#D4AF37" />
+                }
+              ].map((card, idx) => (
+                <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={idx}>
+                  <Box 
+                    sx={{ 
+                      p: 3, 
+                      borderRadius: 4, 
+                      background: 'linear-gradient(180deg, rgba(24,26,40,0.85), rgba(16,18,29,0.9), rgba(11,12,20,1))',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      borderTopColor: 'rgba(255,255,255,0.3)',
+                      backdropFilter: 'blur(20px)',
+                      boxShadow: '0 20px 50px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.15)',
+                      transition: 'all 0.3s',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      height: '100%',
+                      '&:hover': {
+                        boxShadow: '0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(212,175,55,0.25)',
+                        borderColor: 'rgba(212,175,55,0.6)',
+                        transform: 'translateY(-8px)',
+                        '& .iconBox': { transform: 'scale(1.1)' }
+                      }
+                    }}
+                  >
+                    <Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                        <Typography 
+                          sx={{ 
+                            fontSize: { xs: '1.5rem', sm: '1.875rem', lg: '2.25rem' }, 
+                            fontFamily: '"Syne", sans-serif', 
+                            fontWeight: 900,
+                            letterSpacing: '-0.02em',
+                            background: 'linear-gradient(to right, #f3e5ab, #D4AF37)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            filter: 'drop-shadow(0 4px 12px rgba(212,175,55,0.4))'
+                          }}
+                        >
+                          {card.title}
+                        </Typography>
+                        <Box 
+                          className="iconBox"
+                          sx={{ 
+                            width: 44, 
+                            height: 44, 
+                            borderRadius: 3, 
+                            background: 'linear-gradient(135deg, rgba(212,175,55,0.25), rgba(0,0,0,0.6))',
+                            border: '1px solid rgba(212,175,55,0.5)',
+                            boxShadow: '0 0 20px rgba(212,175,55,0.25)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'transform 0.3s'
+                          }}
+                        >
+                          {card.icon}
+                        </Box>
+                      </Box>
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
+                          fontSize: { xs: '0.625rem', sm: '0.6875rem' }, 
+                          color: 'text.secondary', 
+                          letterSpacing: '0.1em', 
+                          display: 'block', 
+                          mb: 0.5 
+                        }}
+                      >
+                        {card.subtitle}
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold', fontFamily: '"Syne", sans-serif', color: 'white' }}>
+                        {card.desc}
+                      </Typography>
+                    </Box>
+                    <Typography 
+                      sx={{ 
+                        fontSize: '0.75rem', 
+                        color: 'text.secondary', 
+                        mt: 2, 
+                        pt: 1.5, 
+                        borderTop: '1px solid rgba(255,255,255,0.1)', 
+                        lineHeight: 1.8, 
+                        fontWeight: 300 
+                      }}
+                    >
+                      {card.body}
+                    </Typography>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+
+            {/* Action Triggers with Modern 3D Buttons */}
+            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, width: { xs: '100%', sm: 'auto' } }}>
+              <Button
+                onClick={() => (window.location.hash = '#/shop')}
+                sx={{
+                  px: 4, py: 2,
+                  background: 'linear-gradient(90deg, #e2b714, #D4AF37, #aa8010)',
+                  color: 'black',
+                  fontWeight: 900,
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  letterSpacing: '0.16em',
+                  borderRadius: 3,
+                  boxShadow: '0 12px 30px rgba(212,175,55,0.45), inset 0 1px 1px rgba(255,255,255,0.6)',
+                  transition: 'all 0.3s',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 16px 35px rgba(212,175,55,0.6), inset 0 1px 1px rgba(255,255,255,0.6)',
+                  }
+                }}
+              >
+                EXPLORE APPAREL <Box component="span" sx={{ ml: 1, display: 'flex' }}><ArrowRight size={17} /></Box>
+              </Button>
+              <Button
+                onClick={() => (window.location.hash = '#/custom-studio')}
+                sx={{
+                  px: 4, py: 2,
+                  bgcolor: 'rgba(255,255,255,0.08)',
+                  color: 'white',
+                  fontWeight: 900,
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  letterSpacing: '0.16em',
+                  borderRadius: 3,
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(20px)',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2)',
+                  transition: 'all 0.3s',
+                  '&:hover': {
+                    bgcolor: 'rgba(255,255,255,0.14)',
+                    borderColor: 'rgba(212,175,55,0.5)',
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 14px 30px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.2)',
+                  }
+                }}
+              >
+                <Box component="span" sx={{ mr: 1, display: 'flex' }}><Compass size={17} /></Box> CUSTOMIZE IN STUDIO
+              </Button>
+            </Box>
+
+          </Box>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

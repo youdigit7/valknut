@@ -1,77 +1,209 @@
 import React from 'react';
 import { Shield, Zap, Lock } from 'lucide-react';
-import { Container } from '../ui/Container';
+import { 
+  createTheme, ThemeProvider, Box, Typography, Container, Grid 
+} from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#D4AF37', dark: '#E2B714' },
+    background: { default: '#0A0C10', paper: '#12141E' },
+    text: { primary: '#ffffff', secondary: '#94a3b8' },
+  },
+  typography: {
+    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
+    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
+  }
+});
 
 export const BrandPhilosophy: React.FC = () => {
   return (
-    <section className="py-14 sm:py-20 lg:py-24 bg-[#0E1017] border-b border-white/10 w-full flex flex-col justify-center items-center overflow-hidden">
-      <Container size="default">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          
-          {/* Left Column: Brand Philosophy Visual (Photo untouched) */}
-          <div className="relative">
-            <div className="relative rounded-[3px] overflow-hidden border border-white/10 p-2 bg-[#12141E] shadow-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=85" 
-                alt="VALKNUT Brand Craftsmanship" 
-                loading="lazy"
-                className="w-full h-[260px] sm:h-[380px] lg:h-[460px] object-cover rounded-[2px] filter contrast-110 brightness-90"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
-              
-              <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 p-4 sm:p-6 bg-[#0E1017]/95 border border-[#D4AF37]/40 rounded-[2px] backdrop-blur-md">
-                <span className="text-[10px] sm:text-xs font-mono font-extrabold tracking-[0.2em] sm:tracking-[0.25em] text-[#D4AF37] uppercase block mb-1">
-                  THE VALKNUT CODE
-                </span>
-                <p className="text-white text-xs sm:text-base font-bold font-heading uppercase leading-snug">
-                  &ldquo;WE DO NOT FOLLOW TRENDS. WE ARCHITECT THE STANDARD.&rdquo;
-                </p>
-              </div>
-            </div>
-          </div>
+    <ThemeProvider theme={theme}>
+      <Box 
+        component="section" 
+        sx={{ 
+          py: { xs: 10, sm: 14, lg: 16 }, 
+          bgcolor: 'background.default', 
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          width: '100%',
+          overflow: 'hidden'
+        }}
+      >
+        <Container maxWidth="xl">
+          <Grid container spacing={{ xs: 6, lg: 10 }} sx={{ alignItems: 'center' }}>
+            
+            {/* Left Column: Brand Philosophy Visual (3D Polaroid Effect) */}
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <Box 
+                sx={{ 
+                  position: 'relative', 
+                  borderRadius: 4, 
+                  overflow: 'hidden', 
+                  p: 1.5, 
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.8))',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  boxShadow: '0 30px 60px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.15)',
+                  transform: 'perspective(1000px) rotateY(5deg)',
+                  transition: 'transform 0.5s',
+                  '&:hover': {
+                    transform: 'perspective(1000px) rotateY(0deg)',
+                  }
+                }}
+              >
+                <Box 
+                  component="img"
+                  src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=85" 
+                  alt="VALKNUT Brand Craftsmanship" 
+                  loading="lazy"
+                  sx={{ 
+                    width: '100%', 
+                    height: { xs: 320, sm: 460, lg: 540 }, 
+                    objectFit: 'cover', 
+                    borderRadius: 3, 
+                    filter: 'contrast(1.1) brightness(0.9)' 
+                  }}
+                />
+                
+                {/* 3D Glass Overlay Box */}
+                <Box 
+                  sx={{ 
+                    position: 'absolute', 
+                    bottom: { xs: 24, sm: 40 }, 
+                    left: { xs: 24, sm: 40 }, 
+                    right: { xs: 24, sm: 40 }, 
+                    p: { xs: 3, sm: 4 }, 
+                    bgcolor: 'rgba(10,12,16,0.85)', 
+                    border: '1px solid rgba(212,175,55,0.4)', 
+                    borderRadius: 3, 
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.6), inset 0 1px 1px rgba(212,175,55,0.2)'
+                  }}
+                >
+                  <Typography 
+                    variant="caption" 
+                    sx={{ 
+                      color: 'primary.main', 
+                      fontWeight: 900, 
+                      letterSpacing: '0.25em', 
+                      display: 'block', 
+                      mb: 1.5 
+                    }}
+                  >
+                    THE VALKNUT CODE
+                  </Typography>
+                  <Typography 
+                    sx={{ 
+                      color: 'white', 
+                      fontSize: { xs: '1rem', sm: '1.25rem' }, 
+                      fontWeight: 900, 
+                      fontFamily: '"Syne", sans-serif', 
+                      textTransform: 'uppercase', 
+                      lineHeight: 1.2 
+                    }}
+                  >
+                    “WE DO NOT FOLLOW TRENDS. WE ARCHITECT THE STANDARD.”
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
 
-          {/* Right Column: Text & Pillars */}
-          <div className="space-y-4 sm:space-y-6">
-            <div className="inline-block px-3 py-1.5 sm:px-3.5 sm:py-1.5 bg-white/5 border border-white/10 rounded-full">
-              <span className="text-[10px] sm:text-xs font-mono font-bold text-[#D4AF37] tracking-widest uppercase">
-                BRAND PHILOSOPHY
-              </span>
-            </div>
+            {/* Right Column: Text & Pillars */}
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                
+                <Box>
+                  <Box 
+                    sx={{ 
+                      display: 'inline-flex', 
+                      px: 2, 
+                      py: 1, 
+                      bgcolor: 'rgba(255,255,255,0.05)', 
+                      border: '1px solid rgba(255,255,255,0.1)', 
+                      borderRadius: 10,
+                      mb: 3
+                    }}
+                  >
+                    <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 'bold', letterSpacing: '0.25em' }}>
+                      BRAND PHILOSOPHY
+                    </Typography>
+                  </Box>
 
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase font-heading leading-[1.15] break-words">
-              DESIGNED FOR THOSE WHO COMMAND THEIR DESTINY.
-            </h2>
+                  <Typography 
+                    variant="h3" 
+                    sx={{ 
+                      fontSize: { xs: '2rem', sm: '3rem', md: '3.5rem' }, 
+                      letterSpacing: '-0.02em', 
+                      lineHeight: 1.1,
+                      mb: 3,
+                      textShadow: '0 4px 20px rgba(0,0,0,0.5)'
+                    }}
+                  >
+                    DESIGNED FOR THOSE WHO COMMAND THEIR DESTINY.
+                  </Typography>
 
-            <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
-              VALKNUT Official was founded on a singular principle: true power starts within the mind. 
-              Our garments are built not merely as apparel, but as armor for the relentless—combining 
-              architectural heavy drape fabrics, precision tailoring, and dark luxury minimalism.
-            </p>
+                  <Typography 
+                    variant="body2" 
+                    sx={{ 
+                      color: 'text.secondary', 
+                      fontSize: { xs: '0.875rem', sm: '1rem' }, 
+                      lineHeight: 1.8, 
+                      fontWeight: 300 
+                    }}
+                  >
+                    VALKNUT Official was founded on a singular principle: true power starts within the mind. 
+                    Our garments are built not merely as apparel, but as armor for the relentless—combining 
+                    architectural heavy drape fabrics, precision tailoring, and dark luxury minimalism.
+                  </Typography>
+                </Box>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-2 sm:pt-4">
-              <div className="p-4 sm:p-5 bg-[#12141E] border border-white/5 rounded-[2px] hover:border-[#D4AF37]/40 transition-colors shadow-lg">
-                <Shield className="text-[#D4AF37] mb-2 sm:mb-3" size={22} />
-                <h4 className="text-[11px] sm:text-xs font-bold text-white uppercase tracking-wider mb-1">UNCOMPROMISED</h4>
-                <p className="text-[10px] sm:text-[11px] text-slate-400 leading-relaxed">480GSM ultra-dense organic cotton constructions.</p>
-              </div>
+                <Grid container spacing={3}>
+                  {[
+                    { title: 'UNCOMPROMISED', icon: <Shield size={24} color="#D4AF37" />, desc: '480GSM ultra-dense organic cotton constructions.' },
+                    { title: 'CUSTOM STUDIO', icon: <Zap size={24} color="#D4AF37" />, desc: 'Personalize with high-density puff & embroidery.' },
+                    { title: 'SECURE CHECKOUT', icon: <Lock size={24} color="#D4AF37" />, desc: 'Koko, OnePay & eWAY instant payments.' }
+                  ].map((pillar, idx) => (
+                    <Grid size={{ xs: 12, sm: 4 }} key={idx}>
+                      <Box 
+                        sx={{ 
+                          p: 3, 
+                          height: '100%',
+                          bgcolor: 'background.paper', 
+                          border: '1px solid rgba(255,255,255,0.05)', 
+                          borderRadius: 3, 
+                          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                          transition: 'all 0.3s',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 1.5,
+                          '&:hover': {
+                            borderColor: 'primary.main',
+                            boxShadow: '0 15px 40px rgba(0,0,0,0.7), inset 0 0 20px rgba(212,175,55,0.05)',
+                            transform: 'translateY(-4px)'
+                          }
+                        }}
+                      >
+                        <Box sx={{ mb: 1 }}>{pillar.icon}</Box>
+                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'white', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                          {pillar.title}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.6875rem', lineHeight: 1.6 }}>
+                          {pillar.desc}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
 
-              <div className="p-4 sm:p-5 bg-[#12141E] border border-white/5 rounded-[2px] hover:border-[#D4AF37]/40 transition-colors shadow-lg">
-                <Zap className="text-[#D4AF37] mb-2 sm:mb-3" size={22} />
-                <h4 className="text-[11px] sm:text-xs font-bold text-white uppercase tracking-wider mb-1">CUSTOM STUDIO</h4>
-                <p className="text-[10px] sm:text-[11px] text-slate-400 leading-relaxed">Personalize with high-density puff & embroidery.</p>
-              </div>
-
-              <div className="p-4 sm:p-5 bg-[#12141E] border border-white/5 rounded-[2px] hover:border-[#D4AF37]/40 transition-colors shadow-lg">
-                <Lock className="text-[#D4AF37] mb-2 sm:mb-3" size={22} />
-                <h4 className="text-[11px] sm:text-xs font-bold text-white uppercase tracking-wider mb-1">SECURE CHECKOUT</h4>
-                <p className="text-[10px] sm:text-[11px] text-slate-400 leading-relaxed">Koko, OnePay & eWAY instant payments.</p>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </Container>
-    </section>
+              </Box>
+            </Grid>
+            
+          </Grid>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 };

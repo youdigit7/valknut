@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { Product } from '../../types/ecommerce';
 import { useStore } from '../../context/StoreContext';
 import { Eye, Sparkles, ShoppingBag } from 'lucide-react';
+import { Box, Typography, IconButton, Button } from '@mui/material';
 
 interface ProductCardProps {
   product: Product;
@@ -36,109 +37,202 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <div 
+    <Box
       onClick={() => setSelectedProduct(product)}
-      className="group relative bg-[#0e1017] border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-[#d4af37]/60 hover:shadow-[0_10px_30px_rgba(212,175,55,0.15)] flex flex-col cursor-pointer"
+      sx={{
+        position: 'relative',
+        bgcolor: '#0e1017',
+        border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: 2,
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
+        display: 'flex',
+        flexDirection: 'column',
+        cursor: 'pointer',
+        height: '100%',
+        '&:hover': {
+          borderColor: 'rgba(212,175,55,0.6)',
+          boxShadow: '0 10px 30px rgba(212,175,55,0.15)',
+          transform: 'translateY(-4px)',
+          '& .img-overlay': { opacity: 1 },
+          '& .product-img': { transform: 'scale(1.05)' },
+          '& .product-title': { color: 'primary.main' }
+        }
+      }}
     >
       {/* Product Image Area */}
-      <div 
-        className="relative w-full aspect-[4/5] bg-[#141620] overflow-hidden"
+      <Box 
+        sx={{ position: 'relative', width: '100%', aspectRatio: '4/5', bgcolor: '#141620', overflow: 'hidden' }}
         onMouseEnter={() => product.images.length > 1 && setCurrentImgIndex(1)}
         onMouseLeave={() => setCurrentImgIndex(0)}
       >
-        <img 
+        <Box
+          component="img"
           src={product.images[currentImgIndex] || product.images[0]} 
-          alt={product.name} 
-          className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+          alt={product.name}
+          className="product-img"
+          sx={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            transition: 'transform 0.7s ease-out'
+          }}
         />
 
         {/* Top Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+        <Box sx={{ position: 'absolute', top: 12, left: 12, display: 'flex', flexDirection: 'column', gap: 1, zIndex: 10 }}>
           {hasSale && (
-            <span className="badge-pill bg-red-950/80 text-red-400 border border-red-500/40 backdrop-blur-md">
+            <Box sx={{ px: 1.5, py: 0.5, borderRadius: 5, bgcolor: 'rgba(69,10,10,0.8)', border: '1px solid rgba(239,68,68,0.4)', color: '#f87171', fontSize: '0.625rem', fontWeight: 'bold', backdropFilter: 'blur(4px)' }}>
               SALE
-            </span>
+            </Box>
           )}
           {product.isBestSeller && (
-            <span className="badge-pill badge-gold backdrop-blur-md">
+            <Box sx={{ px: 1.5, py: 0.5, borderRadius: 5, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.625rem', fontWeight: 'bold', backdropFilter: 'blur(4px)' }}>
               BEST SELLER
-            </span>
+            </Box>
           )}
           {product.isNewArrival && (
-            <span className="badge-pill badge-dark backdrop-blur-md">
+            <Box sx={{ px: 1.5, py: 0.5, borderRadius: 5, bgcolor: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontSize: '0.625rem', fontWeight: 'bold', backdropFilter: 'blur(4px)' }}>
               NEW
-            </span>
+            </Box>
           )}
-        </div>
+        </Box>
 
         {/* Custom Studio Badge Top Right */}
         {product.isCustomizable && (
-          <button
+          <IconButton
             onClick={handleCustomStudio}
-            className="absolute top-3 right-3 p-2 rounded-full bg-black/70 hover:bg-[#d4af37] text-[#d4af37] hover:text-black border border-[#d4af37]/50 backdrop-blur-md transition-all duration-300 z-10"
             title="Customize in Studio"
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              bgcolor: 'rgba(0,0,0,0.7)',
+              color: 'primary.main',
+              border: '1px solid rgba(212,175,55,0.5)',
+              backdropFilter: 'blur(4px)',
+              transition: 'all 0.3s ease',
+              zIndex: 10,
+              width: 32,
+              height: 32,
+              '&:hover': {
+                bgcolor: 'primary.main',
+                color: 'black'
+              }
+            }}
           >
-            <Sparkles size={15} />
-          </button>
+            <Sparkles size={16} />
+          </IconButton>
         )}
 
         {/* Hover Action Overlay */}
-        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2">
-          <button 
+        <Box 
+          className="img-overlay"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            top: 'auto',
+            p: 1.5,
+            background: 'linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.4), transparent)',
+            opacity: 0,
+            transition: 'opacity 0.3s ease',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1
+          }}
+        >
+          <Button 
             onClick={handleQuickAdd}
-            className="flex-1 py-2.5 bg-white text-black font-extrabold text-[11px] tracking-wider uppercase rounded hover:bg-[#d4af37] transition-colors flex items-center justify-center gap-1.5"
+            sx={{
+              flex: 1,
+              py: 1,
+              bgcolor: 'white',
+              color: 'black',
+              fontWeight: 900,
+              fontSize: '0.6875rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              borderRadius: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 1,
+              minWidth: 0,
+              '&:hover': {
+                bgcolor: 'primary.main'
+              }
+            }}
           >
             <ShoppingBag size={14} />
-            <span>QUICK ADD</span>
-          </button>
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>QUICK ADD</Box>
+          </Button>
 
-          <button 
-            onClick={() => setSelectedProduct(product)}
-            className="p-2.5 bg-white/20 hover:bg-white/30 text-white rounded backdrop-blur-md transition-colors"
+          <IconButton 
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedProduct(product);
+            }}
             title="Quick View"
+            sx={{
+              bgcolor: 'rgba(255,255,255,0.2)',
+              color: 'white',
+              borderRadius: 1,
+              backdropFilter: 'blur(4px)',
+              width: 36,
+              height: 36,
+              '&:hover': {
+                bgcolor: 'rgba(255,255,255,0.3)'
+              }
+            }}
           >
             <Eye size={16} />
-          </button>
-        </div>
-      </div>
+          </IconButton>
+        </Box>
+      </Box>
 
       {/* Details Box */}
-      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-        <div>
-          <span className="text-[10px] font-bold tracking-[0.2em] text-[#d4af37] uppercase block mb-1">
+      <Box sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 1.5 }}>
+        <Box>
+          <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', letterSpacing: '0.2em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5 }}>
             {product.subCategory}
-          </span>
-          <h3 className="text-sm font-bold text-white group-hover:text-[#d4af37] transition-colors line-clamp-1">
+          </Typography>
+          <Typography className="product-title" sx={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'white', transition: 'colors 0.3s', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {product.name}
-          </h3>
-        </div>
+          </Typography>
+        </Box>
 
         {/* Price & Variant Swatches */}
-        <div className="flex items-center justify-between pt-2 border-t border-white/5">
-          <div className="flex items-baseline gap-2">
-            <span className="text-sm font-extrabold text-white">
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pt: 1, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+            <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, color: 'white' }}>
               LKR {displayPrice.toLocaleString()}
-            </span>
+            </Typography>
             {hasSale && (
-              <span className="text-xs text-slate-500 line-through">
+              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', textDecoration: 'line-through' }}>
                 LKR {product.price.toLocaleString()}
-              </span>
+              </Typography>
             )}
-          </div>
+          </Box>
 
           {/* Color Swatch Dots */}
-          <div className="flex items-center gap-1">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             {Array.from(new Set(product.variants.map(v => v.colorHex))).slice(0, 3).map((hex, i) => (
-              <span 
+              <Box 
                 key={i} 
-                className="w-2.5 h-2.5 rounded-full border border-white/30 inline-block"
-                style={{ backgroundColor: hex }}
+                sx={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: '50%',
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  bgcolor: hex
+                }}
               />
             ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
 
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

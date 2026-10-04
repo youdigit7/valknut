@@ -9,6 +9,7 @@ import {
   LogOut, 
   ShieldCheck 
 } from 'lucide-react';
+import { Modal, Backdrop, Fade, Box, Typography, IconButton, Button, TextField } from '@mui/material';
 
 export const CustomerAccountModal: React.FC = () => {
   const { 
@@ -50,252 +51,245 @@ export const CustomerAccountModal: React.FC = () => {
     }
   };
 
+  const textFieldStyles = {
+    '& .MuiOutlinedInput-root': {
+      color: 'white',
+      fontFamily: '"JetBrains Mono", sans-serif',
+      fontSize: '0.75rem',
+      bgcolor: '#141620',
+      '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
+      '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+      '&.Mui-focused fieldset': { borderColor: 'primary.main' }
+    },
+    '& .MuiInputLabel-root': { color: 'text.secondary', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' },
+    '& .MuiInputLabel-root.Mui-focused': { color: 'primary.main' }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-fade-in">
-      <div className="bg-[#0e1017] border border-white/10 w-full max-w-3xl rounded-lg overflow-hidden relative shadow-2xl my-auto max-h-[90vh] flex flex-col">
-        
-        {/* Header */}
-        <div className="p-6 bg-[#08090d] border-b border-white/10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <User className="text-[#d4af37]" size={22} />
-            <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider font-syne">
-                VALKNUT CUSTOMER PORTAL
-              </h3>
-              <p className="text-xs text-slate-400">
-                {user ? `Logged in as ${user.name}` : 'Sign in to view orders & saved address'}
-              </p>
-            </div>
-          </div>
+    <Modal
+      open={isAccountOpen}
+      onClose={() => setIsAccountOpen(false)}
+      closeAfterTransition
+      slots={{ backdrop: Backdrop }}
+      slotProps={{
+        backdrop: {
+          timeout: 500,
+          sx: { bgcolor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)' }
+        }
+      }}
+    >
+      <Fade in={isAccountOpen}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 768, maxHeight: '90vh', bgcolor: '#0e1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', outline: 'none' }}>
+          
+          {/* Header */}
+          <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: '#08090d', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <User color="#d4af37" size={22} />
+              <Box>
+                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'white', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
+                  VALKNUT CUSTOMER PORTAL
+                </Typography>
+                <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  {user ? `Logged in as ${user.name}` : 'Sign in to view orders & saved address'}
+                </Typography>
+              </Box>
+            </Box>
+            <IconButton onClick={() => setIsAccountOpen(false)} sx={{ color: 'text.secondary', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+              <X size={20} />
+            </IconButton>
+          </Box>
 
-          <button 
-            onClick={() => setIsAccountOpen(false)} 
-            className="text-slate-400 hover:text-white p-1 rounded-full bg-white/5"
-            aria-label="Close Portal"
-          >
-            <X size={20} />
-          </button>
-        </div>
+          {/* Modal Body */}
+          {!user ? (
+            /* LOGIN FORM */
+            <Box sx={{ p: { xs: 3, sm: 4 }, maxWidth: 400, mx: 'auto', w: '100%', display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'primary.main', mb: 0.5, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  ACCESS YOUR ACCOUNT
+                </Typography>
+                <Typography variant="h4" sx={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>
+                  SIGN IN / REGISTER
+                </Typography>
+              </Box>
 
-        {/* Modal Body */}
-        {!user ? (
-          /* LOGIN FORM */
-          <div className="p-8 max-w-md mx-auto w-full space-y-6">
-            <div className="text-center">
-              <span className="text-xs font-extrabold tracking-widest text-[#d4af37] uppercase block mb-1">
-                ACCESS YOUR ACCOUNT
-              </span>
-              <h4 className="text-xl font-bold text-white font-syne uppercase">
-                SIGN IN / REGISTER
-              </h4>
-            </div>
-
-            <form onSubmit={handleLoginSubmit} className="space-y-4">
-              <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  value={nameInput}
-                  onChange={(e) => setNameInput(e.target.value)}
-                  placeholder="e.g. Kasun Perera"
-                  className="w-full bg-[#141620] border border-white/20 rounded p-3 text-xs text-white focus:outline-none focus:border-[#d4af37]"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1">Email Address</label>
-                <input
-                  type="email"
-                  required
-                  value={emailInput}
-                  onChange={(e) => setEmailInput(e.target.value)}
-                  placeholder="kasun@example.com"
-                  className="w-full bg-[#141620] border border-white/20 rounded p-3 text-xs text-white focus:outline-none focus:border-[#d4af37]"
-                />
-              </div>
-
-              <button type="submit" className="w-full btn-gold py-3.5 text-xs font-extrabold">
-                SIGN IN TO ACCOUNT
-              </button>
-            </form>
-          </div>
-        ) : (
-          /* LOGGED IN PORTAL */
-          <div className="p-6 overflow-y-auto max-h-[80vh] space-y-6">
-            
-            {/* Navigation Tabs */}
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setActiveTab('ORDERS')}
-                  className={`px-4 py-2 rounded text-xs font-bold uppercase transition-colors ${
-                    activeTab === 'ORDERS' ? 'bg-[#d4af37] text-black' : 'bg-white/5 text-slate-300'
-                  }`}
-                >
-                  ORDER HISTORY ({userOrders.length})
-                </button>
-                <button
-                  onClick={() => setActiveTab('PROFILE')}
-                  className={`px-4 py-2 rounded text-xs font-bold uppercase transition-colors ${
-                    activeTab === 'PROFILE' ? 'bg-[#d4af37] text-black' : 'bg-white/5 text-slate-300'
-                  }`}
-                >
-                  PROFILE DETAILS
-                </button>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {user.isAdmin && (
-                  <button
-                    onClick={() => { setIsAccountOpen(false); setIsAdminOpen(true); }}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-[#d4af37]/20 border border-[#d4af37]/50 rounded text-xs font-bold text-[#d4af37]"
+              <Box component="form" onSubmit={handleLoginSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <TextField fullWidth required label="Full Name" value={nameInput} onChange={(e) => setNameInput(e.target.value)} placeholder="e.g. Kasun Perera" variant="outlined" sx={textFieldStyles} />
+                <TextField fullWidth required type="email" label="Email Address" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} placeholder="kasun@example.com" variant="outlined" sx={textFieldStyles} />
+                <Button type="submit" sx={{ mt: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
+                  SIGN IN TO ACCOUNT
+                </Button>
+              </Box>
+            </Box>
+          ) : (
+            /* LOGGED IN PORTAL */
+            <Box sx={{ p: { xs: 2, sm: 3 }, overflowY: 'auto', maxHeight: 'calc(90vh - 77px)', display: 'flex', flexDirection: 'column', gap: 3 }}>
+              
+              {/* Navigation Tabs */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyItems: 'center', justifyContent: 'space-between', gap: 2, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button
+                    onClick={() => setActiveTab('ORDERS')}
+                    sx={{ px: 2, py: 1, borderRadius: 1, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', ...(activeTab === 'ORDERS' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' } }) }}
                   >
-                    <ShieldCheck size={14} />
-                    <span>OPEN ADMIN</span>
-                  </button>
-                )}
+                    ORDER HISTORY ({userOrders.length})
+                  </Button>
+                  <Button
+                    onClick={() => setActiveTab('PROFILE')}
+                    sx={{ px: 2, py: 1, borderRadius: 1, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', ...(activeTab === 'PROFILE' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' } }) }}
+                  >
+                    PROFILE DETAILS
+                  </Button>
+                </Box>
 
-                <button
-                  onClick={logoutUser}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-white/5 hover:bg-red-950/40 text-slate-300 hover:text-red-400 rounded text-xs font-bold"
-                >
-                  <LogOut size={14} />
-                  <span>Sign Out</span>
-                </button>
-              </div>
-            </div>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  {user.isAdmin && (
+                    <Button
+                      onClick={() => { setIsAccountOpen(false); setIsAdminOpen(true); }}
+                      startIcon={<ShieldCheck size={14} />}
+                      sx={{ px: 1.5, py: 0.5, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.5)', borderRadius: 1, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main', '&:hover': { bgcolor: 'rgba(212,175,55,0.2)' } }}
+                    >
+                      OPEN ADMIN
+                    </Button>
+                  )}
+                  <Button
+                    onClick={logoutUser}
+                    startIcon={<LogOut size={14} />}
+                    sx={{ px: 1.5, py: 0.5, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 1, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', '&:hover': { bgcolor: 'rgba(153,27,27,0.4)', color: 'error.light' } }}
+                  >
+                    Sign Out
+                  </Button>
+                </Box>
+              </Box>
 
-            {/* Orders Tab View */}
-            {activeTab === 'ORDERS' && (
-              <div className="space-y-4">
-                {userOrders.length === 0 ? (
-                  <div className="text-center py-12 space-y-2">
-                    <Package className="mx-auto text-slate-500" size={32} />
-                    <p className="text-sm text-slate-300 font-bold">No orders found under your account.</p>
-                  </div>
-                ) : (
-                  userOrders.map(order => {
-                    const stepNum = getStatusStep(order.orderStatus);
+              {/* Orders Tab View */}
+              {activeTab === 'ORDERS' && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {userOrders.length === 0 ? (
+                    <Box sx={{ textAlign: 'center', py: 6, display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'center' }}>
+                      <Package color="rgba(255,255,255,0.4)" size={32} />
+                      <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>No orders found under your account.</Typography>
+                    </Box>
+                  ) : (
+                    userOrders.map(order => {
+                      const stepNum = getStatusStep(order.orderStatus);
 
-                    return (
-                      <div key={order.id} className="bg-[#141620] border border-white/10 rounded-lg p-5 space-y-4">
-                        
-                        {/* Top Summary Bar */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 pb-3">
-                          <div>
-                            <span className="text-xs font-extrabold text-[#d4af37] font-mono block">
-                              {order.orderNumber}
-                            </span>
-                            <span className="text-[11px] text-slate-400">
-                              Placed on {new Date(order.createdAt).toLocaleDateString()}
-                            </span>
-                          </div>
+                      return (
+                        <Box key={order.id} sx={{ bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                          
+                          {/* Top Summary Bar */}
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 2, borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 2 }}>
+                            <Box>
+                              <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', fontFamily: '"JetBrains Mono", sans-serif' }}>{order.orderNumber}</Typography>
+                              <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>Placed on {new Date(order.createdAt).toLocaleDateString()}</Typography>
+                            </Box>
+                            <Box sx={{ textAlign: 'right' }}>
+                              <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, color: 'white', fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {order.totalAmount.toLocaleString()}</Typography>
+                              <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', fontFamily: '"JetBrains Mono", sans-serif' }}>{order.paymentGateway} ({order.paymentStatus})</Typography>
+                            </Box>
+                          </Box>
 
-                          <div className="text-right">
-                            <span className="text-xs font-black text-white block">
-                              LKR {order.totalAmount.toLocaleString()}
-                            </span>
-                            <span className="text-[10px] font-bold text-[#d4af37] uppercase">
-                              {order.paymentGateway} ({order.paymentStatus})
-                            </span>
-                          </div>
-                        </div>
+                          {/* Order Items Breakdown */}
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                            {order.items.map((ci: any, idx: number) => {
+                              const img = ci.customization?.finalPreviewDataUrl || ci.imageUrl || ci.product?.images?.[0] || '';
+                              const name = ci.productName || ci.product?.name || 'VALKNUT Piece';
+                              const size = ci.size || ci.selectedSize || 'M';
 
-                        {/* Order Items Breakdown */}
-                        <div className="space-y-2">
-                          {order.items.map((ci: any, idx: number) => {
-                            const img = ci.customization?.finalPreviewDataUrl || ci.imageUrl || ci.product?.images?.[0] || '';
-                            const name = ci.productName || ci.product?.name || 'VALKNUT Piece';
-                            const size = ci.size || ci.selectedSize || 'M';
-
-                            return (
-                              <div key={idx} className="flex items-center gap-3 text-xs">
-                                {img ? (
-                                  <img src={img} alt={name} className="w-10 h-12 object-cover rounded bg-[#141620]" />
-                                ) : (
-                                  <div className="w-10 h-12 bg-[#141620] rounded flex items-center justify-center text-[9px] font-mono">VK</div>
-                                )}
-                                <div className="flex-1">
-                                  <p className="font-bold text-white uppercase">{name}</p>
-                                  <p className="text-[10px] text-slate-400">Size: {size} | Qty: {ci.quantity}</p>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-
-                        {/* Live Tracking Progress Timeline */}
-                        <div className="pt-2 border-t border-white/5">
-                          <p className="text-[11px] font-bold text-slate-300 mb-3 flex items-center justify-between">
-                            <span>SHIPPING STATUS: <strong className="text-[#d4af37] uppercase">{order.orderStatus}</strong></span>
-                            {order.awbNumber && (
-                              <span className="text-[10px] text-slate-400">AWB: <strong className="text-white">{order.awbNumber}</strong> ({order.courierName})</span>
-                            )}
-                          </p>
-
-                          {/* Progress Bar steps */}
-                          <div className="grid grid-cols-5 gap-1 text-center text-[9px] font-extrabold uppercase text-slate-500">
-                            {['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered'].map((stName, idx) => {
-                              const isCompleted = stepNum >= (idx + 1);
                               return (
-                                <div key={stName} className="space-y-1">
-                                  <div className={`h-1.5 rounded-full ${isCompleted ? 'bg-[#d4af37]' : 'bg-white/10'}`} />
-                                  <span className={isCompleted ? 'text-white' : 'text-slate-500'}>{stName}</span>
-                                </div>
+                                <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 2, fontSize: '0.75rem' }}>
+                                  {img ? (
+                                    <Box component="img" src={img} alt={name} sx={{ width: 40, height: 48, objectFit: 'cover', borderRadius: 1, bgcolor: '#141620' }} />
+                                  ) : (
+                                    <Box sx={{ width: 40, height: 48, bgcolor: '#141620', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif' }}>VK</Box>
+                                  )}
+                                  <Box sx={{ flex: 1 }}>
+                                    <Typography sx={{ fontWeight: 'bold', color: 'white', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>{name}</Typography>
+                                    <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>Size: {size} | Qty: {ci.quantity}</Typography>
+                                  </Box>
+                                </Box>
                               );
                             })}
-                          </div>
+                          </Box>
 
-                          {/* Tracking Link Button */}
-                          {order.trackingLink && (
-                            <div className="mt-3 text-right">
-                              <a
-                                href={order.trackingLink}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-1 text-xs font-bold text-[#d4af37] hover:underline"
-                              >
-                                <span>Track with {order.courierName || 'Courier'}</span>
-                                <ExternalLink size={13} />
-                              </a>
-                            </div>
-                          )}
-                        </div>
+                          {/* Live Tracking Progress Timeline */}
+                          <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5, fontSize: '0.6875rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Typography sx={{ fontSize: 'inherit' }}>SHIPPING STATUS:</Typography>
+                                <Typography sx={{ fontSize: 'inherit', color: 'primary.main', textTransform: 'uppercase' }}>{order.orderStatus}</Typography>
+                              </Box>
+                              {order.awbNumber && (
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.625rem' }}>
+                                  <Typography sx={{ fontSize: 'inherit' }}>AWB:</Typography>
+                                  <Typography sx={{ fontSize: 'inherit', color: 'white' }}>{order.awbNumber}</Typography>
+                                  <Typography sx={{ fontSize: 'inherit' }}>({order.courierName})</Typography>
+                                </Box>
+                              )}
+                            </Box>
 
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            )}
+                            {/* Progress Bar steps */}
+                            <Box sx={{ display: 'flex', gap: 0.5 }}>
+                              {['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered'].map((stName, idx) => {
+                                const isCompleted = stepNum >= (idx + 1);
+                                return (
+                                  <Box sx={{ flex: 1, textAlign: 'center' }} key={stName}>
+                                    <Box sx={{ height: 6, borderRadius: 3, mb: 0.5, bgcolor: isCompleted ? 'primary.main' : 'rgba(255,255,255,0.1)' }} />
+                                    <Typography sx={{ fontSize: '0.5625rem', fontWeight: 900, textTransform: 'uppercase', fontFamily: '"JetBrains Mono", sans-serif', color: isCompleted ? 'white' : 'text.secondary' }}>{stName}</Typography>
+                                  </Box>
+                                );
+                              })}
+                            </Box>
 
-            {/* Profile Tab View */}
-            {activeTab === 'PROFILE' && (
-              <div className="bg-[#141620] border border-white/10 rounded-lg p-6 space-y-4 text-xs text-slate-300">
-                <div className="flex justify-between border-b border-white/5 pb-2">
-                  <span>Name:</span>
-                  <strong className="text-white">{user.name}</strong>
-                </div>
-                <div className="flex justify-between border-b border-white/5 pb-2">
-                  <span>Email:</span>
-                  <strong className="text-white">{user.email}</strong>
-                </div>
-                <div className="flex justify-between border-b border-white/5 pb-2">
-                  <span>Phone:</span>
-                  <strong className="text-white">{user.phone}</strong>
-                </div>
-                <div className="flex justify-between">
-                  <span>Role:</span>
-                  <strong className="text-[#d4af37] uppercase">{user.isAdmin ? 'Store Admin & Owner' : 'VALKNUT VIP Member'}</strong>
-                </div>
-              </div>
-            )}
+                            {/* Tracking Link Button */}
+                            {order.trackingLink && (
+                              <Box sx={{ mt: 2, textAlign: 'right' }}>
+                                <Button
+                                  href={order.trackingLink}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  endIcon={<ExternalLink size={13} />}
+                                  sx={{ minWidth: 'auto', p: 0, fontSize: '0.75rem', fontWeight: 'bold', color: 'primary.main', fontFamily: '"JetBrains Mono", sans-serif', '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}
+                                >
+                                  Track with {order.courierName || 'Courier'}
+                                </Button>
+                              </Box>
+                            )}
+                          </Box>
 
-          </div>
-        )}
+                        </Box>
+                      );
+                    })
+                  )}
+                </Box>
+              )}
 
-      </div>
-    </div>
+              {/* Profile Tab View */}
+              {activeTab === 'PROFILE' && (
+                <Box sx={{ bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', gap: 2, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 1.5 }}>
+                    <Typography sx={{ fontSize: 'inherit' }}>Name:</Typography>
+                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'white' }}>{user.name}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 1.5 }}>
+                    <Typography sx={{ fontSize: 'inherit' }}>Email:</Typography>
+                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'white' }}>{user.email}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 1.5 }}>
+                    <Typography sx={{ fontSize: 'inherit' }}>Phone:</Typography>
+                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'white' }}>{user.phone}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: 'inherit' }}>Role:</Typography>
+                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase' }}>{user.isAdmin ? 'Store Admin & Owner' : 'VALKNUT VIP Member'}</Typography>
+                  </Box>
+                </Box>
+              )}
+
+            </Box>
+          )}
+
+        </Box>
+      </Fade>
+    </Modal>
   );
 };

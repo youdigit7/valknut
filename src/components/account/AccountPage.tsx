@@ -4,27 +4,22 @@ import type { OrderStatus, ShippingAddress } from '../../types/ecommerce';
 import { registerCustomer, loginCustomer, logoutCustomer, requestPasswordReset, updateCustomerProfile } from '../../services/authService';
 import { mergeGuestCartWithCustomerCart } from '../../services/cartService';
 import { 
-  User, 
-  Package, 
-  MapPin, 
-  LogOut, 
-  ExternalLink, 
-  Lock, 
-  Mail, 
-  Phone, 
-  Check, 
-  ChevronRight, 
-  ShieldCheck, 
-  Eye, 
-  EyeOff, 
-  ArrowRight,
-  Sparkles,
-  Edit3
+  User, Package, MapPin, LogOut, ExternalLink, Lock, Mail, Phone, Check, ChevronRight, 
+  ShieldCheck, Eye, EyeOff, ArrowRight, Sparkles, Edit3, AlertCircle, X
 } from 'lucide-react';
+import { Box, Typography, Button, TextField, MenuItem, Modal, IconButton, InputAdornment, Checkbox, FormControlLabel, Select, InputLabel, FormControl } from '@mui/material';
 
 interface AccountPageProps {
   initialSubTab?: 'dashboard' | 'orders' | 'profile' | 'login' | 'register' | 'forgot-password';
 }
+
+const SRI_LANKAN_DISTRICTS = [
+  'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya', 
+  'Galle', 'Matara', 'Hambantota', 'Jaffna', 'Kilinochchi', 'Mannar', 
+  'Vavuniya', 'Mullaitivu', 'Batticaloa', 'Ampara', 'Trincomalee', 
+  'Kurunegala', 'Puttalam', 'Anuradhapura', 'Polonnaruwa', 'Badulla', 
+  'Moneragala', 'Ratnapura', 'Kegalle'
+];
 
 export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashboard' }) => {
   const { 
@@ -37,7 +32,6 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
     showToast 
   } = useStore();
 
-  // Active view tab
   const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'profile' | 'login' | 'register' | 'forgot-password'>(() => {
     if (!user) {
       if (initialSubTab === 'register' || initialSubTab === 'forgot-password') return initialSubTab;
@@ -46,17 +40,15 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
     return initialSubTab === 'login' || initialSubTab === 'register' ? 'dashboard' : initialSubTab;
   });
 
-  // Selected Order for detail modal view
   const [selectedOrderDetails, setSelectedOrderDetails] = useState<any | null>(null);
 
-  // Form states: Login
+  // Form states
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  // Form states: Register
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPhone, setRegPhone] = useState('');
@@ -66,12 +58,10 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
   const [regError, setRegError] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
 
-  // Form states: Forgot password
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotMsg, setForgotMsg] = useState<{ text: string; isError: boolean } | null>(null);
   const [isForgotLoading, setIsForgotLoading] = useState(false);
 
-  // Form states: Profile editor
   const [editName, setEditName] = useState(user?.name || '');
   const [editPhone, setEditPhone] = useState(user?.phone || '');
   const [editAddress, setEditAddress] = useState<ShippingAddress>({
@@ -81,12 +71,11 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
     addressLine1: user?.address?.addressLine1 || '',
     addressLine2: user?.address?.addressLine2 || '',
     city: user?.address?.city || '',
-    district: user?.address?.district || 'Western Province',
+    district: user?.address?.district || 'Colombo',
     postalCode: user?.address?.postalCode || ''
   });
   const [isSavingProfile, setIsSavingProfile] = useState(false);
 
-  // Filter orders for logged in user (or sample orders for demo)
   const userOrders = user 
     ? orders.filter((o) => o.customerInfo.email.toLowerCase() === user.email.toLowerCase() || user.isAdmin)
     : [];
@@ -95,17 +84,13 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
     e.preventDefault();
     setLoginError('');
     setIsLoggingIn(true);
-
     try {
       const res = await loginCustomer(loginEmail, loginPassword);
       if (res.success && res.user) {
         loginUser(res.user.email, res.user.name);
-        
-        // Merge Guest Cart into User's Account Cart
         if (cart.length > 0) {
           await mergeGuestCartWithCustomerCart(cart, res.user.id);
         }
-
         showToast(res.message || 'Logged in successfully', 'success');
         setActiveTab('dashboard');
         window.location.hash = '#/account';
@@ -122,29 +107,22 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setRegError('');
-
     if (regPassword !== regConfirmPassword) {
       setRegError('Passwords do not match.');
       return;
     }
-
     if (regPassword.length < 6) {
       setRegError('Password must be at least 6 characters long.');
       return;
     }
-
     setIsRegistering(true);
-
     try {
       const res = await registerCustomer(regEmail, regPassword, regName, regPhone);
       if (res.success && res.user) {
         loginUser(res.user.email, res.user.name);
-
-        // Merge Guest Cart
         if (cart.length > 0) {
           await mergeGuestCartWithCustomerCart(cart, res.user.id);
         }
-
         showToast('Welcome to VALKNUT Official VIP.', 'success');
         setActiveTab('dashboard');
         window.location.hash = '#/account';
@@ -162,7 +140,6 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
     e.preventDefault();
     setForgotMsg(null);
     if (!forgotEmail.trim()) return;
-
     setIsForgotLoading(true);
     try {
       const res = await requestPasswordReset(forgotEmail);
@@ -187,7 +164,6 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
-
     setIsSavingProfile(true);
     try {
       const updated = await updateCustomerProfile(user.id, {
@@ -195,7 +171,6 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
         phone: editPhone,
         address: editAddress
       });
-
       if (updated) {
         loginUser(updated.email, updated.name);
         showToast('Profile and delivery address updated.', 'success');
@@ -221,370 +196,276 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
     }
   };
 
-  // If user is NOT logged in and attempting to view protected tabs
+  const textFieldStyles = {
+    '& .MuiOutlinedInput-root': {
+      color: 'white',
+      fontFamily: '"JetBrains Mono", sans-serif',
+      fontSize: '0.75rem',
+      bgcolor: '#131520',
+      '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
+      '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+      '&.Mui-focused fieldset': { borderColor: 'primary.main' }
+    },
+    '& .MuiInputLabel-root': { color: 'text.secondary', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', letterSpacing: '0.1em', textTransform: 'uppercase' },
+    '& .MuiInputLabel-root.Mui-focused': { color: 'primary.main' }
+  };
+
   const isAuthView = !user || activeTab === 'login' || activeTab === 'register' || activeTab === 'forgot-password';
 
   return (
-    <div className="w-full min-h-screen bg-[#0A0A0A] py-8 sm:py-12 border-b border-white/10">
-      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
+    <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: '#0A0A0A', py: { xs: 4, sm: 6 }, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+      <Box sx={{ maxWidth: 1500, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
         
         {/* Breadcrumb Hierarchy */}
-        <nav className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-6">
-          <a href="#/" className="hover:text-white transition-colors">Home</a>
-          <ChevronRight size={12} className="text-slate-600" />
-          <a href="#/account" className="text-[#D4AF37] font-bold">Customer Portal</a>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'text.secondary', mb: 4 }}>
+          <Box component="a" href="#/" sx={{ color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'white' }, transition: 'color 0.3s' }}>Home</Box>
+          <ChevronRight size={12} />
+          <Box component="a" href="#/account" sx={{ color: 'primary.main', textDecoration: 'none', fontWeight: 'bold' }}>Customer Portal</Box>
           {user && activeTab !== 'dashboard' && (
             <>
-              <ChevronRight size={12} className="text-slate-600" />
-              <span className="text-slate-300 capitalize">{activeTab}</span>
+              <ChevronRight size={12} />
+              <Typography sx={{ fontSize: 'inherit', color: 'text.primary', fontFamily: 'inherit' }}>{activeTab}</Typography>
             </>
           )}
-        </nav>
+        </Box>
 
-        {/* 1. AUTHENTICATION SCREENS (LOGIN / REGISTER / FORGOT PASSWORD) */}
         {isAuthView ? (
-          <div className="max-w-xl mx-auto my-8 bg-[#0E1017] border border-white/10 rounded-md p-6 sm:p-10 shadow-2xl animate-fade-in">
+          <Box sx={{ maxWidth: 500, mx: 'auto', my: 4, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 5 }, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', animation: 'fadeIn 0.5s ease-out' }}>
             
-            {/* Auth Top Branding */}
-            <div className="text-center space-y-2 mb-8">
-              <div className="w-10 h-10 border border-[#D4AF37] mx-auto flex items-center justify-center rounded-[2px] mb-3">
-                <span className="text-[#D4AF37] font-syne font-black text-lg">V</span>
-              </div>
-              <span className="text-[10px] font-mono font-bold tracking-[0.3em] text-[#D4AF37] uppercase block">
+            <Box sx={{ textAlign: 'center', mb: 4 }}>
+              <Box sx={{ width: 40, height: 40, border: '1px solid #D4AF37', mx: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 0.5, mb: 2 }}>
+                <Typography sx={{ color: 'primary.main', fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: '1.25rem' }}>V</Typography>
+              </Box>
+              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mb: 1 }}>
                 VALKNUT SOVEREIGN PORTAL
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black uppercase text-white font-syne tracking-tight">
+              </Typography>
+              <Typography variant="h2" sx={{ fontSize: { xs: '1.5rem', sm: '1.875rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'white', fontFamily: '"Syne", sans-serif', letterSpacing: '-0.02em', mb: 1 }}>
                 {activeTab === 'register' ? 'CREATE VIP ACCOUNT' : activeTab === 'forgot-password' ? 'RESET PASSWORD' : 'MEMBER SIGN IN'}
-              </h2>
-              <p className="text-xs text-slate-400 font-sans">
+              </Typography>
+              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
                 {activeTab === 'register'
                   ? 'Join the VALKNUT inner circle for exclusive drops and order tracking.'
                   : activeTab === 'forgot-password'
                   ? 'Enter your registered email to receive recovery instructions.'
                   : 'Access your order history, delivery details, and saved sizing.'}
-              </p>
-            </div>
+              </Typography>
+            </Box>
 
-            {/* Auth Navigation Switcher */}
             {activeTab !== 'forgot-password' && (
-              <div className="grid grid-cols-2 p-1 bg-[#131520] border border-white/10 rounded-[2px] mb-6 text-xs font-mono font-bold">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('login')}
-                  className={`py-2.5 rounded-[2px] transition-all cursor-pointer ${
-                    activeTab === 'login'
-                      ? 'bg-[#D4AF37] text-black shadow-sm'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', p: 0.5, bgcolor: '#131520', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, mb: 4 }}>
+                <Button 
+                  onClick={() => setActiveTab('login')} 
+                  sx={{ py: 1, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif', transition: 'all 0.3s ease', ...(activeTab === 'login' ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 2px 10px rgba(212,175,55,0.2)' } : { color: 'text.secondary', '&:hover': { color: 'white' } }) }}
                 >
                   SIGN IN
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('register')}
-                  className={`py-2.5 rounded-[2px] transition-all cursor-pointer ${
-                    activeTab === 'register'
-                      ? 'bg-[#D4AF37] text-black shadow-sm'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
+                </Button>
+                <Button 
+                  onClick={() => setActiveTab('register')} 
+                  sx={{ py: 1, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif', transition: 'all 0.3s ease', ...(activeTab === 'register' ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 2px 10px rgba(212,175,55,0.2)' } : { color: 'text.secondary', '&:hover': { color: 'white' } }) }}
                 >
                   CREATE ACCOUNT
-                </button>
-              </div>
+                </Button>
+              </Box>
             )}
 
             {/* LOGIN FORM */}
             {activeTab === 'login' && (
-              <form onSubmit={handleLogin} className="space-y-4">
+              <Box component="form" onSubmit={handleLogin} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {loginError && (
-                  <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-[2px] text-xs font-mono text-red-400">
+                  <Box sx={{ p: 1.5, bgcolor: 'rgba(153,27,27,0.4)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'error.light', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <AlertCircle size={14} />
                     {loginError}
-                  </div>
+                  </Box>
                 )}
-
-                <div className="space-y-1">
-                  <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                    <input
-                      type="email"
-                      required
-                      value={loginEmail}
-                      onChange={(e) => setLoginEmail(e.target.value)}
-                      placeholder="name@example.com"
-                      className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-3 pl-10 pr-4 text-xs font-mono text-white placeholder-slate-500 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                      Password
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab('forgot-password')}
-                      className="text-[11px] font-mono text-[#D4AF37] hover:underline"
-                    >
-                      Forgot?
-                    </button>
-                  </div>
-                  <div className="relative">
-                    <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                    <input
-                      type={showLoginPassword ? 'text' : 'password'}
-                      required
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-3 pl-10 pr-10 text-xs font-mono text-white placeholder-slate-500 focus:outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowLoginPassword(!showLoginPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-1"
-                    >
-                      {showLoginPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                    </button>
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isLoggingIn}
-                  className="w-full py-3.5 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold text-xs uppercase tracking-[0.2em] rounded-[2px] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#D4AF37]/20 cursor-pointer disabled:opacity-50 mt-2"
-                >
-                  <span>{isLoggingIn ? 'AUTHENTICATING...' : 'SIGN IN'}</span>
-                  <ArrowRight size={15} />
-                </button>
-              </form>
+                <TextField 
+                  fullWidth 
+                  required 
+                  type="email" 
+                  label="Email Address" 
+                  value={loginEmail} 
+                  onChange={(e) => setLoginEmail(e.target.value)} 
+                  variant="outlined" 
+                  sx={textFieldStyles}
+                  slotProps={{ input: { startAdornment: <InputAdornment position="start"><Mail size={16} color="#64748b" /></InputAdornment> } }}
+                />
+                <Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 0.5 }}>
+                    <Button onClick={() => setActiveTab('forgot-password')} sx={{ minWidth: 'auto', p: 0, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main', '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}>
+                      Forgot Password?
+                    </Button>
+                  </Box>
+                  <TextField 
+                    fullWidth 
+                    required 
+                    type={showLoginPassword ? 'text' : 'password'} 
+                    label="Password" 
+                    value={loginPassword} 
+                    onChange={(e) => setLoginPassword(e.target.value)} 
+                    variant="outlined" 
+                    sx={textFieldStyles}
+                    slotProps={{ input: { 
+                      startAdornment: <InputAdornment position="start"><Lock size={16} color="#64748b" /></InputAdornment>,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={() => setShowLoginPassword(!showLoginPassword)} size="small" sx={{ color: 'text.secondary', '&:hover': { color: 'white' } }}>
+                            {showLoginPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    } }}
+                  />
+                </Box>
+                <Button type="submit" disabled={isLoggingIn} sx={{ mt: 2, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
+                  {isLoggingIn ? 'AUTHENTICATING...' : 'SIGN IN'}
+                </Button>
+              </Box>
             )}
 
             {/* REGISTER FORM */}
             {activeTab === 'register' && (
-              <form onSubmit={handleRegister} className="space-y-4">
+              <Box component="form" onSubmit={handleRegister} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {regError && (
-                  <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-[2px] text-xs font-mono text-red-400">
+                  <Box sx={{ p: 1.5, bgcolor: 'rgba(153,27,27,0.4)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'error.light', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <AlertCircle size={14} />
                     {regError}
-                  </div>
+                  </Box>
                 )}
-
-                <div className="space-y-1">
-                  <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                    <input
-                      type="text"
-                      required
-                      value={regName}
-                      onChange={(e) => setRegName(e.target.value)}
-                      placeholder="Kasun Perera"
-                      className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-3 pl-10 pr-4 text-xs font-mono text-white placeholder-slate-500 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                    <input
-                      type="email"
-                      required
-                      value={regEmail}
-                      onChange={(e) => setRegEmail(e.target.value)}
-                      placeholder="kasun@example.com"
-                      className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-3 pl-10 pr-4 text-xs font-mono text-white placeholder-slate-500 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                    Phone Number (for SMS Tracking)
-                  </label>
-                  <div className="relative">
-                    <Phone size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                    <input
-                      type="tel"
-                      required
-                      value={regPhone}
-                      onChange={(e) => setRegPhone(e.target.value)}
-                      placeholder="+94 77 123 4567"
-                      className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-3 pl-10 pr-4 text-xs font-mono text-white placeholder-slate-500 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                      <input
-                        type={showRegPassword ? 'text' : 'password'}
-                        required
-                        value={regPassword}
-                        onChange={(e) => setRegPassword(e.target.value)}
-                        placeholder="Min 6 characters"
-                        className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-3 pl-10 pr-9 text-xs font-mono text-white placeholder-slate-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                      Confirm
-                    </label>
-                    <div className="relative">
-                      <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                      <input
-                        type={showRegPassword ? 'text' : 'password'}
-                        required
-                        value={regConfirmPassword}
-                        onChange={(e) => setRegConfirmPassword(e.target.value)}
-                        placeholder="Re-enter password"
-                        className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-3 pl-10 pr-9 text-xs font-mono text-white placeholder-slate-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 pt-1">
-                  <input
-                    type="checkbox"
-                    id="showRegPass"
-                    checked={showRegPassword}
-                    onChange={(e) => setShowRegPassword(e.target.checked)}
-                    className="accent-[#D4AF37]"
+                <TextField 
+                  fullWidth 
+                  required 
+                  label="Full Name" 
+                  value={regName} 
+                  onChange={(e) => setRegName(e.target.value)} 
+                  variant="outlined" 
+                  sx={textFieldStyles}
+                  slotProps={{ input: { startAdornment: <InputAdornment position="start"><User size={16} color="#64748b" /></InputAdornment> } }}
+                />
+                <TextField 
+                  fullWidth 
+                  required 
+                  type="email" 
+                  label="Email Address" 
+                  value={regEmail} 
+                  onChange={(e) => setRegEmail(e.target.value)} 
+                  variant="outlined" 
+                  sx={textFieldStyles}
+                  slotProps={{ input: { startAdornment: <InputAdornment position="start"><Mail size={16} color="#64748b" /></InputAdornment> } }}
+                />
+                <TextField 
+                  fullWidth 
+                  required 
+                  type="tel" 
+                  label="Phone Number" 
+                  value={regPhone} 
+                  onChange={(e) => setRegPhone(e.target.value)} 
+                  variant="outlined" 
+                  sx={textFieldStyles}
+                  slotProps={{ input: { startAdornment: <InputAdornment position="start"><Phone size={16} color="#64748b" /></InputAdornment> } }}
+                />
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                  <TextField 
+                    fullWidth 
+                    required 
+                    type={showRegPassword ? 'text' : 'password'} 
+                    label="Password" 
+                    value={regPassword} 
+                    onChange={(e) => setRegPassword(e.target.value)} 
+                    variant="outlined" 
+                    sx={textFieldStyles}
+                    slotProps={{ input: { startAdornment: <InputAdornment position="start"><Lock size={16} color="#64748b" /></InputAdornment> } }}
                   />
-                  <label htmlFor="showRegPass" className="text-[11px] font-mono text-slate-400 cursor-pointer">
-                    Show password
-                  </label>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isRegistering}
-                  className="w-full py-3.5 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold text-xs uppercase tracking-[0.2em] rounded-[2px] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#D4AF37]/20 cursor-pointer disabled:opacity-50 mt-2"
-                >
-                  <span>{isRegistering ? 'CREATING ACCOUNT...' : 'JOIN VALKNUT VIP'}</span>
-                  <ArrowRight size={15} />
-                </button>
-              </form>
+                  <TextField 
+                    fullWidth 
+                    required 
+                    type={showRegPassword ? 'text' : 'password'} 
+                    label="Confirm" 
+                    value={regConfirmPassword} 
+                    onChange={(e) => setRegConfirmPassword(e.target.value)} 
+                    variant="outlined" 
+                    sx={textFieldStyles}
+                    slotProps={{ input: { startAdornment: <InputAdornment position="start"><Lock size={16} color="#64748b" /></InputAdornment> } }}
+                  />
+                </Box>
+                <FormControlLabel
+                  control={<Checkbox checked={showRegPassword} onChange={(e) => setShowRegPassword(e.target.checked)} sx={{ color: 'text.secondary', '&.Mui-checked': { color: 'primary.main' } }} />}
+                  label={<Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>Show password</Typography>}
+                />
+                <Button type="submit" disabled={isRegistering} sx={{ mt: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
+                  {isRegistering ? 'CREATING ACCOUNT...' : 'JOIN VALKNUT VIP'}
+                </Button>
+              </Box>
             )}
 
             {/* FORGOT PASSWORD FORM */}
             {activeTab === 'forgot-password' && (
-              <form onSubmit={handleForgotPassword} className="space-y-4">
+              <Box component="form" onSubmit={handleForgotPassword} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {forgotMsg && (
-                  <div
-                    className={`p-3 rounded-[2px] text-xs font-mono ${
-                      forgotMsg.isError
-                        ? 'bg-red-950/60 border border-red-500/40 text-red-400'
-                        : 'bg-emerald-950/60 border border-emerald-500/40 text-emerald-400'
-                    }`}
-                  >
+                  <Box sx={{ p: 1.5, bgcolor: forgotMsg.isError ? 'rgba(153,27,27,0.4)' : 'rgba(16,185,129,0.1)', border: '1px solid', borderColor: forgotMsg.isError ? 'rgba(239,68,68,0.5)' : 'rgba(16,185,129,0.3)', borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: forgotMsg.isError ? 'error.light' : 'success.main', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <AlertCircle size={14} />
                     {forgotMsg.text}
-                  </div>
+                  </Box>
                 )}
-
-                <div className="space-y-1">
-                  <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                    Registered Email
-                  </label>
-                  <div className="relative">
-                    <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                    <input
-                      type="email"
-                      required
-                      value={forgotEmail}
-                      onChange={(e) => setForgotEmail(e.target.value)}
-                      placeholder="name@example.com"
-                      className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-3 pl-10 pr-4 text-xs font-mono text-white placeholder-slate-500 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isForgotLoading}
-                  className="w-full py-3.5 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold text-xs uppercase tracking-[0.2em] rounded-[2px] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#D4AF37]/20 cursor-pointer disabled:opacity-50"
-                >
-                  <span>{isForgotLoading ? 'SENDING...' : 'SEND RECOVERY LINK'}</span>
-                  <ArrowRight size={15} />
-                </button>
-
-                <div className="text-center pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('login')}
-                    className="text-xs font-mono text-slate-400 hover:text-white"
-                  >
+                <TextField 
+                  fullWidth 
+                  required 
+                  type="email" 
+                  label="Registered Email" 
+                  value={forgotEmail} 
+                  onChange={(e) => setForgotEmail(e.target.value)} 
+                  variant="outlined" 
+                  sx={textFieldStyles}
+                  slotProps={{ input: { startAdornment: <InputAdornment position="start"><Mail size={16} color="#64748b" /></InputAdornment> } }}
+                />
+                <Button type="submit" disabled={isForgotLoading} sx={{ mt: 2, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
+                  {isForgotLoading ? 'SENDING...' : 'SEND RECOVERY LINK'}
+                </Button>
+                <Box sx={{ textAlign: 'center', mt: 2 }}>
+                  <Button onClick={() => setActiveTab('login')} sx={{ minWidth: 'auto', p: 0, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'transparent' } }}>
                     ← Back to Sign In
-                  </button>
-                </div>
-              </form>
+                  </Button>
+                </Box>
+              </Box>
             )}
 
-          </div>
+          </Box>
         ) : (
-          /* 2. LOGGED-IN CUSTOMER ACCOUNT PORTAL */
-          <div className="space-y-8 animate-fade-in">
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, animation: 'fadeIn 0.5s ease-out' }}>
             
             {/* Top Customer Banner */}
-            <div className="bg-[#0E1017] border border-white/10 rounded-md p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-2xl">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-[2px] bg-[#141620] border border-[#D4AF37]/40 flex items-center justify-center text-[#D4AF37] font-syne font-black text-2xl shadow-lg flex-shrink-0">
+            <Box sx={{ bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'center' }, justifyContent: 'space-between', gap: 3, boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <Box sx={{ width: 64, height: 64, borderRadius: 1, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'primary.main', fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: '1.5rem', boxShadow: '0 4px 15px rgba(212,175,55,0.1)', flexShrink: 0 }}>
                   {user.name.charAt(0).toUpperCase()}
-                </div>
-
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-xl sm:text-2xl font-black text-white font-syne uppercase">
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <Typography variant="h2" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' }, fontWeight: 900, color: 'white', fontFamily: '"Syne", sans-serif', textTransform: 'uppercase' }}>
                       {user.name}
-                    </h1>
-                    <span className="px-2 py-0.5 bg-[#D4AF37]/20 border border-[#D4AF37] text-[#D4AF37] text-[10px] font-mono font-black uppercase rounded-[2px]">
+                    </Typography>
+                    <Typography sx={{ px: 1, py: 0.25, bgcolor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, textTransform: 'uppercase', borderRadius: 0.5 }}>
                       {user.isAdmin ? 'FOUNDER / ADMIN' : 'SOVEREIGN VIP'}
-                    </span>
-                  </div>
-                  <p className="text-xs font-mono text-slate-400">{user.email} • {user.phone}</p>
-                </div>
-              </div>
+                    </Typography>
+                  </Box>
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                    {user.email} • {user.phone}
+                  </Typography>
+                </Box>
+              </Box>
 
-              {/* Actions: Admin Dashboard & Sign Out */}
-              <div className="flex items-center gap-3">
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 {user.isAdmin && (
-                  <button
-                    onClick={() => setIsAdminOpen(true)}
-                    className="px-4 py-2.5 bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 border border-[#D4AF37] text-[#D4AF37] text-xs font-mono font-bold rounded-[2px] flex items-center gap-2 transition-colors cursor-pointer"
-                  >
-                    <ShieldCheck size={15} />
-                    <span>ADMIN SUITE</span>
-                  </button>
+                  <Button onClick={() => setIsAdminOpen(true)} startIcon={<ShieldCheck size={16} />} sx={{ px: 3, py: 1.5, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(212,175,55,0.2)' } }}>
+                    ADMIN SUITE
+                  </Button>
                 )}
-
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2.5 bg-white/5 hover:bg-red-950/40 border border-white/10 hover:border-red-500/40 text-slate-300 hover:text-red-400 text-xs font-mono font-bold rounded-[2px] flex items-center gap-2 transition-colors cursor-pointer"
-                >
-                  <LogOut size={15} />
-                  <span>SIGN OUT</span>
-                </button>
-              </div>
-            </div>
+                <Button onClick={handleLogout} startIcon={<LogOut size={16} />} sx={{ px: 3, py: 1.5, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'text.secondary', fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(239,68,68,0.1)', borderColor: 'rgba(239,68,68,0.4)', color: 'error.main' } }}>
+                  SIGN OUT
+                </Button>
+              </Box>
+            </Box>
 
             {/* Navigation Tabs Bar */}
-            <div className="flex items-center gap-2 border-b border-white/10 pb-3 overflow-x-auto scrollbar-none">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2, overflowX: 'auto', '&::-webkit-scrollbar': { display: 'none' }, msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
               {[
                 { id: 'dashboard', label: 'OVERVIEW', icon: Sparkles },
                 { id: 'orders', label: `ORDERS (${userOrders.length})`, icon: Package },
@@ -593,465 +474,262 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
                 return (
-                  <button
+                  <Button
                     key={tab.id}
                     onClick={() => {
                       setActiveTab(tab.id as any);
                       window.location.hash = `#/account/${tab.id}`;
                     }}
-                    className={`px-5 py-2.5 rounded-[2px] text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer flex-shrink-0 ${
-                      isActive
-                        ? 'bg-[#D4AF37] text-black shadow-md'
-                        : 'bg-[#12141F] text-slate-400 hover:text-white border border-white/5 hover:bg-white/5'
-                    }`}
+                    startIcon={<Icon size={14} />}
+                    sx={{ px: 3, py: 1.5, borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.3s ease', flexShrink: 0, ...(isActive ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 4px 15px rgba(212,175,55,0.2)' } : { bgcolor: '#12141F', color: 'text.secondary', border: '1px solid rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.05)', color: 'white' } }) }}
                   >
-                    <Icon size={14} />
-                    <span>{tab.label}</span>
-                  </button>
+                    {tab.label}
+                  </Button>
                 );
               })}
-            </div>
+            </Box>
 
             {/* TAB 1: DASHBOARD OVERVIEW */}
             {activeTab === 'dashboard' && (
-              <div className="space-y-8">
-                
-                {/* Stats Matrix Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="p-5 bg-[#0E1017] border border-white/10 rounded-md space-y-1">
-                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block font-bold">
-                      TOTAL COMPLETED ORDERS
-                    </span>
-                    <p className="text-3xl font-black text-white font-mono">
-                      {userOrders.length}
-                    </p>
-                    <span className="text-[11px] text-emerald-400 font-mono">Verified Purchases</span>
-                  </div>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 2 }}>
+                  <Box sx={{ p: 3, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>TOTAL COMPLETED ORDERS</Typography>
+                    <Typography sx={{ fontSize: '1.875rem', fontWeight: 900, color: 'white', fontFamily: '"JetBrains Mono", sans-serif' }}>{userOrders.length}</Typography>
+                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'success.main' }}>Verified Purchases</Typography>
+                  </Box>
+                  <Box sx={{ p: 3, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>VIP REWARDS LEVEL</Typography>
+                    <Typography sx={{ fontSize: '1.875rem', fontWeight: 900, color: 'primary.main', fontFamily: '"JetBrains Mono", sans-serif' }}>TIER 1</Typography>
+                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>Early Drop Access Active</Typography>
+                  </Box>
+                  <Box sx={{ p: 3, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>DEFAULT SHIPPING ZONE</Typography>
+                    <Typography sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'white', fontFamily: '"JetBrains Mono", sans-serif', mt: 1 }}>{user.address?.city || 'Colombo 03'}</Typography>
+                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>Sri Lanka Delivery</Typography>
+                  </Box>
+                </Box>
 
-                  <div className="p-5 bg-[#0E1017] border border-white/10 rounded-md space-y-1">
-                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block font-bold">
-                      VIP REWARDS LEVEL
-                    </span>
-                    <p className="text-3xl font-black text-[#D4AF37] font-mono">
-                      TIER 1
-                    </p>
-                    <span className="text-[11px] text-slate-400 font-mono">Early Drop Access Active</span>
-                  </div>
-
-                  <div className="p-5 bg-[#0E1017] border border-white/10 rounded-md space-y-1">
-                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block font-bold">
-                      DEFAULT SHIPPING ZONE
-                    </span>
-                    <p className="text-lg font-black text-white font-mono truncate">
-                      {user.address?.city || 'Colombo 03'}
-                    </p>
-                    <span className="text-[11px] text-slate-400 font-mono">Sri Lanka Delivery</span>
-                  </div>
-                </div>
-
-                {/* Recent Order Tracker Snapshot */}
                 {userOrders.length > 0 && (
-                  <div className="bg-[#0E1017] border border-white/10 rounded-md p-6 sm:p-7 space-y-5 shadow-2xl">
-                    <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                      <div>
-                        <span className="text-[10px] font-mono font-bold text-[#D4AF37] uppercase tracking-widest block mb-0.5">
-                          LATEST DISPATCH STATUS
-                        </span>
-                        <h3 className="text-lg font-black text-white uppercase font-syne">
-                          ORDER #{userOrders[0].orderNumber}
-                        </h3>
-                      </div>
+                  <Box sx={{ p: { xs: 3, sm: 4 }, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                      <Box>
+                        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.2em', mb: 0.5 }}>LATEST DISPATCH STATUS</Typography>
+                        <Typography variant="h3" sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'white', fontFamily: '"Syne", sans-serif', textTransform: 'uppercase' }}>ORDER #{userOrders[0].orderNumber}</Typography>
+                      </Box>
+                      <Button onClick={() => setSelectedOrderDetails(userOrders[0])} endIcon={<ArrowRight size={14} />} sx={{ p: 0, minWidth: 'auto', color: 'primary.main', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' } }}>
+                        View Breakdown
+                      </Button>
+                    </Box>
 
-                      <button
-                        onClick={() => setSelectedOrderDetails(userOrders[0])}
-                        className="text-xs font-mono font-bold text-[#D4AF37] hover:underline flex items-center gap-1"
-                      >
-                        <span>View Full Breakdown</span>
-                        <ArrowRight size={13} />
-                      </button>
-                    </div>
-
-                    {/* Progress Timeline */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="text-slate-300">
-                          Current Phase: <strong className="text-[#D4AF37] uppercase">{userOrders[0].orderStatus}</strong>
-                        </span>
-                        {userOrders[0].awbNumber && (
-                          <span className="text-slate-400 text-[11px]">
-                            AWB: <strong className="text-white">{userOrders[0].awbNumber}</strong>
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="grid grid-cols-5 gap-1.5 pt-1 text-center font-mono text-[9px] uppercase font-bold text-slate-500">
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                        <Typography sx={{ fontSize: 'inherit', color: 'text.secondary' }}>Current Phase: <Box component="strong" sx={{ color: 'primary.main', textTransform: 'uppercase' }}>{userOrders[0].orderStatus}</Box></Typography>
+                        {userOrders[0].awbNumber && <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>AWB: <Box component="strong" sx={{ color: 'white' }}>{userOrders[0].awbNumber}</Box></Typography>}
+                      </Box>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 1, pt: 1, textAlign: 'center' }}>
                         {['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered'].map((step, idx) => {
                           const isDone = getStatusStep(userOrders[0].orderStatus) >= idx + 1;
                           return (
-                            <div key={step} className="space-y-1">
-                              <div className={`h-2 rounded-full transition-all ${isDone ? 'bg-[#D4AF37]' : 'bg-white/10'}`} />
-                              <span className={isDone ? 'text-white' : 'text-slate-600'}>{step}</span>
-                            </div>
+                            <Box key={step} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                              <Box sx={{ height: 6, borderRadius: 3, transition: 'all 0.3s ease', bgcolor: isDone ? 'primary.main' : 'rgba(255,255,255,0.1)' }} />
+                              <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', color: isDone ? 'white' : 'text.secondary' }}>{step}</Typography>
+                            </Box>
                           );
                         })}
-                      </div>
-                    </div>
-                  </div>
+                      </Box>
+                    </Box>
+                  </Box>
                 )}
-
-              </div>
+              </Box>
             )}
 
             {/* TAB 2: ORDERS HISTORY */}
             {activeTab === 'orders' && (
-              <div className="space-y-4">
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 {userOrders.length === 0 ? (
-                  <div className="bg-[#0E1017] border border-white/10 rounded-md p-12 text-center space-y-3">
-                    <Package size={36} className="mx-auto text-slate-600" />
-                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">No Orders Placed Yet</h3>
-                    <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                      Once you place an order, live tracking, courier AWB tracking, and digital invoices will appear here.
-                    </p>
-                    <a href="#/shop" className="inline-block mt-2 px-5 py-2.5 bg-[#D4AF37] text-black font-extrabold text-xs uppercase tracking-widest rounded-[2px]">
-                      Explore Shop
-                    </a>
-                  </div>
+                  <Box sx={{ p: 6, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <Package size={40} color="rgba(255,255,255,0.4)" />
+                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', color: 'white', fontFamily: '"JetBrains Mono", sans-serif', letterSpacing: '0.1em' }}>No Orders Placed Yet</Typography>
+                    <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', maxWidth: 400 }}>Once you place an order, live tracking, courier AWB tracking, and digital invoices will appear here.</Typography>
+                    <Button href="#/shop" sx={{ mt: 2, px: 4, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, '&:hover': { bgcolor: 'primary.dark' } }}>Explore Shop</Button>
+                  </Box>
                 ) : (
                   userOrders.map((order) => {
                     const stepNum = getStatusStep(order.orderStatus);
-
                     return (
-                      <div key={order.id} className="bg-[#0E1017] border border-white/10 rounded-md p-5 sm:p-6 space-y-4 shadow-xl">
+                      <Box key={order.id} sx={{ p: { xs: 3, sm: 4 }, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
                         
-                        {/* Order Header Summary */}
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/5 pb-4 gap-3">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-black font-mono text-[#D4AF37]">
-                                {order.orderNumber}
-                              </span>
-                              <span className="px-2 py-0.5 bg-[#141620] border border-white/10 rounded text-[10px] font-mono text-slate-300">
-                                {new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                              </span>
-                            </div>
-                            <p className="text-xs text-slate-400 mt-0.5 font-mono">
-                              Paid via {order.paymentGateway} ({order.paymentStatus})
-                            </p>
-                          </div>
-
-                          <div className="flex items-center gap-4 justify-between sm:justify-end">
-                            <div className="text-right">
-                              <span className="text-sm sm:text-base font-black font-mono text-white block">
-                                LKR {order.totalAmount.toLocaleString()}
-                              </span>
-                              <span className="text-[10px] font-mono text-slate-400">
-                                {order.items.reduce((s, i) => s + i.quantity, 0)} Items
-                              </span>
-                            </div>
-
-                            <button
-                              onClick={() => setSelectedOrderDetails(order)}
-                              className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-[2px] text-xs font-mono font-bold transition-colors cursor-pointer"
-                            >
+                        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, sm: 'items-center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2, gap: 2 }}>
+                          <Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                              <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main' }}>{order.orderNumber}</Typography>
+                              <Typography sx={{ px: 1, py: 0.25, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>{new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</Typography>
+                            </Box>
+                            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif', mt: 0.5 }}>Paid via {order.paymentGateway} ({order.paymentStatus})</Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
+                            <Box sx={{ textAlign: { sm: 'right' } }}>
+                              <Typography sx={{ fontSize: '1rem', fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif', color: 'white' }}>LKR {order.totalAmount.toLocaleString()}</Typography>
+                              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>{order.items.reduce((s, i) => s + i.quantity, 0)} Items</Typography>
+                            </Box>
+                            <Button onClick={() => setSelectedOrderDetails(order)} sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.1)', color: 'white', fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}>
                               Details
-                            </button>
-                          </div>
-                        </div>
+                            </Button>
+                          </Box>
+                        </Box>
 
-                        {/* Order Items Preview */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {order.items.map((item: any, idx: number) => {
-                            const img = item.customization?.finalPreviewDataUrl || item.imageUrl || item.product?.images?.[0] || '';
-                            const name = item.productName || item.product?.name || 'Garment';
-                            const size = item.size || item.selectedSize || 'M';
-                            const color = item.color || item.selectedColor || '';
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(3, 1fr)' }, gap: 2 }}>
+                          {order.items.map((item: any, idx: number) => (
+                            <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 1.5, bgcolor: '#141620', borderRadius: 0.5, border: '1px solid rgba(255,255,255,0.05)' }}>
+                              <Box component="img" src={item.customization?.finalPreviewDataUrl || item.imageUrl || item.product?.images?.[0] || ''} alt="" sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 0.5, bgcolor: '#1a1d2d', flexShrink: 0 }} />
+                              <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+                                <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'white', fontFamily: '"Syne", sans-serif' }} noWrap>{item.productName || item.product?.name || 'Garment'}</Typography>
+                                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>Size: {item.size || item.selectedSize || 'M'} {item.color || item.selectedColor ? `• ${item.color || item.selectedColor}` : ''} • Qty: {item.quantity}</Typography>
+                                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main' }}>LKR {(item.unitPrice || 0).toLocaleString()}</Typography>
+                              </Box>
+                            </Box>
+                          ))}
+                        </Box>
 
-                            return (
-                              <div key={idx} className="flex items-center gap-3 p-2.5 bg-[#141620] rounded-[2px] border border-white/5">
-                                {img ? (
-                                  <img
-                                    src={img}
-                                    alt={name}
-                                    className="w-12 h-14 object-cover rounded-[2px] bg-[#1a1d2d] flex-shrink-0"
-                                  />
-                                ) : (
-                                  <div className="w-12 h-14 bg-[#1a1d2d] rounded-[2px] flex items-center justify-center flex-shrink-0 text-slate-500 font-mono text-[9px]">
-                                    VALKNUT
-                                  </div>
-                                )}
-                                <div className="flex-1 min-w-0">
-                                  <h5 className="text-xs font-bold text-white truncate font-heading">{name}</h5>
-                                  <p className="text-[10px] font-mono text-slate-400">Size: {size} {color ? `• ${color}` : ''} • Qty: {item.quantity}</p>
-                                  <p className="text-[10px] font-mono font-bold text-[#D4AF37]">LKR {(item.unitPrice || 0).toLocaleString()}</p>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-
-                        {/* Live Delivery Tracker Bar */}
-                        <div className="pt-3 border-t border-white/5 space-y-2">
-                          <div className="flex items-center justify-between text-xs font-mono">
-                            <span className="text-slate-300">
-                              Status: <strong className="text-[#D4AF37] uppercase">{order.orderStatus}</strong>
-                            </span>
+                        <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                            <Typography sx={{ fontSize: 'inherit', color: 'text.secondary' }}>Status: <Box component="strong" sx={{ color: 'primary.main', textTransform: 'uppercase' }}>{order.orderStatus}</Box></Typography>
                             {order.trackingLink && (
-                              <a
-                                href={order.trackingLink}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-bold"
-                              >
-                                <span>Track via {order.courierName || 'Pronto Express'}</span>
-                                <ExternalLink size={12} />
-                              </a>
+                              <Box component="a" href={order.trackingLink} target="_blank" rel="noreferrer" sx={{ color: 'primary.main', fontWeight: 'bold', textDecoration: 'none', '&:hover': { textDecoration: 'underline' }, display: 'flex', alignItems: 'center', gap: 0.5, fontSize: '0.6875rem' }}>
+                                Track via {order.courierName || 'Pronto Express'} <ExternalLink size={12} />
+                              </Box>
                             )}
-                          </div>
-
-                          <div className="grid grid-cols-5 gap-1 text-center font-mono text-[9px] uppercase font-bold text-slate-500">
+                          </Box>
+                          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 1, textAlign: 'center' }}>
                             {['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered'].map((step, idx) => (
-                              <div key={step} className="space-y-1">
-                                <div className={`h-1.5 rounded-full ${stepNum >= idx + 1 ? 'bg-[#D4AF37]' : 'bg-white/10'}`} />
-                                <span className={stepNum >= idx + 1 ? 'text-white' : 'text-slate-600'}>{step}</span>
-                              </div>
+                              <Box key={step} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                <Box sx={{ height: 6, borderRadius: 3, transition: 'all 0.3s ease', bgcolor: stepNum >= idx + 1 ? 'primary.main' : 'rgba(255,255,255,0.1)' }} />
+                                <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', color: stepNum >= idx + 1 ? 'white' : 'text.secondary' }}>{step}</Typography>
+                              </Box>
                             ))}
-                          </div>
-                        </div>
-
-                      </div>
+                          </Box>
+                        </Box>
+                        
+                      </Box>
                     );
                   })
                 )}
-              </div>
+              </Box>
             )}
 
             {/* TAB 3: PROFILE & DELIVERY ADDRESS */}
             {activeTab === 'profile' && (
-              <form onSubmit={handleSaveProfile} className="bg-[#0E1017] border border-white/10 rounded-md p-6 sm:p-8 space-y-6 shadow-2xl">
-                <div>
-                  <h3 className="text-base font-black uppercase text-white font-syne tracking-wider">
-                    PERSONAL & DELIVERY PROFILE
-                  </h3>
-                  <p className="text-xs text-slate-400 font-sans mt-0.5">
-                    Update your contact information and primary Sri Lanka delivery destination for 1-click checkout.
-                  </p>
-                </div>
+              <Box component="form" onSubmit={handleSaveProfile} sx={{ p: { xs: 3, sm: 4 }, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <Box>
+                  <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'white', fontFamily: '"Syne", sans-serif', letterSpacing: '0.1em' }}>PERSONAL & DELIVERY PROFILE</Typography>
+                  <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mt: 0.5 }}>Update your contact information and primary Sri Lanka delivery destination for 1-click checkout.</Typography>
+                </Box>
 
-                {/* Profile Fields */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/10 pt-6">
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] p-3 text-xs font-mono text-white focus:outline-none"
-                    />
-                  </div>
+                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 4 }}>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>
+                    <TextField fullWidth required label="Full Name" value={editName} onChange={(e) => setEditName(e.target.value)} variant="outlined" sx={textFieldStyles} />
+                    <TextField fullWidth disabled label="Email Address (Account Linked)" value={user.email} variant="outlined" sx={{...textFieldStyles, '& .MuiOutlinedInput-root': { ...textFieldStyles['& .MuiOutlinedInput-root'], bgcolor: 'rgba(255,255,255,0.02)', color: 'text.secondary' }}} />
+                    <TextField fullWidth required type="tel" label="Mobile Number (For Delivery SMS)" value={editPhone} onChange={(e) => setEditPhone(e.target.value)} variant="outlined" sx={textFieldStyles} />
+                  </Box>
+                </Box>
 
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                      Email Address (Account Linked)
-                    </label>
-                    <input
-                      type="email"
-                      disabled
-                      value={user.email}
-                      className="w-full bg-[#131520]/50 border border-white/5 rounded-[2px] p-3 text-xs font-mono text-slate-500 cursor-not-allowed"
-                    />
-                  </div>
+                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 4, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'white', fontFamily: '"JetBrains Mono", sans-serif', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <MapPin size={16} color="#D4AF37" /> Primary Delivery Address
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <TextField fullWidth required label="Address Line 1 (Street & House No.)" value={editAddress.addressLine1} onChange={(e) => setEditAddress({ ...editAddress, addressLine1: e.target.value })} variant="outlined" sx={textFieldStyles} />
+                    <TextField fullWidth label="Address Line 2 (Apartment / Suite / Landmark)" value={editAddress.addressLine2 || ''} onChange={(e) => setEditAddress({ ...editAddress, addressLine2: e.target.value })} variant="outlined" sx={textFieldStyles} />
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 3 }}>
+                      <TextField fullWidth required label="City" value={editAddress.city} onChange={(e) => setEditAddress({ ...editAddress, city: e.target.value })} variant="outlined" sx={textFieldStyles} />
+                      <FormControl fullWidth variant="outlined" sx={textFieldStyles}>
+                        <InputLabel id="district-label">District / Province</InputLabel>
+                        <Select labelId="district-label" label="District / Province" value={editAddress.district} onChange={(e) => setEditAddress({ ...editAddress, district: e.target.value as string })}>
+                          {SRI_LANKAN_DISTRICTS.map((d) => (
+                            <MenuItem key={d} value={d} sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>{d} District</MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <TextField fullWidth required label="Postal Code" value={editAddress.postalCode} onChange={(e) => setEditAddress({ ...editAddress, postalCode: e.target.value })} variant="outlined" sx={textFieldStyles} />
+                    </Box>
+                  </Box>
+                </Box>
 
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-mono font-bold text-slate-300 block uppercase">
-                      Mobile Number (For Delivery SMS)
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      value={editPhone}
-                      onChange={(e) => setEditPhone(e.target.value)}
-                      className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] p-3 text-xs font-mono text-white focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                {/* Delivery Address Fields */}
-                <div className="space-y-4 border-t border-white/10 pt-6">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200 font-heading flex items-center gap-1.5">
-                    <MapPin size={14} className="text-[#D4AF37]" />
-                    <span>Primary Delivery Address</span>
-                  </h4>
-
-                  <div className="space-y-3">
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-mono font-bold text-slate-400 block uppercase">
-                        Address Line 1 (Street & House No.)
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={editAddress.addressLine1}
-                        onChange={(e) => setEditAddress({ ...editAddress, addressLine1: e.target.value })}
-                        placeholder="No. 45, Galle Road"
-                        className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] p-3 text-xs font-mono text-white focus:outline-none"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-mono font-bold text-slate-400 block uppercase">
-                        Address Line 2 (Apartment / Suite / Landmark)
-                      </label>
-                      <input
-                        type="text"
-                        value={editAddress.addressLine2 || ''}
-                        onChange={(e) => setEditAddress({ ...editAddress, addressLine2: e.target.value })}
-                        placeholder="Floor 4, Apartment 4B (Optional)"
-                        className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] p-3 text-xs font-mono text-white focus:outline-none"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div className="space-y-1">
-                        <label className="text-[11px] font-mono font-bold text-slate-400 block uppercase">
-                          City
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={editAddress.city}
-                          onChange={(e) => setEditAddress({ ...editAddress, city: e.target.value })}
-                          placeholder="Colombo 03"
-                          className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] p-3 text-xs font-mono text-white focus:outline-none"
-                        />
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-[11px] font-mono font-bold text-slate-400 block uppercase">
-                          District / Province
-                        </label>
-                        <select
-                          value={editAddress.district}
-                          onChange={(e) => setEditAddress({ ...editAddress, district: e.target.value })}
-                          className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] p-3 text-xs font-mono text-white focus:outline-none cursor-pointer"
-                        >
-                          <option value="Western Province">Western Province (Colombo, Gampaha, Kalutara)</option>
-                          <option value="Central Province">Central Province (Kandy, Matale, Nuwara Eliya)</option>
-                          <option value="Southern Province">Southern Province (Galle, Matara, Hambantota)</option>
-                          <option value="North Western Province">North Western Province (Kurunegala, Puttalam)</option>
-                          <option value="Sabaragamuwa Province">Sabaragamuwa Province (Ratnapura, Kegalle)</option>
-                        </select>
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-[11px] font-mono font-bold text-slate-400 block uppercase">
-                          Postal Code
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={editAddress.postalCode}
-                          onChange={(e) => setEditAddress({ ...editAddress, postalCode: e.target.value })}
-                          placeholder="00300"
-                          className="w-full bg-[#131520] border border-white/15 focus:border-[#D4AF37] rounded-[2px] p-3 text-xs font-mono text-white focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-white/10 flex items-center justify-end">
-                  <button
-                    type="submit"
-                    disabled={isSavingProfile}
-                    className="px-8 py-3.5 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold text-xs uppercase tracking-[0.2em] rounded-[2px] transition-all flex items-center gap-2 shadow-lg shadow-[#D4AF37]/20 cursor-pointer disabled:opacity-50"
-                  >
-                    <Check size={16} />
-                    <span>{isSavingProfile ? 'SAVING CHANGES...' : 'SAVE PROFILE CHANGES'}</span>
-                  </button>
-                </div>
-              </form>
+                <Box sx={{ pt: 3, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button type="submit" disabled={isSavingProfile} startIcon={<Check size={16} />} sx={{ px: 4, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
+                    {isSavingProfile ? 'SAVING...' : 'SAVE PROFILE'}
+                  </Button>
+                </Box>
+              </Box>
             )}
 
-          </div>
+          </Box>
         )}
 
-        {/* ORDER DETAILS MODAL */}
-        {selectedOrderDetails && (
-          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-            <div className="bg-[#0E1017] border border-white/15 w-full max-w-2xl rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <div>
-                  <span className="text-[10px] font-mono text-[#D4AF37] font-bold block">ORDER INVOICE</span>
-                  <h3 className="text-lg font-black font-syne text-white uppercase">
-                    {selectedOrderDetails.orderNumber}
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setSelectedOrderDetails(null)}
-                  className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-xs font-mono"
-                >
-                  Close
-                </button>
-              </div>
+        <Modal open={!!selectedOrderDetails} onClose={() => setSelectedOrderDetails(null)} closeAfterTransition slotProps={{ backdrop: { sx: { bgcolor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)' } } }}>
+          <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '90%', maxWidth: 700, maxHeight: '90vh', overflowY: 'auto', bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 2, p: { xs: 3, sm: 5 }, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {selectedOrderDetails && (
+              <>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                  <Box>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main', fontWeight: 'bold' }}>ORDER INVOICE</Typography>
+                    <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, fontFamily: '"Syne", sans-serif', color: 'white', textTransform: 'uppercase' }}>{selectedOrderDetails.orderNumber}</Typography>
+                  </Box>
+                  <IconButton onClick={() => setSelectedOrderDetails(null)} sx={{ color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+                    <X size={20} />
+                  </IconButton>
+                </Box>
 
-              {/* Items List */}
-              <div className="space-y-3 max-h-60 overflow-y-auto divide-y divide-white/5">
-                {selectedOrderDetails.items.map((it: any, idx: number) => {
-                  const img = it.customization?.finalPreviewDataUrl || it.imageUrl || it.product?.images?.[0] || '';
-                  const name = it.productName || it.product?.name || 'Garment';
-                  const size = it.size || it.selectedSize || 'M';
-                  const color = it.color || it.selectedColor || '';
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxHeight: 300, overflowY: 'auto', pr: 1, '&::-webkit-scrollbar': { width: 6 }, '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(255,255,255,0.2)', borderRadius: 3 } }}>
+                  {selectedOrderDetails.items.map((it: any, idx: number) => (
+                    <Box key={idx} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pb: 2, borderBottom: idx < selectedOrderDetails.items.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        {it.customization?.finalPreviewDataUrl || it.imageUrl || it.product?.images?.[0] ? (
+                          <Box component="img" src={it.customization?.finalPreviewDataUrl || it.imageUrl || it.product?.images?.[0]} sx={{ width: 40, height: 48, objectFit: 'cover', borderRadius: 0.5, bgcolor: '#141620' }} />
+                        ) : null}
+                        <Box>
+                          <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'white', fontFamily: '"JetBrains Mono", sans-serif' }}>{it.productName || it.product?.name || 'Garment'}</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>Size: {it.size || it.selectedSize || 'M'} {it.color || it.selectedColor ? `• ${it.color || it.selectedColor}` : ''} • Qty: {it.quantity}</Typography>
+                        </Box>
+                      </Box>
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'white', fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {((it.unitPrice || 0) * (it.quantity || 1)).toLocaleString()}</Typography>
+                    </Box>
+                  ))}
+                </Box>
 
-                  return (
-                    <div key={idx} className="pt-3 first:pt-0 flex items-center justify-between text-xs font-mono">
-                      <div className="flex items-center gap-3">
-                        {img && <img src={img} alt="" className="w-10 h-12 object-cover rounded bg-[#141620]" />}
-                        <div>
-                          <p className="font-bold text-white">{name}</p>
-                          <p className="text-[10px] text-slate-400">Size: {size} {color ? `• ${color}` : ''} • Qty: {it.quantity}</p>
-                        </div>
-                      </div>
-                      <span className="font-bold text-white">LKR {((it.unitPrice || 0) * (it.quantity || 1)).toLocaleString()}</span>
-                    </div>
-                  );
-                })}
-              </div>
+                <Box sx={{ bgcolor: '#141620', p: 3, borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: 'inherit' }}>Subtotal:</Typography>
+                    <Typography sx={{ fontSize: 'inherit', color: 'white', fontWeight: 'bold' }}>LKR {selectedOrderDetails.subtotal.toLocaleString()}</Typography>
+                  </Box>
+                  {selectedOrderDetails.discountAmount > 0 && (
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'success.main' }}>
+                      <Typography sx={{ fontSize: 'inherit' }}>Discount:</Typography>
+                      <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold' }}>- LKR {selectedOrderDetails.discountAmount.toLocaleString()}</Typography>
+                    </Box>
+                  )}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: 'inherit' }}>Shipping:</Typography>
+                    <Typography sx={{ fontSize: 'inherit', color: 'white', fontWeight: 'bold' }}>{selectedOrderDetails.shippingCharge === 0 ? 'FREE' : `LKR ${selectedOrderDetails.shippingCharge}`}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, color: 'white' }}>TOTAL PAID:</Typography>
+                    <Typography sx={{ fontSize: '1rem', fontWeight: 900, color: 'primary.main' }}>LKR {selectedOrderDetails.totalAmount.toLocaleString()}</Typography>
+                  </Box>
+                </Box>
 
-              {/* Financial Totals */}
-              <div className="bg-[#141620] p-4 rounded space-y-2 text-xs font-mono text-slate-300 border border-white/5">
-                <div className="flex justify-between">
-                  <span>Subtotal:</span>
-                  <strong>LKR {selectedOrderDetails.subtotal.toLocaleString()}</strong>
-                </div>
-                {selectedOrderDetails.discountAmount > 0 && (
-                  <div className="flex justify-between text-emerald-400">
-                    <span>Discount:</span>
-                    <strong>- LKR {selectedOrderDetails.discountAmount.toLocaleString()}</strong>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span>Shipping:</span>
-                  <strong>{selectedOrderDetails.shippingCharge === 0 ? 'FREE' : `LKR ${selectedOrderDetails.shippingCharge}`}</strong>
-                </div>
-                <div className="flex justify-between text-sm font-black text-white pt-2 border-t border-white/10">
-                  <span>TOTAL PAID:</span>
-                  <span className="text-[#D4AF37]">LKR {selectedOrderDetails.totalAmount.toLocaleString()}</span>
-                </div>
-              </div>
+                <Box sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary', display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  <Typography sx={{ fontSize: 'inherit' }}><Box component="strong" sx={{ color: 'white' }}>Shipping To:</Box> {selectedOrderDetails.customerInfo.fullName}, {selectedOrderDetails.customerInfo.addressLine1}, {selectedOrderDetails.customerInfo.city}</Typography>
+                  <Typography sx={{ fontSize: 'inherit' }}><Box component="strong" sx={{ color: 'white' }}>Contact Phone:</Box> {selectedOrderDetails.customerInfo.phone}</Typography>
+                </Box>
+              </>
+            )}
+          </Box>
+        </Modal>
 
-              {/* Shipping info */}
-              <div className="text-xs font-mono text-slate-400 space-y-1">
-                <p><strong className="text-white">Shipping To:</strong> {selectedOrderDetails.customerInfo.fullName}, {selectedOrderDetails.customerInfo.addressLine1}, {selectedOrderDetails.customerInfo.city}</p>
-                <p><strong className="text-white">Contact Phone:</strong> {selectedOrderDetails.customerInfo.phone}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

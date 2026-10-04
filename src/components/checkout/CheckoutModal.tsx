@@ -13,33 +13,14 @@ import {
   ArrowLeft,
   Package
 } from 'lucide-react';
+import { Modal, Backdrop, Fade, Box, Typography, IconButton, Grid, TextField, MenuItem, Button } from '@mui/material';
 
 const SRI_LANKAN_DISTRICTS = [
-  'Colombo',
-  'Gampaha',
-  'Kalutara',
-  'Kandy',
-  'Matale',
-  'Nuwara Eliya',
-  'Galle',
-  'Matara',
-  'Hambantota',
-  'Jaffna',
-  'Kilinochchi',
-  'Mannar',
-  'Vavuniya',
-  'Mullaitivu',
-  'Batticaloa',
-  'Ampara',
-  'Trincomalee',
-  'Kurunegala',
-  'Puttalam',
-  'Anuradhapura',
-  'Polonnaruwa',
-  'Badulla',
-  'Monaragala',
-  'Ratnapura',
-  'Kegalle'
+  'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya',
+  'Galle', 'Matara', 'Hambantota', 'Jaffna', 'Kilinochchi', 'Mannar',
+  'Vavuniya', 'Mullaitivu', 'Batticaloa', 'Ampara', 'Trincomalee',
+  'Kurunegala', 'Puttalam', 'Anuradhapura', 'Polonnaruwa', 'Badulla',
+  'Monaragala', 'Ratnapura', 'Kegalle'
 ];
 
 export const CheckoutModal: React.FC = () => {
@@ -83,13 +64,7 @@ export const CheckoutModal: React.FC = () => {
     setIsSubmitting(true);
 
     const shippingInfo: ShippingAddress = {
-      fullName,
-      email,
-      phone,
-      addressLine1,
-      city,
-      district,
-      postalCode
+      fullName, email, phone, addressLine1, city, district, postalCode
     };
 
     try {
@@ -121,444 +96,358 @@ export const CheckoutModal: React.FC = () => {
     setPlacedOrder(null);
   };
 
+  const textFieldStyles = {
+    '& .MuiOutlinedInput-root': {
+      color: 'white',
+      fontFamily: '"JetBrains Mono", sans-serif',
+      fontSize: '0.75rem',
+      bgcolor: '#141620',
+      '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
+      '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+      '&.Mui-focused fieldset': { borderColor: 'primary.main' }
+    },
+    '& .MuiInputLabel-root': { color: 'text.secondary', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' },
+    '& .MuiInputLabel-root.Mui-focused': { color: 'primary.main' }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-fade-in">
-      <div className="bg-[#0e1017] border border-[#d4af37]/40 w-full max-w-4xl rounded-lg overflow-hidden relative shadow-2xl my-auto max-h-[95vh] flex flex-col">
-        
-        {/* Header */}
-        <div className="p-6 bg-[#08090d] border-b border-white/10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Lock className="text-[#d4af37]" size={20} />
-            <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider font-syne">
-                {step === 'FORM' ? 'VALKNUT EXPRESS CHECKOUT' : 'ORDER CONFIRMED'}
-              </h3>
-              <p className="text-xs text-slate-400">256-Bit SSL Encrypted Payment Gateway</p>
-            </div>
-          </div>
+    <Modal
+      open={isCheckoutOpen}
+      onClose={handleClose}
+      closeAfterTransition
+      slots={{ backdrop: Backdrop }}
+      slotProps={{
+        backdrop: {
+          timeout: 500,
+          sx: { bgcolor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)' }
+        }
+      }}
+    >
+      <Fade in={isCheckoutOpen}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 900, maxHeight: '95vh', bgcolor: '#0e1017', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', outline: 'none' }}>
+          
+          {/* Header */}
+          <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: '#08090d', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Lock color="#d4af37" size={20} />
+              <Box>
+                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'white', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
+                  {step === 'FORM' ? 'VALKNUT EXPRESS CHECKOUT' : 'ORDER CONFIRMED'}
+                </Typography>
+                <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  256-Bit SSL Encrypted Payment Gateway
+                </Typography>
+              </Box>
+            </Box>
+            <IconButton onClick={handleClose} sx={{ color: 'text.secondary', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+              <X size={20} />
+            </IconButton>
+          </Box>
 
-          <button 
-            onClick={handleClose} 
-            className="text-slate-400 hover:text-white p-1 rounded-full bg-white/5"
-            aria-label="Close Checkout"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        {/* Modal Body */}
-        {step === 'FORM' ? (
-          <form onSubmit={handleSubmitOrder} className="p-6 overflow-y-auto max-h-[80vh] grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            {/* Left Column: Customer & Delivery Details */}
-            <div className="lg:col-span-7 space-y-6">
+          {/* Modal Body */}
+          {step === 'FORM' ? (
+            <Box component="form" onSubmit={handleSubmitOrder} sx={{ p: { xs: 2, sm: 3 }, overflowY: 'auto', maxHeight: 'calc(95vh - 77px)', display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 4 }}>
               
-              {/* Error Notice */}
-              {errorMsg && (
-                <div className="p-3 bg-red-950/40 border border-red-500/50 rounded text-red-300 text-xs font-mono">
-                  {errorMsg}
-                </div>
-              )}
-
-              {/* 1. Contact Information */}
-              <div>
-                <h4 className="text-xs font-extrabold text-[#d4af37] tracking-widest uppercase mb-3 flex items-center gap-2">
-                  <span>1. CUSTOMER CONTACT INFORMATION</span>
-                </h4>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Full Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      placeholder="e.g. Kasun Perera"
-                      className="w-full bg-[#141620] border border-white/20 rounded p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Mobile Phone (For SMS Tracking)</label>
-                    <input
-                      type="tel"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+94771234567"
-                      className="w-full bg-[#141620] border border-white/20 rounded p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]"
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-3">
-                  <label className="text-[11px] font-bold text-slate-300 block mb-1">Email Address (For Invoice)</label>
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="kasun@example.com"
-                    className="w-full bg-[#141620] border border-white/20 rounded p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]"
-                  />
-                </div>
-              </div>
-
-              {/* 2. Delivery Address */}
-              <div className="border-t border-white/10 pt-4">
-                <h4 className="text-xs font-extrabold text-[#d4af37] tracking-widest uppercase mb-3">
-                  2. ISLANDWIDE SHIPPING ADDRESS
-                </h4>
-
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Street Address</label>
-                    <input
-                      type="text"
-                      required
-                      value={addressLine1}
-                      onChange={(e) => setAddressLine1(e.target.value)}
-                      placeholder="House No., Street Name, Apartment"
-                      className="w-full bg-[#141620] border border-white/20 rounded p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div>
-                      <label className="text-[11px] font-bold text-slate-300 block mb-1">City</label>
-                      <input
-                        type="text"
-                        required
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        placeholder="Colombo"
-                        className="w-full bg-[#141620] border border-white/20 rounded p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] font-bold text-slate-300 block mb-1">District</label>
-                      <select
-                        value={district}
-                        onChange={(e) => setDistrict(e.target.value)}
-                        className="w-full bg-[#141620] border border-white/20 rounded p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37] cursor-pointer"
-                      >
-                        {SRI_LANKAN_DISTRICTS.map((d) => (
-                          <option key={d} value={d} className="bg-[#141620] text-white">
-                            {d}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] font-bold text-slate-300 block mb-1">Postal Code</label>
-                      <input
-                        type="text"
-                        value={postalCode}
-                        onChange={(e) => setPostalCode(e.target.value)}
-                        placeholder="00300"
-                        className="w-full bg-[#141620] border border-white/20 rounded p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mt-3">
-                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Delivery Notes / Landmark (Optional)</label>
-                    <input
-                      type="text"
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      placeholder="e.g. Near commercial bank, call before delivery"
-                      className="w-full bg-[#141620] border border-white/20 rounded p-2.5 text-xs text-white focus:outline-none focus:border-[#d4af37]"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. Shipping Method Selector */}
-              <div className="border-t border-white/10 pt-4">
-                <h4 className="text-xs font-extrabold text-[#d4af37] tracking-widest uppercase mb-3">
-                  3. SELECT SHIPPING METHOD
-                </h4>
-
-                <div className="space-y-2">
-                  {availableShippingMethods.map((method) => {
-                    const isSelected = shippingMethodId === method.id;
-                    const isFree = method.freeShippingThreshold > 0 && cartSubtotal >= method.freeShippingThreshold;
-                    const fee = isFree ? 0 : method.baseCharge;
-
-                    return (
-                      <div
-                        key={method.id}
-                        onClick={() => setShippingMethodId(method.id)}
-                        className={`p-3 rounded border cursor-pointer transition-all flex items-center justify-between ${
-                          isSelected
-                            ? 'border-[#d4af37] bg-[#d4af37]/15 text-white'
-                            : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/30'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <input
-                            type="radio"
-                            name="modalShippingMethod"
-                            checked={isSelected}
-                            onChange={() => setShippingMethodId(method.id)}
-                            className="accent-[#d4af37] cursor-pointer"
-                          />
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs font-bold text-white uppercase">{method.name}</span>
-                              {method.id === 'express' && (
-                                <span className="text-[8px] bg-[#d4af37] text-black px-1.5 py-0.2 rounded font-black font-mono">
-                                  VIP PRIORITY
-                                </span>
-                              )}
-                            </div>
-                            <span className="text-[10px] text-slate-400 block">{method.estimatedDays}</span>
-                          </div>
-                        </div>
-
-                        <span className="text-xs font-bold font-mono">
-                          {isFree ? <span className="text-emerald-400">FREE</span> : `LKR ${fee.toLocaleString()}`}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* 4. Payment Gateway Selection */}
-              <div className="border-t border-white/10 pt-4">
-                <h4 className="text-xs font-extrabold text-[#d4af37] tracking-widest uppercase mb-3">
-                  4. SELECT PAYMENT METHOD
-                </h4>
-
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Koko Option */}
-                  <div
-                    onClick={() => setPaymentGateway('Koko')}
-                    className={`p-3 rounded border cursor-pointer transition-all flex flex-col justify-between ${
-                      paymentGateway === 'Koko'
-                        ? 'border-[#d4af37] bg-[#d4af37]/15 text-white'
-                        : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/30'
-                    }`}
-                  >
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="font-extrabold text-xs text-[#d4af37]">KOKO PAY</span>
-                        <span className="text-[9px] bg-[#d4af37] text-black px-1.5 py-0.2 rounded font-black">3 PAY</span>
-                      </div>
-                      <p className="text-[10px] text-slate-300">Pay in 3 interest-free monthly installments of LKR {Math.round(cartTotal / 3).toLocaleString()}.</p>
-                    </div>
-                  </div>
-
-                  {/* OnePay Option */}
-                  <div
-                    onClick={() => setPaymentGateway('OnePay')}
-                    className={`p-3 rounded border cursor-pointer transition-all flex flex-col justify-between ${
-                      paymentGateway === 'OnePay'
-                        ? 'border-[#d4af37] bg-[#d4af37]/15 text-white'
-                        : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/30'
-                    }`}
-                  >
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="font-extrabold text-xs text-sky-400">ONEPAY</span>
-                        <span className="text-[9px] bg-sky-500 text-black px-1.5 py-0.2 rounded font-black">INSTANT</span>
-                      </div>
-                      <p className="text-[10px] text-slate-300">Direct Sri Lankan Internet Banking & Wallet Gateway.</p>
-                    </div>
-                  </div>
-
-                  {/* eWAY Option */}
-                  <div
-                    onClick={() => setPaymentGateway('eWAY')}
-                    className={`p-3 rounded border cursor-pointer transition-all flex flex-col justify-between ${
-                      paymentGateway === 'eWAY'
-                        ? 'border-[#d4af37] bg-[#d4af37]/15 text-white'
-                        : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/30'
-                    }`}
-                  >
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="font-extrabold text-xs text-amber-400">eWAY / CARD</span>
-                        <CreditCard size={14} className="text-amber-400" />
-                      </div>
-                      <p className="text-[10px] text-slate-300">Visa, Mastercard, AMEX Credit / Debit Cards.</p>
-                    </div>
-                  </div>
-
-                  {/* COD Option */}
-                  <div
-                    onClick={() => setPaymentGateway('Cash on Delivery')}
-                    className={`p-3 rounded border cursor-pointer transition-all flex flex-col justify-between ${
-                      paymentGateway === 'Cash on Delivery'
-                        ? 'border-[#d4af37] bg-[#d4af37]/15 text-white'
-                        : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/30'
-                    }`}
-                  >
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="font-extrabold text-xs text-emerald-400">CASH ON DELIVERY</span>
-                        <Truck size={14} className="text-emerald-400" />
-                      </div>
-                      <p className="text-[10px] text-slate-300">Pay cash directly upon courier delivery.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Right Column: Order Summary & Pay Button */}
-            <div className="lg:col-span-5 bg-[#08090d] border border-white/10 rounded-lg p-6 flex flex-col justify-between space-y-6">
-              <div>
-                <h4 className="text-xs font-extrabold text-[#d4af37] tracking-widest uppercase mb-4 pb-2 border-b border-white/10">
-                  ORDER SUMMARY ({cart.length} ITEMS)
-                </h4>
-
-                <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1">
-                  {cart.map(item => (
-                    <div key={item.id} className="flex items-center gap-3 text-xs">
-                      <img src={item.product.images[0]} alt={item.product.name} className="w-12 h-14 object-cover rounded bg-[#141620]" />
-                      <div className="flex-1">
-                        <h5 className="font-bold text-white line-clamp-1">{item.product.name}</h5>
-                        <p className="text-[10px] text-slate-400">Size: {item.selectedSize} | Qty: {item.quantity}</p>
-                      </div>
-                      <span className="font-extrabold text-white">LKR {(item.unitPrice * item.quantity).toLocaleString()}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Price Breakdown */}
-                <div className="border-t border-white/10 pt-4 mt-4 space-y-2 text-xs text-slate-300">
-                  <div className="flex justify-between">
-                    <span>Subtotal:</span>
-                    <span>LKR {cartSubtotal.toLocaleString()}</span>
-                  </div>
-
-                  {cartDiscount > 0 && (
-                    <div className="flex justify-between text-emerald-400">
-                      <span>Discount ({appliedCoupon?.code}):</span>
-                      <span>- LKR {cartDiscount.toLocaleString()}</span>
-                    </div>
-                  )}
-
-                  <div className="flex justify-between">
-                    <span>Islandwide Delivery ({shippingMethodId === 'standard' ? 'Standard' : 'VIP Express'}):</span>
-                    <span>{cartShipping === 0 ? 'FREE' : `LKR ${cartShipping.toLocaleString()}`}</span>
-                  </div>
-
-                  <div className="flex justify-between items-baseline text-base font-black text-white pt-2 border-t border-white/10">
-                    <span>TOTAL AMOUNT:</span>
-                    <span className="text-xl text-[#d4af37]">LKR {cartTotal.toLocaleString()}</span>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Submit CTA Button */}
-              <button
-                type="submit"
-                disabled={isSubmitting || cart.length === 0}
-                className="w-full btn-gold py-4 text-xs font-black flex items-center justify-center gap-2 shadow-2xl disabled:opacity-50"
-              >
-                {isSubmitting ? (
-                  <span>LOCKING INVENTORY & AUTHORIZING...</span>
-                ) : (
-                  <>
-                    <Lock size={16} />
-                    <span>CONFIRM & PAY LKR {cartTotal.toLocaleString()} VIA {paymentGateway.toUpperCase()}</span>
-                  </>
+              {/* Left Column: Customer & Delivery Details */}
+              <Box sx={{ flex: 7, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                
+                {/* Error Notice */}
+                {errorMsg && (
+                  <Box sx={{ p: 1.5, bgcolor: 'rgba(153,27,27,0.4)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: 1, color: 'error.light', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                    {errorMsg}
+                  </Box>
                 )}
-              </button>
-            </div>
 
-          </form>
-        ) : (
-          /* CONFIRMATION SCREEN */
-          <div className="p-8 text-center space-y-6 max-h-[85vh] overflow-y-auto">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/10 border-2 border-emerald-500 text-emerald-400 flex items-center justify-center mx-auto animate-bounce">
-              <CheckCircle size={36} />
-            </div>
+                {/* 1. Contact Information */}
+                <Box>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                    1. CUSTOMER CONTACT INFORMATION
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <TextField fullWidth required label="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="e.g. Kasun Perera" variant="outlined" size="small" sx={textFieldStyles} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <TextField fullWidth required type="tel" label="Mobile Phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+94771234567" variant="outlined" size="small" sx={textFieldStyles} />
+                    </Grid>
+                    <Grid size={12}>
+                      <TextField fullWidth required type="email" label="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="kasun@example.com" variant="outlined" size="small" sx={textFieldStyles} />
+                    </Grid>
+                  </Grid>
+                </Box>
 
-            <div>
-              <span className="text-xs font-extrabold tracking-[0.25em] text-[#d4af37] uppercase block mb-1">
-                VALKNUT ORDER CONFIRMED
-              </span>
-              <h2 className="text-3xl font-black text-white tracking-tight uppercase font-syne">
-                THANK YOU FOR YOUR ORDER
-              </h2>
-              <p className="text-sm text-slate-400 mt-2">
-                Order Number: <strong className="text-white font-mono">{placedOrder?.orderNumber}</strong>
-              </p>
-            </div>
+                {/* 2. Delivery Address */}
+                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 3 }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                    2. ISLANDWIDE SHIPPING ADDRESS
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid size={12}>
+                      <TextField fullWidth required label="Street Address" value={addressLine1} onChange={(e) => setAddressLine1(e.target.value)} placeholder="House No., Street Name, Apartment" variant="outlined" size="small" sx={textFieldStyles} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <TextField fullWidth required label="City" value={city} onChange={(e) => setCity(e.target.value)} placeholder="Colombo" variant="outlined" size="small" sx={textFieldStyles} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <TextField select fullWidth label="District" value={district} onChange={(e) => setDistrict(e.target.value)} variant="outlined" size="small" sx={textFieldStyles}>
+                        {SRI_LANKAN_DISTRICTS.map((d) => (
+                          <MenuItem key={d} value={d} sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>{d}</MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <TextField fullWidth label="Postal Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="00300" variant="outlined" size="small" sx={textFieldStyles} />
+                    </Grid>
+                    <Grid size={12}>
+                      <TextField fullWidth label="Delivery Notes (Optional)" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="e.g. Near commercial bank, call before delivery" variant="outlined" size="small" sx={textFieldStyles} />
+                    </Grid>
+                  </Grid>
+                </Box>
 
-            {/* Simulated SMS & Email Trigger Alerts */}
-            <div className="max-w-md mx-auto space-y-2 text-left text-xs">
-              <div className="p-3 bg-emerald-950/40 border border-emerald-500/30 rounded flex items-center gap-3 text-emerald-300">
-                <MessageSquare size={20} className="flex-shrink-0" />
-                <div>
-                  <p className="font-bold">SMS Sent to {placedOrder?.customerInfo.phone}</p>
-                  <p className="text-[10px] text-emerald-400">Order confirmation & courier dispatch updates scheduled via SMS Gateway.</p>
-                </div>
-              </div>
+                {/* 3. Shipping Method Selector */}
+                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 3 }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                    3. SELECT SHIPPING METHOD
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                    {availableShippingMethods.map((method) => {
+                      const isSelected = shippingMethodId === method.id;
+                      const isFree = method.freeShippingThreshold > 0 && cartSubtotal >= method.freeShippingThreshold;
+                      const fee = isFree ? 0 : method.baseCharge;
 
-              <div className="p-3 bg-sky-950/40 border border-sky-500/30 rounded flex items-center gap-3 text-sky-300">
-                <Mail size={20} className="flex-shrink-0" />
-                <div>
-                  <p className="font-bold">Email Receipt Dispatched</p>
-                  <p className="text-[10px] text-sky-400">Invoice sent to {placedOrder?.customerInfo.email}</p>
-                </div>
-              </div>
-            </div>
+                      return (
+                        <Box
+                          key={method.id}
+                          onClick={() => setShippingMethodId(method.id)}
+                          sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}
+                        >
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                            <input type="radio" checked={isSelected} readOnly style={{ accentColor: '#d4af37' }} />
+                            <Box>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase' }}>{method.name}</Typography>
+                                {method.id === 'express' && (
+                                  <Typography sx={{ fontSize: '0.5rem', bgcolor: 'primary.main', color: 'black', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif' }}>VIP PRIORITY</Typography>
+                                )}
+                              </Box>
+                              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: isSelected ? 'rgba(255,255,255,0.7)' : 'inherit' }}>{method.estimatedDays}</Typography>
+                            </Box>
+                          </Box>
+                          <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                            {isFree ? <Box component="span" sx={{ color: 'success.main' }}>FREE</Box> : `LKR ${fee.toLocaleString()}`}
+                          </Typography>
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                </Box>
 
-            {/* Order Details summary box */}
-            <div className="bg-[#08090d] border border-white/10 rounded-lg p-4 max-w-lg mx-auto text-left text-xs text-slate-300 space-y-2">
-              <div className="flex justify-between border-b border-white/10 pb-2">
-                <span>Shipping Method:</span>
-                <strong className="text-white">{placedOrder?.shippingInfo.shippingMethodName}</strong>
-              </div>
-              <div className="flex justify-between border-b border-white/10 pb-2">
-                <span>Payment Method:</span>
-                <strong className="text-white">{placedOrder?.paymentGateway}</strong>
-              </div>
-              <div className="flex justify-between border-b border-white/10 pb-2">
-                <span>Total Amount Paid:</span>
-                <strong className="text-[#d4af37]">LKR {placedOrder?.totalAmount.toLocaleString()}</strong>
-              </div>
-              <div className="flex justify-between">
-                <span>Estimated Delivery:</span>
-                <strong className="text-emerald-400">{placedOrder?.shippingInfo.estimatedDays}</strong>
-              </div>
-            </div>
+                {/* 4. Payment Gateway Selection */}
+                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 3 }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                    4. SELECT PAYMENT METHOD
+                  </Typography>
+                  <Grid container spacing={1.5}>
+                    {/* Koko Option */}
+                    <Grid size={12}>
+                      <Box onClick={() => setPaymentGateway('Koko')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'Koko' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                        <Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                            <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: 'primary.main' }}>KOKO PAY</Typography>
+                            <Typography sx={{ fontSize: '0.5625rem', bgcolor: 'primary.main', color: 'black', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900 }}>3 PAY</Typography>
+                          </Box>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: paymentGateway === 'Koko' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Pay in 3 interest-free monthly installments of LKR {Math.round(cartTotal / 3).toLocaleString()}.</Typography>
+                        </Box>
+                      </Box>
+                    </Grid>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto pt-2">
-              <button
-                onClick={() => {
-                  handleClose();
-                  window.location.hash = `#/track-order?order=${placedOrder?.orderNumber}`;
-                }}
-                className="btn-gold px-6 py-3 text-xs font-black inline-flex items-center justify-center gap-2"
-              >
-                <Package size={15} />
-                <span>TRACK ORDER</span>
-              </button>
+                    {/* OnePay Option */}
+                    <Grid size={12}>
+                      <Box onClick={() => setPaymentGateway('OnePay')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'OnePay' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                        <Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                            <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#38bdf8' }}>ONEPAY</Typography>
+                            <Typography sx={{ fontSize: '0.5625rem', bgcolor: '#0ea5e9', color: 'black', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900 }}>INSTANT</Typography>
+                          </Box>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: paymentGateway === 'OnePay' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Direct Sri Lankan Internet Banking & Wallet Gateway.</Typography>
+                        </Box>
+                      </Box>
+                    </Grid>
 
-              <button
-                onClick={handleClose}
-                className="btn-secondary px-6 py-3 text-xs font-black inline-flex items-center justify-center gap-2"
-              >
-                <ArrowLeft size={15} />
-                <span>RETURN TO STORE</span>
-              </button>
-            </div>
-          </div>
-        )}
+                    {/* eWAY Option */}
+                    <Grid size={12}>
+                      <Box onClick={() => setPaymentGateway('eWAY')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'eWAY' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                        <Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                            <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#fbbf24' }}>eWAY / CARD</Typography>
+                            <CreditCard size={14} color="#fbbf24" />
+                          </Box>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: paymentGateway === 'eWAY' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Visa, Mastercard, AMEX Credit / Debit Cards.</Typography>
+                        </Box>
+                      </Box>
+                    </Grid>
 
-      </div>
-    </div>
+                    {/* COD Option */}
+                    <Grid size={12}>
+                      <Box onClick={() => setPaymentGateway('Cash on Delivery')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'Cash on Delivery' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                        <Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                            <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#34d399' }}>CASH ON DELIVERY</Typography>
+                            <Truck size={14} color="#34d399" />
+                          </Box>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: paymentGateway === 'Cash on Delivery' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Pay cash directly upon courier delivery.</Typography>
+                        </Box>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Box>
+
+              {/* Right Column: Order Summary & Pay Button */}
+              <Box sx={{ flex: 5, bgcolor: '#08090d', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, pb: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                    ORDER SUMMARY ({cart.length} ITEMS)
+                  </Typography>
+
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, maxHeight: 220, overflowY: 'auto', pr: 1, '&::-webkit-scrollbar': { display: 'none' }, msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+                    {cart.map(item => (
+                      <Box key={item.id} sx={{ display: 'flex', alignItems: 'center', gap: 1.5, fontSize: '0.75rem' }}>
+                        <Box component="img" src={item.product.images[0]} alt={item.product.name} sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 1, bgcolor: '#141620' }} />
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                          <Typography sx={{ fontWeight: 'bold', color: 'white',  fontFamily: '"Syne", sans-serif' }}>{item.product.name}</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>Size: {item.selectedSize} | Qty: {item.quantity}</Typography>
+                        </Box>
+                        <Typography sx={{ fontWeight: 900, color: 'white', fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {(item.unitPrice * item.quantity).toLocaleString()}</Typography>
+                      </Box>
+                    ))}
+                  </Box>
+
+                  {/* Price Breakdown */}
+                  <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2, mt: 2, display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography sx={{ fontSize: 'inherit' }}>Subtotal:</Typography>
+                      <Typography sx={{ fontSize: 'inherit' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
+                    </Box>
+
+                    {cartDiscount > 0 && (
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'success.main' }}>
+                        <Typography sx={{ fontSize: 'inherit' }}>Discount ({appliedCoupon?.code}):</Typography>
+                        <Typography sx={{ fontSize: 'inherit' }}>- LKR {cartDiscount.toLocaleString()}</Typography>
+                      </Box>
+                    )}
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography sx={{ fontSize: 'inherit' }}>Islandwide Delivery ({shippingMethodId === 'standard' ? 'Standard' : 'VIP Express'}):</Typography>
+                      <Typography sx={{ fontSize: 'inherit' }}>{cartShipping === 0 ? 'FREE' : `LKR ${cartShipping.toLocaleString()}`}</Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', pt: 1, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                      <Typography sx={{ fontSize: '1rem', fontWeight: 900, color: 'white', fontFamily: '"Syne", sans-serif' }}>TOTAL AMOUNT:</Typography>
+                      <Typography sx={{ fontSize: '1.25rem', color: 'primary.main', fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {/* Submit CTA Button */}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || cart.length === 0}
+                  sx={{ width: '100%', py: 2, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, boxShadow: '0 10px 25px rgba(212,175,55,0.3)', transition: 'all 0.3s ease', borderRadius: 1, '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' }, '&.Mui-disabled': { opacity: 0.5, pointerEvents: 'none' } }}
+                >
+                  {isSubmitting ? (
+                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: '"JetBrains Mono", sans-serif' }}>LOCKING INVENTORY & AUTHORIZING...</Typography>
+                  ) : (
+                    <>
+                      <Lock size={16} />
+                      <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: '"JetBrains Mono", sans-serif' }}>CONFIRM & PAY LKR {cartTotal.toLocaleString()} VIA {paymentGateway.toUpperCase()}</Typography>
+                    </>
+                  )}
+                </Button>
+              </Box>
+
+            </Box>
+          ) : (
+            /* CONFIRMATION SCREEN */
+            <Box sx={{ p: { xs: 3, sm: 6 }, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 3, maxHeight: '85vh', overflowY: 'auto' }}>
+              <Box sx={{ width: 64, height: 64, borderRadius: '50%', bgcolor: 'rgba(16,185,129,0.1)', border: '2px solid #10b981', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', mx: 'auto', animation: 'bounce 1s infinite' }}>
+                <CheckCircle size={36} />
+              </Box>
+
+              <Box>
+                <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.25em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  VALKNUT ORDER CONFIRMED
+                </Typography>
+                <Typography sx={{ fontSize: { xs: '1.5rem', sm: '1.875rem' }, fontWeight: 900, color: 'white', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>
+                  THANK YOU FOR YOUR ORDER
+                </Typography>
+                <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary', mt: 1, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  Order Number: <Box component="strong" sx={{ color: 'white' }}>{placedOrder?.orderNumber}</Box>
+                </Typography>
+              </Box>
+
+              {/* Simulated SMS & Email Trigger Alerts */}
+              <Box sx={{ maxWidth: 400, mx: 'auto', display: 'flex', flexDirection: 'column', gap: 1, textAlign: 'left' }}>
+                <Box sx={{ p: 1.5, bgcolor: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1.5, color: '#6ee7b7' }}>
+                  <MessageSquare size={20} />
+                  <Box>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif' }}>SMS Sent to {placedOrder?.customerInfo.phone}</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', color: '#34d399', fontFamily: '"JetBrains Mono", sans-serif' }}>Order confirmation & courier dispatch updates scheduled via SMS Gateway.</Typography>
+                  </Box>
+                </Box>
+
+                <Box sx={{ p: 1.5, bgcolor: 'rgba(14,165,233,0.1)', border: '1px solid rgba(14,165,233,0.3)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1.5, color: '#7dd3fc' }}>
+                  <Mail size={20} />
+                  <Box>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif' }}>Email Receipt Dispatched</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', color: '#38bdf8', fontFamily: '"JetBrains Mono", sans-serif' }}>Invoice sent to {placedOrder?.customerInfo.email}</Typography>
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Order Details summary box */}
+              <Box sx={{ bgcolor: '#08090d', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: 2, maxWidth: 500, mx: 'auto', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif', width: '100%' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
+                  <Typography sx={{ fontSize: 'inherit' }}>Shipping Method:</Typography>
+                  <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'white' }}>{placedOrder?.shippingInfo.shippingMethodName}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
+                  <Typography sx={{ fontSize: 'inherit' }}>Payment Method:</Typography>
+                  <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'white' }}>{placedOrder?.paymentGateway}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
+                  <Typography sx={{ fontSize: 'inherit' }}>Total Amount Paid:</Typography>
+                  <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'primary.main' }}>LKR {placedOrder?.totalAmount.toLocaleString()}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography sx={{ fontSize: 'inherit' }}>Estimated Delivery:</Typography>
+                  <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'success.main' }}>{placedOrder?.shippingInfo.estimatedDays}</Typography>
+                </Box>
+              </Box>
+
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 1.5, justifyContent: 'center', maxWidth: 400, mx: 'auto', pt: 1, width: '100%' }}>
+                <Button
+                  onClick={() => {
+                    handleClose();
+                    window.location.hash = `#/track-order?order=${placedOrder?.orderNumber}`;
+                  }}
+                  sx={{ flex: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}
+                >
+                  <Package size={15} /> TRACK ORDER
+                </Button>
+
+                <Button
+                  onClick={handleClose}
+                  sx={{ flex: 1, py: 1.5, bgcolor: 'rgba(255,255,255,0.1)', color: 'white', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+                >
+                  <ArrowLeft size={15} /> RETURN TO STORE
+                </Button>
+              </Box>
+            </Box>
+          )}
+
+        </Box>
+      </Fade>
+    </Modal>
   );
 };

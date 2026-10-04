@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -7,6 +7,7 @@ import {
   Maximize2, 
   Sparkles 
 } from 'lucide-react';
+import { Box, Typography, IconButton, Button, Modal, Backdrop, Fade } from '@mui/material';
 
 interface ProductImageGalleryProps {
   images: string[];
@@ -14,6 +15,7 @@ interface ProductImageGalleryProps {
   isCustomizable?: boolean;
   onOpenCustomStudio?: () => void;
   className?: string;
+  activeColorImage?: string;
 }
 
 export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
@@ -21,7 +23,8 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   productName,
   isCustomizable = false,
   onOpenCustomStudio,
-  className = ''
+  className = '',
+  activeColorImage
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -35,6 +38,15 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   const displayImages = images && images.length > 0 
     ? images 
     : ['https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=85'];
+
+  useEffect(() => {
+    if (activeColorImage) {
+      const idx = displayImages.indexOf(activeColorImage);
+      if (idx !== -1) {
+        setActiveIndex(idx);
+      }
+    }
+  }, [activeColorImage, displayImages]);
 
   const currentImage = displayImages[activeIndex] || displayImages[0];
 
@@ -73,39 +85,70 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   };
 
   return (
-    <div className={`flex flex-col-reverse lg:flex-row gap-4 sm:gap-6 ${className}`}>
+    <Box sx={{ display: 'flex', flexDirection: { xs: 'column-reverse', lg: 'row' }, gap: { xs: 2, sm: 3 }, height: '100%' }} className={className}>
       
       {/* 1. Thumbnail Strip (Desktop Vertical / Mobile Horizontal) */}
       {displayImages.length > 1 && (
-        <div className="flex lg:flex-col gap-2.5 overflow-x-auto lg:overflow-y-auto max-h-[560px] pb-2 lg:pb-0 scrollbar-none flex-shrink-0">
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'row', lg: 'column' },
+            gap: 1.5,
+            overflowX: { xs: 'auto', lg: 'hidden' },
+            overflowY: { xs: 'hidden', lg: 'auto' },
+            maxHeight: { lg: 640 },
+            pb: { xs: 1, lg: 0 },
+            flexShrink: 0,
+            '&::-webkit-scrollbar': { display: 'none' },
+            msOverflowStyle: 'none',
+            scrollbarWidth: 'none',
+          }}
+        >
           {displayImages.map((img, idx) => (
-            <button
+            <Box
+              component="button"
               key={idx}
               onClick={() => setActiveIndex(idx)}
-              className={`w-16 h-20 sm:w-20 sm:h-24 rounded-[2px] overflow-hidden bg-[#141620] flex-shrink-0 transition-all cursor-pointer relative border ${
-                activeIndex === idx
-                  ? 'border-[#D4AF37] ring-1 ring-[#D4AF37]/50 opacity-100 shadow-md'
-                  : 'border-white/10 opacity-60 hover:opacity-100 hover:border-white/30'
-              }`}
+              sx={{
+                width: { xs: 64, sm: 80 },
+                height: { xs: 80, sm: 96 },
+                borderRadius: 1,
+                overflow: 'hidden',
+                bgcolor: '#141620',
+                flexShrink: 0,
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                position: 'relative',
+                border: '1px solid',
+                ...(activeIndex === idx ? {
+                  borderColor: 'primary.main',
+                  boxShadow: '0 0 10px rgba(212,175,55,0.3)',
+                  opacity: 1
+                } : {
+                  borderColor: 'rgba(255,255,255,0.1)',
+                  opacity: 0.6,
+                  '&:hover': { opacity: 1, borderColor: 'rgba(255,255,255,0.3)' }
+                })
+              }}
             >
-              <img
+              <Box
+                component="img"
                 src={img}
                 alt={`${productName} thumbnail ${idx + 1}`}
-                className="w-full h-full object-cover object-center"
                 loading="lazy"
+                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
               {activeIndex === idx && (
-                <div className="absolute inset-0 bg-[#D4AF37]/10 pointer-events-none" />
+                <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'rgba(212,175,55,0.1)', pointerEvents: 'none' }} />
               )}
-            </button>
+            </Box>
           ))}
-        </div>
+        </Box>
       )}
 
       {/* 2. Main Large Image Viewer */}
-      <div className="flex-1 relative">
-        <div
-          className="relative aspect-[3/4] max-h-[640px] w-full bg-[#12141F] rounded-[3px] border border-white/10 overflow-hidden group select-none cursor-crosshair shadow-2xl"
+      <Box sx={{ flex: 1, position: 'relative' }}>
+        <Box
           onMouseEnter={() => setIsHoverZooming(true)}
           onMouseLeave={() => setIsHoverZooming(false)}
           onMouseMove={handleMouseMove}
@@ -113,169 +156,234 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           onClick={() => setIsLightboxOpen(true)}
+          sx={{
+            position: 'relative',
+            aspectRatio: '3/4',
+            maxHeight: 640,
+            width: '100%',
+            bgcolor: '#12141F',
+            borderRadius: 1,
+            border: '1px solid rgba(255,255,255,0.1)',
+            overflow: 'hidden',
+            cursor: 'crosshair',
+            boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+            userSelect: 'none',
+            '&:hover .overlay-action': { opacity: 1 }
+          }}
         >
           {/* Main Image with Zoom Magnification */}
-          <img
+          <Box
+            component="img"
             src={currentImage}
             alt={`${productName} — Heavyweight Luxury Streetwear Garment View ${activeIndex + 1}`}
             loading={activeIndex === 0 ? 'eager' : 'lazy'}
             decoding="async"
-            className={`w-full h-full object-cover object-center transition-transform duration-200 ${
-              isHoverZooming ? 'scale-150 origin-[var(--zoom-x)_var(--zoom-y)]' : 'scale-100'
-            }`}
-            style={{
-              // @ts-ignore
-              '--zoom-x': `${zoomPosition.x}%`,
-              '--zoom-y': `${zoomPosition.y}%`
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transition: 'transform 0.2s ease-out',
+              transform: isHoverZooming ? 'scale(1.5)' : 'scale(1)',
+              transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
             }}
           />
 
           {/* Floating Action: Lightbox Fullscreen */}
-          <button
+          <IconButton
             onClick={(e) => {
               e.stopPropagation();
               setIsLightboxOpen(true);
             }}
-            className="absolute top-3.5 right-3.5 p-2 bg-black/70 hover:bg-black/90 text-slate-300 hover:text-white rounded-[2px] backdrop-blur-md border border-white/15 transition-all opacity-0 group-hover:opacity-100 shadow-lg cursor-pointer"
+            className="overlay-action"
+            sx={{
+              position: 'absolute',
+              top: 14,
+              right: 14,
+              bgcolor: 'rgba(0,0,0,0.7)',
+              color: 'text.secondary',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              opacity: { xs: 1, lg: 0 },
+              transition: 'all 0.3s ease',
+              '&:hover': { bgcolor: 'rgba(0,0,0,0.9)', color: 'white' }
+            }}
             title="Expand Fullscreen Gallery"
           >
             <Maximize2 size={16} />
-          </button>
+          </IconButton>
 
           {/* Custom Studio Floating Pill */}
           {isCustomizable && onOpenCustomStudio && (
-            <button
+            <Button
               onClick={(e) => {
                 e.stopPropagation();
                 onOpenCustomStudio();
               }}
-              className="absolute top-3.5 left-3.5 px-3 py-1.5 bg-[#0D0E15]/85 hover:bg-[#D4AF37] text-[#D4AF37] hover:text-black rounded-[2px] text-[10px] font-mono font-bold tracking-widest uppercase border border-[#D4AF37]/50 backdrop-blur-md transition-all flex items-center gap-1.5 shadow-lg cursor-pointer"
+              sx={{
+                position: 'absolute',
+                top: 14,
+                left: 14,
+                bgcolor: 'rgba(13,14,21,0.85)',
+                color: 'primary.main',
+                border: '1px solid rgba(212,175,55,0.5)',
+                backdropFilter: 'blur(10px)',
+                px: 1.5,
+                py: 0.5,
+                borderRadius: 1,
+                fontSize: '0.625rem',
+                fontFamily: '"JetBrains Mono", sans-serif',
+                fontWeight: 'bold',
+                letterSpacing: '0.2em',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                transition: 'all 0.3s ease',
+                '&:hover': { bgcolor: 'primary.main', color: 'black' }
+              }}
             >
-              <Sparkles size={13} />
-              <span>CUSTOM STUDIO READY</span>
-            </button>
+              <Sparkles size={13} /> CUSTOM STUDIO READY
+            </Button>
           )}
 
           {/* Hover Zoom Tip */}
-          <div className="absolute bottom-3 left-3 hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-black/60 rounded-[2px] text-[10px] font-mono text-slate-300 backdrop-blur-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
-            <ZoomIn size={12} className="text-[#D4AF37]" />
-            <span>Hover to zoom • Click to expand</span>
-          </div>
+          <Box
+            className="overlay-action"
+            sx={{
+              position: 'absolute',
+              bottom: 12,
+              left: 12,
+              display: { xs: 'none', lg: 'flex' },
+              alignItems: 'center',
+              gap: 1,
+              px: 1.5,
+              py: 0.5,
+              bgcolor: 'rgba(0,0,0,0.6)',
+              borderRadius: 1,
+              backdropFilter: 'blur(4px)',
+              opacity: 0,
+              transition: 'opacity 0.3s ease',
+              pointerEvents: 'none'
+            }}
+          >
+            <ZoomIn size={12} color="#D4AF37" />
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>Hover to zoom • Click to expand</Typography>
+          </Box>
 
           {/* Mobile Swipe Indicators & Arrows */}
           {displayImages.length > 1 && (
             <>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePrev();
+              <IconButton
+                onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+                className="overlay-action"
+                sx={{
+                  position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)',
+                  bgcolor: 'rgba(0,0,0,0.7)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
+                  opacity: { xs: 1, lg: 0 }, transition: 'all 0.3s ease', '&:hover': { bgcolor: 'black' }
                 }}
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center border border-white/10 backdrop-blur-md transition-all lg:opacity-0 lg:group-hover:opacity-100"
-                aria-label="Previous image"
               >
                 <ChevronLeft size={18} />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleNext();
+              </IconButton>
+              <IconButton
+                onClick={(e) => { e.stopPropagation(); handleNext(); }}
+                className="overlay-action"
+                sx={{
+                  position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
+                  bgcolor: 'rgba(0,0,0,0.7)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
+                  opacity: { xs: 1, lg: 0 }, transition: 'all 0.3s ease', '&:hover': { bgcolor: 'black' }
                 }}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center border border-white/10 backdrop-blur-md transition-all lg:opacity-0 lg:group-hover:opacity-100"
-                aria-label="Next image"
               >
                 <ChevronRight size={18} />
-              </button>
+              </IconButton>
 
               {/* Mobile Dot Indicators */}
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 lg:hidden bg-black/50 px-2 py-1 rounded-full backdrop-blur-sm">
+              <Box sx={{ position: 'absolute', bottom: 12, left: '50%', transform: 'translateX(-50%)', display: { xs: 'flex', lg: 'none' }, alignItems: 'center', gap: 1, bgcolor: 'rgba(0,0,0,0.5)', px: 1, py: 0.5, borderRadius: 10, backdropFilter: 'blur(4px)' }}>
                 {displayImages.map((_, idx) => (
-                  <span
+                  <Box
                     key={idx}
-                    className={`w-1.5 h-1.5 rounded-full transition-all ${
-                      activeIndex === idx ? 'bg-[#D4AF37] w-4' : 'bg-white/40'
-                    }`}
+                    sx={{ width: activeIndex === idx ? 16 : 6, height: 6, borderRadius: '50%', transition: 'all 0.3s ease', bgcolor: activeIndex === idx ? 'primary.main' : 'rgba(255,255,255,0.4)' }}
                   />
                 ))}
-              </div>
+              </Box>
             </>
           )}
-        </div>
-      </div>
+        </Box>
+      </Box>
 
       {/* 3. Fullscreen Lightbox Modal */}
-      {isLightboxOpen && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-between p-4 sm:p-8 animate-fade-in"
-          onClick={() => setIsLightboxOpen(false)}
-        >
-          {/* Header */}
-          <div className="w-full max-w-6xl flex items-center justify-between z-10">
-            <span className="text-xs font-mono font-bold tracking-widest text-[#D4AF37] uppercase">
-              {productName} — ({activeIndex + 1}/{displayImages.length})
-            </span>
-            <button
-              onClick={() => setIsLightboxOpen(false)}
-              className="p-2 text-slate-400 hover:text-white rounded-[2px] bg-white/10 transition-colors"
-              aria-label="Close Lightbox"
-            >
-              <X size={22} />
-            </button>
-          </div>
+      <Modal
+        open={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+            sx: { bgcolor: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(10px)' }
+          },
+        }}
+      >
+        <Fade in={isLightboxOpen}>
+          <Box sx={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', p: { xs: 2, sm: 4 }, outline: 'none' }} onClick={() => setIsLightboxOpen(false)}>
+            
+            {/* Header */}
+            <Box sx={{ w: '100%', width: '100%', maxWidth: 1200, display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 }}>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', color: 'primary.main', textTransform: 'uppercase' }}>
+                {productName} — ({activeIndex + 1}/{displayImages.length})
+              </Typography>
+              <IconButton onClick={() => setIsLightboxOpen(false)} sx={{ color: 'text.secondary', bgcolor: 'rgba(255,255,255,0.1)', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.2)' } }}>
+                <X size={22} />
+              </IconButton>
+            </Box>
 
-          {/* Main View */}
-          <div 
-            className="relative max-w-5xl max-h-[78vh] flex items-center justify-center my-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={currentImage}
-              alt={productName}
-              className="max-w-full max-h-[75vh] object-contain rounded-[2px] shadow-2xl"
-            />
+            {/* Main View */}
+            <Box sx={{ position: 'relative', width: '100%', maxWidth: 1000, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', my: 2 }} onClick={(e) => e.stopPropagation()}>
+              <Box
+                component="img"
+                src={currentImage}
+                alt={productName}
+                sx={{ maxWidth: '100%', maxHeight: '75vh', objectFit: 'contain', borderRadius: 1, boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}
+              />
 
+              {displayImages.length > 1 && (
+                <>
+                  <IconButton
+                    onClick={handlePrev}
+                    sx={{ position: 'absolute', left: { xs: -16, sm: -48 }, top: '50%', transform: 'translateY(-50%)', width: 44, height: 44, bgcolor: 'rgba(0,0,0,0.8)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 10px 25px rgba(0,0,0,0.5)', '&:hover': { bgcolor: 'primary.main', color: 'black' } }}
+                  >
+                    <ChevronLeft size={22} />
+                  </IconButton>
+                  <IconButton
+                    onClick={handleNext}
+                    sx={{ position: 'absolute', right: { xs: -16, sm: -48 }, top: '50%', transform: 'translateY(-50%)', width: 44, height: 44, bgcolor: 'rgba(0,0,0,0.8)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 10px 25px rgba(0,0,0,0.5)', '&:hover': { bgcolor: 'primary.main', color: 'black' } }}
+                  >
+                    <ChevronRight size={22} />
+                  </IconButton>
+                </>
+              )}
+            </Box>
+
+            {/* Lightbox Thumbnails Bottom */}
             {displayImages.length > 1 && (
-              <>
-                <button
-                  onClick={handlePrev}
-                  className="absolute -left-4 sm:-left-12 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/80 hover:bg-[#D4AF37] text-white hover:text-black flex items-center justify-center border border-white/20 transition-all shadow-2xl"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={22} />
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="absolute -right-4 sm:-right-12 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/80 hover:bg-[#D4AF37] text-white hover:text-black flex items-center justify-center border border-white/20 transition-all shadow-2xl"
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={22} />
-                </button>
-              </>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, overflowX: 'auto', py: 1, zIndex: 10, maxWidth: '100%', '&::-webkit-scrollbar': { display: 'none' }, msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+                {displayImages.map((img, idx) => (
+                  <Box
+                    component="button"
+                    key={idx}
+                    onClick={(e) => { e.stopPropagation(); setActiveIndex(idx); }}
+                    sx={{
+                      width: 56, height: 64, borderRadius: 1, overflow: 'hidden', border: '1px solid', transition: 'all 0.3s ease', cursor: 'pointer', flexShrink: 0,
+                      ...(activeIndex === idx ? { borderColor: 'primary.main', transform: 'scale(1.05)', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' } : { borderColor: 'rgba(255,255,255,0.2)', opacity: 0.5, '&:hover': { opacity: 1 } })
+                    }}
+                  >
+                    <Box component="img" src={img} alt="Thumb" sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </Box>
+                ))}
+              </Box>
             )}
-          </div>
-
-          {/* Lightbox Thumbnails Bottom */}
-          {displayImages.length > 1 && (
-            <div className="flex items-center gap-2 overflow-x-auto py-2 z-10">
-              {displayImages.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveIndex(idx);
-                  }}
-                  className={`w-14 h-16 rounded-[2px] overflow-hidden border transition-all ${
-                    activeIndex === idx
-                      ? 'border-[#D4AF37] scale-105 shadow-md'
-                      : 'border-white/20 opacity-50 hover:opacity-100'
-                  }`}
-                >
-                  <img src={img} alt="Thumb" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+          </Box>
+        </Fade>
+      </Modal>
+    </Box>
   );
 };
