@@ -239,7 +239,7 @@ export const CustomStudio: React.FC = () => {
             <Box>
               <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: 5, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: 'primary.main', fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase', mb: 2 }}>
                 <Sparkles size={13} />
-                <span>VALKNUT BESPOKE APPAREL STUDIO</span>
+                <Typography component="span">VALKNUT BESPOKE APPAREL STUDIO</Typography>
               </Box>
               <Typography variant="h3" sx={{ fontSize: { xs: '1.875rem', sm: '2.5rem' }, letterSpacing: '-0.02em', mb: 1, textShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>
                 INTERACTIVE <Box component="span" sx={{ color: 'primary.main' }}>CUSTOM STUDIO</Box>
@@ -537,7 +537,7 @@ export const CustomStudio: React.FC = () => {
                           }}
                         >
                           <Icon size={13} />
-                          <span>{tab.label}</span>
+                          <Typography component="span">{tab.label}</Typography>
                         </Box>
                       );
                     })}
@@ -563,7 +563,7 @@ export const CustomStudio: React.FC = () => {
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.6875rem' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'white', fontWeight: 'bold' }}>
                                 <Box sx={{ animation: 'spin 2s linear infinite', display: 'flex' }}><RefreshCw size={12} color="#D4AF37" /></Box>
-                                <span>Uploading to Cloud...</span>
+                                <Typography component="span">Uploading to Cloud...</Typography>
                               </Box>
                               <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>{uploadProgress}%</Typography>
                             </Box>
@@ -651,7 +651,7 @@ export const CustomStudio: React.FC = () => {
                           <Box sx={{ display: 'flex', itemsCenter: 'center', justifyContent: 'space-between' }}>
                             <Typography sx={{ fontSize: '0.625rem', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase' }}>ARTWORK ADJUSTMENTS</Typography>
                             <Box component="button" onClick={handleRemoveArtwork} sx={{ fontSize: '0.625rem', color: '#f87171', display: 'flex', alignItems: 'center', gap: 0.5, border: 'none', bgcolor: 'transparent', cursor: 'pointer', '&:hover': { color: '#fca5a5' } }}>
-                              <Trash2 size={11} /> <span>Remove</span>
+                              <Trash2 size={11} /> <Typography component="span">Remove</Typography>
                             </Box>
                           </Box>
 
@@ -854,24 +854,24 @@ export const CustomStudio: React.FC = () => {
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                     <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em' }}>BESPOKE ORDER VALUATION</Typography>
                     <Box sx={{ color: '#34d399', fontSize: '0.625rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <ShieldCheck size={12} /> <span>CRAFT VERIFIED</span>
+                      <ShieldCheck size={12} /> <Typography component="span">CRAFT VERIFIED</Typography>
                     </Box>
                   </Box>
 
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.6875rem' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'text.secondary' }}>
-                      <span>Base Heavyweight Garment:</span>
+                      <Typography component="span">Base Heavyweight Garment:</Typography>
                       <Typography sx={{ color: 'white', fontSize: 'inherit' }}>LKR {basePrice.toLocaleString()}</Typography>
                     </Box>
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'text.secondary' }}>
-                      <span>{printTechnique}:</span>
+                      <Typography component="span">{printTechnique}:</Typography>
                       <Typography sx={{ color: 'primary.main', fontSize: 'inherit' }}>{techniqueFee === 0 ? 'Free' : `+ LKR ${techniqueFee.toLocaleString()}`}</Typography>
                     </Box>
 
                     {placementFee > 0 && (
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'text.secondary' }}>
-                        <span>Precision Sleeve Setup:</span>
+                        <Typography component="span">Precision Sleeve Setup:</Typography>
                         <Typography sx={{ color: 'primary.main', fontSize: 'inherit' }}>+ LKR {placementFee.toLocaleString()}</Typography>
                       </Box>
                     )}

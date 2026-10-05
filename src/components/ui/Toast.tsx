@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconButton as MuiIconButton, Box, Typography } from '@mui/material';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
 export interface ToastProps {
@@ -27,21 +28,22 @@ export const Toast: React.FC<ToastProps> = ({
   }[type];
 
   return (
-    <div
+    <Box
       role="status"
-      className={`flex items-center gap-3 bg-[#0E1017] border ${borderClass} px-4 py-3.5 rounded-[2px] shadow-2xl animate-slide-up max-w-sm w-full ${className}`}
+      className={`flex items-center gap-3 bg-[#0E1017] border ${borderClass} px-4 py-3.5 rounded-[2px] shadow-2xl max-w-sm w-full ${className}`}
     >
       {icon}
-      <span className="text-xs font-semibold text-white flex-1">{message}</span>
+      <Typography component="span" className="text-xs font-semibold text-white flex-1">{message}</Typography>
       {onClose && (
-        <button
+        <MuiIconButton
           onClick={onClose}
           className="text-slate-400 hover:text-white p-1 transition-colors"
           aria-label="Dismiss notification"
+          disableRipple
         >
           <X size={14} />
-        </button>
+        </MuiIconButton>
       )}
-    </div>
+    </Box>
   );
 };

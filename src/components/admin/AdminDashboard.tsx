@@ -1,24 +1,25 @@
 import React, { useState, useMemo } from 'react';
 import { useStore } from '../../context/StoreContext';
-import type { 
-  Product, 
-  ProductVariant, 
-  OrderStatus, 
-  Coupon, 
-  CategoryItem, 
-  CollectionItem, 
-  HomepageConfig, 
-  CustomerAccountRecord, 
+import type {
+  Product,
+  ProductVariant,
+  OrderStatus,
+  Coupon,
+  CategoryItem,
+
+  CollectionItem,
+  HomepageConfig,
+  CustomerAccountRecord,
   CategoryType,
-  SubCategoryType 
+  SubCategoryType
 } from '../../types/ecommerce';
 import { SUPABASE_SETUP_SQL } from '../../lib/supabase';
 import { ProductImageManager } from './ProductImageManager';
 import { SingleImageUploader } from './SingleImageUploader';
 import { FIREBASE_STORAGE_RULES, syncProductMediaToSupabase } from '../../services/mediaService';
-import { 
-  getAdminCategories, 
-  saveAdminCategory, 
+import {
+  getAdminCategories,
+  saveAdminCategory,
   deleteAdminCategory,
   getAdminCollections,
   saveAdminCollection,
@@ -27,15 +28,15 @@ import {
   saveAdminHomepageConfig,
   getAdminCustomersList
 } from '../../services/adminService';
-import { 
-  ShieldCheck, 
-  Package, 
-  ShoppingBag, 
-  Tag, 
-  Sparkles, 
-  Plus, 
-  Trash2, 
-  Database, 
+import {
+  ShieldCheck,
+  Package,
+  ShoppingBag,
+  Tag,
+  Sparkles,
+  Plus,
+  Trash2,
+  Database,
   TrendingUp,
   AlertTriangle,
   Layers,
@@ -50,30 +51,32 @@ import {
   Check,
   Cloud
 } from 'lucide-react';
+import { Box, Typography, Paper, Tabs, Tab, Chip, Alert, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Button, Input, IconButton } from '../ui';
 
-type AdminTab = 
-  | 'METRICS' 
-  | 'PRODUCTS' 
-  | 'CATEGORIES' 
-  | 'COLLECTIONS' 
-  | 'ORDERS' 
-  | 'CUSTOMERS' 
-  | 'COUPONS' 
-  | 'HOMEPAGE' 
+type AdminTab =
+  | 'METRICS'
+  | 'PRODUCTS'
+  | 'CATEGORIES'
+  | 'COLLECTIONS'
+  | 'ORDERS'
+  | 'CUSTOMERS'
+  | 'COUPONS'
+  | 'HOMEPAGE'
   | 'DATABASE';
 
 export const AdminDashboard: React.FC = () => {
-  const { 
-    setIsAdminOpen, 
-    products, 
-    addProduct, 
-    updateProduct, 
-    deleteProduct, 
-    orders, 
-    updateOrderStatus, 
-    coupons, 
-    addCoupon, 
-    deleteCoupon, 
+  const {
+    setIsAdminOpen,
+    products,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    orders,
+    updateOrderStatus,
+    coupons,
+    addCoupon,
+    deleteCoupon,
     user,
     loginUser,
     showToast
@@ -449,8 +452,8 @@ export const AdminDashboard: React.FC = () => {
     return orders.filter((o) => {
       const matchStatus = orderStatusFilter === 'ALL' || o.orderStatus.toLowerCase() === orderStatusFilter.toLowerCase();
       const q = orderSearchQuery.trim().toLowerCase();
-      const matchSearch = !q || 
-        o.orderNumber.toLowerCase().includes(q) || 
+      const matchSearch = !q ||
+        o.orderNumber.toLowerCase().includes(q) ||
         o.customerInfo.fullName.toLowerCase().includes(q) ||
         o.customerInfo.phone.includes(q) ||
         o.customerInfo.email.toLowerCase().includes(q);
@@ -471,619 +474,633 @@ export const AdminDashboard: React.FC = () => {
   // AUTHENTICATION GUARD SCREEN
   if (!isAuthorizedAdmin) {
     return (
-      <div className="w-full min-h-screen bg-[#0A0A0A] py-16 px-4 flex items-center justify-center border-b border-white/10">
-        <div className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-md rounded-md p-8 shadow-2xl space-y-6 animate-fade-in relative overflow-hidden">
-          <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#D4AF37]/5 rounded-full blur-2xl pointer-events-none" />
-          
-          <div className="text-center space-y-2">
-            <div className="w-16 h-16 rounded-full bg-[#D4AF37]/10 border-2 border-[#D4AF37] text-[#D4AF37] flex items-center justify-center mx-auto shadow-lg shadow-[#D4AF37]/10">
+      <Box className="w-full min-h-screen bg-[#0A0A0A] py-16 px-4 flex items-center justify-center border-b border-white/10">
+        <Paper
+          elevation={24}
+          className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-md rounded-md p-8 relative overflow-hidden animate-fade-in"
+          sx={{ backgroundColor: '#0E1017' }}
+        >
+          <Box className="absolute -top-10 -right-10 w-32 h-32 bg-[#D4AF37]/5 rounded-full blur-2xl pointer-events-none" />
+
+          <Box className="flex flex-col items-center text-center space-y-4 mb-8">
+            <Box className="w-16 h-16 rounded-full bg-[#D4AF37]/10 border-2 border-[#D4AF37] text-[#D4AF37] flex items-center justify-center shadow-lg shadow-[#D4AF37]/10">
               <Lock size={28} />
-            </div>
-            <span className="text-[10px] font-mono font-bold tracking-[0.3em] text-[#D4AF37] uppercase block pt-2">
+            </Box>
+            <Typography variant="overline" className="text-[10px] font-mono font-bold tracking-[0.3em] text-[#D4AF37] uppercase block pt-2" sx={{ lineHeight: 1.2 }}>
               RESTRICTED VALKNUT ARCHIVE
-            </span>
-            <h1 className="text-2xl font-black uppercase text-white font-syne tracking-tight">
+            </Typography>
+            <Typography variant="h5" className="font-black uppercase text-white font-syne tracking-tight">
               ADMINISTRATIVE ACCESS
-            </h1>
-            <p className="text-slate-400 text-xs font-mono">
+            </Typography>
+            <Typography variant="caption" className="text-slate-400 font-mono text-xs">
               Database Row-Level Security Enforced. Customers must authenticate with verified admin credentials.
-            </p>
-          </div>
+            </Typography>
+          </Box>
 
           {authError && (
-            <div className="p-3 bg-red-950/60 border border-red-500/40 rounded text-red-400 text-xs font-mono flex items-center gap-2">
-              <XCircle size={15} className="flex-shrink-0" />
-              <span>{authError}</span>
-            </div>
+            <Alert severity="error" className="mb-4 bg-red-950/60 border border-red-500/40 text-red-400 font-mono text-xs" sx={{ color: '#f87171', '& .MuiAlert-icon': { color: '#f87171' } }}>
+              {authError}
+            </Alert>
           )}
 
           <form onSubmit={handleAdminLogin} className="space-y-4 font-mono text-xs">
-            <div className="space-y-1">
-              <label className="text-slate-300 font-bold block uppercase text-[10px] tracking-wider">
-                Admin Email Identifier
-              </label>
-              <input
-                type="email"
-                required
-                value={adminEmail}
-                onChange={(e) => setAdminEmail(e.target.value)}
-                placeholder="admin@valknutofficial.com"
-                className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-[2px] p-3 text-white placeholder-slate-500 focus:outline-none"
-              />
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-slate-300 font-bold block uppercase text-[10px] tracking-wider">
-                Security Password / Token
-              </label>
-              <input
-                type="password"
-                required
-                value={adminPassword}
-                onChange={(e) => setAdminPassword(e.target.value)}
-                placeholder="••••••••••••"
-                className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-[2px] p-3 text-white placeholder-slate-500 focus:outline-none"
-              />
-            </div>
-
-            <button
+            <Input
+              label="Admin Email Identifier"
+              type="email"
+              required
+              value={adminEmail}
+              onChange={(e) => setAdminEmail(e.target.value)}
+              placeholder="admin@valknutofficial.com"
+            />
+            <Input
+              label="Security Password / Token"
+              type="password"
+              required
+              value={adminPassword}
+              onChange={(e) => setAdminPassword(e.target.value)}
+              placeholder="••••••••••••"
+            />
+            <Button
               type="submit"
-              className="w-full py-4 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold text-xs uppercase tracking-[0.2em] rounded-[2px] transition-all flex items-center justify-center gap-2 shadow-xl shadow-[#D4AF37]/20 cursor-pointer"
+              variant="gold"
+              fullWidth
+              leftIcon={<ShieldCheck size={16} />}
+              className="py-4 mt-2"
             >
-              <ShieldCheck size={16} />
-              <span>AUTHORIZE ACCESS</span>
-            </button>
+              AUTHORIZE ACCESS
+            </Button>
           </form>
 
-          {/* Quick Demo Fill Helper */}
-          <div className="pt-2 border-t border-white/10 space-y-2">
-            <button
-              type="button"
+          <Box className="pt-4 mt-6 border-t border-white/10 space-y-3">
+            <Button
+              variant="outline"
+              fullWidth
+              size="sm"
               onClick={handleFillDemoAdmin}
-              className="w-full py-2 bg-white/5 hover:bg-white/10 text-[#D4AF37] text-[11px] font-mono rounded border border-[#D4AF37]/30 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              className="py-2.5"
             >
-              <span>Use Verified Demo Admin Credentials</span>
-            </button>
-
-            <a
+              Use Verified Demo Admin Credentials
+            </Button>
+            <Typography
+              component="a"
               href="#/"
-              className="w-full py-2 text-center text-slate-400 hover:text-white text-[11px] font-mono block transition-colors"
+              className="w-full text-center text-slate-400 hover:text-white text-[11px] font-mono block transition-colors mt-2"
             >
               Return to VALKNUT Storefront
-            </a>
-          </div>
-
-        </div>
-      </div>
+            </Typography>
+          </Box>
+        </Paper>
+      </Box>
     );
   }
 
   // FULL AUTHORIZED ADMIN OPERATIONS SUITE
   return (
-    <div className="w-full min-h-screen bg-[#08090D] text-white flex flex-col antialiased">
-      
-      {/* Top Operations Bar */}
-      <header className="bg-[#0E1017] border-b border-white/10 sticky top-0 z-40 px-4 sm:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-[#D4AF37] text-black flex items-center justify-center font-mono font-black text-sm">
-              VK
-            </div>
-            <div>
-              <span className="text-[9px] font-mono font-bold tracking-[0.25em] text-[#D4AF37] uppercase block">
-                VALKNUT MASTER CONTROL
-              </span>
-              <h1 className="text-base font-black uppercase text-white font-syne tracking-tight">
-                EXECUTIVE SUITE
-              </h1>
-            </div>
-          </div>
+    <Box className="w-full min-h-screen bg-[#08090D] text-white flex flex-col antialiased">
 
-          <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-950/60 border border-emerald-500/40 text-[10px] font-mono text-emerald-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>CLOUD SYNC ACTIVE</span>
-          </span>
-        </div>
+      {/* Top Operations Bar */}
+      <Box component="header" className="bg-[#0E1017] border-b border-white/10 sticky top-0 z-40 px-4 sm:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+        <Box className="flex items-center gap-4">
+          <Box className="flex items-center gap-2">
+            <Box className="w-8 h-8 rounded bg-[#D4AF37] text-black flex items-center justify-center font-mono font-black text-sm">
+              VK
+            </Box>
+            <Box>
+              <Typography className="text-[9px] font-mono font-bold tracking-[0.25em] text-[#D4AF37] uppercase block">
+                VALKNUT MASTER CONTROL
+              </Typography>
+              <Typography variant="h6" className="text-base font-black uppercase text-white font-syne tracking-tight">
+                EXECUTIVE SUITE
+              </Typography>
+            </Box>
+          </Box>
+
+          <Chip
+            label={
+              <Box className="flex items-center gap-1.5">
+                <Box className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <Typography component="span">CLOUD SYNC ACTIVE</Typography>
+              </Box>
+            }
+            className="hidden md:flex bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 font-mono text-[10px]"
+            variant="outlined"
+            size="small"
+            sx={{ borderRadius: '9999px', height: '24px' }}
+          />
+        </Box>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-3">
-          <a
-            href="#/shop"
-            className="px-3.5 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white rounded text-xs font-mono flex items-center gap-1.5 transition-colors"
+        <Box className="flex items-center gap-3">
+          <Button
+            variant="secondary"
+            size="sm"
+            rightIcon={<ExternalLink size={13} />}
+            onClick={() => window.location.hash = '#/shop'}
           >
-            <span>Live Store</span>
-            <ExternalLink size={13} />
-          </a>
+            Live Store
+          </Button>
 
-          <div className="flex items-center gap-2 border-l border-white/10 pl-3">
-            <div className="text-right hidden sm:block">
-              <span className="text-xs font-bold text-white block font-mono">{user?.name || 'Administrator'}</span>
-              <span className="text-[10px] text-[#D4AF37] font-mono">SUPABASE FOUNDER</span>
-            </div>
-            <button
+          <Box className="flex items-center gap-2 border-l border-white/10 pl-3">
+            <Box className="text-right hidden sm:block">
+              <Typography className="text-xs font-bold text-white block font-mono">{user?.name || 'Administrator'}</Typography>
+              <Typography className="text-[10px] text-[#D4AF37] font-mono">SUPABASE FOUNDER</Typography>
+            </Box>
+            <IconButton
+              icon={<XCircle size={18} />}
+              label="Exit Dashboard"
+              variant="ghost"
               onClick={() => {
                 if (setIsAdminOpen) setIsAdminOpen(false);
                 window.location.hash = '#/';
               }}
-              className="p-2 text-slate-400 hover:text-white bg-white/5 rounded transition-colors"
-              title="Exit Dashboard"
-            >
-              <XCircle size={18} />
-            </button>
-          </div>
-        </div>
-      </header>
+            />
+          </Box>
+        </Box>
+      </Box>
 
       {/* Main Container */}
-      <div className="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        
+      <Box className="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
         {/* Navigation Tabs Bar */}
-        <nav className="flex items-center gap-1.5 border-b border-white/10 pb-3 overflow-x-auto scrollbar-none font-mono text-xs">
-          {[
-            { id: 'METRICS', label: 'OVERVIEW', icon: TrendingUp },
-            { id: 'PRODUCTS', label: `PRODUCTS (${products.length})`, icon: Package },
-            { id: 'CATEGORIES', label: `CATEGORIES (${categories.length})`, icon: Layers },
-            { id: 'COLLECTIONS', label: `COLLECTIONS (${collections.length})`, icon: Sparkles },
-            { id: 'ORDERS', label: `ORDERS (${orders.length})`, icon: ShoppingBag },
-            { id: 'CUSTOMERS', label: `CUSTOMERS (${customers.length})`, icon: Users },
-            { id: 'COUPONS', label: `COUPONS (${coupons.length})`, icon: Tag },
-            { id: 'HOMEPAGE', label: 'HOMEPAGE CMS', icon: Home },
-            { id: 'DATABASE', label: 'DATABASE & RLS', icon: Database }
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as AdminTab)}
-                className={`px-4 py-2.5 rounded-[2px] font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer flex-shrink-0 ${
-                  isActive
-                    ? 'bg-[#D4AF37] text-black shadow-lg shadow-[#D4AF37]/10'
-                    : 'bg-[#12141F] text-slate-400 hover:text-white border border-white/5 hover:bg-white/5'
-                }`}
-              >
-                <Icon size={14} />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
-        </nav>
+        <Box className="border-b border-white/10 pb-3">
+          <Tabs
+            value={activeTab}
+            onChange={(_, val) => setActiveTab(val)}
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{
+              '& .MuiTabs-indicator': { backgroundColor: '#D4AF37' },
+              '& .MuiTab-root': { color: '#94a3b8', fontFamily: 'monospace', fontWeight: 700, minHeight: '40px', padding: '10px 20px', transition: 'all 0.2s', fontSize: '0.75rem' },
+              '& .Mui-selected': { color: '#D4AF37 !important' },
+            }}
+          >
+            <Tab icon={<TrendingUp size={16} />} iconPosition="start" label="OVERVIEW" value="METRICS" />
+            <Tab icon={<Package size={16} />} iconPosition="start" label={`PRODUCTS (${products.length})`} value="PRODUCTS" />
+            <Tab icon={<Layers size={16} />} iconPosition="start" label={`CATEGORIES (${categories.length})`} value="CATEGORIES" />
+            <Tab icon={<Sparkles size={16} />} iconPosition="start" label={`COLLECTIONS (${collections.length})`} value="COLLECTIONS" />
+            <Tab icon={<ShoppingBag size={16} />} iconPosition="start" label={`ORDERS (${orders.length})`} value="ORDERS" />
+            <Tab icon={<Users size={16} />} iconPosition="start" label={`CUSTOMERS (${customers.length})`} value="CUSTOMERS" />
+            <Tab icon={<Tag size={16} />} iconPosition="start" label={`COUPONS (${coupons.length})`} value="COUPONS" />
+            <Tab icon={<Home size={16} />} iconPosition="start" label="HOMEPAGE CMS" value="HOMEPAGE" />
+            <Tab icon={<Database size={16} />} iconPosition="start" label="DATABASE & RLS" value="DATABASE" />
+          </Tabs>
+        </Box>
 
         {/* 1. METRICS TAB */}
         {activeTab === 'METRICS' && (
-          <div className="space-y-6 animate-fade-in">
+          <Box className="space-y-6 animate-fade-in">
             {/* KPI Matrix */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2 relative overflow-hidden">
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
-                  GROSS REVENUE (LKR)
-                </span>
-                <p className="text-3xl font-black text-white font-mono">
-                  LKR {totalRevenue.toLocaleString()}
-                </p>
-                <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
-                  <TrendingUp size={14} />
-                  <span>Verified Purchases Across Sri Lanka</span>
-                </div>
-              </div>
+            <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Box>
+                <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2 relative overflow-hidden h-full" sx={{ backgroundColor: '#0E1017' }}>
+                  <Typography className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
+                    GROSS REVENUE (LKR)
+                  </Typography>
+                  <Typography className="text-3xl font-black text-white font-mono mt-2">
+                    LKR {totalRevenue.toLocaleString()}
+                  </Typography>
+                  <Box className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono mt-2">
+                    <TrendingUp size={14} />
+                    <Typography component="span">Verified Purchases</Typography>
+                  </Box>
+                </Paper>
+              </Box>
 
-              <div className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2">
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
-                  TOTAL COMPLETED ORDERS
-                </span>
-                <p className="text-3xl font-black text-[#D4AF37] font-mono">
-                  {totalOrdersCount}
-                </p>
-                <span className="text-xs text-slate-400 font-mono">
-                  {pendingOrdersCount} Pending Dispatch
-                </span>
-              </div>
+              <Box>
+                <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2 h-full" sx={{ backgroundColor: '#0E1017' }}>
+                  <Typography className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
+                    TOTAL COMPLETED ORDERS
+                  </Typography>
+                  <Typography className="text-3xl font-black text-[#D4AF37] font-mono mt-2">
+                    {totalOrdersCount}
+                  </Typography>
+                  <Typography className="text-xs text-slate-400 font-mono mt-2">
+                    {pendingOrdersCount} Pending Dispatch
+                  </Typography>
+                </Paper>
+              </Box>
 
-              <div className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2">
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
-                  REGISTERED BUYERS
-                </span>
-                <p className="text-3xl font-black text-white font-mono">
-                  {customers.length}
-                </p>
-                <span className="text-xs text-emerald-400 font-mono">
-                  100% Verified Customer Profiles
-                </span>
-              </div>
+              <Box>
+                <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2 h-full" sx={{ backgroundColor: '#0E1017' }}>
+                  <Typography className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
+                    REGISTERED BUYERS
+                  </Typography>
+                  <Typography className="text-3xl font-black text-white font-mono mt-2">
+                    {customers.length}
+                  </Typography>
+                  <Typography className="text-xs text-emerald-400 font-mono mt-2">
+                    100% Verified Customer Profiles
+                  </Typography>
+                </Paper>
+              </Box>
 
-              <div className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2">
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
-                  LOW-STOCK ALERTS (&le; 5 PCS)
-                </span>
-                <p className={`text-3xl font-black font-mono ${lowStockProducts.length > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
-                  {lowStockProducts.length} Products
-                </p>
-                <span className="text-xs text-slate-400 font-mono">
-                  {lowStockProducts.length > 0 ? 'Action required in warehouse' : 'Inventory levels healthy'}
-                </span>
-              </div>
-            </div>
+              <Box>
+                <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2 h-full" sx={{ backgroundColor: '#0E1017' }}>
+                  <Typography className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
+                    LOW-STOCK ALERTS (&le; 5 PCS)
+                  </Typography>
+                  <Typography className={`text-3xl font-black font-mono mt-2 ${lowStockProducts.length > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                    {lowStockProducts.length} Products
+                  </Typography>
+                  <Typography className="text-xs text-slate-400 font-mono mt-2">
+                    {lowStockProducts.length > 0 ? 'Action required in warehouse' : 'Inventory levels healthy'}
+                  </Typography>
+                </Paper>
+              </Box>
+            </Box>
 
             {/* Recent Orders Feed & Low Stock Table */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              
+            <Box className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+
               {/* Recent Orders (8 cols) */}
-              <div className="lg:col-span-8 bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4">
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                  <h3 className="text-sm font-black uppercase text-white font-syne tracking-wider">
-                    RECENT ORDERS STREAM
-                  </h3>
-                  <button
-                    onClick={() => setActiveTab('ORDERS')}
-                    className="text-xs font-mono text-[#D4AF37] hover:underline"
-                  >
-                    View All Orders &rarr;
-                  </button>
-                </div>
+              <Box className="lg:col-span-8">
+                <Paper className="bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4 h-full" sx={{ backgroundColor: '#0E1017', color: 'white' }}>
+                  <Box className="flex items-center justify-between border-b border-white/10 pb-3">
+                    <Typography className="text-sm font-black uppercase text-white font-syne tracking-wider">
+                      RECENT ORDERS STREAM
+                    </Typography>
+                    <Typography
+                      component="button"
+                      onClick={() => setActiveTab('ORDERS')}
+                      className="text-xs font-mono text-[#D4AF37] hover:underline cursor-pointer bg-transparent border-none"
+                    >
+                      View All Orders &rarr;
+                    </Typography>
+                  </Box>
 
-                <div className="divide-y divide-white/5 overflow-x-auto">
-                  {orders.slice(0, 5).map((ord) => (
-                    <div key={ord.id} className="py-3.5 flex items-center justify-between gap-4 text-xs font-mono">
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-2">
-                          <strong className="text-white">{ord.orderNumber}</strong>
-                          <span className="text-[10px] px-2 py-0.5 rounded bg-white/5 border border-white/10 text-slate-300">
-                            {ord.paymentGateway}
-                          </span>
-                        </div>
-                        <p className="text-slate-400 text-[11px]">{ord.customerInfo.fullName} • {ord.customerInfo.phone}</p>
-                      </div>
+                  <Box className="divide-y divide-white/5 overflow-x-auto">
+                    {orders.slice(0, 5).map((ord) => (
+                      <Box key={ord.id} className="py-3.5 flex items-center justify-between gap-4 text-xs font-mono">
+                        <Box className="space-y-0.5">
+                          <Box className="flex items-center gap-2">
+                            <strong className="text-white">{ord.orderNumber}</strong>
+                            <Chip size="small" label={ord.paymentGateway} className="text-[10px] bg-white/5 border border-white/10 text-slate-300 rounded" />
+                          </Box>
+                          <Typography className="text-slate-400 text-[11px]">{ord.customerInfo.fullName} • {ord.customerInfo.phone}</Typography>
+                        </Box>
 
-                      <div className="text-right">
-                        <p className="text-white font-bold">LKR {ord.totalAmount.toLocaleString()}</p>
-                        <span className="text-[10px] text-[#D4AF37] font-bold uppercase">{ord.orderStatus}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                        <Box className="text-right">
+                          <Typography className="text-white font-bold text-xs">LKR {ord.totalAmount.toLocaleString()}</Typography>
+                          <Typography className="text-[10px] text-[#D4AF37] font-bold uppercase">{ord.orderStatus}</Typography>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                </Paper>
+              </Box>
 
               {/* Low Stock Items (4 cols) */}
-              <div className="lg:col-span-4 bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4">
-                <h3 className="text-sm font-black uppercase text-amber-400 font-syne tracking-wider flex items-center gap-2">
-                  <AlertTriangle size={16} />
-                  <span>LOW INVENTORY NOTICES</span>
-                </h3>
+              <Box className="lg:col-span-4">
+                <Paper className="bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4 h-full" sx={{ backgroundColor: '#0E1017', color: 'white' }}>
+                  <Typography className="text-sm font-black uppercase text-amber-400 font-syne tracking-wider flex items-center gap-2">
+                    <AlertTriangle size={16} />
+                    <Typography component="span">LOW INVENTORY NOTICES</Typography>
+                  </Typography>
 
-                {lowStockProducts.length === 0 ? (
-                  <p className="text-xs font-mono text-slate-400 py-6 text-center">
-                    All variant quantities are above minimum reorder thresholds.
-                  </p>
-                ) : (
-                  <div className="divide-y divide-white/5 space-y-3">
-                    {lowStockProducts.slice(0, 5).map((prod) => (
-                      <div key={prod.id} className="pt-3 first:pt-0 flex items-center justify-between text-xs font-mono">
-                        <div className="flex items-center gap-2.5">
-                          <img src={prod.images[0]} alt="" className="w-10 h-12 object-cover rounded bg-[#141620]" />
-                          <div>
-                            <p className="text-white font-bold truncate max-w-[140px]">{prod.name}</p>
-                            <p className="text-[10px] text-slate-400">{prod.subCategory}</p>
-                          </div>
-                        </div>
+                  {lowStockProducts.length === 0 ? (
+                    <Typography className="text-xs font-mono text-slate-400 py-6 text-center">
+                      All variant quantities are above minimum reorder thresholds.
+                    </Typography>
+                  ) : (
+                    <Box className="divide-y divide-white/5 space-y-3">
+                      {lowStockProducts.slice(0, 5).map((prod) => (
+                        <Box key={prod.id} className="pt-3 first:pt-0 flex items-center justify-between text-xs font-mono">
+                          <Box className="flex items-center gap-2.5">
+                            <Box component="img" src={prod.images[0]} alt="" className="w-10 h-12 object-cover rounded bg-[#141620]" />
+                            <Box>
+                              <Typography className="text-white font-bold truncate max-w-[140px] text-xs">{prod.name}</Typography>
+                              <Typography className="text-[10px] text-slate-400">{prod.subCategory}</Typography>
+                            </Box>
+                          </Box>
 
-                        <button
-                          onClick={() => openProductForm(prod)}
-                          className="px-2.5 py-1 bg-amber-950/40 border border-amber-500/40 text-amber-400 rounded text-[10px] hover:bg-amber-950 transition-colors"
-                        >
-                          Restock
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => openProductForm(prod)}
+                            className="px-2.5 py-1 text-[10px]"
+                          >
+                            Restock
+                          </Button>
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                </Paper>
+              </Box>
 
-            </div>
-          </div>
+            </Box>
+          </Box>
         )}
 
         {/* 2. PRODUCT MANAGEMENT TAB */}
         {activeTab === 'PRODUCTS' && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
-              <div className="flex items-center gap-3">
+          <Box className="space-y-6 animate-fade-in">
+            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
+              <Box className="flex items-center gap-3">
                 <Package className="text-[#D4AF37]" size={22} />
-                <div>
-                  <h2 className="text-base font-black uppercase text-white font-syne">
+                <Box>
+                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
                     PRODUCT CATALOG REPOSITORY
-                  </h2>
-                  <p className="text-xs font-mono text-slate-400">
+                  </Typography>
+                  <Typography variant="body2" className="text-xs font-mono text-slate-400">
                     Manage heavyweight luxury garments, size charts, variant stocks, and specs.
-                  </p>
-                </div>
-              </div>
+                  </Typography>
+                </Box>
+              </Box>
 
-              <button
+              <Button
                 onClick={() => openProductForm()}
-                className="px-5 py-3 bg-[#D4AF37] hover:bg-[#E2B714] text-black text-xs font-mono font-extrabold uppercase tracking-wider rounded-[2px] flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-[#D4AF37]/20"
+                className="px-5 py-3 text-xs font-mono font-extrabold tracking-wider bg-[#D4AF37] hover:bg-[#E2B714] text-black shadow-lg shadow-[#D4AF37]/20"
               >
-                <Plus size={16} />
-                <span>CREATE PRODUCT</span>
-              </button>
-            </div>
+                <Plus size={16} className="mr-2 inline" />
+                CREATE PRODUCT
+              </Button>
+            </Box>
 
             {/* Products Table */}
-            <div className="bg-[#0E1017] border border-white/10 rounded-md overflow-hidden shadow-2xl">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left font-mono text-xs">
-                  <thead className="bg-[#141620] text-slate-400 uppercase text-[10px] tracking-wider border-b border-white/10">
-                    <tr>
-                      <th className="p-4">Garment</th>
-                      <th className="p-4">Category / Collection</th>
-                      <th className="p-4">Price</th>
-                      <th className="p-4">Variants & Stock</th>
-                      <th className="p-4">Status Badges</th>
-                      <th className="p-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5">
-                    {products.map((prod) => {
-                      const totalStock = prod.variants.reduce((sum, v) => sum + (v.stock ?? 0), 0);
-                      const isLowStock = totalStock <= 10;
+            <TableContainer component={Paper} className="bg-[#0E1017] border border-white/10 rounded-md overflow-hidden shadow-2xl" sx={{ backgroundColor: '#0E1017' }}>
+              <Table sx={{ minWidth: 650, '& .MuiTableCell-root': { borderBottom: '1px solid rgba(255,255,255,0.05)' } }} aria-label="products table">
+                <TableHead sx={{ backgroundColor: '#141620' }}>
+                  <TableRow>
+                    <TableCell className="text-slate-400 font-mono text-[10px] uppercase tracking-wider p-4">Garment</TableCell>
+                    <TableCell className="text-slate-400 font-mono text-[10px] uppercase tracking-wider p-4">Category / Collection</TableCell>
+                    <TableCell className="text-slate-400 font-mono text-[10px] uppercase tracking-wider p-4">Price</TableCell>
+                    <TableCell className="text-slate-400 font-mono text-[10px] uppercase tracking-wider p-4">Variants & Stock</TableCell>
+                    <TableCell className="text-slate-400 font-mono text-[10px] uppercase tracking-wider p-4">Status Badges</TableCell>
+                    <TableCell align="right" className="text-slate-400 font-mono text-[10px] uppercase tracking-wider p-4">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {products.map((prod) => {
+                    const totalStock = prod.variants.reduce((sum, v) => sum + (v.stock ?? 0), 0);
+                    const isLowStock = totalStock <= 10;
 
-                      return (
-                        <tr key={prod.id} className="hover:bg-white/5 transition-colors">
-                          <td className="p-4">
-                            <div className="flex items-center gap-3">
-                              <img
-                                src={prod.images[0] || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=300&q=80'}
-                                alt=""
-                                className="w-12 h-14 object-cover rounded bg-[#141620] border border-white/10 flex-shrink-0"
-                              />
-                              <div>
-                                <h4 className="text-white font-bold text-xs uppercase font-heading">{prod.name}</h4>
-                                <span className="text-[10px] text-slate-500 block">SKU: {prod.variants[0]?.sku || prod.slug}</span>
-                              </div>
-                            </div>
-                          </td>
+                    return (
+                      <TableRow key={prod.id} hover sx={{ '&:hover': { backgroundColor: 'rgba(255,255,255,0.05) !important' } }}>
+                        <TableCell className="p-4 border-0">
+                          <Box className="flex items-center gap-3">
+                            <Box
+                              component="img"
+                              src={prod.images[0] || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=300&q=80'}
+                              alt=""
+                              className="w-12 h-14 object-cover rounded bg-[#141620] border border-white/10 flex-shrink-0"
+                            />
+                            <Box>
+                              <Typography className="text-white font-bold text-xs uppercase font-heading">{prod.name}</Typography>
+                              <Typography className="text-[10px] text-slate-500 font-mono block">SKU: {prod.variants[0]?.sku || prod.slug}</Typography>
+                            </Box>
+                          </Box>
+                        </TableCell>
 
-                          <td className="p-4">
-                            <span className="text-[#D4AF37] font-bold block">{prod.category}</span>
-                            <span className="text-[10px] text-slate-400 block">{prod.subCategory}</span>
-                            {prod.collection && (
-                              <span className="text-[9px] text-slate-500 uppercase">{prod.collection}</span>
-                            )}
-                          </td>
+                        <TableCell className="p-4 font-mono border-0">
+                          <Typography className="text-[#D4AF37] font-bold text-xs block">{prod.category}</Typography>
+                          <Typography className="text-[10px] text-slate-400 block">{prod.subCategory}</Typography>
+                          {prod.collection && (
+                            <Typography className="text-[9px] text-slate-500 uppercase">{prod.collection}</Typography>
+                          )}
+                        </TableCell>
 
-                          <td className="p-4">
-                            <span className="text-white font-bold block">LKR {prod.price.toLocaleString()}</span>
-                            {prod.salePrice && (
-                              <span className="text-emerald-400 text-[10px] block">Sale: LKR {prod.salePrice.toLocaleString()}</span>
-                            )}
-                          </td>
+                        <TableCell className="p-4 font-mono border-0">
+                          <Typography className="text-white font-bold text-xs block">LKR {prod.price.toLocaleString()}</Typography>
+                          {prod.salePrice && (
+                            <Typography className="text-emerald-400 text-[10px] block">Sale: LKR {prod.salePrice.toLocaleString()}</Typography>
+                          )}
+                        </TableCell>
 
-                          <td className="p-4">
-                            <span className={`font-bold ${isLowStock ? 'text-amber-400' : 'text-slate-300'}`}>
-                              {totalStock} units
-                            </span>
-                            <span className="text-[10px] text-slate-500 block">
-                              {prod.variants.length} Size/Color Variants
-                            </span>
-                          </td>
+                        <TableCell className="p-4 font-mono border-0">
+                          <Typography className={`font-bold text-xs ${isLowStock ? 'text-amber-400' : 'text-slate-300'}`}>
+                            {totalStock} units
+                          </Typography>
+                          <Typography className="text-[10px] text-slate-500 block">
+                            {prod.variants.length} Size/Color Variants
+                          </Typography>
+                        </TableCell>
 
-                          <td className="p-4">
-                            <div className="flex items-center gap-1.5 flex-wrap text-[9px]">
-                              {prod.isNewArrival && <span className="px-1.5 py-0.5 bg-sky-950 text-sky-400 border border-sky-500/30 rounded">NEW</span>}
-                              {prod.isBestSeller && <span className="px-1.5 py-0.5 bg-amber-950 text-amber-400 border border-amber-500/30 rounded">BESTSELLER</span>}
-                              {prod.isCustomizable && <span className="px-1.5 py-0.5 bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 rounded">STUDIO</span>}
-                            </div>
-                          </td>
+                        <TableCell className="p-4 font-mono border-0">
+                          <Box className="flex items-center gap-1.5 flex-wrap">
+                            {prod.isNewArrival && <Chip size="small" label="NEW" sx={{ height: '20px', fontSize: '9px', backgroundColor: '#0c4a6e', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)' }} />}
+                            {prod.isBestSeller && <Chip size="small" label="BESTSELLER" sx={{ height: '20px', fontSize: '9px', backgroundColor: '#451a03', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.3)' }} />}
+                            {prod.isCustomizable && <Chip size="small" label="STUDIO" sx={{ height: '20px', fontSize: '9px', backgroundColor: 'rgba(212, 175, 55, 0.2)', color: '#D4AF37', border: '1px solid rgba(212, 175, 55, 0.4)' }} />}
+                          </Box>
+                        </TableCell>
 
-                          <td className="p-4 text-right space-x-2">
-                            <button
-                              onClick={() => openProductForm(prod)}
-                              className="p-2 bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white rounded transition-colors"
-                              title="Edit Product"
-                            >
-                              <Edit2 size={14} />
-                            </button>
+                        <TableCell align="right" className="p-4 space-x-2 border-0">
+                          <IconButton
+                            onClick={() => openProductForm(prod)}
+                            label="Edit Product"
+                            size="sm"
+                            icon={<Edit2 size={14} className="text-slate-300" />}
+                          />
 
-                            <button
-                              onClick={() => setDeleteConfirmTarget({ type: 'product', id: prod.id, name: prod.name })}
-                              className="p-2 bg-red-950/30 hover:bg-red-950/80 text-red-400 rounded transition-colors"
-                              title="Delete Product"
-                            >
-                              <Trash2 size={14} />
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+                          <IconButton
+                            onClick={() => setDeleteConfirmTarget({ type: 'product', id: prod.id, name: prod.name })}
+                            label="Delete Product"
+                            size="sm"
+                            sx={{ '&:hover': { backgroundColor: 'rgba(153, 27, 27, 0.3)' } }}
+                            icon={<Trash2 size={14} className="text-red-400" />}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         )}
 
         {/* 3. CATEGORY MANAGEMENT TAB */}
         {activeTab === 'CATEGORIES' && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
-              <div className="flex items-center gap-3">
+          <Box className="space-y-6 animate-fade-in">
+            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
+              <Box className="flex items-center gap-3">
                 <Layers className="text-[#D4AF37]" size={22} />
-                <div>
-                  <h2 className="text-base font-black uppercase text-white font-syne">
+                <Box>
+                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
                     STOREFRONT CATEGORIES & TAXONOMIES
-                  </h2>
-                  <p className="text-xs font-mono text-slate-400">
+                  </Typography>
+                  <Typography variant="body2" className="text-xs font-mono text-slate-400">
                     Configure parent categories, sub-classifications, and SEO metadata.
-                  </p>
-                </div>
-              </div>
+                  </Typography>
+                </Box>
+              </Box>
 
-              <button
+              <Button
                 onClick={() => openCategoryForm()}
-                className="px-5 py-3 bg-[#D4AF37] hover:bg-[#E2B714] text-black text-xs font-mono font-extrabold uppercase tracking-wider rounded-[2px] flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-[#D4AF37]/20"
+                className="px-5 py-3 text-xs font-mono font-extrabold tracking-wider bg-[#D4AF37] hover:bg-[#E2B714] text-black shadow-lg shadow-[#D4AF37]/20"
               >
-                <Plus size={16} />
-                <span>CREATE CATEGORY</span>
-              </button>
-            </div>
+                <Plus size={16} className="mr-2 inline" />
+                CREATE CATEGORY
+              </Button>
+            </Box>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {categories.map((cat) => (
-                <div key={cat.id} className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-4 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase">
+                <Paper key={cat.id} className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-4 flex flex-col justify-between" sx={{ backgroundColor: '#0E1017' }}>
+                  <Box className="space-y-2">
+                    <Box className="flex items-center justify-between">
+                      <Typography className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase">
                         PARENT: {cat.parentCategory}
-                      </span>
-                      <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/30">
-                        ACTIVE
-                      </span>
-                    </div>
+                      </Typography>
+                      <Chip size="small" label="ACTIVE" sx={{ height: '20px', fontSize: '10px', backgroundColor: 'rgba(5, 150, 105, 0.4)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)' }} />
+                    </Box>
 
-                    <h3 className="text-base font-bold uppercase text-white font-syne">{cat.name}</h3>
-                    <p className="text-xs font-mono text-slate-400 line-clamp-2">{cat.description || 'No description provided.'}</p>
+                    <Typography className="text-base font-bold uppercase text-white font-syne">{cat.name}</Typography>
+                    <Typography className="text-xs font-mono text-slate-400 line-clamp-2">{cat.description || 'No description provided.'}</Typography>
 
                     {cat.seoTitle && (
-                      <div className="p-2.5 bg-[#141620] rounded border border-white/5 text-[11px] font-mono text-slate-300 space-y-1">
-                        <span className="text-[9px] text-[#D4AF37] uppercase block font-bold">SEO TITLE</span>
-                        <p className="truncate">{cat.seoTitle}</p>
-                      </div>
+                      <Box className="p-2.5 bg-[#141620] rounded border border-white/5 text-[11px] font-mono text-slate-300 space-y-1">
+                        <Typography className="text-[9px] text-[#D4AF37] uppercase block font-bold">SEO TITLE</Typography>
+                        <Typography className="truncate font-mono">{cat.seoTitle}</Typography>
+                      </Box>
                     )}
-                  </div>
+                  </Box>
 
-                  <div className="pt-3 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-xs font-mono text-slate-500">Slug: /{cat.slug}</span>
-                    <div className="flex items-center gap-2">
-                      <button
+                  <Box className="pt-3 border-t border-white/5 flex items-center justify-between">
+                    <Typography className="text-xs font-mono text-slate-500">Slug: /{cat.slug}</Typography>
+                    <Box className="flex items-center gap-2">
+                      <IconButton
                         onClick={() => openCategoryForm(cat)}
-                        className="p-2 bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white rounded"
-                      >
-                        <Edit2 size={13} />
-                      </button>
-                      <button
+                        label="Edit Category"
+                        size="sm"
+                        icon={<Edit2 size={13} className="text-slate-300" />}
+                      />
+                      <IconButton
                         onClick={() => setDeleteConfirmTarget({ type: 'category', id: cat.id, name: cat.name })}
-                        className="p-2 bg-red-950/30 hover:bg-red-950 text-red-400 rounded"
-                      >
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                        label="Delete Category"
+                        size="sm"
+                        sx={{ '&:hover': { backgroundColor: 'rgba(153, 27, 27, 0.3)' } }}
+                        icon={<Trash2 size={13} className="text-red-400" />}
+                      />
+                    </Box>
+                  </Box>
+                </Paper>
               ))}
-            </div>
-          </div>
+            </Box>
+          </Box>
         )}
 
         {/* 4. COLLECTION MANAGEMENT TAB */}
         {activeTab === 'COLLECTIONS' && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
-              <div className="flex items-center gap-3">
+          <Box className="space-y-6 animate-fade-in">
+            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
+              <Box className="flex items-center gap-3">
                 <Sparkles className="text-[#D4AF37]" size={22} />
-                <div>
-                  <h2 className="text-base font-black uppercase text-white font-syne">
+                <Box>
+                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
                     EDITORIAL COLLECTIONS & DROPS
-                  </h2>
-                  <p className="text-xs font-mono text-slate-400">
+                  </Typography>
+                  <Typography variant="body2" className="text-xs font-mono text-slate-400">
                     Group pieces into themed drops like Shadow Ops 2026 and Stealth Labs.
-                  </p>
-                </div>
-              </div>
+                  </Typography>
+                </Box>
+              </Box>
 
-              <button
+              <Button
                 onClick={() => openCollectionForm()}
-                className="px-5 py-3 bg-[#D4AF37] hover:bg-[#E2B714] text-black text-xs font-mono font-extrabold uppercase tracking-wider rounded-[2px] flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-[#D4AF37]/20"
+                className="px-5 py-3 text-xs font-mono font-extrabold tracking-wider bg-[#D4AF37] hover:bg-[#E2B714] text-black shadow-lg shadow-[#D4AF37]/20"
               >
-                <Plus size={16} />
-                <span>CREATE COLLECTION</span>
-              </button>
-            </div>
+                <Plus size={16} className="mr-2 inline" />
+                CREATE COLLECTION
+              </Button>
+            </Box>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Box className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {collections.map((col) => (
-                <div key={col.id} className="bg-[#0E1017] border border-white/10 rounded-md overflow-hidden flex flex-col justify-between shadow-xl">
-                  <div className="h-44 relative bg-[#141620] overflow-hidden">
-                    <img src={col.imageUrl} alt={col.name} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0E1017] via-transparent to-black/40" />
-                    <div className="absolute top-3 left-3">
-                      <span className="px-2.5 py-1 bg-black/80 text-[#D4AF37] border border-[#D4AF37]/50 text-[10px] font-mono font-black uppercase rounded">
-                        RELEASE: {col.releaseDate || '2026'}
-                      </span>
-                    </div>
-                  </div>
+                <Paper key={col.id} className="bg-[#0E1017] border border-white/10 rounded-md overflow-hidden flex flex-col justify-between shadow-xl" sx={{ backgroundColor: '#0E1017' }}>
+                  <Box className="h-44 relative bg-[#141620] overflow-hidden">
+                    <Box component="img" src={col.imageUrl} alt={col.name} className="w-full h-full object-cover" />
+                    <Box className="absolute inset-0 bg-gradient-to-t from-[#0E1017] via-transparent to-black/40" />
+                    <Box className="absolute top-3 left-3">
+                      <Chip
+                        size="small"
+                        label={`RELEASE: ${col.releaseDate || '2026'}`}
+                        sx={{
+                          height: '24px',
+                          fontSize: '10px',
+                          fontFamily: 'monospace',
+                          fontWeight: 900,
+                          backgroundColor: 'rgba(0,0,0,0.8)',
+                          color: '#D4AF37',
+                          border: '1px solid rgba(212, 175, 55, 0.5)',
+                          borderRadius: '4px'
+                        }}
+                      />
+                    </Box>
+                  </Box>
 
-                  <div className="p-6 space-y-3 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-lg font-black uppercase text-white font-syne">{col.name}</h3>
-                      <p className="text-xs font-mono text-slate-400 mt-1">{col.description}</p>
-                      
-                      <div className="mt-3 flex items-center gap-2 text-xs font-mono text-slate-300">
+                  <Box className="p-6 space-y-3 flex-1 flex flex-col justify-between">
+                    <Box>
+                      <Typography className="text-lg font-black uppercase text-white font-syne">{col.name}</Typography>
+                      <Typography className="text-xs font-mono text-slate-400 mt-1">{col.description}</Typography>
+
+                      <Box className="mt-3 flex items-center gap-2 text-xs font-mono text-slate-300">
                         <strong className="text-white">{col.productIds.length}</strong> Assigned Garments
-                      </div>
-                    </div>
+                      </Box>
+                    </Box>
 
-                    <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                      <span className="text-[11px] font-mono text-slate-500">Slug: /{col.slug}</span>
-                      <div className="flex items-center gap-2">
-                        <button
+                    <Box className="pt-4 border-t border-white/10 flex items-center justify-between">
+                      <Typography className="text-[11px] font-mono text-slate-500">Slug: /{col.slug}</Typography>
+                      <Box className="flex items-center gap-2">
+                        <IconButton
                           onClick={() => openCollectionForm(col)}
-                          className="px-3 py-1.5 bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white rounded text-xs font-mono flex items-center gap-1.5"
-                        >
-                          <Edit2 size={13} />
-                          <span>Edit</span>
-                        </button>
-                        <button
+                          label="Edit Collection"
+                          size="sm"
+                          icon={<Edit2 size={13} className="text-slate-300" />}
+                        />
+                        <IconButton
                           onClick={() => setDeleteConfirmTarget({ type: 'collection', id: col.id, name: col.name })}
-                          className="p-1.5 bg-red-950/30 hover:bg-red-950 text-red-400 rounded"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                          label="Delete Collection"
+                          size="sm"
+                          sx={{ '&:hover': { backgroundColor: 'rgba(153, 27, 27, 0.3)' } }}
+                          icon={<Trash2 size={14} className="text-red-400" />}
+                        />
+                      </Box>
+                    </Box>
+                  </Box>
+                </Paper>
               ))}
-            </div>
-          </div>
+            </Box>
+          </Box>
         )}
 
         {/* 5. ORDER & LOGISTICS MANAGEMENT TAB */}
         {activeTab === 'ORDERS' && (
-          <div className="space-y-6 animate-fade-in">
+          <Box className="space-y-6 animate-fade-in">
             {/* Header & Filter Controls */}
-            <div className="bg-[#0E1017] border border-white/10 p-5 rounded-md space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
+            <Box className="bg-[#0E1017] border border-white/10 p-5 rounded-md space-y-4">
+              <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <Box className="flex items-center gap-3">
                   <ShoppingBag className="text-[#D4AF37]" size={22} />
-                  <div>
+                  <Box>
                     <h2 className="text-base font-black uppercase text-white font-syne">
                       ORDER FULFILLMENT & COURIER DISPATCH
                     </h2>
-                    <p className="text-xs font-mono text-slate-400">
+                    <Typography component="p" className="text-xs font-mono text-slate-400">
                       Real-time status changes, Air Waybill tracking assignment, and courier integration.
-                    </p>
-                  </div>
-                </div>
+                    </Typography>
+                  </Box>
+                </Box>
 
                 {/* Status Tabs Quick Filter */}
-                <div className="flex items-center gap-1.5 overflow-x-auto text-[10px] font-mono">
+                <Box className="flex items-center gap-1.5 overflow-x-auto text-[10px] font-mono">
                   {['ALL', 'Pending', 'Payment Confirmed', 'Processing', 'Packed', 'Shipped', 'Delivered', 'Cancelled'].map((st) => (
-                    <button
+                    <Box component="button"
                       key={st}
                       onClick={() => setOrderStatusFilter(st)}
-                      className={`px-3 py-1.5 rounded uppercase font-bold transition-all cursor-pointer flex-shrink-0 ${
-                        orderStatusFilter === st
-                          ? 'bg-[#D4AF37] text-black'
-                          : 'bg-[#141620] text-slate-400 hover:text-white border border-white/5'
-                      }`}
+                      className={`px-3 py-1.5 rounded uppercase font-bold transition-all cursor-pointer flex-shrink-0 ${orderStatusFilter === st
+                        ? 'bg-[#D4AF37] text-black'
+                        : 'bg-[#141620] text-slate-400 hover:text-white border border-white/5'
+                        }`}
                     >
                       {st}
-                    </button>
+                    </Box>
                   ))}
-                </div>
-              </div>
+                </Box>
+              </Box>
 
               {/* Search Box */}
-              <div className="relative">
+              <Box className="relative">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                 <input
                   type="text"
@@ -1092,62 +1109,62 @@ export const AdminDashboard: React.FC = () => {
                   placeholder="Search by Order # (e.g. VK-2026-8801), Customer Name, Mobile Phone, or Email..."
                   className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-2.5 pl-10 pr-4 text-xs font-mono text-white placeholder-slate-500 focus:outline-none"
                 />
-              </div>
-            </div>
+              </Box>
+            </Box>
 
             {/* Orders Feed Table */}
-            <div className="bg-[#0E1017] border border-white/10 rounded-md overflow-hidden shadow-2xl">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left font-mono text-xs">
-                  <thead className="bg-[#141620] text-slate-400 uppercase text-[10px] tracking-wider border-b border-white/10">
-                    <tr>
-                      <th className="p-4">Order Ref</th>
-                      <th className="p-4">Customer & Destination</th>
-                      <th className="p-4">Items</th>
-                      <th className="p-4">Total & Gateway</th>
-                      <th className="p-4">Order Status</th>
-                      <th className="p-4">Courier / AWB</th>
-                      <th className="p-4 text-right">Logistics Update</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5">
+            <Box className="bg-[#0E1017] border border-white/10 rounded-md overflow-hidden shadow-2xl">
+              <Box className="overflow-x-auto">
+                <Table className="w-full text-left font-mono text-xs">
+                  <TableHead className="bg-[#141620] text-slate-400 uppercase text-[10px] tracking-wider border-b border-white/10">
+                    <TableRow>
+                      <TableCell className="p-4">Order Ref</TableCell>
+                      <TableCell className="p-4">Customer & Destination</TableCell>
+                      <TableCell className="p-4">Items</TableCell>
+                      <TableCell className="p-4">Total & Gateway</TableCell>
+                      <TableCell className="p-4">Order Status</TableCell>
+                      <TableCell className="p-4">Courier / AWB</TableCell>
+                      <TableCell className="p-4 text-right">Logistics Update</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody className="divide-y divide-white/5">
                     {filteredOrders.length === 0 ? (
-                      <tr>
-                        <td colSpan={7} className="p-8 text-center text-slate-500 font-mono">
+                      <TableRow>
+                        <TableCell colSpan={7} className="p-8 text-center text-slate-500 font-mono">
                           No orders matched the active filter criteria.
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     ) : (
                       filteredOrders.map((ord) => (
-                        <tr key={ord.id} className="hover:bg-white/5 transition-colors">
-                          <td className="p-4">
+                        <TableRow key={ord.id} className="hover:bg-white/5 transition-colors">
+                          <TableCell className="p-4">
                             <strong className="text-white font-bold block">{ord.orderNumber}</strong>
-                            <span className="text-[10px] text-slate-500">
+                            <Typography component="span" className="text-[10px] text-slate-500">
                               {new Date(ord.createdAt).toLocaleDateString()}
-                            </span>
-                          </td>
+                            </Typography>
+                          </TableCell>
 
-                          <td className="p-4">
-                            <span className="text-white font-bold block">{ord.customerInfo.fullName}</span>
-                            <span className="text-[10px] text-slate-400 block">{ord.customerInfo.city}, {ord.customerInfo.district}</span>
-                            <span className="text-[10px] text-slate-500">{ord.customerInfo.phone}</span>
-                          </td>
+                          <TableCell className="p-4">
+                            <Typography component="span" className="text-white font-bold block">{ord.customerInfo.fullName}</Typography>
+                            <Typography component="span" className="text-[10px] text-slate-400 block">{ord.customerInfo.city}, {ord.customerInfo.district}</Typography>
+                            <Typography component="span" className="text-[10px] text-slate-500">{ord.customerInfo.phone}</Typography>
+                          </TableCell>
 
-                          <td className="p-4">
-                            <span className="text-white font-bold block">
+                          <TableCell className="p-4">
+                            <Typography component="span" className="text-white font-bold block">
                               {ord.items.reduce((s, i) => s + i.quantity, 0)} Pcs
-                            </span>
-                            <span className="text-[10px] text-slate-400 block truncate max-w-[150px]">
+                            </Typography>
+                            <Typography component="span" className="text-[10px] text-slate-400 block truncate max-w-[150px]">
                               {ord.items[0]?.productName || 'Garment'}
-                            </span>
-                          </td>
+                            </Typography>
+                          </TableCell>
 
-                          <td className="p-4">
-                            <span className="text-[#D4AF37] font-bold block">LKR {ord.totalAmount.toLocaleString()}</span>
-                            <span className="text-[10px] text-slate-400 block">{ord.paymentGateway} ({ord.paymentStatus})</span>
-                          </td>
+                          <TableCell className="p-4">
+                            <Typography component="span" className="text-[#D4AF37] font-bold block">LKR {ord.totalAmount.toLocaleString()}</Typography>
+                            <Typography component="span" className="text-[10px] text-slate-400 block">{ord.paymentGateway} ({ord.paymentStatus})</Typography>
+                          </TableCell>
 
-                          <td className="p-4">
+                          <TableCell className="p-4">
                             <select
                               value={ord.orderStatus}
                               onChange={(e) => updateOrderStatus(ord.id, e.target.value as OrderStatus)}
@@ -1162,21 +1179,21 @@ export const AdminDashboard: React.FC = () => {
                               <option value="Delivered">Delivered</option>
                               <option value="Cancelled">Cancelled</option>
                             </select>
-                          </td>
+                          </TableCell>
 
-                          <td className="p-4">
+                          <TableCell className="p-4">
                             {ord.awbNumber ? (
-                              <div>
-                                <span className="text-white font-bold block">{ord.awbNumber}</span>
-                                <span className="text-[10px] text-slate-400">{ord.courierName || 'Courier'}</span>
-                              </div>
+                              <Box>
+                                <Typography component="span" className="text-white font-bold block">{ord.awbNumber}</Typography>
+                                <Typography component="span" className="text-[10px] text-slate-400">{ord.courierName || 'Courier'}</Typography>
+                              </Box>
                             ) : (
-                              <span className="text-amber-400 text-[10px] font-bold">Unassigned</span>
+                              <Typography component="span" className="text-amber-400 text-[10px] font-bold">Unassigned</Typography>
                             )}
-                          </td>
+                          </TableCell>
 
-                          <td className="p-4 text-right">
-                            <button
+                          <TableCell className="p-4 text-right">
+                            <Box component="button"
                               onClick={() => {
                                 setSelectedOrderForAwb(ord);
                                 setAwbCourier(ord.courierName || 'Pronto Lanka Express');
@@ -1187,235 +1204,261 @@ export const AdminDashboard: React.FC = () => {
                               className="px-3 py-1.5 bg-[#D4AF37]/15 hover:bg-[#D4AF37]/30 border border-[#D4AF37]/50 text-[#D4AF37] rounded text-xs font-mono font-bold transition-colors cursor-pointer"
                             >
                               Dispatch AWB
-                            </button>
-                          </td>
-                        </tr>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
                       ))
                     )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+                  </TableBody>
+                </Table>
+              </Box>
+            </Box>
+          </Box>
         )}
 
         {/* 6. CUSTOMER MANAGEMENT TAB */}
         {activeTab === 'CUSTOMERS' && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="bg-[#0E1017] border border-white/10 p-5 rounded-md flex items-center justify-between">
-              <div className="flex items-center gap-3">
+          <Box className="space-y-6 animate-fade-in">
+            <Box className="bg-[#0E1017] border border-white/10 p-5 rounded-md flex items-center justify-between">
+              <Box className="flex items-center gap-3">
                 <Users className="text-[#D4AF37]" size={22} />
-                <div>
-                  <h2 className="text-base font-black uppercase text-white font-syne">
+                <Box>
+                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
                     CUSTOMER DIRECTORY & PURCHASE PROFILES
-                  </h2>
-                  <p className="text-xs font-mono text-slate-400">
+                  </Typography>
+                  <Typography variant="body2" className="text-xs font-mono text-slate-400">
                     View verified client histories, total lifetime expenditure, and Sri Lanka delivery destinations.
-                  </p>
-                </div>
-              </div>
-            </div>
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {customers.map((c) => (
-                <div key={c.id} className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-4 shadow-xl">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#141620] border border-white/10 flex items-center justify-center text-white font-mono font-bold">
+                <Paper key={c.id} className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-4 shadow-xl" sx={{ backgroundColor: '#0E1017' }}>
+                  <Box className="flex items-start justify-between">
+                    <Box className="flex items-center gap-3">
+                      <Box className="w-10 h-10 rounded-full bg-[#141620] border border-white/10 flex items-center justify-center text-white font-mono font-bold">
                         {c.fullName.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-bold uppercase text-white font-heading">{c.fullName}</h4>
-                        <span className="text-[11px] font-mono text-slate-400 block">{c.email}</span>
-                      </div>
-                    </div>
+                      </Box>
+                      <Box>
+                        <Typography className="text-sm font-bold uppercase text-white font-heading">{c.fullName}</Typography>
+                        <Typography className="text-[11px] font-mono text-slate-400 block">{c.email}</Typography>
+                      </Box>
+                    </Box>
 
                     {c.isAdmin && (
-                      <span className="px-2 py-0.5 bg-[#D4AF37]/20 border border-[#D4AF37] text-[#D4AF37] text-[9px] font-mono font-bold uppercase rounded">
-                        ADMIN
-                      </span>
+                      <Chip 
+                        size="small" 
+                        label="ADMIN" 
+                        sx={{ 
+                          height: '20px', 
+                          fontSize: '9px', 
+                          fontFamily: 'monospace',
+                          fontWeight: 'bold',
+                          backgroundColor: 'rgba(212, 175, 55, 0.2)', 
+                          color: '#D4AF37', 
+                          border: '1px solid #D4AF37',
+                          borderRadius: '4px'
+                        }} 
+                      />
                     )}
-                  </div>
+                  </Box>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs font-mono p-3 bg-[#141620] rounded border border-white/5">
-                    <div>
-                      <span className="text-[9px] text-slate-500 uppercase block">TOTAL ORDERS</span>
-                      <strong className="text-white">{c.ordersCount} Orders</strong>
-                    </div>
-                    <div>
-                      <span className="text-[9px] text-slate-500 uppercase block">LIFETIME SPEND</span>
-                      <strong className="text-[#D4AF37]">LKR {c.totalSpent.toLocaleString()}</strong>
-                    </div>
-                  </div>
+                  <Box className="grid grid-cols-2 gap-2 text-xs font-mono p-3 bg-[#141620] rounded border border-white/5">
+                    <Box>
+                      <Typography className="text-[9px] text-slate-500 uppercase block font-mono">TOTAL ORDERS</Typography>
+                      <strong className="text-white font-mono">{c.ordersCount} Orders</strong>
+                    </Box>
+                    <Box>
+                      <Typography className="text-[9px] text-slate-500 uppercase block font-mono">LIFETIME SPEND</Typography>
+                      <strong className="text-[#D4AF37] font-mono">LKR {c.totalSpent.toLocaleString()}</strong>
+                    </Box>
+                  </Box>
 
-                  <div className="text-xs font-mono text-slate-400 space-y-1">
-                    <p className="text-slate-300">Tel: {c.phone}</p>
+                  <Box className="text-xs font-mono text-slate-400 space-y-1">
+                    <Typography className="text-slate-300 font-mono text-xs">Tel: {c.phone}</Typography>
                     {c.address && (
-                      <p className="truncate">Destination: {c.address.city}, {c.address.district}</p>
+                      <Typography className="truncate font-mono text-xs">Destination: {c.address.city}, {c.address.district}</Typography>
                     )}
-                  </div>
+                  </Box>
 
-                  <button
+                  <Button
                     onClick={() => setViewingCustomer(c)}
-                    className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded text-xs font-mono font-bold transition-colors"
+                    className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded text-xs font-mono font-bold transition-colors shadow-none block text-center"
                   >
                     View Customer Order History
-                  </button>
-                </div>
+                  </Button>
+                </Paper>
               ))}
-            </div>
-          </div>
+            </Box>
+          </Box>
         )}
 
         {/* 7. COUPON MANAGEMENT TAB */}
         {activeTab === 'COUPONS' && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
-              <div className="flex items-center gap-3">
+          <Box className="space-y-6 animate-fade-in">
+            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
+              <Box className="flex items-center gap-3">
                 <Tag className="text-[#D4AF37]" size={22} />
-                <div>
-                  <h2 className="text-base font-black uppercase text-white font-syne">
+                <Box>
+                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
                     PROMOTIONS & DISCOUNT RULES
-                  </h2>
-                  <p className="text-xs font-mono text-slate-400">
+                  </Typography>
+                  <Typography variant="body2" className="text-xs font-mono text-slate-400">
                     Configure percentage discounts, fixed vouchers, usage caps, and expiration limits.
-                  </p>
-                </div>
-              </div>
+                  </Typography>
+                </Box>
+              </Box>
 
-              <button
+              <Button
                 onClick={() => setIsCouponModalOpen(true)}
-                className="px-5 py-3 bg-[#D4AF37] hover:bg-[#E2B714] text-black text-xs font-mono font-extrabold uppercase tracking-wider rounded-[2px] flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-[#D4AF37]/20"
+                className="px-5 py-3 text-xs font-mono font-extrabold tracking-wider bg-[#D4AF37] hover:bg-[#E2B714] text-black shadow-lg shadow-[#D4AF37]/20"
               >
-                <Plus size={16} />
-                <span>CREATE COUPON</span>
-              </button>
-            </div>
+                <Plus size={16} className="mr-2 inline" />
+                CREATE COUPON
+              </Button>
+            </Box>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Box className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {coupons.map((cpn) => (
-                <div key={cpn.code} className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-4 shadow-xl flex flex-col justify-between">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-mono font-black text-[#D4AF37] tracking-wider">
+                <Paper key={cpn.code} className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-4 shadow-xl flex flex-col justify-between" sx={{ backgroundColor: '#0E1017' }}>
+                  <Box className="space-y-3">
+                    <Box className="flex items-center justify-between">
+                      <Typography className="text-lg font-mono font-black text-[#D4AF37] tracking-wider">
                         {cpn.code}
-                      </span>
-                      <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-500/40 text-[10px] font-mono font-bold rounded">
-                        {cpn.active ? 'ACTIVE' : 'INACTIVE'}
-                      </span>
-                    </div>
+                      </Typography>
+                      <Chip 
+                        size="small" 
+                        label={cpn.active ? 'ACTIVE' : 'INACTIVE'} 
+                        sx={{ 
+                          height: '20px', 
+                          fontSize: '10px', 
+                          fontFamily: 'monospace',
+                          fontWeight: 'bold',
+                          backgroundColor: cpn.active ? 'rgba(5, 150, 105, 0.4)' : 'rgba(153, 27, 27, 0.4)', 
+                          color: cpn.active ? '#34d399' : '#f87171', 
+                          border: `1px solid ${cpn.active ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
+                          borderRadius: '4px'
+                        }} 
+                      />
+                    </Box>
 
-                    <div className="p-3 bg-[#141620] rounded border border-white/5 space-y-1.5 text-xs font-mono">
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">Discount:</span>
-                        <strong className="text-white">
+                    <Box className="p-3 bg-[#141620] rounded border border-white/5 space-y-1.5 text-xs font-mono">
+                      <Box className="flex justify-between">
+                        <Typography className="text-slate-400 font-mono text-xs">Discount:</Typography>
+                        <strong className="text-white font-mono text-xs">
                           {cpn.discountType === 'PERCENTAGE' ? `${cpn.discountValue}% OFF` : `LKR ${cpn.discountValue.toLocaleString()} OFF`}
                         </strong>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">Min Order:</span>
-                        <strong className="text-white">LKR {cpn.minOrderAmount.toLocaleString()}</strong>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">Expires:</span>
-                        <strong className="text-slate-300">{cpn.expiryDate}</strong>
-                      </div>
-                    </div>
-                  </div>
+                      </Box>
+                      <Box className="flex justify-between">
+                        <Typography className="text-slate-400 font-mono text-xs">Min Order:</Typography>
+                        <strong className="text-white font-mono text-xs">LKR {cpn.minOrderAmount.toLocaleString()}</strong>
+                      </Box>
+                      <Box className="flex justify-between">
+                        <Typography className="text-slate-400 font-mono text-xs">Expires:</Typography>
+                        <strong className="text-slate-300 font-mono text-xs">{cpn.expiryDate}</strong>
+                      </Box>
+                    </Box>
+                  </Box>
 
-                  <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-slate-500">Usage Limit: {cpn.usageLimit || 'Unlimited'}</span>
-                    <button
+                  <Box className="pt-3 border-t border-white/10 flex items-center justify-between">
+                    <Typography className="text-[10px] font-mono text-slate-500">Usage Limit: {cpn.usageLimit || 'Unlimited'}</Typography>
+                    <IconButton
                       onClick={() => setDeleteConfirmTarget({ type: 'coupon', id: cpn.code, name: cpn.code })}
-                      className="p-2 bg-red-950/30 hover:bg-red-950 text-red-400 rounded transition-colors"
-                      title="Delete Coupon"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
+                      size="sm"
+                      sx={{ '&:hover': { backgroundColor: 'rgba(153, 27, 27, 0.3)' } }}
+                      label="Delete Coupon"
+                      icon={<Trash2 size={14} className="text-red-400" />}
+                    />
+                  </Box>
+                </Paper>
               ))}
-            </div>
-          </div>
+            </Box>
+          </Box>
         )}
 
         {/* 8. HOMEPAGE CMS MANAGEMENT TAB */}
         {activeTab === 'HOMEPAGE' && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="bg-[#0E1017] border border-white/10 p-5 rounded-md flex items-center justify-between">
-              <div className="flex items-center gap-3">
+          <Box className="space-y-6 animate-fade-in">
+            <Box className="bg-[#0E1017] border border-white/10 p-5 rounded-md flex items-center justify-between">
+              <Box className="flex items-center gap-3">
                 <Home className="text-[#D4AF37]" size={22} />
-                <div>
-                  <h2 className="text-base font-black uppercase text-white font-syne">
+                <Box>
+                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
                     STOREFRONT HOMEPAGE CMS & SECTION CONTROLS
-                  </h2>
-                  <p className="text-xs font-mono text-slate-400">
+                  </Typography>
+                  <Typography variant="body2" className="text-xs font-mono text-slate-400">
                     Live hero banners, editorial announcements, and component visibility toggles.
-                  </p>
-                </div>
-              </div>
+                  </Typography>
+                </Box>
+              </Box>
 
-              <button
+              <Button
                 onClick={() => {
                   saveAdminHomepageConfig(homepageConfig);
                   showToast('Homepage CMS settings updated successfully.', 'success');
                 }}
-                className="px-6 py-3 bg-[#D4AF37] hover:bg-[#E2B714] text-black text-xs font-mono font-extrabold uppercase tracking-wider rounded-[2px] transition-all shadow-lg"
+                className="px-6 py-3 bg-[#D4AF37] hover:bg-[#E2B714] text-black text-xs font-mono font-extrabold uppercase tracking-wider transition-all shadow-lg"
               >
                 SAVE CMS CHANGES
-              </button>
-            </div>
+              </Button>
+            </Box>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Box className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Hero Banner Controls */}
-              <div className="bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4">
-                <h3 className="text-sm font-black uppercase text-white font-syne tracking-wider border-b border-white/10 pb-3">
+              <Box className="bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4">
+                <Typography className="text-sm font-black uppercase text-white font-syne tracking-wider border-b border-white/10 pb-3">
                   1. HERO SECTION HERO BANNER
-                </h3>
+                </Typography>
 
-                <div className="space-y-3 font-mono text-xs">
-                  <div>
+                <Box className="space-y-3 font-mono text-xs">
+                  <Box>
                     <label className="text-slate-300 font-bold block mb-1">Headline Text</label>
-                    <input
+                    <Box
+                      component="input"
                       type="text"
                       value={homepageConfig.hero.headline}
-                      onChange={(e) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, headline: e.target.value } })}
-                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                      onChange={(e: any) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, headline: e.target.value } })}
+                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white focus:outline-none"
                     />
-                  </div>
+                  </Box>
 
-                  <div>
+                  <Box>
                     <label className="text-slate-300 font-bold block mb-1">Subheadline Description</label>
-                    <input
+                    <Box
+                      component="input"
                       type="text"
                       value={homepageConfig.hero.subheadline}
-                      onChange={(e) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, subheadline: e.target.value } })}
-                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                      onChange={(e: any) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, subheadline: e.target.value } })}
+                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white focus:outline-none"
                     />
-                  </div>
+                  </Box>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
+                  <Box className="grid grid-cols-2 gap-3">
+                    <Box>
                       <label className="text-slate-300 font-bold block mb-1">CTA Button Text</label>
-                      <input
+                      <Box
+                        component="input"
                         type="text"
                         value={homepageConfig.hero.ctaText}
-                        onChange={(e) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, ctaText: e.target.value } })}
-                        className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                        onChange={(e: any) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, ctaText: e.target.value } })}
+                        className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white focus:outline-none"
                       />
-                    </div>
-                    <div>
+                    </Box>
+                    <Box>
                       <label className="text-slate-300 font-bold block mb-1">CTA Destination Link</label>
-                      <input
+                      <Box
+                        component="input"
                         type="text"
                         value={homepageConfig.hero.ctaLink}
-                        onChange={(e) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, ctaLink: e.target.value } })}
-                        className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                        onChange={(e: any) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, ctaLink: e.target.value } })}
+                        className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white focus:outline-none"
                       />
-                    </div>
-                  </div>
+                    </Box>
+                  </Box>
 
-                  <div>
+                  <Box>
                     <SingleImageUploader
                       label="Hero Background Banner"
                       imageUrl={homepageConfig.hero.bannerImage}
@@ -1423,129 +1466,130 @@ export const AdminDashboard: React.FC = () => {
                       scope="homepage"
                       identifier="hero-banner"
                     />
-                  </div>
-                </div>
-              </div>
+                  </Box>
+                </Box>
+              </Box>
 
               {/* Section Visibility Toggles */}
-              <div className="bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4">
-                <h3 className="text-sm font-black uppercase text-white font-syne tracking-wider border-b border-white/10 pb-3">
+              <Box className="bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4">
+                <Typography className="text-sm font-black uppercase text-white font-syne tracking-wider border-b border-white/10 pb-3">
                   2. HOMEPAGE SECTIONS VISIBILITY
-                </h3>
+                </Typography>
 
-                <div className="grid grid-cols-2 gap-2.5 font-mono text-xs">
+                <Box className="grid grid-cols-2 gap-2.5 font-mono text-xs">
                   {Object.entries(homepageConfig.sectionsVisibility).map(([key, val]) => (
                     <label key={key} className="flex items-center gap-2.5 p-2.5 bg-[#141620] rounded border border-white/5 cursor-pointer">
-                      <input
+                      <Box
+                        component="input"
                         type="checkbox"
                         checked={val}
-                        onChange={(e) => {
+                        onChange={(e: any) => {
                           const updated = { ...homepageConfig.sectionsVisibility, [key]: e.target.checked };
                           setHomepageConfig({ ...homepageConfig, sectionsVisibility: updated });
                         }}
                         className="accent-[#D4AF37]"
                       />
-                      <span className="capitalize text-slate-300 text-[11px]">{key.replace(/([A-Z])/g, ' $1')}</span>
+                      <Box component="span" className="capitalize text-slate-300 text-[11px]">{key.replace(/([A-Z])/g, ' $1')}</Box>
                     </label>
                   ))}
-                </div>
-              </div>
-            </div>
-          </div>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
         )}
 
         {/* 9. DATABASE & SUPABASE TAB */}
         {activeTab === 'DATABASE' && (
-          <div className="space-y-6 animate-fade-in">
+          <Box className="space-y-6 animate-fade-in">
             {/* Supabase SQL Card */}
-            <div className="bg-[#0E1017] border border-white/10 p-6 rounded-md space-y-4">
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                <div className="flex items-center gap-3">
+            <Box className="bg-[#0E1017] border border-white/10 p-6 rounded-md space-y-4">
+              <Box className="flex items-center justify-between flex-wrap gap-3">
+                <Box className="flex items-center gap-3">
                   <Database className="text-[#D4AF37]" size={22} />
-                  <div>
-                    <h2 className="text-base font-black uppercase text-white font-syne">
+                  <Box>
+                    <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
                       SUPABASE DATABASE & RLS POLICIES
-                    </h2>
-                    <p className="text-xs font-mono text-slate-400">
+                    </Typography>
+                    <Typography variant="body2" className="text-xs font-mono text-slate-400">
                       Cloud schema with 11 tables (including product_media) and hardened Row-Level Security policies.
-                    </p>
-                  </div>
-                </div>
+                    </Typography>
+                  </Box>
+                </Box>
 
-                <button
+                <Button
                   onClick={handleCopySql}
-                  className="px-4 py-2 bg-[#D4AF37] text-black font-mono font-bold text-xs uppercase rounded flex items-center gap-1.5 transition-all hover:bg-[#E2B714]"
+                  className="px-4 py-2 bg-[#D4AF37] text-black font-mono font-bold text-xs uppercase transition-all hover:bg-[#E2B714]"
                 >
-                  {copiedSql ? <Check size={14} /> : <Copy size={14} />}
-                  <span>{copiedSql ? 'COPIED SQL' : 'COPY SUPABASE SQL'}</span>
-                </button>
-              </div>
+                  {copiedSql ? <Check size={14} className="mr-1.5 inline" /> : <Copy size={14} className="mr-1.5 inline" />}
+                  {copiedSql ? 'COPIED SQL' : 'COPY SUPABASE SQL'}
+                </Button>
+              </Box>
 
-              <div className="p-4 bg-[#08090D] border border-white/10 rounded font-mono text-[11px] text-slate-300 max-h-[300px] overflow-y-auto whitespace-pre">
+              <Box className="p-4 bg-[#08090D] border border-white/10 rounded font-mono text-[11px] text-slate-300 max-h-[300px] overflow-y-auto whitespace-pre">
                 {SUPABASE_SETUP_SQL}
-              </div>
-            </div>
+              </Box>
+            </Box>
 
             {/* Firebase Storage Security Rules Card */}
-            <div className="bg-[#0E1017] border border-white/10 p-6 rounded-md space-y-4">
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                <div className="flex items-center gap-3">
+            <Box className="bg-[#0E1017] border border-white/10 p-6 rounded-md space-y-4">
+              <Box className="flex items-center justify-between flex-wrap gap-3">
+                <Box className="flex items-center gap-3">
                   <Cloud className="text-[#D4AF37]" size={22} />
-                  <div>
-                    <h2 className="text-base font-black uppercase text-white font-syne">
+                  <Box>
+                    <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
                       FIREBASE CLOUD STORAGE RULES
-                    </h2>
-                    <p className="text-xs font-mono text-slate-400">
+                    </Typography>
+                    <Typography variant="body2" className="text-xs font-mono text-slate-400">
                       Production security rules for products, categories, collections, and custom customer artwork.
-                    </p>
-                  </div>
-                </div>
+                    </Typography>
+                  </Box>
+                </Box>
 
-                <button
+                <Button
                   onClick={() => {
                     navigator.clipboard.writeText(FIREBASE_STORAGE_RULES);
                     setCopiedStorageRules(true);
                     setTimeout(() => setCopiedStorageRules(false), 2000);
                   }}
-                  className="px-4 py-2 bg-[#D4AF37] text-black font-mono font-bold text-xs uppercase rounded flex items-center gap-1.5 transition-all hover:bg-[#E2B714]"
+                  className="px-4 py-2 bg-[#D4AF37] text-black font-mono font-bold text-xs uppercase transition-all hover:bg-[#E2B714]"
                 >
-                  {copiedStorageRules ? <Check size={14} /> : <Copy size={14} />}
-                  <span>{copiedStorageRules ? 'COPIED RULES' : 'COPY STORAGE RULES'}</span>
-                </button>
-              </div>
+                  {copiedStorageRules ? <Check size={14} className="mr-1.5 inline" /> : <Copy size={14} className="mr-1.5 inline" />}
+                  {copiedStorageRules ? 'COPIED RULES' : 'COPY STORAGE RULES'}
+                </Button>
+              </Box>
 
-              <div className="p-4 bg-[#08090D] border border-white/10 rounded font-mono text-[11px] text-slate-300 max-h-[250px] overflow-y-auto whitespace-pre">
+              <Box className="p-4 bg-[#08090D] border border-white/10 rounded font-mono text-[11px] text-slate-300 max-h-[250px] overflow-y-auto whitespace-pre">
                 {FIREBASE_STORAGE_RULES}
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
         )}
 
-      </div>
+      </Box>
 
       {/* PRODUCT CREATE/EDIT MODAL */}
       {isProductModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <div className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-4xl rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div>
-                <span className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase tracking-widest block">
+        <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
+          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-4xl rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
+            <Box className="flex items-center justify-between border-b border-white/10 pb-4">
+              <Box>
+                <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase tracking-widest block">
                   {editingProduct ? 'EDIT EXISTING GARMENT' : 'CREATE NEW LUXURY PRODUCT'}
-                </span>
+                </Typography>
                 <h3 className="text-xl font-black uppercase text-white font-syne">
                   {editingProduct ? editingProduct.name : 'NEW VALKNUT PRODUCT'}
                 </h3>
-              </div>
-              <button onClick={() => setIsProductModalOpen(false)} className="text-slate-400 hover:text-white p-1">
+              </Box>
+              <Box component="button" onClick={() => setIsProductModalOpen(false)} className="text-slate-400 hover:text-white p-1">
                 <XCircle size={22} />
-              </button>
-            </div>
+              </Box>
+            </Box>
 
             <form onSubmit={handleSaveProduct} className="space-y-6 font-mono text-xs">
-              
+
               {/* Basic Fields */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
+              <Box className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Product Title *</label>
                   <input
                     type="text"
@@ -1555,9 +1599,9 @@ export const AdminDashboard: React.FC = () => {
                     placeholder="e.g. Valknut Oversized Heavyweight Boxy Hoodie"
                     className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
                   />
-                </div>
+                </Box>
 
-                <div>
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">URL Slug (Auto-generated if empty)</label>
                   <input
                     type="text"
@@ -1566,12 +1610,12 @@ export const AdminDashboard: React.FC = () => {
                     placeholder="valknut-oversized-heavyweight-boxy-hoodie"
                     className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
                   />
-                </div>
-              </div>
+                </Box>
+              </Box>
 
               {/* Pricing & Categories */}
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <div>
+              <Box className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Regular Price (LKR) *</label>
                   <input
                     type="number"
@@ -1580,9 +1624,9 @@ export const AdminDashboard: React.FC = () => {
                     onChange={(e) => setProdPrice(Number(e.target.value))}
                     className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
                   />
-                </div>
+                </Box>
 
-                <div>
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Sale Price (LKR)</label>
                   <input
                     type="number"
@@ -1591,9 +1635,9 @@ export const AdminDashboard: React.FC = () => {
                     placeholder="Optional"
                     className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
                   />
-                </div>
+                </Box>
 
-                <div>
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Category *</label>
                   <select
                     value={prodCategory}
@@ -1604,9 +1648,9 @@ export const AdminDashboard: React.FC = () => {
                     <option value="WOMEN">WOMEN</option>
                     <option value="ESSENTIALS">ESSENTIALS</option>
                   </select>
-                </div>
+                </Box>
 
-                <div>
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Subcategory *</label>
                   <select
                     value={prodSubCategory}
@@ -1622,12 +1666,12 @@ export const AdminDashboard: React.FC = () => {
                     <option value="Accessories">Accessories</option>
                     <option value="Core products">Core products</option>
                   </select>
-                </div>
-              </div>
+                </Box>
+              </Box>
 
               {/* Description, Material & Care */}
-              <div className="space-y-3">
-                <div>
+              <Box className="space-y-3">
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Product Description</label>
                   <textarea
                     rows={2}
@@ -1635,10 +1679,10 @@ export const AdminDashboard: React.FC = () => {
                     onChange={(e) => setProdDescription(e.target.value)}
                     className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
                   />
-                </div>
+                </Box>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
+                <Box className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Box>
                     <label className="text-slate-300 font-bold block mb-1">Fabric & Material Composition</label>
                     <input
                       type="text"
@@ -1646,8 +1690,8 @@ export const AdminDashboard: React.FC = () => {
                       onChange={(e) => setProdMaterial(e.target.value)}
                       className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
                     />
-                  </div>
-                  <div>
+                  </Box>
+                  <Box>
                     <label className="text-slate-300 font-bold block mb-1">Care & Wash Instructions</label>
                     <input
                       type="text"
@@ -1655,26 +1699,26 @@ export const AdminDashboard: React.FC = () => {
                       onChange={(e) => setProdCare(e.target.value)}
                       className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
                     />
-                  </div>
-                </div>
-              </div>
+                  </Box>
+                </Box>
+              </Box>
 
               {/* Product Media Gallery Uploader & Reordering */}
-              <div className="p-4 bg-[#0A0B0E] rounded-md border border-white/10 space-y-3">
+              <Box className="p-4 bg-[#0A0B0E] rounded-md border border-white/10 space-y-3">
                 <ProductImageManager
                   productId={editingProduct?.id || prodSlug || 'new-product'}
                   images={prodImages}
                   onChange={(newImgs) => setProdImages(newImgs)}
                 />
-              </div>
+              </Box>
 
               {/* Variant Stock Management Table */}
-              <div className="p-4 bg-[#141620] rounded border border-white/10 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#D4AF37] uppercase">
+              <Box className="p-4 bg-[#141620] rounded border border-white/10 space-y-3">
+                <Box className="flex items-center justify-between">
+                  <Typography component="span" className="text-xs font-bold text-[#D4AF37] uppercase">
                     SIZE & COLOR VARIANTS INVENTORY
-                  </span>
-                  <button
+                  </Typography>
+                  <Box component="button"
                     type="button"
                     onClick={() => {
                       const newV: ProductVariant = {
@@ -1690,12 +1734,12 @@ export const AdminDashboard: React.FC = () => {
                     className="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-[10px]"
                   >
                     + Add Variant
-                  </button>
-                </div>
+                  </Box>
+                </Box>
 
-                <div className="space-y-2">
+                <Box className="space-y-2">
                   {prodVariants.map((v, idx) => (
-                    <div key={v.id || idx} className="grid grid-cols-5 gap-2 items-center text-[11px]">
+                    <Box key={v.id || idx} className="grid grid-cols-5 gap-2 items-center text-[11px]">
                       <select
                         value={v.size}
                         onChange={(e) => {
@@ -1748,99 +1792,99 @@ export const AdminDashboard: React.FC = () => {
                         className="bg-[#0E1017] border border-white/15 rounded p-1.5 text-white font-bold"
                       />
 
-                      <button
+                      <Box component="button"
                         type="button"
                         onClick={() => setProdVariants(prodVariants.filter((_, i) => i !== idx))}
                         className="text-red-400 hover:text-red-300 p-1 text-center"
                       >
                         Remove
-                      </button>
-                    </div>
+                      </Box>
+                    </Box>
                   ))}
-                </div>
-              </div>
+                </Box>
+              </Box>
 
               {/* Status Flags */}
-              <div className="flex items-center gap-6 text-xs text-slate-300 flex-wrap">
+              <Box className="flex items-center gap-6 text-xs text-slate-300 flex-wrap">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" checked={prodIsNewArrival} onChange={(e) => setProdIsNewArrival(e.target.checked)} className="accent-[#D4AF37]" />
-                  <span>New Arrival</span>
+                  <Typography component="span">New Arrival</Typography>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" checked={prodIsBestSeller} onChange={(e) => setProdIsBestSeller(e.target.checked)} className="accent-[#D4AF37]" />
-                  <span>Best Seller</span>
+                  <Typography component="span">Best Seller</Typography>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" checked={prodIsCustomizable} onChange={(e) => setProdIsCustomizable(e.target.checked)} className="accent-[#D4AF37]" />
-                  <span>Custom Studio Enabled</span>
+                  <Typography component="span">Custom Studio Enabled</Typography>
                 </label>
-              </div>
+              </Box>
 
               {/* Action Buttons */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
-                <button
+              <Box className="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
+                <Box component="button"
                   type="button"
                   onClick={() => setIsProductModalOpen(false)}
                   className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 rounded font-bold"
                 >
                   Cancel
-                </button>
+                </Box>
 
-                <button
+                <Box component="button"
                   type="submit"
                   className="px-8 py-2.5 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold uppercase tracking-widest rounded"
                 >
                   {editingProduct ? 'SAVE CHANGES' : 'CREATE PRODUCT'}
-                </button>
-              </div>
+                </Box>
+              </Box>
 
             </form>
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {/* AWB & LOGISTICS UPDATE MODAL */}
       {selectedOrderForAwb && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <div className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-lg rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div>
-                <span className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
+        <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
+          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-lg rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative">
+            <Box className="flex items-center justify-between border-b border-white/10 pb-3">
+              <Box>
+                <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
                   COURIER DISPATCH UPDATE
-                </span>
+                </Typography>
                 <h3 className="text-lg font-black uppercase text-white font-syne">
                   {selectedOrderForAwb.orderNumber}
                 </h3>
-              </div>
-              <button onClick={() => setSelectedOrderForAwb(null)} className="text-slate-400 hover:text-white">
+              </Box>
+              <Box component="button" onClick={() => setSelectedOrderForAwb(null)} className="text-slate-400 hover:text-white">
                 <XCircle size={20} />
-              </button>
-            </div>
+              </Box>
+            </Box>
 
             {/* Ordered Items & Bespoke Customization Info */}
-            <div className="p-3.5 bg-[#141620] rounded border border-white/10 space-y-2.5 max-h-48 overflow-y-auto">
-              <span className="text-[10px] text-[#D4AF37] font-bold uppercase block tracking-wider">
+            <Box className="p-3.5 bg-[#141620] rounded border border-white/10 space-y-2.5 max-h-48 overflow-y-auto">
+              <Typography component="span" className="text-[10px] text-[#D4AF37] font-bold uppercase block tracking-wider">
                 ORDER ITEMS & PRODUCTION SPECS ({selectedOrderForAwb.items.length})
-              </span>
-              <div className="divide-y divide-white/5 space-y-2">
+              </Typography>
+              <Box className="divide-y divide-white/5 space-y-2">
                 {selectedOrderForAwb.items.map((it: any, idx: number) => (
-                  <div key={idx} className="pt-2 flex items-start justify-between gap-3 text-[11px]">
-                    <div className="space-y-1">
-                      <p className="text-white font-bold">{it.productName} <span className="text-slate-400 font-normal">({it.size} / {it.color}) × {it.quantity}</span></p>
-                      
+                  <Box key={idx} className="pt-2 flex items-start justify-between gap-3 text-[11px]">
+                    <Box className="space-y-1">
+                      <Typography component="p" className="text-white font-bold">{it.productName} <Typography component="span" className="text-slate-400 font-normal">({it.size} / {it.color}) × {it.quantity}</Typography></Typography>
+
                       {it.customization && (
-                        <div className="p-2 bg-black/60 rounded border border-[#D4AF37]/30 text-[10px] text-[#D4AF37] space-y-1">
-                          <div className="flex items-center gap-1 font-bold">
+                        <Box className="p-2 bg-black/60 rounded border border-[#D4AF37]/30 text-[10px] text-[#D4AF37] space-y-1">
+                          <Box className="flex items-center gap-1 font-bold">
                             <Sparkles size={11} />
-                            <span>Bespoke: {it.customization.printTechnique} ({it.customization.placement})</span>
-                          </div>
+                            <Typography component="span">Bespoke: {it.customization.printTechnique} ({it.customization.placement})</Typography>
+                          </Box>
                           {it.customization.customText && (
-                            <p className="text-slate-300">Custom Text: <strong className="text-white">"{it.customization.customText}"</strong> ({it.customization.textFont})</p>
+                            <Typography component="p" className="text-slate-300">Custom Text: <strong className="text-white">"{it.customization.customText}"</strong> ({it.customization.textFont})</Typography>
                           )}
                           {it.customization.uploadedArtworkUrl && (
-                            <div className="pt-1 flex items-center gap-2">
+                            <Box className="pt-1 flex items-center gap-2">
                               <img src={it.customization.uploadedArtworkUrl} alt="Artwork" className="w-8 h-8 object-contain rounded bg-white/10 p-0.5" />
                               <a
                                 href={it.customization.uploadedArtworkUrl}
@@ -1848,23 +1892,23 @@ export const AdminDashboard: React.FC = () => {
                                 rel="noreferrer"
                                 className="px-2 py-0.5 bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 text-[#D4AF37] rounded text-[9px] font-bold flex items-center gap-1"
                               >
-                                <span>Download High-Res Artwork</span>
+                                <Typography component="span">Download High-Res Artwork</Typography>
                                 <ExternalLink size={10} />
                               </a>
-                            </div>
+                            </Box>
                           )}
-                        </div>
+                        </Box>
                       )}
-                    </div>
+                    </Box>
 
-                    <span className="text-[#D4AF37] font-bold">LKR {it.subtotal.toLocaleString()}</span>
-                  </div>
+                    <Typography component="span" className="text-[#D4AF37] font-bold">LKR {it.subtotal.toLocaleString()}</Typography>
+                  </Box>
                 ))}
-              </div>
-            </div>
+              </Box>
+            </Box>
 
             <form onSubmit={handleSaveAwbUpdate} className="space-y-4 font-mono text-xs">
-              <div>
+              <Box>
                 <label className="text-slate-300 font-bold block mb-1">Select Courier Partner</label>
                 <select
                   value={awbCourier}
@@ -1876,9 +1920,9 @@ export const AdminDashboard: React.FC = () => {
                   <option value="Domex Courier">Domex Courier</option>
                   <option value="Direct VIP Courier">Direct VIP Courier</option>
                 </select>
-              </div>
+              </Box>
 
-              <div>
+              <Box>
                 <label className="text-slate-300 font-bold block mb-1">Air Waybill (AWB) / Tracking # *</label>
                 <input
                   type="text"
@@ -1888,9 +1932,9 @@ export const AdminDashboard: React.FC = () => {
                   placeholder="PRN-99882103"
                   className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                 />
-              </div>
+              </Box>
 
-              <div>
+              <Box>
                 <label className="text-slate-300 font-bold block mb-1">Tracking URL (Optional)</label>
                 <input
                   type="text"
@@ -1899,9 +1943,9 @@ export const AdminDashboard: React.FC = () => {
                   placeholder="https://valknutofficial.com/#/track-order"
                   className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                 />
-              </div>
+              </Box>
 
-              <div>
+              <Box>
                 <label className="text-slate-300 font-bold block mb-1">Update Order Status</label>
                 <select
                   value={awbStatusSelect}
@@ -1912,49 +1956,49 @@ export const AdminDashboard: React.FC = () => {
                   <option value="Delivered">Delivered (Handed over to Customer)</option>
                   <option value="Packed">Packed (Awaiting pickup)</option>
                 </select>
-              </div>
+              </Box>
 
-              <div className="pt-3 border-t border-white/10 flex items-center justify-end gap-3">
-                <button
+              <Box className="pt-3 border-t border-white/10 flex items-center justify-end gap-3">
+                <Box component="button"
                   type="button"
                   onClick={() => setSelectedOrderForAwb(null)}
                   className="px-4 py-2 bg-white/5 text-slate-400 rounded"
                 >
                   Cancel
-                </button>
-                <button
+                </Box>
+                <Box component="button"
                   type="submit"
                   className="px-6 py-2 bg-[#D4AF37] text-black font-extrabold uppercase rounded shadow"
                 >
                   SAVE & DISPATCH
-                </button>
-              </div>
+                </Box>
+              </Box>
             </form>
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {/* CATEGORY CREATE/EDIT MODAL */}
       {isCategoryModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <div className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-xl rounded-md p-6 space-y-6 shadow-2xl relative">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div>
-                <span className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
+        <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
+          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-xl rounded-md p-6 space-y-6 shadow-2xl relative">
+            <Box className="flex items-center justify-between border-b border-white/10 pb-3">
+              <Box>
+                <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
                   CATEGORY CONFIGURATION
-                </span>
+                </Typography>
                 <h3 className="text-lg font-black uppercase text-white font-syne">
                   {editingCategory ? `Edit "${editingCategory.name}"` : 'Create New Category'}
                 </h3>
-              </div>
-              <button onClick={() => setIsCategoryModalOpen(false)} className="text-slate-400 hover:text-white">
+              </Box>
+              <Box component="button" onClick={() => setIsCategoryModalOpen(false)} className="text-slate-400 hover:text-white">
                 <XCircle size={20} />
-              </button>
-            </div>
+              </Box>
+            </Box>
 
             <form onSubmit={handleSaveCategory} className="space-y-4 font-mono text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
+              <Box className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Category Name *</label>
                   <input
                     type="text"
@@ -1969,8 +2013,8 @@ export const AdminDashboard: React.FC = () => {
                     placeholder="e.g. Oversized Hoodies"
                     className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                   />
-                </div>
-                <div>
+                </Box>
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">URL Slug</label>
                   <input
                     type="text"
@@ -1979,11 +2023,11 @@ export const AdminDashboard: React.FC = () => {
                     placeholder="oversized-hoodies"
                     className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                   />
-                </div>
-              </div>
+                </Box>
+              </Box>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
+              <Box className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Parent Classification</label>
                   <select
                     value={catParent}
@@ -1995,8 +2039,8 @@ export const AdminDashboard: React.FC = () => {
                     <option value="WOMEN">Women Collection</option>
                     <option value="ESSENTIALS">Essentials & Accessories</option>
                   </select>
-                </div>
-                <div>
+                </Box>
+                <Box>
                   <SingleImageUploader
                     label="Category Cover Image"
                     imageUrl={catImage}
@@ -2004,10 +2048,10 @@ export const AdminDashboard: React.FC = () => {
                     scope="categories"
                     identifier={catSlug || 'category'}
                   />
-                </div>
-              </div>
+                </Box>
+              </Box>
 
-              <div>
+              <Box>
                 <label className="text-slate-300 font-bold block mb-1">Description</label>
                 <textarea
                   rows={2}
@@ -2016,11 +2060,11 @@ export const AdminDashboard: React.FC = () => {
                   placeholder="Luxury streetwear category description..."
                   className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                 />
-              </div>
+              </Box>
 
-              <div className="p-3 bg-[#141620] rounded border border-white/5 space-y-3">
-                <span className="text-[10px] text-[#D4AF37] font-bold uppercase block">SEO Metadata</span>
-                <div>
+              <Box className="p-3 bg-[#141620] rounded border border-white/5 space-y-3">
+                <Typography component="span" className="text-[10px] text-[#D4AF37] font-bold uppercase block">SEO Metadata</Typography>
+                <Box>
                   <label className="text-slate-300 block mb-1 text-[11px]">SEO Title</label>
                   <input
                     type="text"
@@ -2029,8 +2073,8 @@ export const AdminDashboard: React.FC = () => {
                     placeholder="Luxury Hoodies & Streetwear Sri Lanka | VALKNUT"
                     className="w-full bg-[#0E1017] border border-white/15 rounded p-2 text-white text-[11px]"
                   />
-                </div>
-                <div>
+                </Box>
+                <Box>
                   <label className="text-slate-300 block mb-1 text-[11px]">Meta Description</label>
                   <textarea
                     rows={2}
@@ -2039,50 +2083,50 @@ export const AdminDashboard: React.FC = () => {
                     placeholder="Shop premium streetwear and luxury oversized hoodies in Sri Lanka."
                     className="w-full bg-[#0E1017] border border-white/15 rounded p-2 text-white text-[11px]"
                   />
-                </div>
-              </div>
+                </Box>
+              </Box>
 
-              <div className="pt-3 border-t border-white/10 flex items-center justify-end gap-3">
-                <button
+              <Box className="pt-3 border-t border-white/10 flex items-center justify-end gap-3">
+                <Box component="button"
                   type="button"
                   onClick={() => setIsCategoryModalOpen(false)}
                   className="px-4 py-2 bg-white/5 text-slate-400 rounded"
                 >
                   Cancel
-                </button>
-                <button
+                </Box>
+                <Box component="button"
                   type="submit"
                   className="px-6 py-2 bg-[#D4AF37] text-black font-extrabold uppercase rounded shadow"
                 >
                   {editingCategory ? 'SAVE CATEGORY' : 'CREATE CATEGORY'}
-                </button>
-              </div>
+                </Box>
+              </Box>
             </form>
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {/* COLLECTION CREATE/EDIT MODAL */}
       {isCollectionModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <div className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-xl rounded-md p-6 space-y-6 shadow-2xl relative">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div>
-                <span className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
+        <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
+          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-xl rounded-md p-6 space-y-6 shadow-2xl relative">
+            <Box className="flex items-center justify-between border-b border-white/10 pb-3">
+              <Box>
+                <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
                   EDITORIAL DROP & COLLECTION
-                </span>
+                </Typography>
                 <h3 className="text-lg font-black uppercase text-white font-syne">
                   {editingCollection ? `Edit "${editingCollection.name}"` : 'Create New Collection'}
                 </h3>
-              </div>
-              <button onClick={() => setIsCollectionModalOpen(false)} className="text-slate-400 hover:text-white">
+              </Box>
+              <Box component="button" onClick={() => setIsCollectionModalOpen(false)} className="text-slate-400 hover:text-white">
                 <XCircle size={20} />
-              </button>
-            </div>
+              </Box>
+            </Box>
 
             <form onSubmit={handleSaveCollection} className="space-y-4 font-mono text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
+              <Box className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Collection Title *</label>
                   <input
                     type="text"
@@ -2097,8 +2141,8 @@ export const AdminDashboard: React.FC = () => {
                     placeholder="SHADOW OPS 2026"
                     className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                   />
-                </div>
-                <div>
+                </Box>
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">URL Slug</label>
                   <input
                     type="text"
@@ -2107,10 +2151,10 @@ export const AdminDashboard: React.FC = () => {
                     placeholder="shadow-ops-2026"
                     className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                   />
-                </div>
-              </div>
+                </Box>
+              </Box>
 
-              <div>
+              <Box>
                 <SingleImageUploader
                   label="Collection Campaign Banner"
                   imageUrl={colImage}
@@ -2118,9 +2162,9 @@ export const AdminDashboard: React.FC = () => {
                   scope="collections"
                   identifier={colSlug || 'collection'}
                 />
-              </div>
+              </Box>
 
-              <div>
+              <Box>
                 <label className="text-slate-300 font-bold block mb-1">Editorial Concept</label>
                 <textarea
                   rows={2}
@@ -2129,12 +2173,12 @@ export const AdminDashboard: React.FC = () => {
                   placeholder="Tactical silhouettes crafted for the sovereign individual..."
                   className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                 />
-              </div>
+              </Box>
 
               {/* Product Assign Checklist */}
-              <div className="p-3 bg-[#141620] rounded border border-white/5 space-y-2 max-h-40 overflow-y-auto">
-                <span className="text-[10px] text-[#D4AF37] font-bold uppercase block">Assign Products ({colSelectedProducts.length})</span>
-                <div className="space-y-1.5">
+              <Box className="p-3 bg-[#141620] rounded border border-white/5 space-y-2 max-h-40 overflow-y-auto">
+                <Typography component="span" className="text-[10px] text-[#D4AF37] font-bold uppercase block">Assign Products ({colSelectedProducts.length})</Typography>
+                <Box className="space-y-1.5">
                   {products.map((p) => {
                     const isSelected = colSelectedProducts.includes(p.id);
                     return (
@@ -2151,54 +2195,54 @@ export const AdminDashboard: React.FC = () => {
                           }}
                           className="accent-[#D4AF37]"
                         />
-                        <span className="text-white text-[11px]">{p.name}</span>
-                        <span className="text-slate-500 text-[10px] ml-auto">LKR {p.price.toLocaleString()}</span>
+                        <Typography component="span" className="text-white text-[11px]">{p.name}</Typography>
+                        <Typography component="span" className="text-slate-500 text-[10px] ml-auto">LKR {p.price.toLocaleString()}</Typography>
                       </label>
                     );
                   })}
-                </div>
-              </div>
+                </Box>
+              </Box>
 
-              <div className="pt-3 border-t border-white/10 flex items-center justify-end gap-3">
-                <button
+              <Box className="pt-3 border-t border-white/10 flex items-center justify-end gap-3">
+                <Box component="button"
                   type="button"
                   onClick={() => setIsCollectionModalOpen(false)}
                   className="px-4 py-2 bg-white/5 text-slate-400 rounded"
                 >
                   Cancel
-                </button>
-                <button
+                </Box>
+                <Box component="button"
                   type="submit"
                   className="px-6 py-2 bg-[#D4AF37] text-black font-extrabold uppercase rounded shadow"
                 >
                   {editingCollection ? 'SAVE COLLECTION' : 'CREATE COLLECTION'}
-                </button>
-              </div>
+                </Box>
+              </Box>
             </form>
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {/* COUPON CREATE MODAL */}
       {isCouponModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <div className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-lg rounded-md p-6 space-y-6 shadow-2xl relative">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div>
-                <span className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
+        <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
+          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-lg rounded-md p-6 space-y-6 shadow-2xl relative">
+            <Box className="flex items-center justify-between border-b border-white/10 pb-3">
+              <Box>
+                <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
                   DISCOUNT VOUCHER CONFIGURATION
-                </span>
+                </Typography>
                 <h3 className="text-lg font-black uppercase text-white font-syne">
                   Create Promotional Coupon
                 </h3>
-              </div>
-              <button onClick={() => setIsCouponModalOpen(false)} className="text-slate-400 hover:text-white">
+              </Box>
+              <Box component="button" onClick={() => setIsCouponModalOpen(false)} className="text-slate-400 hover:text-white">
                 <XCircle size={20} />
-              </button>
-            </div>
+              </Box>
+            </Box>
 
             <form onSubmit={handleSaveCoupon} className="space-y-4 font-mono text-xs">
-              <div>
+              <Box>
                 <label className="text-slate-300 font-bold block mb-1">Coupon Promo Code *</label>
                 <input
                   type="text"
@@ -2208,10 +2252,10 @@ export const AdminDashboard: React.FC = () => {
                   placeholder="e.g. VALK2026"
                   className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white font-bold tracking-widest uppercase"
                 />
-              </div>
+              </Box>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
+              <Box className="grid grid-cols-2 gap-4">
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Discount Type</label>
                   <select
                     value={newCouponType}
@@ -2221,8 +2265,8 @@ export const AdminDashboard: React.FC = () => {
                     <option value="PERCENTAGE">Percentage (%) Off</option>
                     <option value="FIXED">Fixed Amount (LKR) Off</option>
                   </select>
-                </div>
-                <div>
+                </Box>
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">
                     {newCouponType === 'PERCENTAGE' ? 'Discount % *' : 'Discount LKR *'}
                   </label>
@@ -2233,11 +2277,11 @@ export const AdminDashboard: React.FC = () => {
                     onChange={(e) => setNewCouponDiscount(Number(e.target.value))}
                     className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white font-bold"
                   />
-                </div>
-              </div>
+                </Box>
+              </Box>
 
-              <div className="grid grid-cols-3 gap-3">
-                <div>
+              <Box className="grid grid-cols-3 gap-3">
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Min Order (LKR)</label>
                   <input
                     type="number"
@@ -2245,8 +2289,8 @@ export const AdminDashboard: React.FC = () => {
                     onChange={(e) => setNewCouponMinOrder(Number(e.target.value))}
                     className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                   />
-                </div>
-                <div>
+                </Box>
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Usage Limit</label>
                   <input
                     type="number"
@@ -2254,8 +2298,8 @@ export const AdminDashboard: React.FC = () => {
                     onChange={(e) => setNewCouponUsageLimit(Number(e.target.value))}
                     className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                   />
-                </div>
-                <div>
+                </Box>
+                <Box>
                   <label className="text-slate-300 font-bold block mb-1">Expiry Date</label>
                   <input
                     type="date"
@@ -2263,140 +2307,140 @@ export const AdminDashboard: React.FC = () => {
                     onChange={(e) => setNewCouponExpiry(e.target.value)}
                     className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
                   />
-                </div>
-              </div>
+                </Box>
+              </Box>
 
-              <div className="pt-3 border-t border-white/10 flex items-center justify-end gap-3">
-                <button
+              <Box className="pt-3 border-t border-white/10 flex items-center justify-end gap-3">
+                <Box component="button"
                   type="button"
                   onClick={() => setIsCouponModalOpen(false)}
                   className="px-4 py-2 bg-white/5 text-slate-400 rounded"
                 >
                   Cancel
-                </button>
-                <button
+                </Box>
+                <Box component="button"
                   type="submit"
                   className="px-6 py-2 bg-[#D4AF37] text-black font-extrabold uppercase rounded shadow"
                 >
                   CREATE COUPON
-                </button>
-              </div>
+                </Box>
+              </Box>
             </form>
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {/* CUSTOMER ORDER HISTORY DRAWER / MODAL */}
       {viewingCustomer && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <div className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-2xl rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div>
-                <span className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
+        <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
+          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-2xl rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative">
+            <Box className="flex items-center justify-between border-b border-white/10 pb-3">
+              <Box>
+                <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
                   CUSTOMER PURCHASE RECORD
-                </span>
+                </Typography>
                 <h3 className="text-lg font-black uppercase text-white font-syne">
                   {viewingCustomer.fullName}
                 </h3>
-              </div>
-              <button onClick={() => setViewingCustomer(null)} className="text-slate-400 hover:text-white">
+              </Box>
+              <Box component="button" onClick={() => setViewingCustomer(null)} className="text-slate-400 hover:text-white">
                 <XCircle size={20} />
-              </button>
-            </div>
+              </Box>
+            </Box>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-[#141620] rounded border border-white/5 font-mono text-xs">
-              <div>
-                <span className="text-[9px] text-slate-500 uppercase block">EMAIL</span>
+            <Box className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-[#141620] rounded border border-white/5 font-mono text-xs">
+              <Box>
+                <Typography component="span" className="text-[9px] text-slate-500 uppercase block">EMAIL</Typography>
                 <strong className="text-white truncate block">{viewingCustomer.email}</strong>
-              </div>
-              <div>
-                <span className="text-[9px] text-slate-500 uppercase block">MOBILE</span>
+              </Box>
+              <Box>
+                <Typography component="span" className="text-[9px] text-slate-500 uppercase block">MOBILE</Typography>
                 <strong className="text-white">{viewingCustomer.phone}</strong>
-              </div>
-              <div>
-                <span className="text-[9px] text-slate-500 uppercase block">ORDERS</span>
+              </Box>
+              <Box>
+                <Typography component="span" className="text-[9px] text-slate-500 uppercase block">ORDERS</Typography>
                 <strong className="text-white">{viewingCustomer.ordersCount}</strong>
-              </div>
-              <div>
-                <span className="text-[9px] text-slate-500 uppercase block">LIFETIME SPEND</span>
+              </Box>
+              <Box>
+                <Typography component="span" className="text-[9px] text-slate-500 uppercase block">LIFETIME SPEND</Typography>
                 <strong className="text-[#D4AF37]">LKR {viewingCustomer.totalSpent.toLocaleString()}</strong>
-              </div>
-            </div>
+              </Box>
+            </Box>
 
             {viewingCustomer.address && (
-              <div className="p-3 bg-[#141620] rounded border border-white/5 font-mono text-xs text-slate-300">
-                <span className="text-[9px] text-[#D4AF37] uppercase font-bold block mb-1">DELIVERY DESTINATION</span>
-                <p>{viewingCustomer.address.addressLine1}, {viewingCustomer.address.city}, {viewingCustomer.address.district} ({viewingCustomer.address.postalCode})</p>
-              </div>
+              <Box className="p-3 bg-[#141620] rounded border border-white/5 font-mono text-xs text-slate-300">
+                <Typography component="span" className="text-[9px] text-[#D4AF37] uppercase font-bold block mb-1">DELIVERY DESTINATION</Typography>
+                <Typography component="p">{viewingCustomer.address.addressLine1}, {viewingCustomer.address.city}, {viewingCustomer.address.district} ({viewingCustomer.address.postalCode})</Typography>
+              </Box>
             )}
 
-            <div className="space-y-3 font-mono text-xs">
-              <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">ORDER HISTORY LOG</span>
-              <div className="divide-y divide-white/5 max-h-56 overflow-y-auto">
+            <Box className="space-y-3 font-mono text-xs">
+              <Typography component="span" className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">ORDER HISTORY LOG</Typography>
+              <Box className="divide-y divide-white/5 max-h-56 overflow-y-auto">
                 {orders.filter((o) => o.customerInfo.email.toLowerCase() === viewingCustomer.email.toLowerCase()).length === 0 ? (
-                  <p className="text-slate-500 py-3">No placed orders recorded for this account yet.</p>
+                  <Typography component="p" className="text-slate-500 py-3">No placed orders recorded for this account yet.</Typography>
                 ) : (
                   orders.filter((o) => o.customerInfo.email.toLowerCase() === viewingCustomer.email.toLowerCase()).map((o) => (
-                    <div key={o.id} className="py-2.5 flex items-center justify-between gap-4">
-                      <div>
-                        <span className="text-white font-bold">{o.orderNumber}</span>
-                        <span className="text-slate-500 text-[10px] block">{new Date(o.createdAt).toLocaleDateString()}</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-white font-bold">LKR {o.totalAmount.toLocaleString()}</span>
-                        <span className="text-[10px] text-[#D4AF37] uppercase block">{o.orderStatus}</span>
-                      </div>
-                    </div>
+                    <Box key={o.id} className="py-2.5 flex items-center justify-between gap-4">
+                      <Box>
+                        <Typography component="span" className="text-white font-bold">{o.orderNumber}</Typography>
+                        <Typography component="span" className="text-slate-500 text-[10px] block">{new Date(o.createdAt).toLocaleDateString()}</Typography>
+                      </Box>
+                      <Box className="text-right">
+                        <Typography component="span" className="text-white font-bold">LKR {o.totalAmount.toLocaleString()}</Typography>
+                        <Typography component="span" className="text-[10px] text-[#D4AF37] uppercase block">{o.orderStatus}</Typography>
+                      </Box>
+                    </Box>
                   ))
                 )}
-              </div>
-            </div>
+              </Box>
+            </Box>
 
-            <div className="pt-3 border-t border-white/10 flex justify-end">
-              <button
+            <Box className="pt-3 border-t border-white/10 flex justify-end">
+              <Box component="button"
                 onClick={() => setViewingCustomer(null)}
                 className="px-5 py-2 bg-white/10 hover:bg-white/15 text-white font-mono text-xs rounded font-bold"
               >
                 Close Customer File
-              </button>
-            </div>
-          </div>
-        </div>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       )}
 
       {/* DELETE CONFIRMATION DIALOG */}
       {deleteConfirmTarget && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fade-in">
-          <div className="bg-[#0E1017] border border-red-500/40 w-full max-w-md rounded-md p-6 space-y-4 shadow-2xl text-center">
-            <div className="w-12 h-12 rounded-full bg-red-950/60 border border-red-500 text-red-400 flex items-center justify-center mx-auto">
+        <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fade-in">
+          <Box className="bg-[#0E1017] border border-red-500/40 w-full max-w-md rounded-md p-6 space-y-4 shadow-2xl text-center">
+            <Box className="w-12 h-12 rounded-full bg-red-950/60 border border-red-500 text-red-400 flex items-center justify-center mx-auto">
               <Trash2 size={24} />
-            </div>
+            </Box>
 
             <h3 className="text-base font-black uppercase text-white font-syne">
               CONFIRM ARCHIVE / DELETION
             </h3>
-            <p className="text-xs font-mono text-slate-400">
+            <Typography component="p" className="text-xs font-mono text-slate-400">
               Are you sure you want to permanently delete <strong className="text-white">"{deleteConfirmTarget.name}"</strong>? This action cannot be undone.
-            </p>
+            </Typography>
 
-            <div className="flex items-center justify-center gap-3 pt-2 font-mono text-xs">
-              <button
+            <Box className="flex items-center justify-center gap-3 pt-2 font-mono text-xs">
+              <Box component="button"
                 onClick={() => setDeleteConfirmTarget(null)}
                 className="px-4 py-2 bg-white/5 hover:bg-white/10 text-slate-300 rounded font-bold"
               >
                 Cancel
-              </button>
-              <button
+              </Box>
+              <Box component="button"
                 onClick={executeDelete}
                 className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-extrabold uppercase rounded shadow-lg shadow-red-600/20"
               >
                 CONFIRM DELETE
-              </button>
-            </div>
-          </div>
-        </div>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       )}
 
-    </div>
+    </Box>
   );
 };

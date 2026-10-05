@@ -1,6 +1,8 @@
 import React from 'react';
+import { IconButton as MuiIconButton, Badge as MuiBadge } from '@mui/material';
+import type { IconButtonProps as MuiIconButtonProps } from '@mui/material';
 
-export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface IconButtonProps extends Omit<MuiIconButtonProps, 'size'> {
   icon: React.ReactNode;
   label: string;
   variant?: 'ghost' | 'secondary' | 'gold' | 'dark';
@@ -31,18 +33,31 @@ export const IconButton: React.FC<IconButtonProps> = ({
   }[variant];
 
   return (
-    <button
+    <MuiIconButton
       aria-label={label}
       title={label}
+      disableRipple
       className={`relative inline-flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#D4AF37] hover:scale-105 active:scale-95 ${sizeClasses} ${variantClasses} ${className}`}
       {...props}
     >
-      {icon}
-      {badge !== undefined && badge !== null && (
-        <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#e6c042] via-[#D4AF37] to-[#aa8010] text-black font-extrabold text-[9px] min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center border border-black shadow-[0_2px_8px_rgba(212,175,55,0.5)]">
-          {badge}
-        </span>
-      )}
-    </button>
+      <MuiBadge 
+        badgeContent={badge} 
+        sx={{
+          '& .MuiBadge-badge': {
+            background: 'linear-gradient(to right, #e6c042, #D4AF37, #aa8010)',
+            color: 'black',
+            fontWeight: '800',
+            fontSize: '9px',
+            minWidth: '18px',
+            height: '18px',
+            padding: '0 4px',
+            border: '1px solid black',
+            boxShadow: '0 2px 8px rgba(212,175,55,0.5)',
+          }
+        }}
+      >
+        {icon}
+      </MuiBadge>
+    </MuiIconButton>
   );
 };

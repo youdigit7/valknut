@@ -1,4 +1,5 @@
 import React from 'react';
+import { Breadcrumbs as MuiBreadcrumbs, Link as MuiLink, Typography as MuiTypography } from '@mui/material';
 import { ChevronRight } from 'lucide-react';
 
 export interface BreadcrumbItem {
@@ -14,37 +15,47 @@ export interface BreadcrumbProps {
 
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, className = '' }) => {
   return (
-    <nav aria-label="Breadcrumb" className={`flex items-center space-x-2 text-xs font-mono text-slate-400 ${className}`}>
+    <MuiBreadcrumbs 
+      separator={<ChevronRight size={12} className="text-slate-600" />} 
+      aria-label="breadcrumb"
+      className={`text-xs font-mono text-slate-400 ${className}`}
+    >
       {items.map((item, idx) => {
         const isLast = idx === items.length - 1;
 
+        if (isLast) {
+          return (
+            <MuiTypography key={idx} className="text-white font-semibold truncate uppercase tracking-wider text-xs font-mono">
+              {item.label}
+            </MuiTypography>
+          );
+        }
+
+        if (item.href) {
+          return (
+            <MuiLink
+              key={idx}
+              href={item.href}
+              underline="none"
+              className="hover:text-[#D4AF37] text-slate-400 transition-colors uppercase tracking-wider text-xs font-mono"
+            >
+              {item.label}
+            </MuiLink>
+          );
+        }
+
         return (
-          <React.Fragment key={idx}>
-            {idx > 0 && <ChevronRight size={12} className="text-slate-600 flex-shrink-0" />}
-            {isLast ? (
-              <span className="text-white font-semibold truncate uppercase tracking-wider">
-                {item.label}
-              </span>
-            ) : item.href ? (
-              <a
-                href={item.href}
-                className="hover:text-[#D4AF37] transition-colors uppercase tracking-wider"
-              >
-                {item.label}
-              </a>
-            ) : item.onClick ? (
-              <button
-                onClick={item.onClick}
-                className="hover:text-[#D4AF37] transition-colors uppercase tracking-wider"
-              >
-                {item.label}
-              </button>
-            ) : (
-              <span className="uppercase tracking-wider">{item.label}</span>
-            )}
-          </React.Fragment>
+          <MuiLink
+            key={idx}
+            component="button"
+            underline="none"
+            onClick={item.onClick}
+            className="hover:text-[#D4AF37] text-slate-400 transition-colors uppercase tracking-wider font-mono text-xs"
+          >
+            {item.label}
+          </MuiLink>
         );
       })}
-    </nav>
+    </MuiBreadcrumbs>
   );
 };

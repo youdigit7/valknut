@@ -1,6 +1,8 @@
 import React from 'react';
+import { Chip as MuiChip } from '@mui/material';
+import type { ChipProps as MuiChipProps } from '@mui/material';
 
-export interface BadgeProps {
+export interface BadgeProps extends Omit<MuiChipProps, 'variant' | 'size' | 'children'> {
   children: React.ReactNode;
   variant?: 'gold' | 'dark' | 'red' | 'purple' | 'outline' | 'soldout';
   size?: 'sm' | 'md';
@@ -12,6 +14,7 @@ export const Badge: React.FC<BadgeProps> = ({
   variant = 'gold',
   size = 'md',
   className = '',
+  ...props
 }) => {
   const sizeClasses = {
     sm: 'text-[9px] px-2 py-0.5 tracking-[0.1em]',
@@ -28,10 +31,17 @@ export const Badge: React.FC<BadgeProps> = ({
   }[variant];
 
   return (
-    <span
+    <MuiChip
+      label={children}
       className={`inline-flex items-center justify-center uppercase font-mono rounded-[2px] shadow-sm select-none ${sizeClasses} ${variantClasses} ${className}`}
-    >
-      {children}
-    </span>
+      sx={{
+        height: 'auto',
+        borderRadius: '2px',
+        '& .MuiChip-label': {
+          padding: 0,
+        }
+      }}
+      {...props}
+    />
   );
 };

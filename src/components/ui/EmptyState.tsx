@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, Typography } from '@mui/material';
 import { PackageOpen } from 'lucide-react';
 import { Button } from './Button';
 
@@ -20,21 +21,21 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   className = '',
 }) => {
   return (
-    <div
+    <Box
       className={`flex flex-col items-center justify-center text-center p-12 bg-[#0E1017] border border-white/5 rounded-[2px] max-w-md mx-auto ${className}`}
     >
-      <div className="w-16 h-16 rounded-full bg-[#151824] border border-white/10 flex items-center justify-center text-slate-400 mb-5">
+      <Box className="w-16 h-16 rounded-full bg-[#151824] border border-white/10 flex items-center justify-center text-slate-400 mb-5">
         {icon || <PackageOpen size={28} className="text-[#D4AF37]" />}
-      </div>
+      </Box>
 
-      <h4 className="text-lg font-black uppercase text-white font-syne tracking-wider mb-2">
+      <Typography variant="h4" className="text-lg font-black uppercase text-white font-syne tracking-wider mb-2">
         {title}
-      </h4>
+      </Typography>
 
       {description && (
-        <p className="text-xs text-slate-400 max-w-xs leading-relaxed mb-6">
+        <Typography variant="body2" className="text-xs text-slate-400 max-w-xs leading-relaxed mb-6">
           {description}
-        </p>
+        </Typography>
       )}
 
       {actionText && onAction && (
@@ -42,6 +43,6 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           {actionText}
         </Button>
       )}
-    </div>
+    </Box>
   );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, Typography, Link as MuiLink } from '@mui/material';
 
 export interface SectionHeadingProps {
   eyebrow?: string;
@@ -31,44 +32,46 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
     : 'text-left items-start justify-between';
 
   return (
-    <div className={`flex flex-col ${alignContainer} mb-7 sm:mb-10 lg:mb-12 max-w-3xl ${isCenter ? 'mx-auto' : ''} ${className}`}>
+    <Box className={`flex flex-col ${alignContainer} mb-7 sm:mb-10 lg:mb-12 max-w-3xl ${isCenter ? 'mx-auto' : ''} ${className}`}>
       {/* Eyebrow Tag */}
       {eyebrow && (
-        <span className="text-[#D4AF37] text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase block mb-2 sm:mb-3">
+        <Typography component="span" className="text-[#D4AF37] text-[10px] sm:text-xs font-mono font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase block mb-2 sm:mb-3">
           {eyebrow}
-        </span>
+        </Typography>
       )}
 
       {/* Main Headline with Responsive Fluid Sizing */}
-      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white uppercase font-heading tracking-tight leading-[1.14] sm:leading-[1.18] max-w-3xl break-words">
+      <Typography variant="h2" className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white uppercase font-heading tracking-tight leading-[1.14] sm:leading-[1.18] max-w-3xl break-words">
         {title}
-      </h2>
+      </Typography>
 
       {/* Subtitle with Adaptive Padding */}
       {subtitle && (
-        <p className="text-slate-300 text-xs sm:text-sm md:text-base mt-2.5 sm:mt-3.5 max-w-2xl leading-relaxed font-normal">
+        <Typography className="text-slate-300 text-xs sm:text-sm md:text-base mt-2.5 sm:mt-3.5 max-w-2xl leading-relaxed font-normal">
           {subtitle}
-        </p>
+        </Typography>
       )}
 
       {/* Action Link */}
       {linkText && (linkHref || onLinkClick) && (
-        <div className={`mt-5 ${isCenter ? 'flex justify-center' : ''}`}>
-          <a
+        <Box className={`mt-5 ${isCenter ? 'flex justify-center' : ''}`}>
+          <MuiLink
             href={linkHref || '#'}
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               if (onLinkClick) {
                 e.preventDefault();
                 onLinkClick();
               }
             }}
-            className="inline-flex items-center gap-2 text-[#D4AF37] text-xs font-extrabold tracking-[0.2em] uppercase underline underline-offset-8 hover:text-[#E2B714] transition-all group py-1"
+            underline="none"
+            className="inline-flex items-center gap-2 text-[#D4AF37] text-xs font-extrabold tracking-[0.2em] uppercase underline-offset-8 hover:text-[#E2B714] transition-all group py-1"
+            sx={{ textDecoration: 'underline' }}
           >
-            <span>{linkText}</span>
-            <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5 font-mono">→</span>
-          </a>
-        </div>
+            <Typography component="span">{linkText}</Typography>
+            <Typography component="span" className="inline-block transition-transform duration-300 group-hover:translate-x-1.5 font-mono">→</Typography>
+          </MuiLink>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };

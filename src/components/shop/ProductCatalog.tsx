@@ -634,7 +634,7 @@ export const ProductCatalog: React.FC = () => {
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
-                    <span>Show:</span>
+                    <Typography component="span">Show:</Typography>
                     <Select value={itemsPerPage} onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} size="small" sx={{ bgcolor: '#131520', color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.1)' } }}>
                       <MenuItem value={8}>8 / page</MenuItem>
                       <MenuItem value={12}>12 / page</MenuItem>

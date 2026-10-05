@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, Typography, IconButton as MuiIconButton } from '@mui/material';
 
 export interface ColorOption {
   name: string;
@@ -21,37 +22,39 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
   showLabel = true,
 }) => {
   return (
-    <div className={`space-y-2 ${className}`}>
+    <Box className={`space-y-2 ${className}`}>
       {showLabel && (
-        <div className="flex items-center text-xs font-bold text-slate-300 uppercase tracking-[0.14em]">
-          COLOR: <span className="text-[#D4AF37] ml-1">{selectedColor}</span>
-        </div>
+        <Typography variant="body2" className="flex items-center text-xs font-bold text-slate-300 uppercase tracking-[0.14em]">
+          COLOR: <Box component="span" className="text-[#D4AF37] ml-1">{selectedColor}</Box>
+        </Typography>
       )}
 
-      <div className="flex items-center gap-2.5 flex-wrap">
+      <Box className="flex items-center gap-2.5 flex-wrap">
         {colors.map((color) => {
           const isSelected = selectedColor.toLowerCase() === color.name.toLowerCase();
 
           return (
-            <button
+            <MuiIconButton
               key={color.name}
-              type="button"
               onClick={() => onSelectColor(color)}
               title={color.name}
+              disableRipple
               className={`group relative w-8 h-8 rounded-full transition-all flex items-center justify-center ${
                 isSelected
                   ? 'ring-2 ring-[#D4AF37] ring-offset-2 ring-offset-[#0A0A0A] scale-110'
                   : 'hover:scale-105 border border-white/20'
               }`}
+              sx={{ padding: 0 }}
             >
-              <span
+              <Box
+                component="span"
                 className="w-full h-full rounded-full border border-black/30"
                 style={{ backgroundColor: color.hex }}
               />
-            </button>
+            </MuiIconButton>
           );
         })}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

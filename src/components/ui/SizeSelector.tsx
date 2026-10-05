@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, Typography, Button as MuiButton, Link as MuiLink } from '@mui/material';
 
 export type SizeOption = 'S' | 'M' | 'L' | 'XL' | 'XXL';
 
@@ -24,33 +25,35 @@ export const SizeSelector: React.FC<SizeSelectorProps> = ({
   onOpenGuide,
 }) => {
   return (
-    <div className={`space-y-2 ${className}`}>
-      <div className="flex items-center justify-between text-xs">
-        <span className="font-bold text-slate-300 uppercase tracking-[0.14em]">
-          SELECT SIZE: <span className="text-[#D4AF37] font-mono ml-1">{selectedSize}</span>
-        </span>
+    <Box className={`space-y-2 ${className}`}>
+      <Box className="flex items-center justify-between text-xs">
+        <Typography component="span" className="font-bold text-slate-300 uppercase tracking-[0.14em]">
+          SELECT SIZE: <Typography component="span" className="text-[#D4AF37] font-mono ml-1">{selectedSize}</Typography>
+        </Typography>
         {showGuideButton && (
-          <button
+          <MuiLink
+            component="button"
             type="button"
             onClick={onOpenGuide || (() => (window.location.hash = '#/size-guide'))}
             className="text-slate-400 hover:text-[#D4AF37] underline text-[11px] font-medium transition-colors"
+            sx={{ textDecoration: 'underline' }}
           >
             Size Guide
-          </button>
+          </MuiLink>
         )}
-      </div>
+      </Box>
 
-      <div className="flex flex-wrap gap-2">
+      <Box className="flex flex-wrap gap-2">
         {sizes.map((size) => {
           const isSelected = selectedSize === size;
           const isAvailable = availableSizes ? availableSizes.includes(size) : true;
 
           return (
-            <button
+            <MuiButton
               key={size}
-              type="button"
               disabled={!isAvailable}
               onClick={() => onSelectSize(size)}
+              disableRipple
               className={`min-w-[48px] h-11 px-3 flex items-center justify-center text-xs font-bold font-mono uppercase rounded-[2px] transition-all relative ${
                 isSelected
                   ? 'bg-white text-black border-2 border-white shadow-md'
@@ -58,12 +61,21 @@ export const SizeSelector: React.FC<SizeSelectorProps> = ({
                   ? 'bg-[#12141E] text-slate-200 border border-white/10 hover:border-white/40 hover:text-white'
                   : 'bg-[#0E1017] text-slate-600 border border-white/5 cursor-not-allowed opacity-40 line-through'
               }`}
+              sx={{
+                minWidth: '48px',
+                height: '44px',
+                padding: '0 12px',
+                '&.Mui-disabled': {
+                   color: '#475569',
+                   borderColor: 'rgba(255, 255, 255, 0.05)',
+                }
+              }}
             >
               {size}
-            </button>
+            </MuiButton>
           );
         })}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

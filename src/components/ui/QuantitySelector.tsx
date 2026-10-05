@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, IconButton as MuiIconButton, Typography } from '@mui/material';
 import { Minus, Plus } from 'lucide-react';
 
 export interface QuantitySelectorProps {
@@ -39,32 +40,32 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   }[size];
 
   return (
-    <div
+    <Box
       className={`inline-flex items-center bg-[#12141E] border border-white/10 rounded-[2px] ${sizeClasses} ${className}`}
     >
-      <button
-        type="button"
+      <MuiIconButton
         onClick={handleDecrement}
         disabled={quantity <= min}
-        className={`h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:pointer-events-none transition-colors ${buttonPadding}`}
+        disableRipple
+        className={`h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-30 transition-colors rounded-none ${buttonPadding}`}
         aria-label="Decrease quantity"
       >
         <Minus size={size === 'sm' ? 12 : 14} />
-      </button>
+      </MuiIconButton>
 
-      <span className="w-10 text-center font-mono font-bold text-white select-none">
+      <Typography component="span" className="w-10 text-center font-mono font-bold text-white select-none">
         {quantity}
-      </span>
+      </Typography>
 
-      <button
-        type="button"
+      <MuiIconButton
         onClick={handleIncrement}
         disabled={quantity >= max}
-        className={`h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:pointer-events-none transition-colors ${buttonPadding}`}
+        disableRipple
+        className={`h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-30 transition-colors rounded-none ${buttonPadding}`}
         aria-label="Increase quantity"
       >
         <Plus size={size === 'sm' ? 12 : 14} />
-      </button>
-    </div>
+      </MuiIconButton>
+    </Box>
   );
 };

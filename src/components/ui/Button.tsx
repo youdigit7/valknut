@@ -1,6 +1,8 @@
 import React from 'react';
+import { Button as MuiButton, CircularProgress, Typography } from '@mui/material';
+import type { ButtonProps as MuiButtonProps } from '@mui/material';
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends Omit<MuiButtonProps, 'size' | 'variant'> {
   variant?: 'primary' | 'secondary' | 'gold' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   fullWidth?: boolean;
@@ -49,18 +51,19 @@ export const Button: React.FC<ButtonProps> = ({
   const widthClass = fullWidth ? 'w-full' : '';
 
   return (
-    <button
+    <MuiButton
       className={`${baseClasses} ${sizeClasses} ${variantClasses} ${widthClass} ${className}`}
       disabled={disabled || isLoading}
+      disableRipple
       {...props}
     >
       {isLoading ? (
-        <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+        <CircularProgress size={16} color="inherit" className="mr-2" />
       ) : (
-        leftIcon && <span className="flex-shrink-0">{leftIcon}</span>
+        leftIcon && <Typography component="span" className="flex-shrink-0 flex items-center justify-center">{leftIcon}</Typography>
       )}
-      <span>{children}</span>
-      {!isLoading && rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
-    </button>
+      <Typography component="span" className="flex-1">{children}</Typography>
+      {!isLoading && rightIcon && <Typography component="span" className="flex-shrink-0 flex items-center justify-center">{rightIcon}</Typography>}
+    </MuiButton>
   );
 };

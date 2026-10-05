@@ -169,8 +169,8 @@ export const CartDrawer: React.FC = () => {
                           <Sparkles size={11} /> Bespoke: {item.customization.printTechnique}
                         </Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'grey.300', fontSize: '0.5625rem', mt: 0.5 }}>
-                          <span>Zone: {item.customization.placement.replace('_', ' ')}</span>
-                          {item.customization.customText && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 120 }}>"{item.customization.customText}"</span>}
+                          <Typography component="span">Zone: {item.customization.placement.replace('_', ' ')}</Typography>
+                          {item.customization.customText && <Typography component="span" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 120 }}>"{item.customization.customText}"</Typography>}
                         </Box>
                         {item.customization.uploadedArtworkUrl && (
                           <Typography sx={{ fontSize: '0.5625rem', color: '#4ade80', display: 'flex', alignItems: 'center', gap: 0.5, pt: 0.5 }}>

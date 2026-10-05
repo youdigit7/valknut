@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, Typography } from '@mui/material';
 
 export interface PriceProps {
   price: number;
@@ -50,22 +51,22 @@ export const Price: React.FC<PriceProps> = ({
   }[size];
 
   return (
-    <div className={`inline-flex items-baseline gap-2.5 flex-wrap ${className}`}>
-      <span className={`${sizeClasses.current} text-[#D4AF37] font-mono tracking-tight`}>
+    <Box className={`inline-flex items-baseline gap-2.5 flex-wrap ${className}`}>
+      <Typography component="span" className={`${sizeClasses.current} text-[#D4AF37] font-mono tracking-tight`}>
         {currency} {currentPrice.toLocaleString()}
-      </span>
+      </Typography>
 
       {isSale && originalPrice && (
-        <span className={`${sizeClasses.original} text-slate-400 line-through font-mono`}>
+        <Typography component="span" className={`${sizeClasses.original} text-slate-400 line-through font-mono`}>
           {currency} {originalPrice.toLocaleString()}
-        </span>
+        </Typography>
       )}
 
       {isSale && showDiscountPercent && (
-        <span className={`${sizeClasses.badge} bg-red-600/20 text-red-400 border border-red-500/30 rounded-[2px] font-bold uppercase tracking-wider`}>
+        <Box component="span" className={`${sizeClasses.badge} bg-red-600/20 text-red-400 border border-red-500/30 rounded-[2px] font-bold uppercase tracking-wider`}>
           -{discountPercent}%
-        </span>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };

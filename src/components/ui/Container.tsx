@@ -1,6 +1,8 @@
 import React from 'react';
+import { Container as MuiContainer } from '@mui/material';
+import type { ContainerProps as MuiContainerProps } from '@mui/material';
 
-export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ContainerProps extends Omit<MuiContainerProps, 'maxWidth'> {
   size?: 'default' | 'narrow' | 'wide' | 'full';
   clean?: boolean;
 }
@@ -19,14 +21,16 @@ export const Container: React.FC<ContainerProps> = ({
     full: 'max-w-full',
   }[size];
 
-  const paddingClass = clean ? '' : 'px-3.5 sm:px-6 md:px-8 lg:px-10 2xl:px-14';
+  const paddingClass = clean ? '!px-0' : 'px-3.5 sm:px-6 md:px-8 lg:px-10 2xl:px-14';
 
   return (
-    <div
+    <MuiContainer
+      disableGutters
+      maxWidth={false}
       className={`w-full mx-auto ${sizeClasses} ${paddingClass} ${className}`}
       {...props}
     >
       {children}
-    </div>
+    </MuiContainer>
   );
 };

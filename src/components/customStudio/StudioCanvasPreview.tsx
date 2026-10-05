@@ -296,7 +296,7 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
               }}
             >
               <Sparkles size={8} />
-              <span>{placement.replace('_', ' ')} PRINT ZONE</span>
+              <Typography component="span">{placement.replace('_', ' ')} PRINT ZONE</Typography>
             </Box>
           </Box>
 

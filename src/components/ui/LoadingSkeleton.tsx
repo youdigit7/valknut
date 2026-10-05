@@ -1,4 +1,5 @@
 import React from 'react';
+import { Skeleton, Box } from '@mui/material';
 
 export interface LoadingSkeletonProps {
   variant?: 'card' | 'text' | 'image' | 'avatar' | 'rect';
@@ -15,55 +16,60 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
   className = '',
   count = 1,
 }) => {
-  const baseClasses = 'bg-[#151824] animate-pulse rounded-[2px] border border-white/5';
+  const baseClasses = 'bg-[#151824] rounded-[2px] border border-white/5';
 
   const renderSingle = (key: number) => {
     if (variant === 'card') {
       return (
-        <div key={key} className="space-y-3">
-          <div className="w-full aspect-[3/4] bg-[#151824] animate-pulse rounded-[2px] border border-white/5" />
-          <div className="h-4 bg-[#151824] animate-pulse rounded-[2px] w-3/4" />
-          <div className="h-3 bg-[#151824] animate-pulse rounded-[2px] w-1/2" />
-        </div>
+        <Box key={key} className="space-y-3">
+          <Skeleton variant="rectangular" className={`${baseClasses} w-full aspect-[3/4]`} sx={{ bgcolor: '#151824' }} />
+          <Skeleton variant="text" className={`${baseClasses} h-4 w-3/4`} sx={{ bgcolor: '#151824' }} />
+          <Skeleton variant="text" className={`${baseClasses} h-3 w-1/2`} sx={{ bgcolor: '#151824' }} />
+        </Box>
       );
     }
 
     if (variant === 'text') {
       return (
-        <div
+        <Skeleton
           key={key}
+          variant="text"
           className={`${baseClasses} h-4 ${width || 'w-full'} ${className}`}
+          sx={{ bgcolor: '#151824' }}
         />
       );
     }
 
     if (variant === 'avatar') {
       return (
-        <div
+        <Skeleton
           key={key}
-          className={`${baseClasses} rounded-full ${width || 'w-10'} ${
-            height || 'h-10'
-          } ${className}`}
+          variant="circular"
+          className={`${baseClasses} ${width || 'w-10'} ${height || 'h-10'} ${className}`}
+          sx={{ bgcolor: '#151824' }}
         />
       );
     }
 
     if (variant === 'image') {
       return (
-        <div
+        <Skeleton
           key={key}
+          variant="rectangular"
           className={`${baseClasses} aspect-[3/4] w-full ${className}`}
+          sx={{ bgcolor: '#151824' }}
         />
       );
     }
 
     return (
-      <div
+      <Skeleton
         key={key}
-        style={{ width, height }}
-        className={`${baseClasses} ${width ? '' : 'w-full'} ${
-          height ? '' : 'h-12'
-        } ${className}`}
+        variant="rectangular"
+        width={width}
+        height={height || 48}
+        className={`${baseClasses} ${width ? '' : 'w-full'} ${className}`}
+        sx={{ bgcolor: '#151824' }}
       />
     );
   };

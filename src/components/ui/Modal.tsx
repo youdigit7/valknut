@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { Dialog, DialogContent, DialogTitle, IconButton as MuiIconButton, Box, Typography } from '@mui/material';
 import { X } from 'lucide-react';
 
 export interface ModalProps {
@@ -20,67 +21,71 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   showCloseButton = true,
 }) => {
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
+  const sizeMap = {
+    sm: 'xs',
+    md: 'sm',
+    lg: 'md',
+    xl: 'lg',
+    full: 'xl',
+  } as const;
 
-  if (!isOpen) return null;
-
-  const sizeClasses = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl',
-    full: 'max-w-6xl',
-  }[size];
+  const maxWidth = sizeMap[size];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 animate-fade-in">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
-        onClick={onClose}
-      />
-
-      {/* Modal Card */}
-      <div
-        className={`relative w-full ${sizeClasses} bg-[#0E1017] border border-white/10 rounded-[2px] shadow-2xl overflow-hidden z-10 my-8`}
-      >
-        {/* Header */}
-        {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-5 sm:p-6 border-b border-white/5 bg-[#12141E]/40">
-            <div>
-              {title && (
-                <h3 className="text-lg font-black uppercase text-white font-syne tracking-wider">
-                  {title}
-                </h3>
-              )}
-              {subtitle && (
-                <p className="text-xs text-slate-400 mt-1">{subtitle}</p>
-              )}
-            </div>
-            {showCloseButton && (
-              <button
-                onClick={onClose}
-                className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-[2px] transition-colors"
-                aria-label="Close modal"
-              >
-                <X size={20} />
-              </button>
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      maxWidth={maxWidth}
+      fullWidth
+      sx={{
+        '& .MuiDialog-paper': {
+          backgroundColor: '#0E1017',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '2px',
+          backgroundImage: 'none',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+          margin: { xs: 2, sm: 4 },
+        }
+      }}
+      slotProps={{
+        backdrop: {
+          sx: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            backdropFilter: 'blur(12px)',
+          }
+        }
+      }}
+    >
+      {(title || showCloseButton) && (
+        <DialogTitle className="flex items-center justify-between p-5 sm:p-6 border-b border-white/5 bg-[#12141E]/40" sx={{ padding: '20px 24px' }}>
+          <Box>
+            {title && (
+              <Typography variant="h6" className="text-lg font-black uppercase text-white font-syne tracking-wider">
+                {title}
+              </Typography>
             )}
-          </div>
-        )}
+            {subtitle && (
+              <Typography variant="body2" className="text-xs text-slate-400 mt-1">
+                {subtitle}
+              </Typography>
+            )}
+          </Box>
+          {showCloseButton && (
+            <MuiIconButton
+              onClick={onClose}
+              className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-[2px] transition-colors"
+              aria-label="Close modal"
+              sx={{ color: '#94a3b8' }}
+            >
+              <X size={20} />
+            </MuiIconButton>
+          )}
+        </DialogTitle>
+      )}
 
-        {/* Content Body */}
-        <div className="p-5 sm:p-6 max-h-[80vh] overflow-y-auto">{children}</div>
-      </div>
-    </div>
+      <DialogContent className="p-5 sm:p-6" sx={{ padding: '20px 24px', maxHeight: '80vh' }}>
+        {children}
+      </DialogContent>
+    </Dialog>
   );
 };
