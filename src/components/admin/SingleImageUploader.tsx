@@ -18,7 +18,7 @@ interface SingleImageUploaderProps {
 const fieldSx = {
   '& .MuiOutlinedInput-root': {
     bgcolor: '#141620',
-    color: 'white',
+    color: 'var(--text-primary)',
     fontSize: '0.6875rem',
     fontFamily: '"JetBrains Mono", sans-serif',
     '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
@@ -134,7 +134,7 @@ export const SingleImageUploader: React.FC<SingleImageUploaderProps> = ({
               {uploadProgress}%
             </Typography>
           </Box>
-          <LinearProgress variant="determinate" value={uploadProgress} sx={{ height: 4, borderRadius: 2, bgcolor: '#0E1017', '& .MuiLinearProgress-bar': { bgcolor: '#D4AF37' } }} />
+          <LinearProgress variant="determinate" value={uploadProgress} sx={{ height: 4, borderRadius: 2, bgcolor: 'var(--bg-surface)', '& .MuiLinearProgress-bar': { bgcolor: '#D4AF37' } }} />
         </Box>
       )}
 
@@ -165,7 +165,7 @@ export const SingleImageUploader: React.FC<SingleImageUploaderProps> = ({
               startIcon={<Upload size={11} />}
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              sx={{ px: 1.5, py: 0.75, bgcolor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.075em', '&:hover': { bgcolor: 'rgba(255,255,255,0.15)', color: 'white' } }}
+              sx={{ px: 1.5, py: 0.75, bgcolor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.075em', '&:hover': { bgcolor: 'rgba(255,255,255,0.15)', color: 'var(--text-primary)' } }}
             >
               Upload Local Image
             </Button>

@@ -1,24 +1,8 @@
 import React from 'react';
 import { Truck, Shield, RotateCcw, CreditCard } from 'lucide-react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Grid 
+  Box, Typography, Container, Grid 
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0E1017' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
 
 const TRUST_ITEMS = [
   {
@@ -45,12 +29,12 @@ const TRUST_ITEMS = [
 
 export const TrustBar: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
           py: { xs: 5, sm: 8, lg: 10 }, 
-          bgcolor: 'background.default', 
+          bgcolor: 'var(--bg-main)', 
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           width: '100%',
           display: 'flex',
@@ -112,7 +96,7 @@ export const TrustBar: React.FC = () => {
                         fontWeight: 900, 
                         textTransform: 'uppercase', 
                         letterSpacing: '0.1em', 
-                        color: 'white', 
+                        color: 'var(--text-primary)', 
                         display: 'block',
                         mb: 0.5
                       }}
@@ -123,7 +107,7 @@ export const TrustBar: React.FC = () => {
                       variant="caption" 
                       sx={{ 
                         fontSize: { xs: '0.6875rem', sm: '0.75rem' }, 
-                        color: 'text.secondary', 
+                        color: 'var(--text-secondary)', 
                         display: 'block',
                         lineHeight: 1.4
                       }}
@@ -138,6 +122,6 @@ export const TrustBar: React.FC = () => {
           </Grid>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

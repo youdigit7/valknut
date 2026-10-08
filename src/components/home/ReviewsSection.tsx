@@ -1,7 +1,7 @@
 import React from 'react';
 import { Star } from 'lucide-react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Grid 
+  Box, Typography, Container, Grid 
 } from '@mui/material';
 
 interface ReviewData {
@@ -39,22 +39,6 @@ const reviews: ReviewData[] = [
     image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&q=80'
   }
 ];
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
 
 const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
   return (
@@ -95,7 +79,7 @@ const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
           fontSize: '1rem',
           letterSpacing: '0.1em',
           mb: 1.5,
-          color: 'white',
+          color: 'var(--text-primary)',
           textShadow: '0 2px 10px rgba(0,0,0,0.5)'
         }}
       >
@@ -107,7 +91,7 @@ const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
         sx={{ 
           fontSize: '0.8125rem',
           lineHeight: 1.7,
-          color: 'text.secondary',
+          color: 'var(--text-secondary)',
           mb: 3,
           flexGrow: 1
         }}
@@ -152,7 +136,7 @@ const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
             zIndex: 2 
           }}
         >
-          <Typography sx={{ color: 'white', fontSize: '0.55rem', fontWeight: 'bold', letterSpacing: '0.1em' }}>
+          <Typography sx={{ color: 'var(--text-primary)', fontSize: '0.55rem', fontWeight: 'bold', letterSpacing: '0.1em' }}>
             VERIFIED BUYER
           </Typography>
         </Box>
@@ -169,7 +153,7 @@ const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
           fontSize: '0.6875rem' 
         }}
       >
-        {review.name} · <Box component="span" sx={{ color: 'text.secondary' }}>{review.location}</Box>
+        {review.name} · <Box component="span" sx={{ color: 'var(--text-secondary)' }}>{review.location}</Box>
       </Typography>
     </Box>
   );
@@ -177,12 +161,12 @@ const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
 
 export const ReviewsSection: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
           py: { xs: 8, sm: 12, lg: 16 }, 
-          bgcolor: 'background.default', 
+          bgcolor: 'var(--bg-main)', 
           borderTop: '1px solid rgba(255,255,255,0.05)',
           width: '100%',
           overflow: 'hidden'
@@ -210,7 +194,7 @@ export const ReviewsSection: React.FC = () => {
                 fontSize: { xs: '2rem', sm: '3rem', md: '3.5rem' }, 
                 letterSpacing: '-0.02em',
                 textShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                color: 'white'
+                color: 'var(--text-primary)'
               }}
             >
               WHAT THEY SAY
@@ -228,6 +212,6 @@ export const ReviewsSection: React.FC = () => {
           
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

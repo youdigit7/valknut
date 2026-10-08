@@ -41,7 +41,7 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
       )}
 
       {/* Main Headline with Responsive Fluid Sizing */}
-      <Typography variant="h2" className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white uppercase font-heading tracking-tight leading-[1.14] sm:leading-[1.18] max-w-3xl break-words">
+      <Typography variant="h2" className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[var(--text-primary)] uppercase font-heading tracking-tight leading-[1.14] sm:leading-[1.18] max-w-3xl break-words">
         {title}
       </Typography>
 

@@ -41,20 +41,20 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
       }}
     >
       <Fade in={isOpen}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 672, bgcolor: '#0e1017', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', p: 4, outline: 'none', display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 672, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', p: 4, outline: 'none', display: 'flex', flexDirection: 'column', gap: 3 }}>
           
           {/* Header */}
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <Ruler color="#d4af37" size={24} />
               <Box>
-                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'white', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
+                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
                   VALKNUT OFFICIAL SIZE GUIDE
                 </Typography>
-                <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>Architectural Heavyweight Fit & Sizing Matrix</Typography>
+                <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif' }}>Architectural Heavyweight Fit & Sizing Matrix</Typography>
               </Box>
             </Box>
-            <IconButton onClick={onClose} sx={{ color: 'text.secondary', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+            <IconButton onClick={onClose} sx={{ color: 'var(--text-secondary)', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }}>
               <X size={20} />
             </IconButton>
           </Box>
@@ -66,7 +66,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
                 onClick={() => setActiveTab('MEN')}
                 sx={{
                   px: 2, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif',
-                  ...(activeTab === 'MEN' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { color: 'text.secondary', '&:hover': { color: 'white' } })
+                  ...(activeTab === 'MEN' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } })
                 }}
               >
                 MEN / UNISEX FIT
@@ -75,7 +75,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
                 onClick={() => setActiveTab('WOMEN')}
                 sx={{
                   px: 2, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif',
-                  ...(activeTab === 'WOMEN' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { color: 'text.secondary', '&:hover': { color: 'white' } })
+                  ...(activeTab === 'WOMEN' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } })
                 }}
               >
                 WOMEN'S FIT
@@ -87,7 +87,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
                 onClick={() => setUnit('CM')}
                 sx={{
                   px: 1.5, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif', minWidth: 'auto',
-                  ...(unit === 'CM' ? { bgcolor: 'white', color: 'black', '&:hover': { bgcolor: '#f1f5f9' } } : { color: 'text.secondary', '&:hover': { color: 'white' } })
+                  ...(unit === 'CM' ? { bgcolor: 'var(--text-primary)', color: 'black', '&:hover': { bgcolor: '#f1f5f9' } } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } })
                 }}
               >
                 CM
@@ -96,7 +96,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
                 onClick={() => setUnit('INCHES')}
                 sx={{
                   px: 1.5, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif', minWidth: 'auto',
-                  ...(unit === 'INCHES' ? { bgcolor: 'white', color: 'black', '&:hover': { bgcolor: '#f1f5f9' } } : { color: 'text.secondary', '&:hover': { color: 'white' } })
+                  ...(unit === 'INCHES' ? { bgcolor: 'var(--text-primary)', color: 'black', '&:hover': { bgcolor: '#f1f5f9' } } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } })
                 }}
               >
                 INCHES
@@ -118,10 +118,10 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
               <TableBody>
                 {currentData.map((row) => (
                   <TableRow key={row.size} sx={{ '&:last-child td, &:last-child th': { border: 0 }, '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' }, transition: 'background-color 0.3s' }}>
-                    <TableCell sx={{ color: 'white', fontSize: '0.75rem', fontWeight: 800, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{row.size}</TableCell>
-                    <TableCell sx={{ color: 'text.secondary', fontSize: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{unit === 'CM' ? row.chestCm : row.chestIn}</TableCell>
-                    <TableCell sx={{ color: 'text.secondary', fontSize: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{unit === 'CM' ? row.lengthCm : row.lengthIn}</TableCell>
-                    <TableCell sx={{ color: 'text.secondary', fontSize: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{unit === 'CM' ? row.shoulderCm : row.shoulderIn}</TableCell>
+                    <TableCell sx={{ color: 'var(--text-primary)', fontSize: '0.75rem', fontWeight: 800, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{row.size}</TableCell>
+                    <TableCell sx={{ color: 'var(--text-secondary)', fontSize: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{unit === 'CM' ? row.chestCm : row.chestIn}</TableCell>
+                    <TableCell sx={{ color: 'var(--text-secondary)', fontSize: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{unit === 'CM' ? row.lengthCm : row.lengthIn}</TableCell>
+                    <TableCell sx={{ color: 'var(--text-secondary)', fontSize: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{unit === 'CM' ? row.shoulderCm : row.shoulderIn}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -130,8 +130,8 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
 
           {/* Measuring Tip */}
           <Box sx={{ bgcolor: 'rgba(255,255,255,0.03)', p: 2, borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)' }}>
-            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 600, color: 'white', mb: 0.5, fontFamily: '"JetBrains Mono", sans-serif' }}>FIT NOTE:</Typography>
-            <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary', lineHeight: 1.6, fontFamily: '"JetBrains Mono", sans-serif' }}>
+            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-primary)', mb: 0.5, fontFamily: '"JetBrains Mono", sans-serif' }}>FIT NOTE:</Typography>
+            <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)', lineHeight: 1.6, fontFamily: '"JetBrains Mono", sans-serif' }}>
               VALKNUT tops are cut in our signature signature relaxed/oversized drop-shoulder profile. 
               If you prefer a closer tailored fit, we recommend selecting one size down.
             </Typography>

@@ -30,14 +30,14 @@ export const Toast: React.FC<ToastProps> = ({
   return (
     <Box
       role="status"
-      className={`flex items-center gap-3 bg-[#0E1017] border ${borderClass} px-4 py-3.5 rounded-[2px] shadow-2xl max-w-sm w-full ${className}`}
+      className={`flex items-center gap-3 bg-[var(--bg-surface)] border ${borderClass} px-4 py-3.5 rounded-[2px] shadow-2xl max-w-sm w-full ${className}`}
     >
       {icon}
-      <Typography component="span" className="text-xs font-semibold text-white flex-1">{message}</Typography>
+      <Typography component="span" className="text-xs font-semibold text-[var(--text-primary)] flex-1">{message}</Typography>
       {onClose && (
         <MuiIconButton
           onClick={onClose}
-          className="text-slate-400 hover:text-white p-1 transition-colors"
+          className="text-slate-400 hover:text-[var(--text-primary)] p-1 transition-colors"
           aria-label="Dismiss notification"
           disableRipple
         >

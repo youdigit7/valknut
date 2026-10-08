@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../../context/StoreContext';
+import { useAppTheme } from '../../context/ThemeContext';
 import type { CategoryType } from '../../types/ecommerce';
 import {
   ShoppingBag,
@@ -10,40 +11,16 @@ import {
   X,
   ChevronDown,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { SearchModal } from '../shop/SearchModal';
 import {
-  createTheme, ThemeProvider, Box, Typography, Container,
+  Box, Typography, Container,
   Button, IconButton, Badge, Drawer, Menu as MuiMenu, MenuItem, AppBar, Toolbar
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#06070a', paper: '#0A0C10' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 20,
-          textTransform: 'uppercase',
-          fontWeight: 700,
-        },
-      }
-    }
-  }
-});
+import logoUrl from '../../assets/PHOTO-2026-10-06-23-18-52.jpg';
 
 export const Navbar: React.FC = () => {
   const {
@@ -59,6 +36,7 @@ export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState('LKR');
   const [currencyAnchorEl, setCurrencyAnchorEl] = useState<null | HTMLElement>(null);
+  const { mode, toggleTheme } = useAppTheme();
 
   const cartItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const currencies = ['LKR', 'USD', 'EUR', 'GBP', 'AUD'];
@@ -101,31 +79,32 @@ export const Navbar: React.FC = () => {
   ];
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <AppBar
         position="sticky"
         elevation={isScrolled ? 8 : 0}
         sx={{
-          bgcolor: isScrolled ? 'rgba(6,7,10,0.95)' : 'rgba(6,7,10,0.8)',
+          bgcolor: isScrolled ? (mode === 'dark' ? 'rgba(6,7,10,0.95)' : 'rgba(255,255,255,0.95)') : (mode === 'dark' ? 'rgba(6,7,10,0.8)' : 'rgba(255,255,255,0.8)'),
           backdropFilter: 'blur(24px)',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          borderBottom: '1px solid',
+          borderColor: mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
           transition: 'all 0.3s ease'
         }}
       >
         {/* Top Banner */}
-        <Box sx={{ bgcolor: '#020202', borderBottom: '1px solid rgba(255,255,255,0.05)', py: 0.5, px: 2, textAlign: 'center' }}>
+        <Box sx={{ bgcolor: mode === 'dark' ? '#020202' : '#f1f5f9', borderBottom: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', py: 0.5, px: 2, textAlign: 'center' }}>
           <Box sx={{ maxWidth: 2000, mx: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
               <Box sx={{ w: 6, h: 6, borderRadius: '50%', bgcolor: 'primary.main', boxShadow: '0 0 8px rgba(212,175,55,0.8)' }} />
-              <Typography variant="caption" sx={{ fontSize: '0.65rem', color: 'text.secondary', fontWeight: 'bold', letterSpacing: '0.2em' }}>COLOMBO ARCHIVES</Typography>
+              <Typography variant="caption" sx={{ fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 'bold', letterSpacing: '0.2em' }}>COLOMBO ARCHIVES</Typography>
             </Box>
-            <Typography variant="caption" sx={{ fontSize: '0.65rem', color: 'text.primary', flex: 1, letterSpacing: '0.15em' }}>
+            <Typography variant="caption" sx={{ fontSize: '0.65rem', color: 'var(--text-primary)', flex: 1, letterSpacing: '0.15em' }}>
               <Box component="span" sx={{ color: 'primary.main', fontWeight: 'bold' }}>DROP 04 LIVE</Box>
-              <Box component="span" sx={{ mx: 2, color: 'text.secondary' }}>—</Box>
+              <Box component="span" sx={{ mx: 2, color: 'var(--text-secondary)' }}>—</Box>
               <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>COMPLIMENTARY SHIPPING OVER LKR 25,000</Box>
               <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>FREE SHIP &gt; LKR 25K</Box>
             </Typography>
-            <Typography variant="caption" sx={{ display: { xs: 'none', md: 'inline' }, fontSize: '0.65rem', color: 'text.secondary', fontWeight: 'bold', letterSpacing: '0.2em' }}>
+            <Typography variant="caption" sx={{ display: { xs: 'none', md: 'inline' }, fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 'bold', letterSpacing: '0.2em' }}>
               GLOBAL DISPATCH
             </Typography>
           </Box>
@@ -139,12 +118,24 @@ export const Navbar: React.FC = () => {
               onClick={() => handleNavigate('#/', 'ALL')}
               sx={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer', flexShrink: 0 }}
             >
-              <Box sx={{ width: { xs: 32, lg: 40 }, height: { xs: 32, lg: 40 }, borderRadius: 2, background: 'linear-gradient(135deg, #1e2235, #10121d, #000)', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.25)', transition: 'all 0.3s', '&:hover': { borderColor: 'primary.main', boxShadow: '0 0 20px rgba(212,175,55,0.35)' } }}>
-                <Typography sx={{ color: 'primary.main', fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: { xs: '1rem', lg: '1.2rem' } }}>V</Typography>
-              </Box>
+              <Box 
+                component="img"
+                src={logoUrl}
+                alt="Valknut Logo"
+                sx={{ 
+                  width: { xs: 32, lg: 40 }, height: { xs: 32, lg: 40 }, 
+                  borderRadius: 2, 
+                  objectFit: 'cover',
+                  boxShadow: mode === 'dark' ? '0 4px 15px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.25)' : '0 4px 15px rgba(0,0,0,0.1)', 
+                  transition: 'all 0.3s', 
+                  border: '1px solid',
+                  borderColor: mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
+                  '&:hover': { borderColor: 'primary.main', boxShadow: '0 0 20px rgba(212,175,55,0.35)' } 
+                }} 
+              />
               <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column' }}>
-                <Typography sx={{ fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: { xs: '1rem', lg: '1.25rem' }, letterSpacing: '0.22em', lineHeight: 1 }}>VALKNUT</Typography>
-                <Typography sx={{ fontSize: '0.5rem', fontFamily: '"JetBrains Mono", sans-serif', letterSpacing: '0.4em', color: 'text.secondary', mt: 0.5, fontWeight: 'bold' }}>OFFICIAL</Typography>
+                <Typography sx={{ fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: { xs: '1rem', lg: '1.25rem' }, letterSpacing: '0.22em', lineHeight: 1, color: mode === 'dark' ? 'white' : 'black' }}>VALKNUT</Typography>
+                <Typography sx={{ fontSize: '0.5rem', fontFamily: '"JetBrains Mono", sans-serif', letterSpacing: '0.4em', color: 'var(--text-secondary)', mt: 0.5, fontWeight: 'bold' }}>OFFICIAL</Typography>
               </Box>
             </Box>
 
@@ -196,7 +187,7 @@ export const Navbar: React.FC = () => {
             <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1.5 }}>
               <Button
                 onClick={(e) => setCurrencyAnchorEl(e.currentTarget)}
-                sx={{ minWidth: 0, px: 2, py: 1, fontSize: '0.65rem', color: 'text.secondary', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)', '&:hover': { color: 'white', borderColor: 'primary.main' } }}
+                sx={{ minWidth: 0, px: 2, py: 1, fontSize: '0.65rem', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)', '&:hover': { color: 'var(--text-primary)', borderColor: 'primary.main' } }}
                 endIcon={<ChevronDown size={12} />}
               >
                 {selectedCurrency}
@@ -205,7 +196,7 @@ export const Navbar: React.FC = () => {
                 anchorEl={currencyAnchorEl}
                 open={Boolean(currencyAnchorEl)}
                 onClose={() => setCurrencyAnchorEl(null)}
-                slotProps={{ paper: { sx: { bgcolor: 'background.paper', border: '1px solid rgba(255,255,255,0.1)', mt: 1, boxShadow: '0 20px 50px rgba(0,0,0,0.9)' } } }}
+                slotProps={{ paper: { sx: { bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', mt: 1, boxShadow: '0 20px 50px rgba(0,0,0,0.9)' } } }}
               >
                 {currencies.map(c => (
                   <MenuItem
@@ -220,19 +211,22 @@ export const Navbar: React.FC = () => {
 
               <Button
                 onClick={() => setIsSearchOpen(true)}
-                sx={{ minWidth: 0, px: 2, py: 1, fontSize: '0.7rem', color: 'text.secondary', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)', '&:hover': { color: 'white', borderColor: 'primary.main' }, display: 'flex', gap: 1 }}
+                sx={{ minWidth: 0, px: 2, py: 1, fontSize: '0.7rem', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', borderColor: 'primary.main' }, display: 'flex', gap: 1 }}
               >
                 <Search size={14} color="#D4AF37" /> Search...
                 <Box component="span" sx={{ ml: 1, fontSize: '0.6rem', bgcolor: 'rgba(0,0,0,0.4)', px: 1, borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)' }}>⌘K</Box>
               </Button>
 
-              <IconButton onClick={() => setIsAccountOpen(true)} sx={{ color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } }}>
+              <IconButton onClick={toggleTheme} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                {mode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </IconButton>
+              <IconButton onClick={() => setIsAccountOpen(true)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
                 <User size={18} />
               </IconButton>
-              <IconButton onClick={() => handleNavigate('#/lookbook')} sx={{ color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } }}>
+              <IconButton onClick={() => handleNavigate('#/lookbook')} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
                 <Heart size={18} />
               </IconButton>
-              <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } }}>
+              <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
                 <Badge badgeContent={cartItemsCount} color="primary" sx={{ '& .MuiBadge-badge': { color: 'black', fontWeight: 'bold' } }}>
                   <ShoppingBag size={18} />
                 </Badge>
@@ -241,18 +235,21 @@ export const Navbar: React.FC = () => {
 
             {/* MOBILE / TABLET RIGHT ACTIONS */}
             <Box sx={{ display: { xs: 'flex', lg: 'none' }, alignItems: 'center', gap: 1 }}>
-              <IconButton onClick={() => setIsSearchOpen(true)} sx={{ color: 'text.secondary', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+              <IconButton onClick={toggleTheme} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+                {mode === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              </IconButton>
+              <IconButton onClick={() => setIsSearchOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
                 <Search size={16} />
               </IconButton>
-              <IconButton onClick={() => setIsAccountOpen(true)} sx={{ color: 'text.secondary', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+              <IconButton onClick={() => setIsAccountOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
                 <User size={16} />
               </IconButton>
-              <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'text.secondary', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+              <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
                 <Badge badgeContent={cartItemsCount} color="primary" sx={{ '& .MuiBadge-badge': { color: 'black', fontWeight: 'bold' } }}>
                   <ShoppingBag size={16} />
                 </Badge>
               </IconButton>
-              <IconButton onClick={() => setIsMobileMenuOpen(true)} sx={{ color: 'text.secondary', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+              <IconButton onClick={() => setIsMobileMenuOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
                 <Menu size={16} />
               </IconButton>
             </Box>
@@ -266,16 +263,19 @@ export const Navbar: React.FC = () => {
         anchor="left"
         open={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        slotProps={{ paper: { sx: { width: '85%', maxWidth: 320, bgcolor: 'background.default', borderRight: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' } } }}
+        slotProps={{ paper: { sx: { width: '85%', maxWidth: 320, bgcolor: 'var(--bg-main)', borderRight: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' } } }}
       >
-        <Box sx={{ p: 3, borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(to bottom, rgba(255,255,255,0.02), transparent)' }}>
+        <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: mode === 'dark' ? 'linear-gradient(to bottom, rgba(255,255,255,0.02), transparent)' : 'linear-gradient(to bottom, rgba(0,0,0,0.02), transparent)' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box sx={{ width: 32, height: 32, borderRadius: 2, background: 'linear-gradient(135deg, #1e2235, #10121d, #000)', border: '1px solid rgba(212,175,55,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Typography sx={{ color: 'primary.main', fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: '1rem' }}>V</Typography>
-            </Box>
+            <Box 
+              component="img"
+              src={logoUrl}
+              alt="Valknut Logo"
+              sx={{ width: 32, height: 32, borderRadius: 2, objectFit: 'cover', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(212,175,55,0.3)' : 'rgba(0,0,0,0.1)' }} 
+            />
             <Typography sx={{ fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: '1.2rem', letterSpacing: '0.2em' }}>VALKNUT</Typography>
           </Box>
-          <IconButton onClick={() => setIsMobileMenuOpen(false)} sx={{ color: 'text.secondary', border: '1px solid rgba(255,255,255,0.05)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+          <IconButton onClick={() => setIsMobileMenuOpen(false)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.05)', bgcolor: 'rgba(255,255,255,0.03)' }}>
             <X size={16} />
           </IconButton>
         </Box>
@@ -283,10 +283,10 @@ export const Navbar: React.FC = () => {
         <Box sx={{ flex: 1, overflowY: 'auto', p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
           <Box
             onClick={() => { setIsMobileMenuOpen(false); setIsSearchOpen(true); }}
-            sx={{ display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: '#10121d', p: 1.5, borderRadius: 5, border: '1px solid rgba(255,255,255,0.1)' }}
+            sx={{ display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: 'var(--bg-surface)', p: 1.5, borderRadius: 5, border: '1px solid rgba(255,255,255,0.1)' }}
           >
             <Search size={16} color="#94a3b8" />
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>Search collections...</Typography>
+            <Typography variant="caption" sx={{ color: 'var(--text-secondary)' }}>Search collections...</Typography>
           </Box>
 
           <Box>
@@ -302,7 +302,7 @@ export const Navbar: React.FC = () => {
                   key={item.label}
                   onClick={() => handleNavigate(item.hash, item.cat as CategoryType | 'ALL')}
                   endIcon={<ChevronRight size={14} />}
-                  sx={{ justifyContent: 'space-between', color: 'text.secondary', py: 1.5, px: 2, borderRadius: 2, '&:hover': { bgcolor: 'rgba(255,255,255,0.05)', color: 'white' } }}
+                  sx={{ justifyContent: 'space-between', color: 'var(--text-secondary)', py: 1.5, px: 2, borderRadius: 2, '&:hover': { bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' } }}
                 >
                   {item.label}
                 </Button>
@@ -318,10 +318,10 @@ export const Navbar: React.FC = () => {
           </Box>
 
           <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.05)', pt: 3 }}>
-            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold', letterSpacing: '0.25em', display: 'block', mb: 2 }}>DISCOVER</Typography>
+            <Typography variant="caption" sx={{ color: 'var(--text-secondary)', fontWeight: 'bold', letterSpacing: '0.25em', display: 'block', mb: 2 }}>DISCOVER</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {['OUR STORY', 'LOOKBOOK', 'SIZE GUIDE', 'TRACK ORDER'].map((label, idx) => (
-                <Button key={idx} onClick={() => { setIsMobileMenuOpen(false); window.location.hash = `#/${label.toLowerCase().replace(' ', '-')}` }} sx={{ justifyContent: 'flex-start', color: 'text.secondary', py: 1.5, px: 2, '&:hover': { color: 'white' } }}>
+                <Button key={idx} onClick={() => { setIsMobileMenuOpen(false); window.location.hash = `#/${label.toLowerCase().replace(' ', '-')}` }} sx={{ justifyContent: 'flex-start', color: 'var(--text-secondary)', py: 1.5, px: 2, '&:hover': { color: 'var(--text-primary)' } }}>
                   {label}
                 </Button>
               ))}
@@ -337,6 +337,6 @@ export const Navbar: React.FC = () => {
           window.location.hash = `#/shop?q=${encodeURIComponent(term)}`;
         }}
       />
-    </ThemeProvider>
+    </>
   );
 };

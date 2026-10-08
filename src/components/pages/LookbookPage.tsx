@@ -4,73 +4,9 @@ import { useStore } from '../../context/StoreContext';
 import { SEOHead } from '../common/SEOHead';
 import { getBreadcrumbSchema } from '../../utils/seo';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Button, 
+  Box, Typography, Button, 
   Container, Card, CardContent, Breadcrumbs, Link, Zoom, Fade, Chip
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A', paper: '#0E1017' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h4: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    h5: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 700, textTransform: 'uppercase' },
-    body1: { fontFamily: '"JetBrains Mono", sans-serif' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    button: { fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 800 },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          padding: '12px 24px',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        },
-        contained: {
-          color: '#000000',
-          background: 'linear-gradient(145deg, #e3bc3b, #bf9d31)',
-          boxShadow: '0 6px 20px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(0,0,0,0.2)',
-          '&:hover': {
-            background: 'linear-gradient(145deg, #f2c83e, #ccaa34)',
-            transform: 'translateY(-3px) scale(1.02)',
-            boxShadow: '0 8px 25px rgba(212, 175, 55, 0.4), inset 0 2px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.2)',
-          },
-          '&:active': {
-            transform: 'translateY(1px)',
-            boxShadow: '0 2px 10px rgba(212, 175, 55, 0.3), inset 0 2px 5px rgba(0,0,0,0.3)',
-          }
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
-          border: '1px solid rgba(255,255,255,0.05)',
-          background: 'linear-gradient(145deg, #131520, #0E1017)',
-          boxShadow: '8px 8px 20px rgba(0,0,0,0.5), -4px -4px 15px rgba(255,255,255,0.02)',
-          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          '&:hover': {
-            transform: 'translateY(-12px)',
-            boxShadow: '15px 15px 40px rgba(0,0,0,0.8), -6px -6px 20px rgba(255,255,255,0.03), 0 0 25px rgba(212,175,55,0.25)',
-            borderColor: 'rgba(212,175,55,0.4)',
-          }
-        }
-      }
-    }
-  }
-});
 
 interface LookbookItem {
   id: string;
@@ -166,8 +102,8 @@ export const LookbookPage: React.FC = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+    <>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'var(--bg-main)', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
         <SEOHead metadata={seoMetadata} />
         
         {/* Ambient Background Effects */}
@@ -176,8 +112,8 @@ export const LookbookPage: React.FC = () => {
         <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
           
           {/* Breadcrumbs */}
-          <Breadcrumbs separator={<Typography sx={{ color: 'text.secondary' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
-            <Link href="#/" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>Home</Link>
+          <Breadcrumbs separator={<Typography sx={{ color: 'var(--text-secondary)' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
+            <Link href="#/" underline="hover" sx={{ color: 'var(--text-secondary)', '&:hover': { color: 'primary.main' } }}>Home</Link>
             <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>Editorial Lookbook 2026</Typography>
           </Breadcrumbs>
 
@@ -193,7 +129,7 @@ export const LookbookPage: React.FC = () => {
                 Editorial <Box component="span" sx={{ background: 'linear-gradient(to right, #D4AF37, #FFF5D1, #D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>Lookbook</Box>
               </Typography>
 
-              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '600px', mx: 'auto', lineHeight: 1.8 }}>
+              <Typography variant="body1" sx={{ color: 'var(--text-secondary)', maxWidth: '600px', mx: 'auto', lineHeight: 1.8 }}>
                 Documenting the collision of dark architectural minimalism and Colombo streetwear culture. Shot on 35mm brutalist concrete backdrops.
               </Typography>
             </Box>
@@ -219,7 +155,7 @@ export const LookbookPage: React.FC = () => {
 
                     {/* Collection Tag */}
                     <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
-                      <Chip label={item.collection} size="small" sx={{ bgcolor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', fontFamily: 'monospace', letterSpacing: '0.1em', fontSize: '0.65rem', borderRadius: 1 }} />
+                      <Chip label={item.collection} size="small" sx={{ bgcolor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)', color: 'var(--text-primary)', border: '1px solid rgba(255,255,255,0.1)', fontFamily: 'monospace', letterSpacing: '0.1em', fontSize: '0.65rem', borderRadius: 1 }} />
                     </Box>
 
                     {/* Hover Action Button */}
@@ -237,7 +173,7 @@ export const LookbookPage: React.FC = () => {
                     </Box>
                   </Box>
 
-                  <CardContent sx={{ flexGrow: 1, bgcolor: 'background.paper', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                  <CardContent sx={{ flexGrow: 1, bgcolor: 'var(--bg-surface)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                     <Typography variant="h6" sx={{ fontSize: '1rem', mb: 1, letterSpacing: '0.05em' }}>
                       {item.title}
                     </Typography>
@@ -252,6 +188,6 @@ export const LookbookPage: React.FC = () => {
           
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

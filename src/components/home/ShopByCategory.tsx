@@ -1,24 +1,8 @@
 import React from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Grid, Button
+  Box, Typography, Container, Grid, Button
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0C12' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
 
 interface CategoryCardProps {
   title: string;
@@ -120,7 +104,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, subtitle, imageUrl, 
           variant="h3" 
           className="cat-title"
           sx={{ 
-            color: 'white', 
+            color: 'var(--text-primary)', 
             fontSize: { xs: '1.5rem', sm: '2rem' }, 
             letterSpacing: '0.05em', 
             mb: 1,
@@ -152,7 +136,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, subtitle, imageUrl, 
             display: 'inline-flex', 
             alignItems: 'center', 
             gap: 1.5, 
-            color: 'white', 
+            color: 'var(--text-primary)', 
             transition: 'color 0.3s ease'
           }}
         >
@@ -185,13 +169,13 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, subtitle, imageUrl, 
 
 export const ShopByCategory: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
           position: 'relative',
           py: { xs: 10, sm: 14 }, 
-          bgcolor: 'background.default', 
+          bgcolor: 'var(--bg-main)', 
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           width: '100%',
           overflow: 'hidden'
@@ -243,7 +227,7 @@ export const ShopByCategory: React.FC = () => {
             <Typography 
               variant="body2" 
               sx={{ 
-                color: 'text.secondary', 
+                color: 'var(--text-secondary)', 
                 maxWidth: '600px', 
                 mx: 'auto',
                 mb: 4,
@@ -255,7 +239,7 @@ export const ShopByCategory: React.FC = () => {
             <Button 
               href="#/shop"
               sx={{ 
-                color: 'text.primary',
+                color: 'var(--text-primary)',
                 borderBottom: '1px solid',
                 borderColor: 'primary.main',
                 pb: 0.5,
@@ -307,6 +291,6 @@ export const ShopByCategory: React.FC = () => {
 
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

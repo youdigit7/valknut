@@ -2,24 +2,8 @@ import React from 'react';
 import { useStore } from '../../context/StoreContext';
 import { ProductCard } from '../ui/ProductCard';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Grid, Button
+  Box, Typography, Container, Grid, Button
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#050608', paper: '#0A0C10' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
 
 export const BestSellersSection: React.FC = () => {
   const { products, setSelectedProduct, addToCart, showToast } = useStore();
@@ -30,12 +14,12 @@ export const BestSellersSection: React.FC = () => {
   if (displayProducts.length === 0) return null;
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
           py: { xs: 7, sm: 10, lg: 12 }, 
-          bgcolor: '#0A0A0A', 
+          bgcolor: 'var(--bg-main)', 
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           width: '100%',
           overflow: 'hidden'
@@ -71,7 +55,7 @@ export const BestSellersSection: React.FC = () => {
             <Typography 
               variant="body2" 
               sx={{ 
-                color: 'text.secondary', 
+                color: 'var(--text-secondary)', 
                 maxWidth: '600px', 
                 mx: 'auto',
                 mb: 4,
@@ -83,7 +67,7 @@ export const BestSellersSection: React.FC = () => {
             <Button 
               href="#/shop"
               sx={{ 
-                color: 'text.primary',
+                color: 'var(--text-primary)',
                 borderBottom: '1px solid',
                 borderColor: 'primary.main',
                 pb: 0.5,
@@ -125,6 +109,6 @@ export const BestSellersSection: React.FC = () => {
 
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

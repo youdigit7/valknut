@@ -1,60 +1,12 @@
 import React, { useState } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, 
+  Box, Typography, Container, 
   Grid, Link, IconButton, Paper, TextField, Button
 } from '@mui/material';
+import logoUrl from '../../assets/PHOTO-2026-10-06-23-18-52.jpg';
 
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#050608', paper: '#0A0C10' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 4,
-          textTransform: 'uppercase',
-          letterSpacing: '0.14em',
-          fontWeight: 900,
-        },
-        contained: {
-          color: '#000000',
-          background: 'linear-gradient(145deg, #e3bc3b, #bf9d31)',
-          boxShadow: '0 4px 15px rgba(212, 175, 55, 0.2), inset 0 2px 0 rgba(255,255,255,0.3)',
-          '&:hover': {
-            background: 'linear-gradient(145deg, #f2c83e, #ccaa34)',
-            boxShadow: '0 6px 20px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.4)',
-          }
-        }
-      }
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root': {
-            backgroundColor: '#12141E',
-            borderRadius: 4,
-            fontFamily: '"JetBrains Mono", sans-serif',
-            '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
-            '&:hover fieldset': { borderColor: 'rgba(212,175,55,0.5)' },
-            '&.Mui-focused fieldset': { borderColor: '#D4AF37' },
-          }
-        }
-      }
-    }
-  }
-});
+
 
 export const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -70,11 +22,11 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box component="footer" sx={{ bgcolor: '#08090C', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+    <>
+      <Box component="footer" sx={{ bgcolor: 'var(--bg-main)', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
         
         {/* Top Editorial Banner */}
-        <Paper elevation={0} sx={{ bgcolor: 'background.paper', py: { xs: 6, sm: 8 }, borderBottom: '1px solid rgba(255,255,255,0.05)', borderRadius: 0 }}>
+        <Paper elevation={0} sx={{ bgcolor: 'var(--bg-surface)', py: { xs: 6, sm: 8 }, borderBottom: '1px solid rgba(255,255,255,0.05)', borderRadius: 0 }}>
           <Container maxWidth="xl">
             <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, alignItems: 'center', justifyContent: 'space-between', gap: 4, textAlign: { xs: 'center', lg: 'left' } }}>
               <Box>
@@ -97,7 +49,7 @@ export const Footer: React.FC = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    sx={{ flexGrow: 1, minWidth: '250px', '& .MuiInputBase-input': { fontSize: '0.75rem', color: 'white' } }}
+                    sx={{ flexGrow: 1, minWidth: '250px', '& .MuiInputBase-input': { fontSize: '0.75rem', color: 'var(--text-primary)' } }}
                   />
                   <Button 
                     type="submit" 
@@ -132,12 +84,15 @@ export const Footer: React.FC = () => {
             {/* Col 1: Brand & Socials */}
             <Grid size={{ xs: 12, md: 12, lg: 4 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                <Box sx={{ width: 40, height: 40, border: '1.5px solid rgba(212,175,55,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 1 }}>
-                  <Typography sx={{ color: 'primary.main', fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: '1.2rem' }}>V</Typography>
-                </Box>
+                <Box 
+                  component="img"
+                  src={logoUrl}
+                  alt="Valknut Logo"
+                  sx={{ width: 40, height: 40, borderRadius: 1, objectFit: 'cover', border: '1.5px solid rgba(212,175,55,0.8)' }} 
+                />
                 <Typography sx={{ fontSize: '1.5rem', fontWeight: 900, letterSpacing: '0.25em', fontFamily: '"Syne", sans-serif' }}>VALKNUT</Typography>
               </Box>
-              <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.8, mb: 4, maxWidth: '400px' }}>
+              <Typography variant="body2" sx={{ color: 'var(--text-secondary)', lineHeight: 1.8, mb: 4, maxWidth: '400px' }}>
                 High-end streetwear rooted in Norse symbolism and modern minimalism. Designed in Sri Lanka and engineered for the world.
               </Typography>
               
@@ -157,7 +112,7 @@ export const Footer: React.FC = () => {
                     sx={{ 
                       border: '1px solid rgba(255,255,255,0.1)', 
                       borderRadius: 1, 
-                      color: 'text.secondary',
+                      color: 'var(--text-secondary)',
                       transition: 'all 0.3s',
                       '&:hover': {
                         color: social.color || 'primary.main',
@@ -202,7 +157,7 @@ export const Footer: React.FC = () => {
                   { label: 'Sri Lanka Streetwear', href: '#/sri-lanka-streetwear' },
                   { label: 'Contact Us', href: '#/brand-story' }
                 ].map((link, idx) => (
-                  <Link key={idx} href={link.href} underline="none" sx={{ color: 'text.secondary', fontSize: '0.8rem', transition: 'color 0.2s', '&:hover': { color: 'white' } }}>
+                  <Link key={idx} href={link.href} underline="none" sx={{ color: 'var(--text-secondary)', fontSize: '0.8rem', transition: 'color 0.2s', '&:hover': { color: 'var(--text-primary)' } }}>
                     {link.label}
                   </Link>
                 ))}
@@ -220,7 +175,7 @@ export const Footer: React.FC = () => {
                   { label: 'Exchange & Returns', href: '#/shipping-returns' },
                   { label: 'FAQs', href: '#/shipping-returns' }
                 ].map((link, idx) => (
-                  <Link key={idx} href={link.href} underline="none" sx={{ color: 'text.secondary', fontSize: '0.8rem', transition: 'color 0.2s', '&:hover': { color: 'white' } }}>
+                  <Link key={idx} href={link.href} underline="none" sx={{ color: 'var(--text-secondary)', fontSize: '0.8rem', transition: 'color 0.2s', '&:hover': { color: 'var(--text-primary)' } }}>
                     {link.label}
                   </Link>
                 ))}
@@ -249,14 +204,14 @@ export const Footer: React.FC = () => {
         </Container>
 
         {/* Bottom Copyright & Payment Methods */}
-        <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.05)', bgcolor: 'background.default' }}>
+        <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.05)', bgcolor: 'var(--bg-main)' }}>
           <Container maxWidth="xl" sx={{ py: 3, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center', justifyContent: 'space-between', gap: 3 }}>
-            <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem' }}>
+            <Typography variant="caption" sx={{ color: 'var(--text-secondary)', fontSize: '0.7rem' }}>
               &copy; {new Date().getFullYear()} VALKNUT Official. All rights reserved. Built in Colombo.
             </Typography>
             
             <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1 }}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.65rem', mr: 1 }}>ACCEPTED:</Typography>
+              <Typography variant="caption" sx={{ color: 'var(--text-secondary)', fontSize: '0.65rem', mr: 1 }}>ACCEPTED:</Typography>
               {['Visa', 'Mastercard', 'Koko', 'MintPay', 'Bank Transfer', 'COD'].map(method => (
                 <Box key={method} sx={{ px: 1.5, py: 0.5, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, bgcolor: '#12141E' }}>
                   <Typography variant="caption" sx={{ color: '#e2e8f0', fontSize: '0.65rem', fontWeight: 'bold', letterSpacing: '0.05em' }}>
@@ -269,6 +224,6 @@ export const Footer: React.FC = () => {
         </Box>
 
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

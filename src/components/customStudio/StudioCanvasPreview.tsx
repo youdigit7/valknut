@@ -96,7 +96,7 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
           justifyContent: 'center', 
           gap: 0.5, 
           p: 0.5, 
-          bgcolor: '#0E1017', 
+          bgcolor: 'var(--bg-surface)', 
           borderRadius: 2, 
           border: '1px solid rgba(255,255,255,0.1)', 
           width: '100%', 
@@ -135,9 +135,9 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
                   boxShadow: '0 4px 10px rgba(212,175,55,0.3)',
                 } : {
                   bgcolor: 'transparent',
-                  color: 'text.secondary',
+                  color: 'var(--text-secondary)',
                   '&:hover': {
-                    color: 'white',
+                    color: 'var(--text-primary)',
                     bgcolor: 'rgba(255,255,255,0.05)'
                   }
                 })
@@ -409,7 +409,7 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
             bottom: 12, 
             right: 12, 
             fontSize: '0.5625rem', 
-            color: 'text.secondary', 
+            color: 'var(--text-secondary)', 
             fontWeight: 'bold', 
             textTransform: 'uppercase', 
             display: 'flex', 

@@ -41,7 +41,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       onClick={() => setSelectedProduct(product)}
       sx={{
         position: 'relative',
-        bgcolor: '#0e1017',
+        bgcolor: 'var(--bg-surface)',
         border: '1px solid rgba(255,255,255,0.1)',
         borderRadius: 2,
         overflow: 'hidden',
@@ -93,7 +93,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </Box>
           )}
           {product.isNewArrival && (
-            <Box sx={{ px: 1.5, py: 0.5, borderRadius: 5, bgcolor: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontSize: '0.625rem', fontWeight: 'bold', backdropFilter: 'blur(4px)' }}>
+            <Box sx={{ px: 1.5, py: 0.5, borderRadius: 5, bgcolor: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.2)', color: 'var(--text-primary)', fontSize: '0.625rem', fontWeight: 'bold', backdropFilter: 'blur(4px)' }}>
               NEW
             </Box>
           )}
@@ -147,7 +147,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             sx={{
               flex: 1,
               py: 1,
-              bgcolor: 'white',
+              bgcolor: 'var(--text-primary)',
               color: 'black',
               fontWeight: 900,
               fontSize: '0.6875rem',
@@ -176,7 +176,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             title="Quick View"
             sx={{
               bgcolor: 'rgba(255,255,255,0.2)',
-              color: 'white',
+              color: 'var(--text-primary)',
               borderRadius: 1,
               backdropFilter: 'blur(4px)',
               width: 36,
@@ -197,7 +197,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', letterSpacing: '0.2em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5 }}>
             {product.subCategory}
           </Typography>
-          <Typography className="product-title" sx={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'white', transition: 'colors 0.3s', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          <Typography className="product-title" sx={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--text-primary)', transition: 'colors 0.3s', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {product.name}
           </Typography>
         </Box>
@@ -205,11 +205,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Price & Variant Swatches */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pt: 1, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-            <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, color: 'white' }}>
+            <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, color: 'var(--text-primary)' }}>
               LKR {displayPrice.toLocaleString()}
             </Typography>
             {hasSale && (
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', textDecoration: 'line-through' }}>
+              <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textDecoration: 'line-through' }}>
                 LKR {product.price.toLocaleString()}
               </Typography>
             )}

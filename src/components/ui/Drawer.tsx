@@ -53,10 +53,10 @@ export const Drawer: React.FC<DrawerProps> = ({
     >
       {/* Header */}
       <Box className={`w-full ${widthClasses} bg-[#0D0E12] border-${position === 'right' ? 'l' : 'r'} border-white/10 shadow-2xl flex-1 flex flex-col h-full`}>
-      <Box className="flex items-center justify-between p-5 border-b border-white/10 bg-[#12141E]/50">
+      <Box className="flex items-center justify-between p-5 border-b border-white/10 bg-[var(--bg-card)]/50">
         <Box>
           {title && (
-            <Typography variant="h3" className="text-sm font-black uppercase text-white tracking-[0.2em] font-syne">
+            <Typography variant="h3" className="text-sm font-black uppercase text-[var(--text-primary)] tracking-[0.2em] font-syne">
               {title}
             </Typography>
           )}
@@ -68,7 +68,7 @@ export const Drawer: React.FC<DrawerProps> = ({
         </Box>
         <IconButton
           onClick={onClose}
-          className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-[2px] transition-colors"
+          className="p-1.5 text-slate-400 hover:text-[var(--text-primary)] hover:bg-white/5 rounded-[2px] transition-colors"
           aria-label="Close drawer"
         >
           <X size={20} />
@@ -80,7 +80,7 @@ export const Drawer: React.FC<DrawerProps> = ({
 
       {/* Footer */}
       {footer && (
-        <Box className="p-5 border-t border-white/10 bg-[#12141E]/50">
+        <Box className="p-5 border-t border-white/10 bg-[var(--bg-card)]/50">
           {footer}
         </Box>
       )}

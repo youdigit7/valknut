@@ -34,7 +34,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               endAdornment: rightIcon ? <InputAdornment position="end" className="text-slate-400">{rightIcon}</InputAdornment> : null,
               sx: {
                 backgroundColor: '#12141E',
-                color: 'white',
+                color: 'var(--text-primary)',
                 borderRadius: '2px',
                 '& fieldset': {
                   borderColor: error ? '#ef4444' : 'rgba(255, 255, 255, 0.1)',

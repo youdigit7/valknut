@@ -1,33 +1,17 @@
 import React from 'react';
 import { ArrowRight, Play } from 'lucide-react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Grid, Button
+  Box, Typography, Container, Grid, Button
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
 
 export const ValknutStorySection: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
           py: { xs: 8, sm: 12, lg: 16 }, 
-          bgcolor: 'background.default', 
+          bgcolor: 'var(--bg-main)', 
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           width: '100%',
           overflow: 'hidden'
@@ -59,7 +43,7 @@ export const ValknutStorySection: React.FC = () => {
                     letterSpacing: '-0.02em',
                     lineHeight: 1.12,
                     textShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                    color: 'white'
+                    color: 'var(--text-primary)'
                   }}
                 >
                   THREE KNOTS.<br />
@@ -80,7 +64,7 @@ export const ValknutStorySection: React.FC = () => {
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    color: 'text.secondary', 
+                    color: 'var(--text-secondary)', 
                     fontSize: { xs: '0.875rem', sm: '1rem' },
                     lineHeight: 1.8,
                     fontWeight: 'bold',
@@ -112,7 +96,7 @@ export const ValknutStorySection: React.FC = () => {
                       height: '48px',
                       px: 4,
                       border: '1px solid rgba(255,255,255,0.2)',
-                      color: 'white',
+                      color: 'var(--text-primary)',
                       fontWeight: 900,
                       fontSize: { xs: '0.75rem', sm: '0.8125rem' },
                       letterSpacing: '0.15em',
@@ -213,7 +197,7 @@ export const ValknutStorySection: React.FC = () => {
                   <Typography 
                     variant="h6" 
                     sx={{ 
-                      color: 'white', 
+                      color: 'var(--text-primary)', 
                       fontSize: '0.875rem', 
                       fontWeight: 900, 
                       textTransform: 'uppercase', 
@@ -226,7 +210,7 @@ export const ValknutStorySection: React.FC = () => {
                   <Typography 
                     variant="caption" 
                     sx={{ 
-                      color: 'text.secondary', 
+                      color: 'var(--text-secondary)', 
                       fontSize: '0.6875rem', 
                       letterSpacing: '0.05em' 
                     }}
@@ -240,6 +224,6 @@ export const ValknutStorySection: React.FC = () => {
           </Grid>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

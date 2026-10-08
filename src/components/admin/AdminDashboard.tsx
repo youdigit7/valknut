@@ -474,10 +474,10 @@ export const AdminDashboard: React.FC = () => {
   // AUTHENTICATION GUARD SCREEN
   if (!isAuthorizedAdmin) {
     return (
-      <Box className="w-full min-h-screen bg-[#0A0A0A] py-16 px-4 flex items-center justify-center border-b border-white/10">
+      <Box className="w-full min-h-screen bg-[var(--bg-main)] py-16 px-4 flex items-center justify-center border-b border-white/10">
         <Paper
           elevation={24}
-          className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-md rounded-md p-8 relative overflow-hidden animate-fade-in"
+          className="bg-[var(--bg-surface)] border border-[#D4AF37]/40 w-full max-w-md rounded-md p-8 relative overflow-hidden animate-fade-in"
           sx={{ backgroundColor: '#0E1017' }}
         >
           <Box className="absolute -top-10 -right-10 w-32 h-32 bg-[#D4AF37]/5 rounded-full blur-2xl pointer-events-none" />
@@ -489,7 +489,7 @@ export const AdminDashboard: React.FC = () => {
             <Typography variant="overline" className="text-[10px] font-mono font-bold tracking-[0.3em] text-[#D4AF37] uppercase block pt-2" sx={{ lineHeight: 1.2 }}>
               RESTRICTED VALKNUT ARCHIVE
             </Typography>
-            <Typography variant="h5" className="font-black uppercase text-white font-syne tracking-tight">
+            <Typography variant="h5" className="font-black uppercase text-[var(--text-primary)] font-syne tracking-tight">
               ADMINISTRATIVE ACCESS
             </Typography>
             <Typography variant="caption" className="text-slate-400 font-mono text-xs">
@@ -544,7 +544,7 @@ export const AdminDashboard: React.FC = () => {
             <Typography
               component="a"
               href="#/"
-              className="w-full text-center text-slate-400 hover:text-white text-[11px] font-mono block transition-colors mt-2"
+              className="w-full text-center text-slate-400 hover:text-[var(--text-primary)] text-[11px] font-mono block transition-colors mt-2"
             >
               Return to VALKNUT Storefront
             </Typography>
@@ -556,10 +556,10 @@ export const AdminDashboard: React.FC = () => {
 
   // FULL AUTHORIZED ADMIN OPERATIONS SUITE
   return (
-    <Box className="w-full min-h-screen bg-[#08090D] text-white flex flex-col antialiased">
+    <Box className="w-full min-h-screen bg-[#08090D] text-[var(--text-primary)] flex flex-col antialiased">
 
       {/* Top Operations Bar */}
-      <Box component="header" className="bg-[#0E1017] border-b border-white/10 sticky top-0 z-40 px-4 sm:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+      <Box component="header" className="bg-[var(--bg-surface)] border-b border-white/10 sticky top-0 z-40 px-4 sm:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
         <Box className="flex items-center gap-4">
           <Box className="flex items-center gap-2">
             <Box className="w-8 h-8 rounded bg-[#D4AF37] text-black flex items-center justify-center font-mono font-black text-sm">
@@ -569,7 +569,7 @@ export const AdminDashboard: React.FC = () => {
               <Typography className="text-[9px] font-mono font-bold tracking-[0.25em] text-[#D4AF37] uppercase block">
                 VALKNUT MASTER CONTROL
               </Typography>
-              <Typography variant="h6" className="text-base font-black uppercase text-white font-syne tracking-tight">
+              <Typography variant="h6" className="text-base font-black uppercase text-[var(--text-primary)] font-syne tracking-tight">
                 EXECUTIVE SUITE
               </Typography>
             </Box>
@@ -602,7 +602,7 @@ export const AdminDashboard: React.FC = () => {
 
           <Box className="flex items-center gap-2 border-l border-white/10 pl-3">
             <Box className="text-right hidden sm:block">
-              <Typography className="text-xs font-bold text-white block font-mono">{user?.name || 'Administrator'}</Typography>
+              <Typography className="text-xs font-bold text-[var(--text-primary)] block font-mono">{user?.name || 'Administrator'}</Typography>
               <Typography className="text-[10px] text-[#D4AF37] font-mono">SUPABASE FOUNDER</Typography>
             </Box>
             <IconButton
@@ -652,11 +652,11 @@ export const AdminDashboard: React.FC = () => {
             {/* KPI Matrix */}
             <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Box>
-                <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2 relative overflow-hidden h-full" sx={{ backgroundColor: '#0E1017' }}>
+                <Paper className="p-6 bg-[var(--bg-surface)] border border-white/10 rounded-md space-y-2 relative overflow-hidden h-full" sx={{ backgroundColor: '#0E1017' }}>
                   <Typography className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
                     GROSS REVENUE (LKR)
                   </Typography>
-                  <Typography className="text-3xl font-black text-white font-mono mt-2">
+                  <Typography className="text-3xl font-black text-[var(--text-primary)] font-mono mt-2">
                     LKR {totalRevenue.toLocaleString()}
                   </Typography>
                   <Box className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono mt-2">
@@ -667,7 +667,7 @@ export const AdminDashboard: React.FC = () => {
               </Box>
 
               <Box>
-                <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2 h-full" sx={{ backgroundColor: '#0E1017' }}>
+                <Paper className="p-6 bg-[var(--bg-surface)] border border-white/10 rounded-md space-y-2 h-full" sx={{ backgroundColor: '#0E1017' }}>
                   <Typography className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
                     TOTAL COMPLETED ORDERS
                   </Typography>
@@ -681,11 +681,11 @@ export const AdminDashboard: React.FC = () => {
               </Box>
 
               <Box>
-                <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2 h-full" sx={{ backgroundColor: '#0E1017' }}>
+                <Paper className="p-6 bg-[var(--bg-surface)] border border-white/10 rounded-md space-y-2 h-full" sx={{ backgroundColor: '#0E1017' }}>
                   <Typography className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
                     REGISTERED BUYERS
                   </Typography>
-                  <Typography className="text-3xl font-black text-white font-mono mt-2">
+                  <Typography className="text-3xl font-black text-[var(--text-primary)] font-mono mt-2">
                     {customers.length}
                   </Typography>
                   <Typography className="text-xs text-emerald-400 font-mono mt-2">
@@ -695,7 +695,7 @@ export const AdminDashboard: React.FC = () => {
               </Box>
 
               <Box>
-                <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-md space-y-2 h-full" sx={{ backgroundColor: '#0E1017' }}>
+                <Paper className="p-6 bg-[var(--bg-surface)] border border-white/10 rounded-md space-y-2 h-full" sx={{ backgroundColor: '#0E1017' }}>
                   <Typography className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
                     LOW-STOCK ALERTS (&le; 5 PCS)
                   </Typography>
@@ -714,9 +714,9 @@ export const AdminDashboard: React.FC = () => {
 
               {/* Recent Orders (8 cols) */}
               <Box className="lg:col-span-8">
-                <Paper className="bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4 h-full" sx={{ backgroundColor: '#0E1017', color: 'white' }}>
+                <Paper className="bg-[var(--bg-surface)] border border-white/10 rounded-md p-6 space-y-4 h-full" sx={{ backgroundColor: '#0E1017', color: 'var(--text-primary)' }}>
                   <Box className="flex items-center justify-between border-b border-white/10 pb-3">
-                    <Typography className="text-sm font-black uppercase text-white font-syne tracking-wider">
+                    <Typography className="text-sm font-black uppercase text-[var(--text-primary)] font-syne tracking-wider">
                       RECENT ORDERS STREAM
                     </Typography>
                     <Typography
@@ -733,14 +733,14 @@ export const AdminDashboard: React.FC = () => {
                       <Box key={ord.id} className="py-3.5 flex items-center justify-between gap-4 text-xs font-mono">
                         <Box className="space-y-0.5">
                           <Box className="flex items-center gap-2">
-                            <strong className="text-white">{ord.orderNumber}</strong>
+                            <strong className="text-[var(--text-primary)]">{ord.orderNumber}</strong>
                             <Chip size="small" label={ord.paymentGateway} className="text-[10px] bg-white/5 border border-white/10 text-slate-300 rounded" />
                           </Box>
                           <Typography className="text-slate-400 text-[11px]">{ord.customerInfo.fullName} • {ord.customerInfo.phone}</Typography>
                         </Box>
 
                         <Box className="text-right">
-                          <Typography className="text-white font-bold text-xs">LKR {ord.totalAmount.toLocaleString()}</Typography>
+                          <Typography className="text-[var(--text-primary)] font-bold text-xs">LKR {ord.totalAmount.toLocaleString()}</Typography>
                           <Typography className="text-[10px] text-[#D4AF37] font-bold uppercase">{ord.orderStatus}</Typography>
                         </Box>
                       </Box>
@@ -751,7 +751,7 @@ export const AdminDashboard: React.FC = () => {
 
               {/* Low Stock Items (4 cols) */}
               <Box className="lg:col-span-4">
-                <Paper className="bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4 h-full" sx={{ backgroundColor: '#0E1017', color: 'white' }}>
+                <Paper className="bg-[var(--bg-surface)] border border-white/10 rounded-md p-6 space-y-4 h-full" sx={{ backgroundColor: '#0E1017', color: 'var(--text-primary)' }}>
                   <Typography className="text-sm font-black uppercase text-amber-400 font-syne tracking-wider flex items-center gap-2">
                     <AlertTriangle size={16} />
                     <Typography component="span">LOW INVENTORY NOTICES</Typography>
@@ -768,7 +768,7 @@ export const AdminDashboard: React.FC = () => {
                           <Box className="flex items-center gap-2.5">
                             <Box component="img" src={prod.images[0]} alt="" className="w-10 h-12 object-cover rounded bg-[#141620]" />
                             <Box>
-                              <Typography className="text-white font-bold truncate max-w-[140px] text-xs">{prod.name}</Typography>
+                              <Typography className="text-[var(--text-primary)] font-bold truncate max-w-[140px] text-xs">{prod.name}</Typography>
                               <Typography className="text-[10px] text-slate-400">{prod.subCategory}</Typography>
                             </Box>
                           </Box>
@@ -795,11 +795,11 @@ export const AdminDashboard: React.FC = () => {
         {/* 2. PRODUCT MANAGEMENT TAB */}
         {activeTab === 'PRODUCTS' && (
           <Box className="space-y-6 animate-fade-in">
-            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
+            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[var(--bg-surface)] border border-white/10 p-4 rounded-md">
               <Box className="flex items-center gap-3">
                 <Package className="text-[#D4AF37]" size={22} />
                 <Box>
-                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
+                  <Typography variant="h6" className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
                     PRODUCT CATALOG REPOSITORY
                   </Typography>
                   <Typography variant="body2" className="text-xs font-mono text-slate-400">
@@ -818,7 +818,7 @@ export const AdminDashboard: React.FC = () => {
             </Box>
 
             {/* Products Table */}
-            <TableContainer component={Paper} className="bg-[#0E1017] border border-white/10 rounded-md overflow-hidden shadow-2xl" sx={{ backgroundColor: '#0E1017' }}>
+            <TableContainer component={Paper} className="bg-[var(--bg-surface)] border border-white/10 rounded-md overflow-hidden shadow-2xl" sx={{ backgroundColor: '#0E1017' }}>
               <Table sx={{ minWidth: 650, '& .MuiTableCell-root': { borderBottom: '1px solid rgba(255,255,255,0.05)' } }} aria-label="products table">
                 <TableHead sx={{ backgroundColor: '#141620' }}>
                   <TableRow>
@@ -846,7 +846,7 @@ export const AdminDashboard: React.FC = () => {
                               className="w-12 h-14 object-cover rounded bg-[#141620] border border-white/10 flex-shrink-0"
                             />
                             <Box>
-                              <Typography className="text-white font-bold text-xs uppercase font-heading">{prod.name}</Typography>
+                              <Typography className="text-[var(--text-primary)] font-bold text-xs uppercase font-heading">{prod.name}</Typography>
                               <Typography className="text-[10px] text-slate-500 font-mono block">SKU: {prod.variants[0]?.sku || prod.slug}</Typography>
                             </Box>
                           </Box>
@@ -861,7 +861,7 @@ export const AdminDashboard: React.FC = () => {
                         </TableCell>
 
                         <TableCell className="p-4 font-mono border-0">
-                          <Typography className="text-white font-bold text-xs block">LKR {prod.price.toLocaleString()}</Typography>
+                          <Typography className="text-[var(--text-primary)] font-bold text-xs block">LKR {prod.price.toLocaleString()}</Typography>
                           {prod.salePrice && (
                             <Typography className="text-emerald-400 text-[10px] block">Sale: LKR {prod.salePrice.toLocaleString()}</Typography>
                           )}
@@ -912,11 +912,11 @@ export const AdminDashboard: React.FC = () => {
         {/* 3. CATEGORY MANAGEMENT TAB */}
         {activeTab === 'CATEGORIES' && (
           <Box className="space-y-6 animate-fade-in">
-            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
+            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[var(--bg-surface)] border border-white/10 p-4 rounded-md">
               <Box className="flex items-center gap-3">
                 <Layers className="text-[#D4AF37]" size={22} />
                 <Box>
-                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
+                  <Typography variant="h6" className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
                     STOREFRONT CATEGORIES & TAXONOMIES
                   </Typography>
                   <Typography variant="body2" className="text-xs font-mono text-slate-400">
@@ -936,7 +936,7 @@ export const AdminDashboard: React.FC = () => {
 
             <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {categories.map((cat) => (
-                <Paper key={cat.id} className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-4 flex flex-col justify-between" sx={{ backgroundColor: '#0E1017' }}>
+                <Paper key={cat.id} className="bg-[var(--bg-surface)] border border-white/10 rounded-md p-5 space-y-4 flex flex-col justify-between" sx={{ backgroundColor: '#0E1017' }}>
                   <Box className="space-y-2">
                     <Box className="flex items-center justify-between">
                       <Typography className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase">
@@ -945,7 +945,7 @@ export const AdminDashboard: React.FC = () => {
                       <Chip size="small" label="ACTIVE" sx={{ height: '20px', fontSize: '10px', backgroundColor: 'rgba(5, 150, 105, 0.4)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)' }} />
                     </Box>
 
-                    <Typography className="text-base font-bold uppercase text-white font-syne">{cat.name}</Typography>
+                    <Typography className="text-base font-bold uppercase text-[var(--text-primary)] font-syne">{cat.name}</Typography>
                     <Typography className="text-xs font-mono text-slate-400 line-clamp-2">{cat.description || 'No description provided.'}</Typography>
 
                     {cat.seoTitle && (
@@ -983,11 +983,11 @@ export const AdminDashboard: React.FC = () => {
         {/* 4. COLLECTION MANAGEMENT TAB */}
         {activeTab === 'COLLECTIONS' && (
           <Box className="space-y-6 animate-fade-in">
-            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
+            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[var(--bg-surface)] border border-white/10 p-4 rounded-md">
               <Box className="flex items-center gap-3">
                 <Sparkles className="text-[#D4AF37]" size={22} />
                 <Box>
-                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
+                  <Typography variant="h6" className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
                     EDITORIAL COLLECTIONS & DROPS
                   </Typography>
                   <Typography variant="body2" className="text-xs font-mono text-slate-400">
@@ -1007,7 +1007,7 @@ export const AdminDashboard: React.FC = () => {
 
             <Box className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {collections.map((col) => (
-                <Paper key={col.id} className="bg-[#0E1017] border border-white/10 rounded-md overflow-hidden flex flex-col justify-between shadow-xl" sx={{ backgroundColor: '#0E1017' }}>
+                <Paper key={col.id} className="bg-[var(--bg-surface)] border border-white/10 rounded-md overflow-hidden flex flex-col justify-between shadow-xl" sx={{ backgroundColor: '#0E1017' }}>
                   <Box className="h-44 relative bg-[#141620] overflow-hidden">
                     <Box component="img" src={col.imageUrl} alt={col.name} className="w-full h-full object-cover" />
                     <Box className="absolute inset-0 bg-gradient-to-t from-[#0E1017] via-transparent to-black/40" />
@@ -1031,11 +1031,11 @@ export const AdminDashboard: React.FC = () => {
 
                   <Box className="p-6 space-y-3 flex-1 flex flex-col justify-between">
                     <Box>
-                      <Typography className="text-lg font-black uppercase text-white font-syne">{col.name}</Typography>
+                      <Typography className="text-lg font-black uppercase text-[var(--text-primary)] font-syne">{col.name}</Typography>
                       <Typography className="text-xs font-mono text-slate-400 mt-1">{col.description}</Typography>
 
                       <Box className="mt-3 flex items-center gap-2 text-xs font-mono text-slate-300">
-                        <strong className="text-white">{col.productIds.length}</strong> Assigned Garments
+                        <strong className="text-[var(--text-primary)]">{col.productIds.length}</strong> Assigned Garments
                       </Box>
                     </Box>
 
@@ -1068,12 +1068,12 @@ export const AdminDashboard: React.FC = () => {
         {activeTab === 'ORDERS' && (
           <Box className="space-y-6 animate-fade-in">
             {/* Header & Filter Controls */}
-            <Box className="bg-[#0E1017] border border-white/10 p-5 rounded-md space-y-4">
+            <Box className="bg-[var(--bg-surface)] border border-white/10 p-5 rounded-md space-y-4">
               <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <Box className="flex items-center gap-3">
                   <ShoppingBag className="text-[#D4AF37]" size={22} />
                   <Box>
-                    <h2 className="text-base font-black uppercase text-white font-syne">
+                    <h2 className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
                       ORDER FULFILLMENT & COURIER DISPATCH
                     </h2>
                     <Typography component="p" className="text-xs font-mono text-slate-400">
@@ -1090,7 +1090,7 @@ export const AdminDashboard: React.FC = () => {
                       onClick={() => setOrderStatusFilter(st)}
                       className={`px-3 py-1.5 rounded uppercase font-bold transition-all cursor-pointer flex-shrink-0 ${orderStatusFilter === st
                         ? 'bg-[#D4AF37] text-black'
-                        : 'bg-[#141620] text-slate-400 hover:text-white border border-white/5'
+                        : 'bg-[#141620] text-slate-400 hover:text-[var(--text-primary)] border border-white/5'
                         }`}
                     >
                       {st}
@@ -1107,13 +1107,13 @@ export const AdminDashboard: React.FC = () => {
                   value={orderSearchQuery}
                   onChange={(e) => setOrderSearchQuery(e.target.value)}
                   placeholder="Search by Order # (e.g. VK-2026-8801), Customer Name, Mobile Phone, or Email..."
-                  className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-2.5 pl-10 pr-4 text-xs font-mono text-white placeholder-slate-500 focus:outline-none"
+                  className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-[2px] py-2.5 pl-10 pr-4 text-xs font-mono text-[var(--text-primary)] placeholder-slate-500 focus:outline-none"
                 />
               </Box>
             </Box>
 
             {/* Orders Feed Table */}
-            <Box className="bg-[#0E1017] border border-white/10 rounded-md overflow-hidden shadow-2xl">
+            <Box className="bg-[var(--bg-surface)] border border-white/10 rounded-md overflow-hidden shadow-2xl">
               <Box className="overflow-x-auto">
                 <Table className="w-full text-left font-mono text-xs">
                   <TableHead className="bg-[#141620] text-slate-400 uppercase text-[10px] tracking-wider border-b border-white/10">
@@ -1138,20 +1138,20 @@ export const AdminDashboard: React.FC = () => {
                       filteredOrders.map((ord) => (
                         <TableRow key={ord.id} className="hover:bg-white/5 transition-colors">
                           <TableCell className="p-4">
-                            <strong className="text-white font-bold block">{ord.orderNumber}</strong>
+                            <strong className="text-[var(--text-primary)] font-bold block">{ord.orderNumber}</strong>
                             <Typography component="span" className="text-[10px] text-slate-500">
                               {new Date(ord.createdAt).toLocaleDateString()}
                             </Typography>
                           </TableCell>
 
                           <TableCell className="p-4">
-                            <Typography component="span" className="text-white font-bold block">{ord.customerInfo.fullName}</Typography>
+                            <Typography component="span" className="text-[var(--text-primary)] font-bold block">{ord.customerInfo.fullName}</Typography>
                             <Typography component="span" className="text-[10px] text-slate-400 block">{ord.customerInfo.city}, {ord.customerInfo.district}</Typography>
                             <Typography component="span" className="text-[10px] text-slate-500">{ord.customerInfo.phone}</Typography>
                           </TableCell>
 
                           <TableCell className="p-4">
-                            <Typography component="span" className="text-white font-bold block">
+                            <Typography component="span" className="text-[var(--text-primary)] font-bold block">
                               {ord.items.reduce((s, i) => s + i.quantity, 0)} Pcs
                             </Typography>
                             <Typography component="span" className="text-[10px] text-slate-400 block truncate max-w-[150px]">
@@ -1168,7 +1168,7 @@ export const AdminDashboard: React.FC = () => {
                             <select
                               value={ord.orderStatus}
                               onChange={(e) => updateOrderStatus(ord.id, e.target.value as OrderStatus)}
-                              className="bg-[#141620] border border-white/20 text-xs font-mono rounded px-2 py-1 text-white focus:outline-none focus:border-[#D4AF37] cursor-pointer"
+                              className="bg-[#141620] border border-white/20 text-xs font-mono rounded px-2 py-1 text-[var(--text-primary)] focus:outline-none focus:border-[#D4AF37] cursor-pointer"
                             >
                               <option value="Pending">Pending</option>
                               <option value="Payment Pending">Payment Pending</option>
@@ -1184,7 +1184,7 @@ export const AdminDashboard: React.FC = () => {
                           <TableCell className="p-4">
                             {ord.awbNumber ? (
                               <Box>
-                                <Typography component="span" className="text-white font-bold block">{ord.awbNumber}</Typography>
+                                <Typography component="span" className="text-[var(--text-primary)] font-bold block">{ord.awbNumber}</Typography>
                                 <Typography component="span" className="text-[10px] text-slate-400">{ord.courierName || 'Courier'}</Typography>
                               </Box>
                             ) : (
@@ -1219,11 +1219,11 @@ export const AdminDashboard: React.FC = () => {
         {/* 6. CUSTOMER MANAGEMENT TAB */}
         {activeTab === 'CUSTOMERS' && (
           <Box className="space-y-6 animate-fade-in">
-            <Box className="bg-[#0E1017] border border-white/10 p-5 rounded-md flex items-center justify-between">
+            <Box className="bg-[var(--bg-surface)] border border-white/10 p-5 rounded-md flex items-center justify-between">
               <Box className="flex items-center gap-3">
                 <Users className="text-[#D4AF37]" size={22} />
                 <Box>
-                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
+                  <Typography variant="h6" className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
                     CUSTOMER DIRECTORY & PURCHASE PROFILES
                   </Typography>
                   <Typography variant="body2" className="text-xs font-mono text-slate-400">
@@ -1235,14 +1235,14 @@ export const AdminDashboard: React.FC = () => {
 
             <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {customers.map((c) => (
-                <Paper key={c.id} className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-4 shadow-xl" sx={{ backgroundColor: '#0E1017' }}>
+                <Paper key={c.id} className="bg-[var(--bg-surface)] border border-white/10 rounded-md p-5 space-y-4 shadow-xl" sx={{ backgroundColor: '#0E1017' }}>
                   <Box className="flex items-start justify-between">
                     <Box className="flex items-center gap-3">
-                      <Box className="w-10 h-10 rounded-full bg-[#141620] border border-white/10 flex items-center justify-center text-white font-mono font-bold">
+                      <Box className="w-10 h-10 rounded-full bg-[#141620] border border-white/10 flex items-center justify-center text-[var(--text-primary)] font-mono font-bold">
                         {c.fullName.charAt(0).toUpperCase()}
                       </Box>
                       <Box>
-                        <Typography className="text-sm font-bold uppercase text-white font-heading">{c.fullName}</Typography>
+                        <Typography className="text-sm font-bold uppercase text-[var(--text-primary)] font-heading">{c.fullName}</Typography>
                         <Typography className="text-[11px] font-mono text-slate-400 block">{c.email}</Typography>
                       </Box>
                     </Box>
@@ -1268,7 +1268,7 @@ export const AdminDashboard: React.FC = () => {
                   <Box className="grid grid-cols-2 gap-2 text-xs font-mono p-3 bg-[#141620] rounded border border-white/5">
                     <Box>
                       <Typography className="text-[9px] text-slate-500 uppercase block font-mono">TOTAL ORDERS</Typography>
-                      <strong className="text-white font-mono">{c.ordersCount} Orders</strong>
+                      <strong className="text-[var(--text-primary)] font-mono">{c.ordersCount} Orders</strong>
                     </Box>
                     <Box>
                       <Typography className="text-[9px] text-slate-500 uppercase block font-mono">LIFETIME SPEND</Typography>
@@ -1285,7 +1285,7 @@ export const AdminDashboard: React.FC = () => {
 
                   <Button
                     onClick={() => setViewingCustomer(c)}
-                    className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded text-xs font-mono font-bold transition-colors shadow-none block text-center"
+                    className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-[var(--text-primary)] rounded text-xs font-mono font-bold transition-colors shadow-none block text-center"
                   >
                     View Customer Order History
                   </Button>
@@ -1298,11 +1298,11 @@ export const AdminDashboard: React.FC = () => {
         {/* 7. COUPON MANAGEMENT TAB */}
         {activeTab === 'COUPONS' && (
           <Box className="space-y-6 animate-fade-in">
-            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0E1017] border border-white/10 p-4 rounded-md">
+            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[var(--bg-surface)] border border-white/10 p-4 rounded-md">
               <Box className="flex items-center gap-3">
                 <Tag className="text-[#D4AF37]" size={22} />
                 <Box>
-                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
+                  <Typography variant="h6" className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
                     PROMOTIONS & DISCOUNT RULES
                   </Typography>
                   <Typography variant="body2" className="text-xs font-mono text-slate-400">
@@ -1322,7 +1322,7 @@ export const AdminDashboard: React.FC = () => {
 
             <Box className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {coupons.map((cpn) => (
-                <Paper key={cpn.code} className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-4 shadow-xl flex flex-col justify-between" sx={{ backgroundColor: '#0E1017' }}>
+                <Paper key={cpn.code} className="bg-[var(--bg-surface)] border border-white/10 rounded-md p-5 space-y-4 shadow-xl flex flex-col justify-between" sx={{ backgroundColor: '#0E1017' }}>
                   <Box className="space-y-3">
                     <Box className="flex items-center justify-between">
                       <Typography className="text-lg font-mono font-black text-[#D4AF37] tracking-wider">
@@ -1347,13 +1347,13 @@ export const AdminDashboard: React.FC = () => {
                     <Box className="p-3 bg-[#141620] rounded border border-white/5 space-y-1.5 text-xs font-mono">
                       <Box className="flex justify-between">
                         <Typography className="text-slate-400 font-mono text-xs">Discount:</Typography>
-                        <strong className="text-white font-mono text-xs">
+                        <strong className="text-[var(--text-primary)] font-mono text-xs">
                           {cpn.discountType === 'PERCENTAGE' ? `${cpn.discountValue}% OFF` : `LKR ${cpn.discountValue.toLocaleString()} OFF`}
                         </strong>
                       </Box>
                       <Box className="flex justify-between">
                         <Typography className="text-slate-400 font-mono text-xs">Min Order:</Typography>
-                        <strong className="text-white font-mono text-xs">LKR {cpn.minOrderAmount.toLocaleString()}</strong>
+                        <strong className="text-[var(--text-primary)] font-mono text-xs">LKR {cpn.minOrderAmount.toLocaleString()}</strong>
                       </Box>
                       <Box className="flex justify-between">
                         <Typography className="text-slate-400 font-mono text-xs">Expires:</Typography>
@@ -1381,11 +1381,11 @@ export const AdminDashboard: React.FC = () => {
         {/* 8. HOMEPAGE CMS MANAGEMENT TAB */}
         {activeTab === 'HOMEPAGE' && (
           <Box className="space-y-6 animate-fade-in">
-            <Box className="bg-[#0E1017] border border-white/10 p-5 rounded-md flex items-center justify-between">
+            <Box className="bg-[var(--bg-surface)] border border-white/10 p-5 rounded-md flex items-center justify-between">
               <Box className="flex items-center gap-3">
                 <Home className="text-[#D4AF37]" size={22} />
                 <Box>
-                  <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
+                  <Typography variant="h6" className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
                     STOREFRONT HOMEPAGE CMS & SECTION CONTROLS
                   </Typography>
                   <Typography variant="body2" className="text-xs font-mono text-slate-400">
@@ -1407,8 +1407,8 @@ export const AdminDashboard: React.FC = () => {
 
             <Box className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Hero Banner Controls */}
-              <Box className="bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4">
-                <Typography className="text-sm font-black uppercase text-white font-syne tracking-wider border-b border-white/10 pb-3">
+              <Box className="bg-[var(--bg-surface)] border border-white/10 rounded-md p-6 space-y-4">
+                <Typography className="text-sm font-black uppercase text-[var(--text-primary)] font-syne tracking-wider border-b border-white/10 pb-3">
                   1. HERO SECTION HERO BANNER
                 </Typography>
 
@@ -1420,7 +1420,7 @@ export const AdminDashboard: React.FC = () => {
                       type="text"
                       value={homepageConfig.hero.headline}
                       onChange={(e: any) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, headline: e.target.value } })}
-                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white focus:outline-none"
+                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)] focus:outline-none"
                     />
                   </Box>
 
@@ -1431,7 +1431,7 @@ export const AdminDashboard: React.FC = () => {
                       type="text"
                       value={homepageConfig.hero.subheadline}
                       onChange={(e: any) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, subheadline: e.target.value } })}
-                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white focus:outline-none"
+                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)] focus:outline-none"
                     />
                   </Box>
 
@@ -1443,7 +1443,7 @@ export const AdminDashboard: React.FC = () => {
                         type="text"
                         value={homepageConfig.hero.ctaText}
                         onChange={(e: any) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, ctaText: e.target.value } })}
-                        className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white focus:outline-none"
+                        className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)] focus:outline-none"
                       />
                     </Box>
                     <Box>
@@ -1453,7 +1453,7 @@ export const AdminDashboard: React.FC = () => {
                         type="text"
                         value={homepageConfig.hero.ctaLink}
                         onChange={(e: any) => setHomepageConfig({ ...homepageConfig, hero: { ...homepageConfig.hero, ctaLink: e.target.value } })}
-                        className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white focus:outline-none"
+                        className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)] focus:outline-none"
                       />
                     </Box>
                   </Box>
@@ -1471,8 +1471,8 @@ export const AdminDashboard: React.FC = () => {
               </Box>
 
               {/* Section Visibility Toggles */}
-              <Box className="bg-[#0E1017] border border-white/10 rounded-md p-6 space-y-4">
-                <Typography className="text-sm font-black uppercase text-white font-syne tracking-wider border-b border-white/10 pb-3">
+              <Box className="bg-[var(--bg-surface)] border border-white/10 rounded-md p-6 space-y-4">
+                <Typography className="text-sm font-black uppercase text-[var(--text-primary)] font-syne tracking-wider border-b border-white/10 pb-3">
                   2. HOMEPAGE SECTIONS VISIBILITY
                 </Typography>
 
@@ -1502,12 +1502,12 @@ export const AdminDashboard: React.FC = () => {
         {activeTab === 'DATABASE' && (
           <Box className="space-y-6 animate-fade-in">
             {/* Supabase SQL Card */}
-            <Box className="bg-[#0E1017] border border-white/10 p-6 rounded-md space-y-4">
+            <Box className="bg-[var(--bg-surface)] border border-white/10 p-6 rounded-md space-y-4">
               <Box className="flex items-center justify-between flex-wrap gap-3">
                 <Box className="flex items-center gap-3">
                   <Database className="text-[#D4AF37]" size={22} />
                   <Box>
-                    <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
+                    <Typography variant="h6" className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
                       SUPABASE DATABASE & RLS POLICIES
                     </Typography>
                     <Typography variant="body2" className="text-xs font-mono text-slate-400">
@@ -1531,12 +1531,12 @@ export const AdminDashboard: React.FC = () => {
             </Box>
 
             {/* Firebase Storage Security Rules Card */}
-            <Box className="bg-[#0E1017] border border-white/10 p-6 rounded-md space-y-4">
+            <Box className="bg-[var(--bg-surface)] border border-white/10 p-6 rounded-md space-y-4">
               <Box className="flex items-center justify-between flex-wrap gap-3">
                 <Box className="flex items-center gap-3">
                   <Cloud className="text-[#D4AF37]" size={22} />
                   <Box>
-                    <Typography variant="h6" className="text-base font-black uppercase text-white font-syne">
+                    <Typography variant="h6" className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
                       FIREBASE CLOUD STORAGE RULES
                     </Typography>
                     <Typography variant="body2" className="text-xs font-mono text-slate-400">
@@ -1570,17 +1570,17 @@ export const AdminDashboard: React.FC = () => {
       {/* PRODUCT CREATE/EDIT MODAL */}
       {isProductModalOpen && (
         <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-4xl rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
+          <Box className="bg-[var(--bg-surface)] border border-[#D4AF37]/40 w-full max-w-4xl rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
             <Box className="flex items-center justify-between border-b border-white/10 pb-4">
               <Box>
                 <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase tracking-widest block">
                   {editingProduct ? 'EDIT EXISTING GARMENT' : 'CREATE NEW LUXURY PRODUCT'}
                 </Typography>
-                <h3 className="text-xl font-black uppercase text-white font-syne">
+                <h3 className="text-xl font-black uppercase text-[var(--text-primary)] font-syne">
                   {editingProduct ? editingProduct.name : 'NEW VALKNUT PRODUCT'}
                 </h3>
               </Box>
-              <Box component="button" onClick={() => setIsProductModalOpen(false)} className="text-slate-400 hover:text-white p-1">
+              <Box component="button" onClick={() => setIsProductModalOpen(false)} className="text-slate-400 hover:text-[var(--text-primary)] p-1">
                 <XCircle size={22} />
               </Box>
             </Box>
@@ -1597,7 +1597,7 @@ export const AdminDashboard: React.FC = () => {
                     value={prodName}
                     onChange={(e) => setProdName(e.target.value)}
                     placeholder="e.g. Valknut Oversized Heavyweight Boxy Hoodie"
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
 
@@ -1608,7 +1608,7 @@ export const AdminDashboard: React.FC = () => {
                     value={prodSlug}
                     onChange={(e) => setProdSlug(e.target.value)}
                     placeholder="valknut-oversized-heavyweight-boxy-hoodie"
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
               </Box>
@@ -1622,7 +1622,7 @@ export const AdminDashboard: React.FC = () => {
                     required
                     value={prodPrice}
                     onChange={(e) => setProdPrice(Number(e.target.value))}
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
 
@@ -1633,7 +1633,7 @@ export const AdminDashboard: React.FC = () => {
                     value={prodSalePrice || ''}
                     onChange={(e) => setProdSalePrice(e.target.value ? Number(e.target.value) : undefined)}
                     placeholder="Optional"
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
 
@@ -1642,7 +1642,7 @@ export const AdminDashboard: React.FC = () => {
                   <select
                     value={prodCategory}
                     onChange={(e) => setProdCategory(e.target.value as CategoryType)}
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
                   >
                     <option value="MEN">MEN</option>
                     <option value="WOMEN">WOMEN</option>
@@ -1655,7 +1655,7 @@ export const AdminDashboard: React.FC = () => {
                   <select
                     value={prodSubCategory}
                     onChange={(e) => setProdSubCategory(e.target.value as SubCategoryType)}
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
                   >
                     <option value="Oversized T-Shirts">Oversized T-Shirts</option>
                     <option value="T-Shirts">T-Shirts</option>
@@ -1677,7 +1677,7 @@ export const AdminDashboard: React.FC = () => {
                     rows={2}
                     value={prodDescription}
                     onChange={(e) => setProdDescription(e.target.value)}
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
 
@@ -1688,7 +1688,7 @@ export const AdminDashboard: React.FC = () => {
                       type="text"
                       value={prodMaterial}
                       onChange={(e) => setProdMaterial(e.target.value)}
-                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
                     />
                   </Box>
                   <Box>
@@ -1697,7 +1697,7 @@ export const AdminDashboard: React.FC = () => {
                       type="text"
                       value={prodCare}
                       onChange={(e) => setProdCare(e.target.value)}
-                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-white"
+                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
                     />
                   </Box>
                 </Box>
@@ -1731,7 +1731,7 @@ export const AdminDashboard: React.FC = () => {
                       };
                       setProdVariants([...prodVariants, newV]);
                     }}
-                    className="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-[10px]"
+                    className="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-[var(--text-primary)] rounded text-[10px]"
                   >
                     + Add Variant
                   </Box>
@@ -1747,7 +1747,7 @@ export const AdminDashboard: React.FC = () => {
                           copy[idx].size = e.target.value as any;
                           setProdVariants(copy);
                         }}
-                        className="bg-[#0E1017] border border-white/15 rounded p-1.5 text-white"
+                        className="bg-[var(--bg-surface)] border border-white/15 rounded p-1.5 text-[var(--text-primary)]"
                       >
                         <option value="S">Size S</option>
                         <option value="M">Size M</option>
@@ -1765,7 +1765,7 @@ export const AdminDashboard: React.FC = () => {
                           setProdVariants(copy);
                         }}
                         placeholder="Color Name"
-                        className="bg-[#0E1017] border border-white/15 rounded p-1.5 text-white"
+                        className="bg-[var(--bg-surface)] border border-white/15 rounded p-1.5 text-[var(--text-primary)]"
                       />
 
                       <input
@@ -1777,7 +1777,7 @@ export const AdminDashboard: React.FC = () => {
                           setProdVariants(copy);
                         }}
                         placeholder="SKU"
-                        className="bg-[#0E1017] border border-white/15 rounded p-1.5 text-white"
+                        className="bg-[var(--bg-surface)] border border-white/15 rounded p-1.5 text-[var(--text-primary)]"
                       />
 
                       <input
@@ -1789,7 +1789,7 @@ export const AdminDashboard: React.FC = () => {
                           setProdVariants(copy);
                         }}
                         placeholder="Stock"
-                        className="bg-[#0E1017] border border-white/15 rounded p-1.5 text-white font-bold"
+                        className="bg-[var(--bg-surface)] border border-white/15 rounded p-1.5 text-[var(--text-primary)] font-bold"
                       />
 
                       <Box component="button"
@@ -1848,17 +1848,17 @@ export const AdminDashboard: React.FC = () => {
       {/* AWB & LOGISTICS UPDATE MODAL */}
       {selectedOrderForAwb && (
         <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-lg rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative">
+          <Box className="bg-[var(--bg-surface)] border border-[#D4AF37]/40 w-full max-w-lg rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative">
             <Box className="flex items-center justify-between border-b border-white/10 pb-3">
               <Box>
                 <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
                   COURIER DISPATCH UPDATE
                 </Typography>
-                <h3 className="text-lg font-black uppercase text-white font-syne">
+                <h3 className="text-lg font-black uppercase text-[var(--text-primary)] font-syne">
                   {selectedOrderForAwb.orderNumber}
                 </h3>
               </Box>
-              <Box component="button" onClick={() => setSelectedOrderForAwb(null)} className="text-slate-400 hover:text-white">
+              <Box component="button" onClick={() => setSelectedOrderForAwb(null)} className="text-slate-400 hover:text-[var(--text-primary)]">
                 <XCircle size={20} />
               </Box>
             </Box>
@@ -1872,7 +1872,7 @@ export const AdminDashboard: React.FC = () => {
                 {selectedOrderForAwb.items.map((it: any, idx: number) => (
                   <Box key={idx} className="pt-2 flex items-start justify-between gap-3 text-[11px]">
                     <Box className="space-y-1">
-                      <Typography component="p" className="text-white font-bold">{it.productName} <Typography component="span" className="text-slate-400 font-normal">({it.size} / {it.color}) × {it.quantity}</Typography></Typography>
+                      <Typography component="p" className="text-[var(--text-primary)] font-bold">{it.productName} <Typography component="span" className="text-slate-400 font-normal">({it.size} / {it.color}) × {it.quantity}</Typography></Typography>
 
                       {it.customization && (
                         <Box className="p-2 bg-black/60 rounded border border-[#D4AF37]/30 text-[10px] text-[#D4AF37] space-y-1">
@@ -1881,7 +1881,7 @@ export const AdminDashboard: React.FC = () => {
                             <Typography component="span">Bespoke: {it.customization.printTechnique} ({it.customization.placement})</Typography>
                           </Box>
                           {it.customization.customText && (
-                            <Typography component="p" className="text-slate-300">Custom Text: <strong className="text-white">"{it.customization.customText}"</strong> ({it.customization.textFont})</Typography>
+                            <Typography component="p" className="text-slate-300">Custom Text: <strong className="text-[var(--text-primary)]">"{it.customization.customText}"</strong> ({it.customization.textFont})</Typography>
                           )}
                           {it.customization.uploadedArtworkUrl && (
                             <Box className="pt-1 flex items-center gap-2">
@@ -1913,7 +1913,7 @@ export const AdminDashboard: React.FC = () => {
                 <select
                   value={awbCourier}
                   onChange={(e) => setAwbCourier(e.target.value)}
-                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                 >
                   <option value="Pronto Lanka Express">Pronto Lanka Express</option>
                   <option value="Fargo Express">Fargo Express</option>
@@ -1930,7 +1930,7 @@ export const AdminDashboard: React.FC = () => {
                   value={awbNumberInput}
                   onChange={(e) => setAwbNumberInput(e.target.value)}
                   placeholder="PRN-99882103"
-                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                 />
               </Box>
 
@@ -1941,7 +1941,7 @@ export const AdminDashboard: React.FC = () => {
                   value={awbTrackingLinkInput}
                   onChange={(e) => setAwbTrackingLinkInput(e.target.value)}
                   placeholder="https://valknutofficial.com/#/track-order"
-                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                 />
               </Box>
 
@@ -1950,7 +1950,7 @@ export const AdminDashboard: React.FC = () => {
                 <select
                   value={awbStatusSelect}
                   onChange={(e) => setAwbStatusSelect(e.target.value as OrderStatus)}
-                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                 >
                   <option value="Shipped">Shipped (Dispatched to Courier)</option>
                   <option value="Delivered">Delivered (Handed over to Customer)</option>
@@ -1981,17 +1981,17 @@ export const AdminDashboard: React.FC = () => {
       {/* CATEGORY CREATE/EDIT MODAL */}
       {isCategoryModalOpen && (
         <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-xl rounded-md p-6 space-y-6 shadow-2xl relative">
+          <Box className="bg-[var(--bg-surface)] border border-[#D4AF37]/40 w-full max-w-xl rounded-md p-6 space-y-6 shadow-2xl relative">
             <Box className="flex items-center justify-between border-b border-white/10 pb-3">
               <Box>
                 <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
                   CATEGORY CONFIGURATION
                 </Typography>
-                <h3 className="text-lg font-black uppercase text-white font-syne">
+                <h3 className="text-lg font-black uppercase text-[var(--text-primary)] font-syne">
                   {editingCategory ? `Edit "${editingCategory.name}"` : 'Create New Category'}
                 </h3>
               </Box>
-              <Box component="button" onClick={() => setIsCategoryModalOpen(false)} className="text-slate-400 hover:text-white">
+              <Box component="button" onClick={() => setIsCategoryModalOpen(false)} className="text-slate-400 hover:text-[var(--text-primary)]">
                 <XCircle size={20} />
               </Box>
             </Box>
@@ -2011,7 +2011,7 @@ export const AdminDashboard: React.FC = () => {
                       }
                     }}
                     placeholder="e.g. Oversized Hoodies"
-                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
                 <Box>
@@ -2021,7 +2021,7 @@ export const AdminDashboard: React.FC = () => {
                     value={catSlug}
                     onChange={(e) => setCatSlug(e.target.value)}
                     placeholder="oversized-hoodies"
-                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
               </Box>
@@ -2032,7 +2032,7 @@ export const AdminDashboard: React.FC = () => {
                   <select
                     value={catParent}
                     onChange={(e) => setCatParent(e.target.value as any)}
-                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                   >
                     <option value="ROOT">Root Department</option>
                     <option value="MEN">Men Collection</option>
@@ -2058,7 +2058,7 @@ export const AdminDashboard: React.FC = () => {
                   value={catDescription}
                   onChange={(e) => setCatDescription(e.target.value)}
                   placeholder="Luxury streetwear category description..."
-                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                 />
               </Box>
 
@@ -2071,7 +2071,7 @@ export const AdminDashboard: React.FC = () => {
                     value={catSeoTitle}
                     onChange={(e) => setCatSeoTitle(e.target.value)}
                     placeholder="Luxury Hoodies & Streetwear Sri Lanka | VALKNUT"
-                    className="w-full bg-[#0E1017] border border-white/15 rounded p-2 text-white text-[11px]"
+                    className="w-full bg-[var(--bg-surface)] border border-white/15 rounded p-2 text-[var(--text-primary)] text-[11px]"
                   />
                 </Box>
                 <Box>
@@ -2081,7 +2081,7 @@ export const AdminDashboard: React.FC = () => {
                     value={catSeoDesc}
                     onChange={(e) => setCatSeoDesc(e.target.value)}
                     placeholder="Shop premium streetwear and luxury oversized hoodies in Sri Lanka."
-                    className="w-full bg-[#0E1017] border border-white/15 rounded p-2 text-white text-[11px]"
+                    className="w-full bg-[var(--bg-surface)] border border-white/15 rounded p-2 text-[var(--text-primary)] text-[11px]"
                   />
                 </Box>
               </Box>
@@ -2109,17 +2109,17 @@ export const AdminDashboard: React.FC = () => {
       {/* COLLECTION CREATE/EDIT MODAL */}
       {isCollectionModalOpen && (
         <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-xl rounded-md p-6 space-y-6 shadow-2xl relative">
+          <Box className="bg-[var(--bg-surface)] border border-[#D4AF37]/40 w-full max-w-xl rounded-md p-6 space-y-6 shadow-2xl relative">
             <Box className="flex items-center justify-between border-b border-white/10 pb-3">
               <Box>
                 <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
                   EDITORIAL DROP & COLLECTION
                 </Typography>
-                <h3 className="text-lg font-black uppercase text-white font-syne">
+                <h3 className="text-lg font-black uppercase text-[var(--text-primary)] font-syne">
                   {editingCollection ? `Edit "${editingCollection.name}"` : 'Create New Collection'}
                 </h3>
               </Box>
-              <Box component="button" onClick={() => setIsCollectionModalOpen(false)} className="text-slate-400 hover:text-white">
+              <Box component="button" onClick={() => setIsCollectionModalOpen(false)} className="text-slate-400 hover:text-[var(--text-primary)]">
                 <XCircle size={20} />
               </Box>
             </Box>
@@ -2139,7 +2139,7 @@ export const AdminDashboard: React.FC = () => {
                       }
                     }}
                     placeholder="SHADOW OPS 2026"
-                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
                 <Box>
@@ -2149,7 +2149,7 @@ export const AdminDashboard: React.FC = () => {
                     value={colSlug}
                     onChange={(e) => setColSlug(e.target.value)}
                     placeholder="shadow-ops-2026"
-                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
               </Box>
@@ -2171,7 +2171,7 @@ export const AdminDashboard: React.FC = () => {
                   value={colDescription}
                   onChange={(e) => setColDescription(e.target.value)}
                   placeholder="Tactical silhouettes crafted for the sovereign individual..."
-                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                 />
               </Box>
 
@@ -2195,7 +2195,7 @@ export const AdminDashboard: React.FC = () => {
                           }}
                           className="accent-[#D4AF37]"
                         />
-                        <Typography component="span" className="text-white text-[11px]">{p.name}</Typography>
+                        <Typography component="span" className="text-[var(--text-primary)] text-[11px]">{p.name}</Typography>
                         <Typography component="span" className="text-slate-500 text-[10px] ml-auto">LKR {p.price.toLocaleString()}</Typography>
                       </label>
                     );
@@ -2226,17 +2226,17 @@ export const AdminDashboard: React.FC = () => {
       {/* COUPON CREATE MODAL */}
       {isCouponModalOpen && (
         <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-lg rounded-md p-6 space-y-6 shadow-2xl relative">
+          <Box className="bg-[var(--bg-surface)] border border-[#D4AF37]/40 w-full max-w-lg rounded-md p-6 space-y-6 shadow-2xl relative">
             <Box className="flex items-center justify-between border-b border-white/10 pb-3">
               <Box>
                 <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
                   DISCOUNT VOUCHER CONFIGURATION
                 </Typography>
-                <h3 className="text-lg font-black uppercase text-white font-syne">
+                <h3 className="text-lg font-black uppercase text-[var(--text-primary)] font-syne">
                   Create Promotional Coupon
                 </h3>
               </Box>
-              <Box component="button" onClick={() => setIsCouponModalOpen(false)} className="text-slate-400 hover:text-white">
+              <Box component="button" onClick={() => setIsCouponModalOpen(false)} className="text-slate-400 hover:text-[var(--text-primary)]">
                 <XCircle size={20} />
               </Box>
             </Box>
@@ -2250,7 +2250,7 @@ export const AdminDashboard: React.FC = () => {
                   value={newCouponCode}
                   onChange={(e) => setNewCouponCode(e.target.value.toUpperCase())}
                   placeholder="e.g. VALK2026"
-                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white font-bold tracking-widest uppercase"
+                  className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)] font-bold tracking-widest uppercase"
                 />
               </Box>
 
@@ -2260,7 +2260,7 @@ export const AdminDashboard: React.FC = () => {
                   <select
                     value={newCouponType}
                     onChange={(e) => setNewCouponType(e.target.value as any)}
-                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                   >
                     <option value="PERCENTAGE">Percentage (%) Off</option>
                     <option value="FIXED">Fixed Amount (LKR) Off</option>
@@ -2275,7 +2275,7 @@ export const AdminDashboard: React.FC = () => {
                     required
                     value={newCouponDiscount}
                     onChange={(e) => setNewCouponDiscount(Number(e.target.value))}
-                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white font-bold"
+                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)] font-bold"
                   />
                 </Box>
               </Box>
@@ -2287,7 +2287,7 @@ export const AdminDashboard: React.FC = () => {
                     type="number"
                     value={newCouponMinOrder}
                     onChange={(e) => setNewCouponMinOrder(Number(e.target.value))}
-                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
                 <Box>
@@ -2296,7 +2296,7 @@ export const AdminDashboard: React.FC = () => {
                     type="number"
                     value={newCouponUsageLimit}
                     onChange={(e) => setNewCouponUsageLimit(Number(e.target.value))}
-                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
                 <Box>
@@ -2305,7 +2305,7 @@ export const AdminDashboard: React.FC = () => {
                     type="date"
                     value={newCouponExpiry}
                     onChange={(e) => setNewCouponExpiry(e.target.value)}
-                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-white"
+                    className="w-full bg-[#141620] border border-white/15 rounded p-2.5 text-[var(--text-primary)]"
                   />
                 </Box>
               </Box>
@@ -2333,17 +2333,17 @@ export const AdminDashboard: React.FC = () => {
       {/* CUSTOMER ORDER HISTORY DRAWER / MODAL */}
       {viewingCustomer && (
         <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <Box className="bg-[#0E1017] border border-[#D4AF37]/40 w-full max-w-2xl rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative">
+          <Box className="bg-[var(--bg-surface)] border border-[#D4AF37]/40 w-full max-w-2xl rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative">
             <Box className="flex items-center justify-between border-b border-white/10 pb-3">
               <Box>
                 <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase block">
                   CUSTOMER PURCHASE RECORD
                 </Typography>
-                <h3 className="text-lg font-black uppercase text-white font-syne">
+                <h3 className="text-lg font-black uppercase text-[var(--text-primary)] font-syne">
                   {viewingCustomer.fullName}
                 </h3>
               </Box>
-              <Box component="button" onClick={() => setViewingCustomer(null)} className="text-slate-400 hover:text-white">
+              <Box component="button" onClick={() => setViewingCustomer(null)} className="text-slate-400 hover:text-[var(--text-primary)]">
                 <XCircle size={20} />
               </Box>
             </Box>
@@ -2351,15 +2351,15 @@ export const AdminDashboard: React.FC = () => {
             <Box className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-[#141620] rounded border border-white/5 font-mono text-xs">
               <Box>
                 <Typography component="span" className="text-[9px] text-slate-500 uppercase block">EMAIL</Typography>
-                <strong className="text-white truncate block">{viewingCustomer.email}</strong>
+                <strong className="text-[var(--text-primary)] truncate block">{viewingCustomer.email}</strong>
               </Box>
               <Box>
                 <Typography component="span" className="text-[9px] text-slate-500 uppercase block">MOBILE</Typography>
-                <strong className="text-white">{viewingCustomer.phone}</strong>
+                <strong className="text-[var(--text-primary)]">{viewingCustomer.phone}</strong>
               </Box>
               <Box>
                 <Typography component="span" className="text-[9px] text-slate-500 uppercase block">ORDERS</Typography>
-                <strong className="text-white">{viewingCustomer.ordersCount}</strong>
+                <strong className="text-[var(--text-primary)]">{viewingCustomer.ordersCount}</strong>
               </Box>
               <Box>
                 <Typography component="span" className="text-[9px] text-slate-500 uppercase block">LIFETIME SPEND</Typography>
@@ -2383,11 +2383,11 @@ export const AdminDashboard: React.FC = () => {
                   orders.filter((o) => o.customerInfo.email.toLowerCase() === viewingCustomer.email.toLowerCase()).map((o) => (
                     <Box key={o.id} className="py-2.5 flex items-center justify-between gap-4">
                       <Box>
-                        <Typography component="span" className="text-white font-bold">{o.orderNumber}</Typography>
+                        <Typography component="span" className="text-[var(--text-primary)] font-bold">{o.orderNumber}</Typography>
                         <Typography component="span" className="text-slate-500 text-[10px] block">{new Date(o.createdAt).toLocaleDateString()}</Typography>
                       </Box>
                       <Box className="text-right">
-                        <Typography component="span" className="text-white font-bold">LKR {o.totalAmount.toLocaleString()}</Typography>
+                        <Typography component="span" className="text-[var(--text-primary)] font-bold">LKR {o.totalAmount.toLocaleString()}</Typography>
                         <Typography component="span" className="text-[10px] text-[#D4AF37] uppercase block">{o.orderStatus}</Typography>
                       </Box>
                     </Box>
@@ -2399,7 +2399,7 @@ export const AdminDashboard: React.FC = () => {
             <Box className="pt-3 border-t border-white/10 flex justify-end">
               <Box component="button"
                 onClick={() => setViewingCustomer(null)}
-                className="px-5 py-2 bg-white/10 hover:bg-white/15 text-white font-mono text-xs rounded font-bold"
+                className="px-5 py-2 bg-white/10 hover:bg-white/15 text-[var(--text-primary)] font-mono text-xs rounded font-bold"
               >
                 Close Customer File
               </Box>
@@ -2411,16 +2411,16 @@ export const AdminDashboard: React.FC = () => {
       {/* DELETE CONFIRMATION DIALOG */}
       {deleteConfirmTarget && (
         <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fade-in">
-          <Box className="bg-[#0E1017] border border-red-500/40 w-full max-w-md rounded-md p-6 space-y-4 shadow-2xl text-center">
+          <Box className="bg-[var(--bg-surface)] border border-red-500/40 w-full max-w-md rounded-md p-6 space-y-4 shadow-2xl text-center">
             <Box className="w-12 h-12 rounded-full bg-red-950/60 border border-red-500 text-red-400 flex items-center justify-center mx-auto">
               <Trash2 size={24} />
             </Box>
 
-            <h3 className="text-base font-black uppercase text-white font-syne">
+            <h3 className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
               CONFIRM ARCHIVE / DELETION
             </h3>
             <Typography component="p" className="text-xs font-mono text-slate-400">
-              Are you sure you want to permanently delete <strong className="text-white">"{deleteConfirmTarget.name}"</strong>? This action cannot be undone.
+              Are you sure you want to permanently delete <strong className="text-[var(--text-primary)]">"{deleteConfirmTarget.name}"</strong>? This action cannot be undone.
             </Typography>
 
             <Box className="flex items-center justify-center gap-3 pt-2 font-mono text-xs">
@@ -2432,7 +2432,7 @@ export const AdminDashboard: React.FC = () => {
               </Box>
               <Box component="button"
                 onClick={executeDelete}
-                className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-extrabold uppercase rounded shadow-lg shadow-red-600/20"
+                className="px-6 py-2 bg-red-600 hover:bg-red-700 text-[var(--text-primary)] font-extrabold uppercase rounded shadow-lg shadow-red-600/20"
               >
                 CONFIRM DELETE
               </Box>

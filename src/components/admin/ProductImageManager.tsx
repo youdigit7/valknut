@@ -18,7 +18,7 @@ interface ProductImageManagerProps {
 const fieldSx = {
   '& .MuiOutlinedInput-root': {
     bgcolor: '#141620',
-    color: 'white',
+    color: 'var(--text-primary)',
     fontSize: '0.6875rem',
     fontFamily: '"JetBrains Mono", sans-serif',
     '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
@@ -184,7 +184,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <ImageIcon size={16} color="#D4AF37" />
-          <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, letterSpacing: '0.15em', color: 'white', textTransform: 'uppercase' }}>
+          <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, letterSpacing: '0.15em', color: 'var(--text-primary)', textTransform: 'uppercase' }}>
             PRODUCT MEDIA GALLERY ({images.length}/{maxImages})
           </Typography>
         </Box>
@@ -216,7 +216,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
       {isUploading && (
         <Box sx={{ p: 2, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 0.5 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-            <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: 'white' }}>
+            <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: 'var(--text-primary)' }}>
               <RefreshCw size={13} style={{ color: '#D4AF37', animation: 'spin 1s linear infinite' }} />
               Uploading {activeUploadFile}...
             </Typography>
@@ -224,7 +224,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
               {uploadProgress}%
             </Typography>
           </Box>
-          <LinearProgress variant="determinate" value={uploadProgress} sx={{ height: 6, borderRadius: 3, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { background: 'linear-gradient(90deg, #D4AF37, #E2B714)', borderRadius: 3 } }} />
+          <LinearProgress variant="determinate" value={uploadProgress} sx={{ height: 6, borderRadius: 3, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { background: 'linear-gradient(90deg, #D4AF37, #E2B714)', borderRadius: 3 } }} />
         </Box>
       )}
 
@@ -257,14 +257,14 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
                     size="small"
                     onClick={() => setPreviewZoomUrl(imgUrl)}
                     title="Zoom View"
-                    sx={{ position: 'absolute', top: 6, right: 6, p: 0.75, bgcolor: 'rgba(0,0,0,0.7)', color: 'rgba(255,255,255,0.7)', opacity: 0, zIndex: 10, borderRadius: 0.25, '&:hover': { bgcolor: 'black', color: 'white' }, '.MuiBox-root:hover &': { opacity: 1 }, transition: 'opacity 0.2s' }}
+                    sx={{ position: 'absolute', top: 6, right: 6, p: 0.75, bgcolor: 'rgba(0,0,0,0.7)', color: 'rgba(255,255,255,0.7)', opacity: 0, zIndex: 10, borderRadius: 0.25, '&:hover': { bgcolor: 'black', color: 'var(--text-primary)' }, '.MuiBox-root:hover &': { opacity: 1 }, transition: 'opacity 0.2s' }}
                   >
                     <Eye size={12} />
                   </IconButton>
                 </Box>
 
                 {/* Controls Bar */}
-                <Box sx={{ p: 1, bgcolor: '#0E1017', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 0.5 }}>
+                <Box sx={{ p: 1, bgcolor: 'var(--bg-surface)', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 0.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
                     <IconButton size="small" disabled={idx === 0} onClick={() => moveImage(idx, idx - 1)} title="Move Left" sx={{ p: 0.5, borderRadius: 0.25, color: idx === 0 ? '#334155' : 'rgba(148,163,184,0.8)', '&:hover': { bgcolor: idx === 0 ? 'transparent' : 'rgba(255,255,255,0.1)', color: idx === 0 ? '#334155' : 'white' } }}>
                       <ArrowLeft size={12} />
@@ -280,7 +280,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
                         Set Cover
                       </Button>
                     )}
-                    <IconButton size="small" onClick={() => { setReplacingIndex(idx); replaceInputRef.current?.click(); }} title="Replace Image" sx={{ p: 0.5, borderRadius: 0.25, color: 'rgba(148,163,184,0.8)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' } }}>
+                    <IconButton size="small" onClick={() => { setReplacingIndex(idx); replaceInputRef.current?.click(); }} title="Replace Image" sx={{ p: 0.5, borderRadius: 0.25, color: 'rgba(148,163,184,0.8)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' } }}>
                       <RefreshCw size={12} />
                     </IconButton>
                     <IconButton size="small" onClick={() => removeImage(idx)} title="Delete Image" sx={{ p: 0.5, borderRadius: 0.25, color: '#f87171', '&:hover': { bgcolor: 'rgba(127,29,29,0.4)', color: '#fca5a5' } }}>
@@ -313,7 +313,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
               <Upload size={18} color="#D4AF37" />
             </Box>
             <Box>
-              <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: 'white' }}>
+              <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: 'var(--text-primary)' }}>
                 Drop high-resolution images here or{' '}
                 <Box component="span" sx={{ color: '#D4AF37', textDecoration: 'underline' }}>Browse</Box>
               </Typography>
@@ -346,7 +346,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
             <Button type="submit" sx={{ px: 2, py: 1, bgcolor: '#D4AF37', color: 'black', fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 0.5, flexShrink: 0, '&:hover': { bgcolor: '#E2B714' } }}>
               Add Link
             </Button>
-            <IconButton size="small" onClick={() => setIsAddingUrl(false)} sx={{ color: '#64748b', '&:hover': { color: 'white' } }}>
+            <IconButton size="small" onClick={() => setIsAddingUrl(false)} sx={{ color: '#64748b', '&:hover': { color: 'var(--text-primary)' } }}>
               <X size={14} />
             </IconButton>
           </Box>
@@ -375,7 +375,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
             <Box component="img" src={previewZoomUrl} alt="Zoom Preview" sx={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             <IconButton
               onClick={() => setPreviewZoomUrl(null)}
-              sx={{ position: 'absolute', top: 12, right: 12, p: 1, bgcolor: 'rgba(0,0,0,0.8)', color: 'white', borderRadius: '50%', '&:hover': { bgcolor: 'black' } }}
+              sx={{ position: 'absolute', top: 12, right: 12, p: 1, bgcolor: 'rgba(0,0,0,0.8)', color: 'var(--text-primary)', borderRadius: '50%', '&:hover': { bgcolor: 'black' } }}
             >
               <X size={18} />
             </IconButton>

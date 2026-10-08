@@ -2,23 +2,8 @@ import React from 'react';
 import { useStore } from '../../context/StoreContext';
 import { ArrowRight, Compass, ShieldCheck, Sparkles } from 'lucide-react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Button, IconButton 
+  Box, Typography, Button, IconButton 
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
 
 export const HeroBanner: React.FC = () => {
   const { setActiveCategory } = useStore();
@@ -38,7 +23,7 @@ export const HeroBanner: React.FC = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
@@ -50,7 +35,7 @@ export const HeroBanner: React.FC = () => {
           justifyContent: 'flex-end',
           alignItems: 'center',
           overflow: 'hidden',
-          bgcolor: 'background.default',
+          bgcolor: 'var(--bg-main)',
           pb: { xs: 5, sm: 8, lg: 10 },
           pt: { xs: 14, sm: 16 }
         }}
@@ -120,7 +105,7 @@ export const HeroBanner: React.FC = () => {
               DROP 04 / DARK SOVEREIGN
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'inline-block' }, w: 6, h: 6, borderRadius: '50%', bgcolor: 'rgba(212,175,55,0.6)' }} />
-            <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline-block' }, color: 'text.secondary', letterSpacing: '0.25em', fontSize: '0.625rem' }}>
+            <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline-block' }, color: 'var(--text-secondary)', letterSpacing: '0.25em', fontSize: '0.625rem' }}>
               COLOMBO ARCHIVES
             </Typography>
           </Box>
@@ -149,7 +134,7 @@ export const HeroBanner: React.FC = () => {
             >
               OWN YOUR MIND.
             </Box>
-            <Box component="span" sx={{ display: 'block', color: 'white', mt: 1, textShadow: '0 8px 30px rgba(0,0,0,0.9)' }}>
+            <Box component="span" sx={{ display: 'block', color: 'var(--text-primary)', mt: 1, textShadow: '0 8px 30px rgba(0,0,0,0.9)' }}>
               CONTROL YOUR WORLD.
             </Box>
           </Typography>
@@ -202,7 +187,7 @@ export const HeroBanner: React.FC = () => {
                 width: { xs: '100%', sm: 'auto' },
                 px: { xs: 4, sm: 5 }, py: { xs: 2, sm: 2 },
                 bgcolor: 'rgba(0,0,0,0.5)',
-                color: 'white',
+                color: 'var(--text-primary)',
                 fontWeight: 900,
                 fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 letterSpacing: '0.18em',
@@ -225,15 +210,15 @@ export const HeroBanner: React.FC = () => {
           </Box>
 
           <Box sx={{ display: 'inline-flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: { xs: 1, sm: 2 }, px: { xs: 2, sm: 3 }, py: 1.5, borderRadius: '50px', bgcolor: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(20px)', boxShadow: '0 10px 25px rgba(0,0,0,0.7)' }}>
-            <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary', letterSpacing: '0.1em', fontSize: { xs: '0.625rem', sm: '0.75rem' } }}>
+            <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-secondary)', letterSpacing: '0.1em', fontSize: { xs: '0.625rem', sm: '0.75rem' } }}>
               <ShieldCheck size={13} color="#D4AF37" /> 480GSM French Terry
             </Typography>
             <Typography sx={{ display: { xs: 'none', sm: 'inline' }, color: 'rgba(255,255,255,0.2)' }}>•</Typography>
-            <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary', letterSpacing: '0.1em', fontSize: { xs: '0.625rem', sm: '0.75rem' } }}>
+            <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-secondary)', letterSpacing: '0.1em', fontSize: { xs: '0.625rem', sm: '0.75rem' } }}>
               <Box component="span" sx={{ color: 'primary.main', fontWeight: 'bold' }}>✓</Box> Islandwide Delivery
             </Typography>
             <Typography sx={{ display: { xs: 'none', sm: 'inline' }, color: 'rgba(255,255,255,0.2)' }}>•</Typography>
-            <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary', letterSpacing: '0.1em', fontSize: { xs: '0.625rem', sm: '0.75rem' } }}>
+            <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-secondary)', letterSpacing: '0.1em', fontSize: { xs: '0.625rem', sm: '0.75rem' } }}>
               <Box component="span" sx={{ color: 'primary.main', fontWeight: 'bold' }}>✓</Box> Koko 3x Instalments
             </Typography>
           </Box>
@@ -249,7 +234,7 @@ export const HeroBanner: React.FC = () => {
             right: 24,
             zIndex: 50,
             bgcolor: '#25D366',
-            color: 'white',
+            color: 'var(--text-primary)',
             borderRadius: '50px',
             px: 2.5,
             py: 1.5,
@@ -274,6 +259,6 @@ export const HeroBanner: React.FC = () => {
         </IconButton>
 
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

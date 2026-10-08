@@ -2,24 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useStore } from '../../context/StoreContext';
 import { ProductCard } from '../ui/ProductCard';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Grid
+  Box, Typography, Container, Grid
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
 
 export const LimitedDropsSection: React.FC = () => {
   const { products, setSelectedProduct, addToCart, showToast } = useStore();
@@ -47,12 +31,12 @@ export const LimitedDropsSection: React.FC = () => {
   if (limitedProducts.length === 0) return null;
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
           py: { xs: 8, sm: 12, lg: 16 }, 
-          bgcolor: 'background.default', 
+          bgcolor: 'var(--bg-main)', 
           borderTop: '1px solid rgba(255,255,255,0.05)',
           width: '100%',
           overflow: 'hidden'
@@ -95,7 +79,7 @@ export const LimitedDropsSection: React.FC = () => {
                   <Typography 
                     variant="body2" 
                     sx={{ 
-                      color: 'text.secondary', 
+                      color: 'var(--text-secondary)', 
                       maxWidth: '400px', 
                       lineHeight: 1.8,
                       mb: 4
@@ -151,7 +135,7 @@ export const LimitedDropsSection: React.FC = () => {
                       <Typography 
                         variant="caption" 
                         sx={{ 
-                          color: 'text.secondary', 
+                          color: 'var(--text-secondary)', 
                           fontSize: { xs: '0.55rem', sm: '0.65rem' }, 
                           fontWeight: 'bold', 
                           letterSpacing: '0.15em', 
@@ -199,7 +183,7 @@ export const LimitedDropsSection: React.FC = () => {
                           left: 12, 
                           zIndex: 20, 
                           background: 'linear-gradient(90deg, #9333ea, #7e22ce)', 
-                          color: 'white', 
+                          color: 'var(--text-primary)', 
                           px: 1.5, 
                           py: 0.5, 
                           fontSize: '0.65rem', 
@@ -237,6 +221,6 @@ export const LimitedDropsSection: React.FC = () => {
           </Grid>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

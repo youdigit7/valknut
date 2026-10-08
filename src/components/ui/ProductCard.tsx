@@ -81,8 +81,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           }}
           className={`absolute top-2.5 right-2.5 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 border border-white/15 backdrop-blur-md ${
             isWishlisted
-              ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.6)]'
-              : 'bg-black/60 text-slate-300 hover:text-white hover:bg-black/90 hover:scale-110 shadow-lg'
+              ? 'bg-red-600 text-[var(--text-primary)] shadow-[0_0_15px_rgba(220,38,38,0.6)]'
+              : 'bg-black/60 text-slate-300 hover:text-[var(--text-primary)] hover:bg-black/90 hover:scale-110 shadow-lg'
           }`}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           disableRipple
@@ -127,7 +127,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <Typography component="span" className="text-[#D4AF37] text-xs font-mono font-bold tracking-[0.2em] uppercase mb-1">
                 VALKNUT
               </Typography>
-              <Typography component="span" className="text-white text-xs font-bold">{product.name}</Typography>
+              <Typography component="span" className="text-[var(--text-primary)] text-xs font-bold">{product.name}</Typography>
             </Box>
           )}
 
@@ -181,7 +181,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             onClick={() => {
               window.location.hash = `#/product/${product.slug}`;
             }}
-            className="text-xs sm:text-sm font-bold text-white uppercase font-heading tracking-wide leading-snug cursor-pointer hover:text-[#D4AF37] transition-colors line-clamp-2"
+            className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase font-heading tracking-wide leading-snug cursor-pointer hover:text-[#D4AF37] transition-colors line-clamp-2"
           >
             {product.name}
           </Typography>

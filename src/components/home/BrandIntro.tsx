@@ -1,33 +1,17 @@
 import React from 'react';
 import { Layers, Sparkles, Truck, CheckCircle2, ArrowRight, Compass } from 'lucide-react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Grid, Button
+  Box, Typography, Container, Grid, Button
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A', paper: '#10121D' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
 
 export const BrandIntro: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
           py: { xs: 10, sm: 14 }, 
-          bgcolor: 'background.default', 
+          bgcolor: 'var(--bg-main)', 
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           width: '100%',
           display: 'flex',
@@ -89,7 +73,7 @@ export const BrandIntro: React.FC = () => {
             <Typography 
               variant="body2" 
               sx={{ 
-                color: 'text.secondary', 
+                color: 'var(--text-secondary)', 
                 maxWidth: '700px', 
                 mx: 'auto',
                 mb: 8,
@@ -198,7 +182,7 @@ export const BrandIntro: React.FC = () => {
                         variant="caption" 
                         sx={{ 
                           fontSize: { xs: '0.625rem', sm: '0.6875rem' }, 
-                          color: 'text.secondary', 
+                          color: 'var(--text-secondary)', 
                           letterSpacing: '0.1em', 
                           display: 'block', 
                           mb: 0.5 
@@ -206,14 +190,14 @@ export const BrandIntro: React.FC = () => {
                       >
                         {card.subtitle}
                       </Typography>
-                      <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold', fontFamily: '"Syne", sans-serif', color: 'white' }}>
+                      <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold', fontFamily: '"Syne", sans-serif', color: 'var(--text-primary)' }}>
                         {card.desc}
                       </Typography>
                     </Box>
                     <Typography 
                       sx={{ 
                         fontSize: '0.75rem', 
-                        color: 'text.secondary', 
+                        color: 'var(--text-secondary)', 
                         mt: 2, 
                         pt: 1.5, 
                         borderTop: '1px solid rgba(255,255,255,0.1)', 
@@ -255,7 +239,7 @@ export const BrandIntro: React.FC = () => {
                 sx={{
                   px: 4, py: 2,
                   bgcolor: 'rgba(255,255,255,0.08)',
-                  color: 'white',
+                  color: 'var(--text-primary)',
                   fontWeight: 900,
                   fontSize: { xs: '0.75rem', sm: '0.875rem' },
                   letterSpacing: '0.16em',
@@ -279,6 +263,6 @@ export const BrandIntro: React.FC = () => {
           </Box>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

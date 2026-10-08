@@ -17,7 +17,7 @@ export const NotificationToast: React.FC = () => {
         return {
           bgcolor: 'rgba(14, 16, 23, 0.95)',
           borderColor: '#d4af37',
-          color: 'white',
+          color: 'var(--text-primary)',
         };
       case 'error':
         return {

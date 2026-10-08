@@ -445,19 +445,19 @@ export const ProductCatalog: React.FC = () => {
   }
 
   return (
-    <Box id="valknut-shop-page" sx={{ width: '100%', minHeight: '100vh', bgcolor: '#0A0A0A', py: { xs: 4, sm: 6 }, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+    <Box id="valknut-shop-page" sx={{ width: '100%', minHeight: '100vh', bgcolor: 'var(--bg-main)', py: { xs: 4, sm: 6 }, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
       <Container maxWidth="xl">
 
         {/* 1. Breadcrumbs & SEO Header */}
         <Box sx={{ mb: { xs: 3, sm: 5 }, pb: 3, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'text.secondary', mb: 3 }}>
-            <Box component="a" href="#/" sx={{ color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'white' }, transition: 'color 0.3s' }}>Home</Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', mb: 3 }}>
+            <Box component="a" href="#/" sx={{ color: 'var(--text-secondary)', textDecoration: 'none', '&:hover': { color: 'var(--text-primary)' }, transition: 'color 0.3s' }}>Home</Box>
             <ChevronRight size={12} />
-            <Box component="a" href="#/shop" sx={{ textDecoration: 'none', transition: 'color 0.3s', color: filters.category === 'ALL' ? 'primary.main' : 'text.secondary', fontWeight: filters.category === 'ALL' ? 'bold' : 'normal', '&:hover': { color: 'white' } }}>Shop</Box>
+            <Box component="a" href="#/shop" sx={{ textDecoration: 'none', transition: 'color 0.3s', color: filters.category === 'ALL' ? 'primary.main' : 'text.secondary', fontWeight: filters.category === 'ALL' ? 'bold' : 'normal', '&:hover': { color: 'var(--text-primary)' } }}>Shop</Box>
             {filters.category !== 'ALL' && (
               <>
                 <ChevronRight size={12} />
-                <Box component="a" href={`#/shop/${filters.category.toLowerCase()}`} sx={{ textDecoration: 'none', transition: 'color 0.3s', color: filters.subCategory === 'ALL' ? 'primary.main' : 'text.secondary', fontWeight: filters.subCategory === 'ALL' ? 'bold' : 'normal', '&:hover': { color: 'white' } }}>
+                <Box component="a" href={`#/shop/${filters.category.toLowerCase()}`} sx={{ textDecoration: 'none', transition: 'color 0.3s', color: filters.subCategory === 'ALL' ? 'primary.main' : 'text.secondary', fontWeight: filters.subCategory === 'ALL' ? 'bold' : 'normal', '&:hover': { color: 'var(--text-primary)' } }}>
                   {filters.category}
                 </Box>
               </>
@@ -475,7 +475,7 @@ export const ProductCatalog: React.FC = () => {
               <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', display: 'block', mb: 0.5 }}>
                 VALKNUT ARCHITECTURAL STREETWEAR
               </Typography>
-              <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem', lg: '3rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'white', letterSpacing: '-0.02em', fontFamily: '"Syne", sans-serif' }}>
+              <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem', lg: '3rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', letterSpacing: '-0.02em', fontFamily: '"Syne", sans-serif' }}>
                 {filters.subCategory !== 'ALL'
                   ? `${filters.category !== 'ALL' ? filters.category + ' ' : ''}${filters.subCategory}`
                   : filters.category === 'ALL'
@@ -484,10 +484,10 @@ export const ProductCatalog: React.FC = () => {
               </Typography>
             </Box>
             <Box sx={{ textAlign: { md: 'right' } }}>
-              <Typography sx={{ fontSize: '1rem', fontWeight: 'bold', color: 'white', fontFamily: '"JetBrains Mono", sans-serif' }}>
+              <Typography sx={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", sans-serif' }}>
                 {totalProductsCount}
               </Typography>
-              <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                 Total Pieces
               </Typography>
             </Box>
@@ -504,11 +504,11 @@ export const ProductCatalog: React.FC = () => {
                 onClick={() => handleFilterChange({ category: cat as CategoryType | 'ALL', subCategory: 'ALL' })}
                 sx={{
                   px: 2.5, py: 1.25, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Syne", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.3s', flexShrink: 0,
-                  ...(isActive ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 4px 15px rgba(212,175,55,0.2)' } : { bgcolor: '#12141F', color: 'text.secondary', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' } })
+                  ...(isActive ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 4px 15px rgba(212,175,55,0.2)' } : { bgcolor: '#12141F', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' } })
                 }}
               >
                 {cat === 'ALL' ? 'SHOP ALL' : cat}
-                <Box component="span" sx={{ ml: 1, px: 0.75, py: 0.25, borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', ...(isActive ? { bgcolor: 'rgba(0,0,0,0.2)', color: 'black' } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary' }) }}>
+                <Box component="span" sx={{ ml: 1, px: 0.75, py: 0.25, borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', ...(isActive ? { bgcolor: 'rgba(0,0,0,0.2)', color: 'black' } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)' }) }}>
                   {cat === 'ALL' ? initialFacets.categories.ALL : initialFacets.categories[cat] || 0}
                 </Box>
               </Button>
@@ -517,7 +517,7 @@ export const ProductCatalog: React.FC = () => {
         </Box>
 
         {/* 3. Controls & Action Bar */}
-        <Box sx={{ bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 1.5, sm: 2 }, mb: 4, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'center' }, justifyContent: 'space-between', gap: 2, boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+        <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 1.5, sm: 2 }, mb: 4, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'center' }, justifyContent: 'space-between', gap: 2, boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flex: 1 }}>
             <Button
               onClick={() => setIsMobileFilterOpen(true)}
@@ -537,13 +537,13 @@ export const ProductCatalog: React.FC = () => {
               onChange={(e) => handleFilterChange({ search: e.target.value })}
               variant="outlined"
               size="small"
-              sx={{ maxWidth: 400, '& .MuiOutlinedInput-root': { bgcolor: '#131520', color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' }, '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.2)' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
+              sx={{ maxWidth: 400, '& .MuiOutlinedInput-root': { bgcolor: '#131520', color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' }, '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.2)' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
               slotProps={{
                 input: {
                   startAdornment: <InputAdornment position="start"><Search size={16} color="#64748b" /></InputAdornment>,
                   endAdornment: filters.search ? (
                     <InputAdornment position="end">
-                      <IconButton size="small" onClick={() => handleFilterChange({ search: '' })} sx={{ color: 'text.secondary', '&:hover': { color: 'white' } }}><X size={14} /></IconButton>
+                      <IconButton size="small" onClick={() => handleFilterChange({ search: '' })} sx={{ color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }}><X size={14} /></IconButton>
                     </InputAdornment>
                   ) : null
                 }
@@ -552,14 +552,14 @@ export const ProductCatalog: React.FC = () => {
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'space-between', flexDirection: { xs: 'row', md: 'row' } }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 0.5, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'text.secondary', textTransform: 'uppercase' }}>
+              <Typography sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 0.5, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
                 <ArrowUpDown size={13} color="#D4AF37" /> Sort:
               </Typography>
               <Select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 size="small"
-                sx={{ bgcolor: '#131520', color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.15)' }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.3)' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' } }}
+                sx={{ bgcolor: '#131520', color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.15)' }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.3)' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' } }}
               >
                 <MenuItem value="latest" sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>Latest Drop Arrivals</MenuItem>
                 <MenuItem value="popular" sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>Best Sellers (Popularity)</MenuItem>
@@ -581,7 +581,7 @@ export const ProductCatalog: React.FC = () => {
         {/* 4. Removable Active Filter Chips */}
         {activeChips.length > 0 && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mb: 4, p: 1.5, bgcolor: 'rgba(14,16,23,0.6)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 0.5 }}>
-            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', mr: 1 }}>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', mr: 1 }}>
               Active Filters:
             </Typography>
             {activeChips.map((chip, idx) => (
@@ -590,7 +590,7 @@ export const ProductCatalog: React.FC = () => {
                 label={chip.label}
                 onDelete={chip.onRemove}
                 deleteIcon={<X size={12} />}
-                sx={{ bgcolor: '#141724', border: '1px solid rgba(212,175,55,0.3)', color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', borderRadius: 0.5, height: 24, '& .MuiChip-deleteIcon': { color: 'text.secondary', '&:hover': { color: 'primary.main' } } }}
+                sx={{ bgcolor: '#141724', border: '1px solid rgba(212,175,55,0.3)', color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', borderRadius: 0.5, height: 24, '& .MuiChip-deleteIcon': { color: 'var(--text-secondary)', '&:hover': { color: 'primary.main' } } }}
               />
             ))}
             <Button onClick={handleResetFilters} startIcon={<RotateCcw size={12} />} sx={{ minWidth: 'auto', p: 0, ml: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main', '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}>
@@ -603,7 +603,7 @@ export const ProductCatalog: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: { xs: 0, lg: 4 } }}>
 
           {/* Left Desktop Filter Sidebar */}
-          <Box sx={{ display: { xs: 'none', lg: 'block' }, width: 280, flexShrink: 0, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: 3, position: 'sticky', top: 112, maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 25px 50px rgba(0,0,0,0.5)', '&::-webkit-scrollbar': { width: 6 }, '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(255,255,255,0.2)', borderRadius: 3 } }}>
+          <Box sx={{ display: { xs: 'none', lg: 'block' }, width: 280, flexShrink: 0, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: 3, position: 'sticky', top: 112, maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 25px 50px rgba(0,0,0,0.5)', '&::-webkit-scrollbar': { width: 6 }, '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(255,255,255,0.2)', borderRadius: 3 } }}>
             <ShopSidebarFilters filters={filters} facets={currentFacets} onChange={handleFilterChange} onReset={handleResetFilters} />
           </Box>
 
@@ -614,7 +614,7 @@ export const ProductCatalog: React.FC = () => {
                 <LoadingSkeleton variant="card" count={itemsPerPage} />
               </Box>
             ) : displayProducts.length === 0 ? (
-              <Box sx={{ py: 8, bgcolor: '#0E1017', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1 }}>
+              <Box sx={{ py: 8, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1 }}>
                 <EmptyState title="NO MATCHING VALKNUT PIECES" description="We couldn't find any products matching your current filters and keywords. Try adjusting your filters or search terms." actionText="RESET ALL FILTERS" onAction={handleResetFilters} />
               </Box>
             ) : (
@@ -628,14 +628,14 @@ export const ProductCatalog: React.FC = () => {
             {/* Pagination Controls */}
             {!isLoading && totalProductsCount > 0 && (
               <Box sx={{ pt: 4, mt: 4, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
-                <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
-                  Showing <Box component="strong" sx={{ color: 'white' }}>{(currentPage - 1) * itemsPerPage + 1}</Box> to <Box component="strong" sx={{ color: 'white' }}>{Math.min(currentPage * itemsPerPage, totalProductsCount)}</Box> of <Box component="strong" sx={{ color: 'primary.main' }}>{totalProductsCount}</Box> pieces
+                <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                  Showing <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{(currentPage - 1) * itemsPerPage + 1}</Box> to <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{Math.min(currentPage * itemsPerPage, totalProductsCount)}</Box> of <Box component="strong" sx={{ color: 'primary.main' }}>{totalProductsCount}</Box> pieces
                 </Typography>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
                     <Typography component="span">Show:</Typography>
-                    <Select value={itemsPerPage} onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} size="small" sx={{ bgcolor: '#131520', color: 'white', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.1)' } }}>
+                    <Select value={itemsPerPage} onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} size="small" sx={{ bgcolor: '#131520', color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.1)' } }}>
                       <MenuItem value={8}>8 / page</MenuItem>
                       <MenuItem value={12}>12 / page</MenuItem>
                       <MenuItem value={24}>24 / page</MenuItem>

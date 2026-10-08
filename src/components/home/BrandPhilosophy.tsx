@@ -1,33 +1,17 @@
 import React from 'react';
 import { Shield, Zap, Lock } from 'lucide-react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Grid 
+  Box, Typography, Container, Grid 
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0C10', paper: '#12141E' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
 
 export const BrandPhilosophy: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
           py: { xs: 10, sm: 14, lg: 16 }, 
-          bgcolor: 'background.default', 
+          bgcolor: 'var(--bg-main)', 
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           width: '100%',
           overflow: 'hidden'
@@ -97,7 +81,7 @@ export const BrandPhilosophy: React.FC = () => {
                   </Typography>
                   <Typography 
                     sx={{ 
-                      color: 'white', 
+                      color: 'var(--text-primary)', 
                       fontSize: { xs: '1rem', sm: '1.25rem' }, 
                       fontWeight: 900, 
                       fontFamily: '"Syne", sans-serif', 
@@ -148,7 +132,7 @@ export const BrandPhilosophy: React.FC = () => {
                   <Typography 
                     variant="body2" 
                     sx={{ 
-                      color: 'text.secondary', 
+                      color: 'var(--text-secondary)', 
                       fontSize: { xs: '0.875rem', sm: '1rem' }, 
                       lineHeight: 1.8, 
                       fontWeight: 300 
@@ -171,7 +155,7 @@ export const BrandPhilosophy: React.FC = () => {
                         sx={{ 
                           p: 3, 
                           height: '100%',
-                          bgcolor: 'background.paper', 
+                          bgcolor: 'var(--bg-surface)', 
                           border: '1px solid rgba(255,255,255,0.05)', 
                           borderRadius: 3, 
                           boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
@@ -187,10 +171,10 @@ export const BrandPhilosophy: React.FC = () => {
                         }}
                       >
                         <Box sx={{ mb: 1 }}>{pillar.icon}</Box>
-                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'white', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                           {pillar.title}
                         </Typography>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.6875rem', lineHeight: 1.6 }}>
+                        <Typography variant="caption" sx={{ color: 'var(--text-secondary)', fontSize: '0.6875rem', lineHeight: 1.6 }}>
                           {pillar.desc}
                         </Typography>
                       </Box>
@@ -204,6 +188,6 @@ export const BrandPhilosophy: React.FC = () => {
           </Grid>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

@@ -4,67 +4,9 @@ import { useStore } from '../../context/StoreContext';
 import { SEOHead } from '../common/SEOHead';
 import { getBreadcrumbSchema } from '../../utils/seo';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, 
+  Box, Typography, Container, 
   Breadcrumbs, Link, Zoom, Fade, Paper, Button
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A', paper: '#0E1017' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h4: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    h5: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 700, textTransform: 'uppercase' },
-    body1: { fontFamily: '"JetBrains Mono", sans-serif' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-  },
-  components: {
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
-          backgroundImage: 'none',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 0 20px rgba(212,175,55,0.03)',
-          border: '1px solid rgba(255,255,255,0.05)',
-          background: 'linear-gradient(145deg, #11131c, #0a0c12)',
-        }
-      }
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          padding: '12px 24px',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        },
-        contained: {
-          color: '#000000',
-          background: 'linear-gradient(145deg, #e3bc3b, #bf9d31)',
-          boxShadow: '0 6px 20px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(0,0,0,0.2)',
-          '&:hover': {
-            background: 'linear-gradient(145deg, #f2c83e, #ccaa34)',
-            transform: 'translateY(-3px) scale(1.02)',
-            boxShadow: '0 8px 25px rgba(212, 175, 55, 0.4), inset 0 2px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.2)',
-          },
-          '&:active': {
-            transform: 'translateY(1px)',
-            boxShadow: '0 2px 10px rgba(212, 175, 55, 0.3), inset 0 2px 5px rgba(0,0,0,0.3)',
-          }
-        },
-      }
-    }
-  }
-});
 
 export const StreetwearSriLankaSEO: React.FC = () => {
   const { setActiveCategory } = useStore();
@@ -91,8 +33,8 @@ export const StreetwearSriLankaSEO: React.FC = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+    <>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'var(--bg-main)', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
         <SEOHead metadata={seoMetadata} />
         
         {/* Ambient Background Effects */}
@@ -101,8 +43,8 @@ export const StreetwearSriLankaSEO: React.FC = () => {
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
           
           {/* Breadcrumbs for SEO */}
-          <Breadcrumbs separator={<Typography sx={{ color: 'text.secondary' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
-            <Link href="#/" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>Home</Link>
+          <Breadcrumbs separator={<Typography sx={{ color: 'var(--text-secondary)' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
+            <Link href="#/" underline="hover" sx={{ color: 'var(--text-secondary)', '&:hover': { color: 'primary.main' } }}>Home</Link>
             <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>Sri Lanka Streetwear Culture</Typography>
           </Breadcrumbs>
 
@@ -118,7 +60,7 @@ export const StreetwearSriLankaSEO: React.FC = () => {
                 The Ultimate <Box component="span" sx={{ background: 'linear-gradient(to right, #D4AF37, #FFF5D1, #D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>Streetwear & Oversized</Box> Clothing Brand in Sri Lanka
               </Typography>
 
-              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '700px', mx: 'auto', lineHeight: 1.8 }}>
+              <Typography variant="body1" sx={{ color: 'var(--text-secondary)', maxWidth: '700px', mx: 'auto', lineHeight: 1.8 }}>
                 Engineered in Colombo. Crafted from ultra-heavyweight 100% organic cotton (up to 480 GSM). 
                 VALKNUT Official redefines modern luxury streetwear with boxy silhouettes, dark aesthetics, and uncompromising discipline.
               </Typography>
@@ -138,7 +80,7 @@ export const StreetwearSriLankaSEO: React.FC = () => {
                     <pillar.icon size={28} />
                   </Box>
                   <Typography variant="h6" sx={{ mb: 2, letterSpacing: '0.05em' }}>{pillar.title}</Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>{pillar.desc}</Typography>
+                  <Typography variant="body2" sx={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>{pillar.desc}</Typography>
                 </Paper>
               </Zoom>
             ))}
@@ -151,10 +93,10 @@ export const StreetwearSriLankaSEO: React.FC = () => {
                 <Typography variant="h4" component="h2" sx={{ mb: 4, fontSize: { xs: '1.5rem', sm: '2rem' } }}>
                   Why VALKNUT is Ranked #1 for Sri Lankan Dark Streetwear
                 </Typography>
-                <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8, mb: 3 }}>
-                  Streetwear in Sri Lanka has evolved beyond fast-fashion graphics. Today’s discerning youth and fashion connoisseurs demand substantial fabric weight, architectural silhouettes, precision embroidery, and empowering philosophies. VALKNUT was founded on the Norse emblem of nine worlds and inner power, encapsulated in our decree: <Box component="strong" sx={{ color: 'white' }}>“OWN YOUR MIND. CONTROL YOUR WORLD.”</Box>
+                <Typography variant="body1" sx={{ color: 'var(--text-secondary)', lineHeight: 1.8, mb: 3 }}>
+                  Streetwear in Sri Lanka has evolved beyond fast-fashion graphics. Today’s discerning youth and fashion connoisseurs demand substantial fabric weight, architectural silhouettes, precision embroidery, and empowering philosophies. VALKNUT was founded on the Norse emblem of nine worlds and inner power, encapsulated in our decree: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>“OWN YOUR MIND. CONTROL YOUR WORLD.”</Box>
                 </Typography>
-                <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+                <Typography variant="body1" sx={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
                   From our iconic <Box component="em" sx={{ color: 'primary.main', fontStyle: 'normal' }}>Celestial Mountain Vintage Washed Oversized Tees</Box> to the monolithic <Box component="em" sx={{ color: 'primary.main', fontStyle: 'normal' }}>480GSM Sovereign Hoodies</Box> and bespoke <Box component="em" sx={{ color: 'primary.main', fontStyle: 'normal' }}>Custom Studio</Box>, we guarantee world-class garment construction manufactured ethically right here in Sri Lanka.
                 </Typography>
               </Box>
@@ -175,10 +117,10 @@ export const StreetwearSriLankaSEO: React.FC = () => {
                         <CheckCircle2 size={20} />
                       </Box>
                       <Box>
-                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: 'white', mb: 0.5, textTransform: 'uppercase', fontFamily: 'monospace' }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: 'var(--text-primary)', mb: 0.5, textTransform: 'uppercase', fontFamily: 'monospace' }}>
                           {item.title}:
                         </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
                           {item.desc}
                         </Typography>
                       </Box>
@@ -195,7 +137,7 @@ export const StreetwearSriLankaSEO: React.FC = () => {
               <Typography variant="h3" component="h2" sx={{ mb: 3, fontSize: { xs: '2rem', sm: '2.5rem' } }}>
                 Ready to Elevate Your Wardrobe?
               </Typography>
-              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '600px', mx: 'auto', mb: 6 }}>
+              <Typography variant="body1" sx={{ color: 'var(--text-secondary)', maxWidth: '600px', mx: 'auto', mb: 6 }}>
                 Explore the latest 2026 drops, limited releases, and customize your own apparel in the VALKNUT Studio.
               </Typography>
               <Button 
@@ -213,6 +155,6 @@ export const StreetwearSriLankaSEO: React.FC = () => {
 
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

@@ -4,84 +4,9 @@ import { useStore } from '../../context/StoreContext';
 import { SEOHead } from '../common/SEOHead';
 import { getBreadcrumbSchema } from '../../utils/seo';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Button, 
+  Box, Typography, Button, 
   Container, Card, CardContent, Breadcrumbs, Link, Zoom, Fade, Paper, Chip
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A', paper: '#0E1017' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h4: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    h5: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 700, textTransform: 'uppercase' },
-    body1: { fontFamily: '"JetBrains Mono", sans-serif' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    button: { fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 800 },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          padding: '16px 32px',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        },
-        contained: {
-          color: '#000000',
-          background: 'linear-gradient(145deg, #e3bc3b, #bf9d31)',
-          boxShadow: '0 6px 20px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(0,0,0,0.2)',
-          '&:hover': {
-            background: 'linear-gradient(145deg, #f2c83e, #ccaa34)',
-            transform: 'translateY(-3px) scale(1.02)',
-            boxShadow: '0 8px 25px rgba(212, 175, 55, 0.4), inset 0 2px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.2)',
-          },
-          '&:active': {
-            transform: 'translateY(1px)',
-            boxShadow: '0 2px 10px rgba(212, 175, 55, 0.3), inset 0 2px 5px rgba(0,0,0,0.3)',
-          }
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
-          border: '1px solid rgba(255,255,255,0.05)',
-          background: 'linear-gradient(145deg, #131520, #0E1017)',
-          boxShadow: '8px 8px 20px rgba(0,0,0,0.5), -4px -4px 15px rgba(255,255,255,0.02)',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          '&:hover': {
-            transform: 'translateY(-10px)',
-            boxShadow: '12px 12px 30px rgba(0,0,0,0.7), -6px -6px 20px rgba(255,255,255,0.03), 0 0 15px rgba(212,175,55,0.2)',
-            borderColor: 'rgba(212,175,55,0.3)',
-          }
-        }
-      }
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
-          backgroundImage: 'none',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 0 20px rgba(212,175,55,0.03)',
-          border: '1px solid rgba(255,255,255,0.05)',
-          background: 'linear-gradient(145deg, #11131c, #0a0c12)',
-        }
-      }
-    }
-  }
-});
 
 export const BrandStoryPage: React.FC = () => {
   const { setActiveCategory } = useStore();
@@ -115,8 +40,8 @@ export const BrandStoryPage: React.FC = () => {
   ];
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+    <>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'var(--bg-main)', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
         <SEOHead metadata={seoMetadata} />
         
         {/* Ambient Background Effects */}
@@ -126,8 +51,8 @@ export const BrandStoryPage: React.FC = () => {
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
           
           {/* Breadcrumbs */}
-          <Breadcrumbs separator={<Typography sx={{ color: 'text.secondary' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
-            <Link href="#/" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>Home</Link>
+          <Breadcrumbs separator={<Typography sx={{ color: 'var(--text-secondary)' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
+            <Link href="#/" underline="hover" sx={{ color: 'var(--text-secondary)', '&:hover': { color: 'primary.main' } }}>Home</Link>
             <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>Brand Story</Typography>
           </Breadcrumbs>
 
@@ -150,7 +75,7 @@ export const BrandStoryPage: React.FC = () => {
                 “OWN YOUR MIND. CONTROL YOUR WORLD.”
               </Typography>
               
-              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '600px', mx: 'auto', lineHeight: 1.8 }}>
+              <Typography variant="body1" sx={{ color: 'var(--text-secondary)', maxWidth: '600px', mx: 'auto', lineHeight: 1.8 }}>
                 Built for those who think different. Rooted in ancient Norse symbolism of the nine interlocked realms and modernized for contemporary dark luxury streetwear.
               </Typography>
             </Box>
@@ -175,7 +100,7 @@ export const BrandStoryPage: React.FC = () => {
                         </Box>
                         <Typography variant="h5" sx={{ mb: 1 }}>{pillar.title}</Typography>
                         <Typography variant="caption" sx={{ color: 'primary.main', letterSpacing: '0.1em', display: 'block', mb: 2 }}>{pillar.sub}</Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>{pillar.text}</Typography>
+                        <Typography variant="body2" sx={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>{pillar.text}</Typography>
                       </CardContent>
                     </Card>
                   </Zoom>
@@ -191,15 +116,15 @@ export const BrandStoryPage: React.FC = () => {
               
               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '7fr 5fr' }, gap: 8, alignItems: 'center' }}>
                 <Box>
-                  <Chip label="100% ETHICAL APPAREL" size="small" sx={{ bgcolor: 'rgba(255,255,255,0.1)', color: 'white', mb: 3, fontFamily: 'monospace', letterSpacing: '0.1em' }} />
+                  <Chip label="100% ETHICAL APPAREL" size="small" sx={{ bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', mb: 3, fontFamily: 'monospace', letterSpacing: '0.1em' }} />
                   <Typography variant="h2" sx={{ mb: 4, fontSize: { xs: '2rem', md: '2.5rem' } }}>
                     Made in Sri Lanka. <br />
                     <Box component="span" sx={{ color: 'primary.main' }}>Crafted for the World.</Box>
                   </Typography>
-                  <Typography variant="body1" sx={{ color: 'text.secondary', mb: 2, lineHeight: 1.8 }}>
+                  <Typography variant="body1" sx={{ color: 'var(--text-secondary)', mb: 2, lineHeight: 1.8 }}>
                     Sri Lanka is globally recognized for high-caliber garment engineering and textile excellence. VALKNUT harnesses this artisan heritage to construct heavyweight streetwear fabrics with zero compromise.
                   </Typography>
-                  <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+                  <Typography variant="body1" sx={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
                     From our pre-shrunk reactive dyeing process to reinforced architectural neckline ribs, every single piece undergoes meticulous quality inspection before dispatch.
                   </Typography>
                 </Box>
@@ -210,8 +135,8 @@ export const BrandStoryPage: React.FC = () => {
                       <Typography sx={{ fontSize: '2rem', fontWeight: 'bold', color: 'primary.main', fontFamily: 'serif' }}>VK</Typography>
                     </Box>
                     <Typography variant="h6" sx={{ letterSpacing: '0.1em', mb: 1 }}>VALKNUT ESSENTIAL</Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary', letterSpacing: '0.1em', display: 'block', mb: 3 }}>Sri Lanka • Est 2026</Typography>
-                    <Box sx={{ display: 'inline-block', py: 1, px: 2, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, typography: 'caption', fontFamily: 'monospace', color: 'text.secondary' }}>
+                    <Typography variant="caption" sx={{ color: 'var(--text-secondary)', letterSpacing: '0.1em', display: 'block', mb: 3 }}>Sri Lanka • Est 2026</Typography>
+                    <Box sx={{ display: 'inline-block', py: 1, px: 2, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, typography: 'caption', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>
                       valknutofficial.com
                     </Box>
                   </Paper>
@@ -237,7 +162,7 @@ export const BrandStoryPage: React.FC = () => {
 
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };
 

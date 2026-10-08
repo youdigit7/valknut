@@ -125,7 +125,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pb: 2, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <SlidersHorizontal size={16} color="#D4AF37" />
-          <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', fontFamily: '"Syne", sans-serif', color: 'white' }}>
+          <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', fontFamily: '"Syne", sans-serif', color: 'var(--text-primary)' }}>
             FILTERS
           </Typography>
           {activeFilterCount > 0 && (
@@ -152,7 +152,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
         <Button
           fullWidth
           onClick={() => toggleSection('categories')}
-          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-secondary)', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'var(--text-primary)', bgcolor: 'transparent' } }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Tag size={13} color="#D4AF37" />
@@ -177,7 +177,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                       ...(isSelected ? {
                         bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main', boxShadow: '0 2px 5px rgba(212,175,55,0.3)'
                       } : {
-                        bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', borderColor: 'rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' }
+                        bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', borderColor: 'rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' }
                       })
                     }}
                   >
@@ -197,7 +197,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                     onClick={() => onChange({ subCategory: 'ALL' })}
                     sx={{
                       justifyContent: 'space-between', py: 0.5, px: 1, borderRadius: 1, textTransform: 'none',
-                      ...(filters.subCategory === 'ALL' ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } })
+                      ...(filters.subCategory === 'ALL' ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.05)' } })
                     }}
                   >
                     <Typography sx={{ fontSize: '0.75rem' }}>All Subcategories</Typography>
@@ -210,7 +210,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                         onClick={() => onChange({ subCategory: isSelected ? 'ALL' : subCat })}
                         sx={{
                           justifyContent: 'space-between', py: 0.5, px: 1, borderRadius: 1, textTransform: 'none',
-                          ...(isSelected ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } })
+                          ...(isSelected ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.05)' } })
                         }}
                       >
                         <Typography sx={{ fontSize: '0.75rem', }}>{subCat}</Typography>
@@ -231,7 +231,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
           <Button
             fullWidth
             onClick={() => toggleSection('collections')}
-            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-secondary)', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'var(--text-primary)', bgcolor: 'transparent' } }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <Sparkles size={13} color="#D4AF37" />
@@ -246,7 +246,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                 onClick={() => onChange({ collection: 'ALL' })}
                 sx={{
                   justifyContent: 'space-between', py: 0.5, px: 1, borderRadius: 1, textTransform: 'none',
-                  ...(filters.collection === 'ALL' ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } })
+                  ...(filters.collection === 'ALL' ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.05)' } })
                 }}
               >
                 <Typography sx={{ fontSize: '0.75rem' }}>All Collections</Typography>
@@ -259,7 +259,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                     onClick={() => onChange({ collection: isSelected ? 'ALL' : col })}
                     sx={{
                       justifyContent: 'space-between', py: 0.5, px: 1, borderRadius: 1, textTransform: 'uppercase',
-                      ...(isSelected ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } })
+                      ...(isSelected ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.05)' } })
                     }}
                   >
                     <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', }}>{col}</Typography>
@@ -277,7 +277,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
         <Button
           fullWidth
           onClick={() => toggleSection('price')}
-          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-secondary)', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'var(--text-primary)', bgcolor: 'transparent' } }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <DollarSign size={13} color="#D4AF37" />
@@ -321,7 +321,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                     onClick={() => onChange({ priceRange: [bracket.min, bracket.max] })}
                     sx={{
                       py: 0.5, px: 1, borderRadius: 1, minWidth: 'auto', border: '1px solid',
-                      ...(isActive ? { bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main' } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', borderColor: 'rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' } })
+                      ...(isActive ? { bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main' } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', borderColor: 'rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' } })
                     }}
                   >
                     <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold' }}>{bracket.label}</Typography>
@@ -338,7 +338,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
         <Button
           fullWidth
           onClick={() => toggleSection('sizes')}
-          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-secondary)', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'var(--text-primary)', bgcolor: 'transparent' } }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Maximize2 size={13} color="#D4AF37" />
@@ -362,7 +362,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                     ...(isSelected ? {
                       bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main', boxShadow: '0 5px 15px rgba(212,175,55,0.3)', transform: 'scale(1.05)'
                     } : {
-                      bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', borderColor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'white', borderColor: 'rgba(255,255,255,0.2)' }
+                      bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', borderColor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'var(--text-primary)', borderColor: 'rgba(255,255,255,0.2)' }
                     })
                   }}
                 >
@@ -381,7 +381,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
           <Button
             fullWidth
             onClick={() => toggleSection('colors')}
-            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-secondary)', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'var(--text-primary)', bgcolor: 'transparent' } }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <Palette size={13} color="#D4AF37" />
@@ -402,9 +402,9 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                     sx={{
                       p: 1, borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', textAlign: 'left',
                       ...(isSelected ? {
-                        bgcolor: 'rgba(212,175,55,0.15)', borderColor: 'primary.main', color: 'white'
+                        bgcolor: 'rgba(212,175,55,0.15)', borderColor: 'primary.main', color: 'var(--text-primary)'
                       } : {
-                        bgcolor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' }
+                        bgcolor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' }
                       })
                     }}
                   >
@@ -430,7 +430,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
         <Button
           fullWidth
           onClick={() => toggleSection('availability')}
-          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'text.secondary', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'white', bgcolor: 'transparent' } }}
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-secondary)', p: 0, minWidth: 'auto', textTransform: 'uppercase', letterSpacing: '0.1em', '&:hover': { color: 'var(--text-primary)', bgcolor: 'transparent' } }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Stock & Drops</Typography>
@@ -441,7 +441,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
         <Collapse in={openSections.availability}>
           <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
             {/* In Stock Only */}
-            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'white' } }}>
+            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }}>
               <Checkbox
                 checked={filters.inStockOnly}
                 onChange={(e) => onChange({ inStockOnly: e.target.checked })}
@@ -451,7 +451,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
             </Box>
 
             {/* Sale Items Only */}
-            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'white' } }}>
+            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }}>
               <Checkbox
                 checked={filters.isSaleOnly}
                 onChange={(e) => onChange({ isSaleOnly: e.target.checked })}
@@ -461,7 +461,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
             </Box>
 
             {/* New Arrivals Only */}
-            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'white' } }}>
+            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }}>
               <Checkbox
                 checked={filters.isNewOnly}
                 onChange={(e) => onChange({ isNewOnly: e.target.checked })}
@@ -471,7 +471,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
             </Box>
 
             {/* Best Sellers */}
-            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'white' } }}>
+            <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }}>
               <Checkbox
                 checked={filters.isBestSellerOnly}
                 onChange={(e) => onChange({ isBestSellerOnly: e.target.checked })}

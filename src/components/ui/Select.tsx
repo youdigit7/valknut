@@ -38,7 +38,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             )}
             sx={{
               backgroundColor: '#12141E',
-              color: 'white',
+              color: 'var(--text-primary)',
               borderRadius: '2px',
               '.MuiOutlinedInput-notchedOutline': {
                 borderColor: error ? '#ef4444' : 'rgba(255, 255, 255, 0.1)',
@@ -67,7 +67,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
                 paper: {
                   sx: {
                     backgroundColor: '#151824',
-                    color: 'white',
+                    color: 'var(--text-primary)',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '2px',
                     marginTop: '4px',

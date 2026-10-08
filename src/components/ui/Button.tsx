@@ -37,15 +37,15 @@ export const Button: React.FC<ButtonProps> = ({
     primary:
       'bg-white text-black hover:bg-[#D4AF37] hover:text-black hover:shadow-[0_0_25px_rgba(212,175,55,0.35)] active:scale-[0.98] border border-white',
     secondary:
-      'bg-transparent text-white border-2 border-white/25 hover:border-white hover:bg-white/10 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] active:scale-[0.98]',
+      'bg-transparent text-[var(--text-primary)] border-2 border-white/25 hover:border-white hover:bg-white/10 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] active:scale-[0.98]',
     gold:
       'bg-[#D4AF37] text-black hover:bg-[#E2B714] hover:shadow-[0_0_30px_rgba(212,175,55,0.45)] active:scale-[0.98] font-black border border-[#D4AF37]',
     outline:
       'bg-transparent text-[#D4AF37] border-2 border-[#D4AF37]/60 hover:border-[#D4AF37] hover:bg-[#D4AF37]/15 hover:shadow-[0_0_25px_rgba(212,175,55,0.25)] active:scale-[0.98]',
     ghost:
-      'bg-transparent text-slate-300 hover:text-white hover:bg-white/10 active:scale-[0.98]',
+      'bg-transparent text-slate-300 hover:text-[var(--text-primary)] hover:bg-white/10 active:scale-[0.98]',
     danger:
-      'bg-red-600 text-white hover:bg-red-500 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] active:scale-[0.98]',
+      'bg-red-600 text-[var(--text-primary)] hover:bg-red-500 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] active:scale-[0.98]',
   }[variant];
 
   const widthClass = fullWidth ? 'w-full' : '';

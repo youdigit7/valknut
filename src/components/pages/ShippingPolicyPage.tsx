@@ -3,42 +3,9 @@ import { Truck, RefreshCw, CreditCard } from 'lucide-react';
 import { SEOHead } from '../common/SEOHead';
 import { getBreadcrumbSchema } from '../../utils/seo';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, 
+  Box, Typography, Container, 
   Breadcrumbs, Link, Zoom, Fade, Paper, Divider 
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A', paper: '#0E1017' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h4: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    h5: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 700, textTransform: 'uppercase' },
-    body1: { fontFamily: '"JetBrains Mono", sans-serif' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-  },
-  components: {
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
-          backgroundImage: 'none',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 0 20px rgba(212,175,55,0.03)',
-          border: '1px solid rgba(255,255,255,0.05)',
-          background: 'linear-gradient(145deg, #11131c, #0a0c12)',
-        }
-      }
-    }
-  }
-});
 
 export const ShippingPolicyPage: React.FC = () => {
   const seoMetadata = {
@@ -58,8 +25,8 @@ export const ShippingPolicyPage: React.FC = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+    <>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'var(--bg-main)', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
         <SEOHead metadata={seoMetadata} />
         
         {/* Ambient Background Effects */}
@@ -68,8 +35,8 @@ export const ShippingPolicyPage: React.FC = () => {
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
           
           {/* Breadcrumbs */}
-          <Breadcrumbs separator={<Typography sx={{ color: 'text.secondary' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
-            <Link href="#/" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>Home</Link>
+          <Breadcrumbs separator={<Typography sx={{ color: 'var(--text-secondary)' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
+            <Link href="#/" underline="hover" sx={{ color: 'var(--text-secondary)', '&:hover': { color: 'primary.main' } }}>Home</Link>
             <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>Shipping, Payments & Returns</Typography>
           </Breadcrumbs>
 
@@ -85,7 +52,7 @@ export const ShippingPolicyPage: React.FC = () => {
                 Shipping, Payments & <Box component="span" sx={{ background: 'linear-gradient(to right, #D4AF37, #FFF5D1, #D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>Exchange Policy</Box>
               </Typography>
 
-              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '600px', mx: 'auto', lineHeight: 1.8 }}>
+              <Typography variant="body1" sx={{ color: 'var(--text-secondary)', maxWidth: '600px', mx: 'auto', lineHeight: 1.8 }}>
                 Transparent, secure, and expedited. We partner with Sri Lanka’s premier courier fleets to ensure your package arrives in pristine condition.
               </Typography>
             </Box>
@@ -106,14 +73,14 @@ export const ShippingPolicyPage: React.FC = () => {
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
                   <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', p: 4, borderRadius: 2 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 'bold', textTransform: 'uppercase', mb: 1 }}>Greater Colombo & Suburbs</Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>1 to 2 business days</Typography>
+                    <Typography variant="body2" sx={{ color: 'var(--text-secondary)', mb: 3 }}>1 to 2 business days</Typography>
                     <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)', mb: 3 }} />
                     <Typography variant="caption" sx={{ color: 'primary.main', fontFamily: 'monospace', fontWeight: 'bold' }}>Standard Rate: LKR 450 | FREE above LKR 10,000</Typography>
                   </Paper>
                   
                   <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', p: 4, borderRadius: 2 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 'bold', textTransform: 'uppercase', mb: 1 }}>All Islandwide Outstations</Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>2 to 4 business days</Typography>
+                    <Typography variant="body2" sx={{ color: 'var(--text-secondary)', mb: 3 }}>2 to 4 business days</Typography>
                     <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)', mb: 3 }} />
                     <Typography variant="caption" sx={{ color: 'primary.main', fontFamily: 'monospace', fontWeight: 'bold' }}>Standard Rate: LKR 450 | FREE above LKR 10,000</Typography>
                   </Paper>
@@ -134,17 +101,17 @@ export const ShippingPolicyPage: React.FC = () => {
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 4 }}>
                   <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', p: 4, borderRadius: 2 }}>
                     <Typography variant="h6" sx={{ color: '#4ade80', mb: 2, fontSize: '1.1rem' }}>Koko BNPL</Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>Split your total bill into 3 equal monthly payments with 0% interest and zero hidden charges using your debit or credit card.</Typography>
+                    <Typography variant="body2" sx={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>Split your total bill into 3 equal monthly payments with 0% interest and zero hidden charges using your debit or credit card.</Typography>
                   </Paper>
                   
                   <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', p: 4, borderRadius: 2 }}>
                     <Typography variant="h6" sx={{ color: '#60a5fa', mb: 2, fontSize: '1.1rem' }}>OnePay Gateway</Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>Bank-grade 256-bit encrypted card processing for Visa, MasterCard, UnionPay, and direct LankaQR instant mobile payments.</Typography>
+                    <Typography variant="body2" sx={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>Bank-grade 256-bit encrypted card processing for Visa, MasterCard, UnionPay, and direct LankaQR instant mobile payments.</Typography>
                   </Paper>
                   
                   <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', p: 4, borderRadius: 2 }}>
                     <Typography variant="h6" sx={{ color: '#e2e8f0', mb: 2, fontSize: '1.1rem' }}>Cash on Delivery</Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>Pay in cash directly to the courier agent upon receiving and inspecting your parcel packaging.</Typography>
+                    <Typography variant="body2" sx={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>Pay in cash directly to the courier agent upon receiving and inspecting your parcel packaging.</Typography>
                   </Paper>
                 </Box>
               </Paper>
@@ -161,7 +128,7 @@ export const ShippingPolicyPage: React.FC = () => {
                 </Box>
                 
                 <Box sx={{ maxWidth: '800px' }}>
-                  <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8, mb: 3 }}>
+                  <Typography variant="body1" sx={{ color: 'var(--text-secondary)', lineHeight: 1.8, mb: 3 }}>
                     If your chosen size does not fit your desired drape, you can request an exchange within 7 days of delivery. The item must be unwashed, unworn, with all original VALKNUT hangtags and packaging intact.
                   </Typography>
                   <Typography variant="caption" sx={{ color: '#94a3b8', fontStyle: 'italic', display: 'block' }}>
@@ -174,6 +141,6 @@ export const ShippingPolicyPage: React.FC = () => {
           </Box>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

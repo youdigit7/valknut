@@ -47,7 +47,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             border: '1px solid rgba(255, 255, 255, 0.1)',
             transition: 'all 0.2s',
             '&:hover': {
-              color: 'white',
+              color: 'var(--text-primary)',
               borderColor: 'rgba(255, 255, 255, 0.3)',
               backgroundColor: '#12141E',
             },

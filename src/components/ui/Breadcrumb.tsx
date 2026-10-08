@@ -25,7 +25,7 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, className = '' })
 
         if (isLast) {
           return (
-            <MuiTypography key={idx} className="text-white font-semibold truncate uppercase tracking-wider text-xs font-mono">
+            <MuiTypography key={idx} className="text-[var(--text-primary)] font-semibold truncate uppercase tracking-wider text-xs font-mono">
               {item.label}
             </MuiTypography>
           );

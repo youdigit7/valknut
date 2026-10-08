@@ -26,10 +26,10 @@ export const IconButton: React.FC<IconButtonProps> = ({
   }[size];
 
   const variantClasses = {
-    ghost: 'text-slate-300 hover:text-white hover:bg-white/[0.08] rounded-full',
-    secondary: 'border border-white/10 text-slate-300 hover:text-white hover:border-[#D4AF37]/50 bg-white/[0.04] hover:bg-white/[0.08] rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.3)]',
+    ghost: 'text-slate-300 hover:text-[var(--text-primary)] hover:bg-white/[0.08] rounded-full',
+    secondary: 'border border-white/10 text-slate-300 hover:text-[var(--text-primary)] hover:border-[#D4AF37]/50 bg-white/[0.04] hover:bg-white/[0.08] rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.3)]',
     gold: 'border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/15 hover:border-[#D4AF37] rounded-full shadow-[0_0_15px_rgba(212,175,55,0.25)]',
-    dark: 'bg-[#12141E] text-white hover:bg-[#1A1D2C] border border-white/10 rounded-full shadow-md',
+    dark: 'bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[#1A1D2C] border border-white/10 rounded-full shadow-md',
   }[variant];
 
   return (

@@ -23,9 +23,9 @@ export const Badge: React.FC<BadgeProps> = ({
 
   const variantClasses = {
     gold: 'bg-[#D4AF37] text-black font-extrabold',
-    dark: 'bg-white/10 text-white border border-white/10 backdrop-blur-sm',
-    red: 'bg-red-600 text-white font-bold',
-    purple: 'bg-purple-600 text-white font-bold',
+    dark: 'bg-white/10 text-[var(--text-primary)] border border-white/10 backdrop-blur-sm',
+    red: 'bg-red-600 text-[var(--text-primary)] font-bold',
+    purple: 'bg-purple-600 text-[var(--text-primary)] font-bold',
     outline: 'bg-transparent text-[#D4AF37] border border-[#D4AF37]/60 font-bold',
     soldout: 'bg-[#181A24] text-slate-400 border border-white/10 font-bold',
   }[variant];

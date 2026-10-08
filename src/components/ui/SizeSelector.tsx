@@ -58,8 +58,8 @@ export const SizeSelector: React.FC<SizeSelectorProps> = ({
                 isSelected
                   ? 'bg-white text-black border-2 border-white shadow-md'
                   : isAvailable
-                  ? 'bg-[#12141E] text-slate-200 border border-white/10 hover:border-white/40 hover:text-white'
-                  : 'bg-[#0E1017] text-slate-600 border border-white/5 cursor-not-allowed opacity-40 line-through'
+                  ? 'bg-[var(--bg-card)] text-slate-200 border border-white/10 hover:border-white/40 hover:text-[var(--text-primary)]'
+                  : 'bg-[var(--bg-surface)] text-slate-600 border border-white/5 cursor-not-allowed opacity-40 line-through'
               }`}
               sx={{
                 minWidth: '48px',

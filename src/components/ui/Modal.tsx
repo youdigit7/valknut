@@ -57,10 +57,10 @@ export const Modal: React.FC<ModalProps> = ({
       }}
     >
       {(title || showCloseButton) && (
-        <DialogTitle className="flex items-center justify-between p-5 sm:p-6 border-b border-white/5 bg-[#12141E]/40" sx={{ padding: '20px 24px' }}>
+        <DialogTitle className="flex items-center justify-between p-5 sm:p-6 border-b border-white/5 bg-[var(--bg-card)]/40" sx={{ padding: '20px 24px' }}>
           <Box>
             {title && (
-              <Typography variant="h6" className="text-lg font-black uppercase text-white font-syne tracking-wider">
+              <Typography variant="h6" className="text-lg font-black uppercase text-[var(--text-primary)] font-syne tracking-wider">
                 {title}
               </Typography>
             )}
@@ -73,7 +73,7 @@ export const Modal: React.FC<ModalProps> = ({
           {showCloseButton && (
             <MuiIconButton
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-[2px] transition-colors"
+              className="p-1.5 text-slate-400 hover:text-[var(--text-primary)] hover:bg-white/5 rounded-[2px] transition-colors"
               aria-label="Close modal"
               sx={{ color: '#94a3b8' }}
             >

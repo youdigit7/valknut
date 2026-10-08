@@ -1,33 +1,17 @@
 import React from 'react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container
+  Box, Typography, Container
 } from '@mui/material';
 import { Play } from 'lucide-react';
 
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
-
 export const LifestyleFilmSection: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
           py: { xs: 8, sm: 12, lg: 16 }, 
-          bgcolor: 'background.default', 
+          bgcolor: 'var(--bg-main)', 
           borderTop: '1px solid rgba(255,255,255,0.05)',
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           width: '100%',
@@ -56,7 +40,7 @@ export const LifestyleFilmSection: React.FC = () => {
                 fontSize: { xs: '1.875rem', sm: '2.5rem', md: '3rem' }, 
                 letterSpacing: '-0.02em',
                 textShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                color: 'white'
+                color: 'var(--text-primary)'
               }}
             >
               DROP 04 — LIFESTYLE FILM
@@ -127,7 +111,7 @@ export const LifestyleFilmSection: React.FC = () => {
             </Typography>
             <Typography 
               sx={{ 
-                color: 'white', 
+                color: 'var(--text-primary)', 
                 fontSize: { xs: '0.875rem', sm: '1rem' }, 
                 fontWeight: 'bold',
                 fontFamily: '"JetBrains Mono", sans-serif',
@@ -138,7 +122,7 @@ export const LifestyleFilmSection: React.FC = () => {
             </Typography>
             <Typography 
               sx={{ 
-                color: 'white', 
+                color: 'var(--text-primary)', 
                 fontSize: { xs: '0.875rem', sm: '1rem' }, 
                 fontWeight: 'bold',
                 fontFamily: '"JetBrains Mono", sans-serif'
@@ -149,7 +133,7 @@ export const LifestyleFilmSection: React.FC = () => {
             <Typography 
               variant="caption"
               sx={{ 
-                color: 'text.secondary', 
+                color: 'var(--text-secondary)', 
                 mt: 3,
                 fontSize: { xs: '0.65rem', sm: '0.75rem' },
                 lineHeight: 1.6,
@@ -162,6 +146,6 @@ export const LifestyleFilmSection: React.FC = () => {
 
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

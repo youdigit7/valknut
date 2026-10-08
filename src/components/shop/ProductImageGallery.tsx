@@ -200,12 +200,12 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
               top: 14,
               right: 14,
               bgcolor: 'rgba(0,0,0,0.7)',
-              color: 'text.secondary',
+              color: 'var(--text-secondary)',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255,255,255,0.15)',
               opacity: { xs: 1, lg: 0 },
               transition: 'all 0.3s ease',
-              '&:hover': { bgcolor: 'rgba(0,0,0,0.9)', color: 'white' }
+              '&:hover': { bgcolor: 'rgba(0,0,0,0.9)', color: 'var(--text-primary)' }
             }}
             title="Expand Fullscreen Gallery"
           >
@@ -267,7 +267,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             }}
           >
             <ZoomIn size={12} color="#D4AF37" />
-            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>Hover to zoom • Click to expand</Typography>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>Hover to zoom • Click to expand</Typography>
           </Box>
 
           {/* Mobile Swipe Indicators & Arrows */}
@@ -278,7 +278,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 className="overlay-action"
                 sx={{
                   position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)',
-                  bgcolor: 'rgba(0,0,0,0.7)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
+                  bgcolor: 'rgba(0,0,0,0.7)', color: 'var(--text-primary)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
                   opacity: { xs: 1, lg: 0 }, transition: 'all 0.3s ease', '&:hover': { bgcolor: 'black' }
                 }}
               >
@@ -289,7 +289,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 className="overlay-action"
                 sx={{
                   position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
-                  bgcolor: 'rgba(0,0,0,0.7)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
+                  bgcolor: 'rgba(0,0,0,0.7)', color: 'var(--text-primary)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
                   opacity: { xs: 1, lg: 0 }, transition: 'all 0.3s ease', '&:hover': { bgcolor: 'black' }
                 }}
               >
@@ -331,7 +331,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
               <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', color: 'primary.main', textTransform: 'uppercase' }}>
                 {productName} — ({activeIndex + 1}/{displayImages.length})
               </Typography>
-              <IconButton onClick={() => setIsLightboxOpen(false)} sx={{ color: 'text.secondary', bgcolor: 'rgba(255,255,255,0.1)', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.2)' } }}>
+              <IconButton onClick={() => setIsLightboxOpen(false)} sx={{ color: 'var(--text-secondary)', bgcolor: 'rgba(255,255,255,0.1)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.2)' } }}>
                 <X size={22} />
               </IconButton>
             </Box>
@@ -349,13 +349,13 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 <>
                   <IconButton
                     onClick={handlePrev}
-                    sx={{ position: 'absolute', left: { xs: -16, sm: -48 }, top: '50%', transform: 'translateY(-50%)', width: 44, height: 44, bgcolor: 'rgba(0,0,0,0.8)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 10px 25px rgba(0,0,0,0.5)', '&:hover': { bgcolor: 'primary.main', color: 'black' } }}
+                    sx={{ position: 'absolute', left: { xs: -16, sm: -48 }, top: '50%', transform: 'translateY(-50%)', width: 44, height: 44, bgcolor: 'rgba(0,0,0,0.8)', color: 'var(--text-primary)', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 10px 25px rgba(0,0,0,0.5)', '&:hover': { bgcolor: 'primary.main', color: 'black' } }}
                   >
                     <ChevronLeft size={22} />
                   </IconButton>
                   <IconButton
                     onClick={handleNext}
-                    sx={{ position: 'absolute', right: { xs: -16, sm: -48 }, top: '50%', transform: 'translateY(-50%)', width: 44, height: 44, bgcolor: 'rgba(0,0,0,0.8)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 10px 25px rgba(0,0,0,0.5)', '&:hover': { bgcolor: 'primary.main', color: 'black' } }}
+                    sx={{ position: 'absolute', right: { xs: -16, sm: -48 }, top: '50%', transform: 'translateY(-50%)', width: 44, height: 44, bgcolor: 'rgba(0,0,0,0.8)', color: 'var(--text-primary)', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 10px 25px rgba(0,0,0,0.5)', '&:hover': { bgcolor: 'primary.main', color: 'black' } }}
                   >
                     <ChevronRight size={22} />
                   </IconButton>

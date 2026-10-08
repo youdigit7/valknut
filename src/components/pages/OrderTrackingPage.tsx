@@ -5,94 +5,9 @@ import type { Order } from '../../types/ecommerce';
 import { SEOHead } from '../common/SEOHead';
 import { getBreadcrumbSchema } from '../../utils/seo';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Button, 
+  Box, Typography, Button, 
   Container, Breadcrumbs, Link, Zoom, Fade, Paper, Chip, TextField, InputAdornment, Avatar
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A', paper: '#0E1017' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h4: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    h5: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 700, textTransform: 'uppercase' },
-    body1: { fontFamily: '"JetBrains Mono", sans-serif' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    button: { fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 800 },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          padding: '12px 24px',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        },
-        contained: {
-          color: '#000000',
-          background: 'linear-gradient(145deg, #e3bc3b, #bf9d31)',
-          boxShadow: '0 6px 20px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(0,0,0,0.2)',
-          '&:hover': {
-            background: 'linear-gradient(145deg, #f2c83e, #ccaa34)',
-            transform: 'translateY(-3px) scale(1.02)',
-            boxShadow: '0 8px 25px rgba(212, 175, 55, 0.4), inset 0 2px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.2)',
-          },
-          '&:active': {
-            transform: 'translateY(1px)',
-            boxShadow: '0 2px 10px rgba(212, 175, 55, 0.3), inset 0 2px 5px rgba(0,0,0,0.3)',
-          }
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
-          backgroundImage: 'none',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 0 20px rgba(212,175,55,0.03)',
-          border: '1px solid rgba(255,255,255,0.05)',
-          background: 'linear-gradient(145deg, #11131c, #0a0c12)',
-        }
-      }
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root': {
-            borderRadius: 8,
-            backgroundColor: 'rgba(19, 21, 32, 0.8)',
-            backdropFilter: 'blur(10px)',
-            boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.3)',
-            transition: 'all 0.3s ease',
-            '& fieldset': {
-              borderColor: 'rgba(255,255,255,0.1)',
-            },
-            '&:hover fieldset': {
-              borderColor: 'rgba(212,175,55,0.3)',
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#D4AF37',
-              borderWidth: '2px',
-            },
-            '&.Mui-focused': {
-              boxShadow: '0 0 15px rgba(212,175,55,0.2), inset 0 2px 5px rgba(0,0,0,0.3)',
-            }
-          }
-        }
-      }
-    }
-  }
-});
 
 export const OrderTrackingPage: React.FC = () => {
   const { orders } = useStore();
@@ -171,8 +86,8 @@ export const OrderTrackingPage: React.FC = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+    <>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'var(--bg-main)', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
         <SEOHead metadata={seoMetadata} />
         
         {/* Ambient Background Effects */}
@@ -181,8 +96,8 @@ export const OrderTrackingPage: React.FC = () => {
         <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
           
           {/* Breadcrumbs */}
-          <Breadcrumbs separator={<Typography sx={{ color: 'text.secondary' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
-            <Link href="#/" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>Home</Link>
+          <Breadcrumbs separator={<Typography sx={{ color: 'var(--text-secondary)' }}>/</Typography>} sx={{ mb: 6, '& .MuiBreadcrumbs-ol': { textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontFamily: 'monospace' } }}>
+            <Link href="#/" underline="hover" sx={{ color: 'var(--text-secondary)', '&:hover': { color: 'primary.main' } }}>Home</Link>
             <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>Live Order Tracking</Typography>
           </Breadcrumbs>
 
@@ -198,7 +113,7 @@ export const OrderTrackingPage: React.FC = () => {
                 Track Your <Box component="span" sx={{ background: 'linear-gradient(to right, #D4AF37, #FFF5D1, #D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>VALKNUT Order</Box>
               </Typography>
 
-              <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: '500px', mx: 'auto', lineHeight: 1.8 }}>
+              <Typography variant="body1" sx={{ color: 'var(--text-secondary)', maxWidth: '500px', mx: 'auto', lineHeight: 1.8 }}>
                 Enter your VALKNUT Order ID (e.g. <Box component="code" sx={{ color: 'primary.main' }}>VK-2026-8801</Box>) or Courier Air Waybill (AWB) number.
               </Typography>
             </Box>
@@ -233,13 +148,13 @@ export const OrderTrackingPage: React.FC = () => {
                 </Button>
               </Box>
 
-              <Box sx={{ mt: 4, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 2, typography: 'caption', color: 'text.secondary', fontFamily: 'monospace' }}>
+              <Box sx={{ mt: 4, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 2, typography: 'caption', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>
                 <Typography variant="caption">Quick Demo IDs:</Typography>
-                <Link component="button" onClick={() => setSearchInput('VK-2026-8801')} underline="always" sx={{ color: 'primary.main', '&:hover': { color: 'white' } }}>
+                <Link component="button" onClick={() => setSearchInput('VK-2026-8801')} underline="always" sx={{ color: 'primary.main', '&:hover': { color: 'var(--text-primary)' } }}>
                   VK-2026-8801 (Shipped)
                 </Link>
                 <Typography variant="caption">•</Typography>
-                <Link component="button" onClick={() => setSearchInput('VK-2026-8802')} underline="always" sx={{ color: 'primary.main', '&:hover': { color: 'white' } }}>
+                <Link component="button" onClick={() => setSearchInput('VK-2026-8802')} underline="always" sx={{ color: 'primary.main', '&:hover': { color: 'var(--text-primary)' } }}>
                   VK-2026-8802 (Processing)
                 </Link>
               </Box>
@@ -255,11 +170,11 @@ export const OrderTrackingPage: React.FC = () => {
                     {/* Header info */}
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 4, pb: 4, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>Order Reference</Typography>
+                        <Typography variant="caption" sx={{ color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>Order Reference</Typography>
                         <Typography variant="h4" sx={{ fontFamily: 'monospace' }}>{searchedOrder.orderNumber}</Typography>
                       </Box>
                       <Box sx={{ textAlign: 'right' }}>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>Status</Typography>
+                        <Typography variant="caption" sx={{ color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>Status</Typography>
                         <Chip label={searchedOrder.orderStatus} sx={{ bgcolor: 'primary.main', color: '#000', fontWeight: 'bold', fontFamily: 'monospace' }} />
                       </Box>
                     </Box>
@@ -279,7 +194,7 @@ export const OrderTrackingPage: React.FC = () => {
                               <item.icon size={28} />
                             </Box>
                             <Typography variant="body2" sx={{ fontWeight: 'bold', textTransform: 'uppercase', mb: 0.5 }}>{item.label}</Typography>
-                            <Typography variant="caption" sx={{ color: 'text.secondary' }}>{item.sub}</Typography>
+                            <Typography variant="caption" sx={{ color: 'var(--text-secondary)' }}>{item.sub}</Typography>
                           </Paper>
                         )
                       })}
@@ -289,7 +204,7 @@ export const OrderTrackingPage: React.FC = () => {
                     {searchedOrder.awbNumber && (
                       <Paper elevation={0} sx={{ bgcolor: 'rgba(0,0,0,0.5)', p: 4, borderRadius: 2, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}>
                         <Box>
-                          <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>Courier Partner & AWB</Typography>
+                          <Typography variant="caption" sx={{ color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>Courier Partner & AWB</Typography>
                           <Typography variant="h6">
                             {searchedOrder.courierName || 'Pronto Express'} — <Box component="span" sx={{ fontFamily: 'monospace', color: 'primary.main' }}>{searchedOrder.awbNumber}</Box>
                           </Typography>
@@ -304,7 +219,7 @@ export const OrderTrackingPage: React.FC = () => {
 
                     {/* Order Items Preview */}
                     <Box>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'text.secondary', mb: 3 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', mb: 3 }}>
                         Items in This Shipment ({searchedOrder.items.length})
                       </Typography>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -317,11 +232,11 @@ export const OrderTrackingPage: React.FC = () => {
                           return (
                             <Paper key={idx} elevation={0} sx={{ display: 'flex', alignItems: 'center', gap: 3, p: 2, bgcolor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
                               {img && (
-                                <Avatar variant="rounded" src={img} sx={{ width: 60, height: 60, bgcolor: 'background.default' }} />
+                                <Avatar variant="rounded" src={img} sx={{ width: 60, height: 60, bgcolor: 'var(--bg-main)' }} />
                               )}
                               <Box sx={{ flex: 1 }}>
                                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold', textTransform: 'uppercase', mb: 0.5 }}>{name}</Typography>
-                                <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: 'monospace' }}>Size: {size} {color ? `| Color: ${color}` : ''} | Qty: {item.quantity}</Typography>
+                                <Typography variant="caption" sx={{ color: 'var(--text-secondary)', fontFamily: 'monospace' }}>Size: {size} {color ? `| Color: ${color}` : ''} | Qty: {item.quantity}</Typography>
                               </Box>
                               <Typography variant="body2" sx={{ fontFamily: 'monospace', fontWeight: 'bold', color: 'primary.main' }}>
                                 LKR {((item.unitPrice || 0) * (item.quantity || 1)).toLocaleString()}
@@ -339,8 +254,8 @@ export const OrderTrackingPage: React.FC = () => {
                       <AlertCircle size={48} />
                     </Box>
                     <Typography variant="h5" sx={{ mb: 2 }}>No Order Found</Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', maxWidth: '400px', mx: 'auto' }}>
-                      We couldn't find an order matching "<Box component="strong" sx={{ color: 'white' }}>{searchInput}</Box>". Please double check your order confirmation SMS/email or contact WhatsApp support (+94 77 123 4567).
+                    <Typography variant="body2" sx={{ color: 'var(--text-secondary)', maxWidth: '400px', mx: 'auto' }}>
+                      We couldn't find an order matching "<Box component="strong" sx={{ color: 'var(--text-primary)' }}>{searchInput}</Box>". Please double check your order confirmation SMS/email or contact WhatsApp support (+94 77 123 4567).
                     </Typography>
                   </Paper>
                 )}
@@ -350,6 +265,6 @@ export const OrderTrackingPage: React.FC = () => {
 
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

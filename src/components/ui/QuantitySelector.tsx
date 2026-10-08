@@ -41,19 +41,19 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
 
   return (
     <Box
-      className={`inline-flex items-center bg-[#12141E] border border-white/10 rounded-[2px] ${sizeClasses} ${className}`}
+      className={`inline-flex items-center bg-[var(--bg-card)] border border-white/10 rounded-[2px] ${sizeClasses} ${className}`}
     >
       <MuiIconButton
         onClick={handleDecrement}
         disabled={quantity <= min}
         disableRipple
-        className={`h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-30 transition-colors rounded-none ${buttonPadding}`}
+        className={`h-full flex items-center justify-center text-slate-400 hover:text-[var(--text-primary)] hover:bg-white/5 disabled:opacity-30 transition-colors rounded-none ${buttonPadding}`}
         aria-label="Decrease quantity"
       >
         <Minus size={size === 'sm' ? 12 : 14} />
       </MuiIconButton>
 
-      <Typography component="span" className="w-10 text-center font-mono font-bold text-white select-none">
+      <Typography component="span" className="w-10 text-center font-mono font-bold text-[var(--text-primary)] select-none">
         {quantity}
       </Typography>
 
@@ -61,7 +61,7 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
         onClick={handleIncrement}
         disabled={quantity >= max}
         disableRipple
-        className={`h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-30 transition-colors rounded-none ${buttonPadding}`}
+        className={`h-full flex items-center justify-center text-slate-400 hover:text-[var(--text-primary)] hover:bg-white/5 disabled:opacity-30 transition-colors rounded-none ${buttonPadding}`}
         aria-label="Increase quantity"
       >
         <Plus size={size === 'sm' ? 12 : 14} />

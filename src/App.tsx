@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import './App.css';
 import { StoreProvider, useStore } from './context/StoreContext';
+import { AppThemeProvider } from './context/ThemeContext';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { SEOHead } from './components/common/SEOHead';
@@ -48,7 +49,7 @@ import { CustomerAccountModal } from './components/account/CustomerAccountModal'
 import { NotificationToast } from './components/common/NotificationToast';
 
 const PageLoadingFallback: React.FC = () => (
-  <div className="w-full min-h-[60vh] flex flex-col items-center justify-center py-24 bg-[#0A0A0A]">
+  <div className="w-full min-h-[60vh] flex flex-col items-center justify-center py-24 bg-[var(--bg-main)]">
     <div className="relative w-16 h-16 flex items-center justify-center mb-6">
       <div className="absolute inset-0 border-2 border-[#D4AF37]/20 border-t-[#D4AF37] rounded-full animate-spin" />
       <span className="font-heading font-black text-[#D4AF37] text-xl">V</span>
@@ -255,7 +256,7 @@ const MainApp: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#0A0A0A] text-white flex flex-col selection:bg-[#d4af37] selection:text-black antialiased">
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden flex flex-col selection:bg-[#d4af37] selection:text-black antialiased" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-primary)' }}>
       <Navbar />
       <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden flex flex-col items-center">
         {renderCurrentView()}
@@ -272,9 +273,11 @@ const MainApp: React.FC = () => {
 
 export function App() {
   return (
-    <StoreProvider>
-      <MainApp />
-    </StoreProvider>
+    <AppThemeProvider>
+      <StoreProvider>
+        <MainApp />
+      </StoreProvider>
+    </AppThemeProvider>
   );
 }
 

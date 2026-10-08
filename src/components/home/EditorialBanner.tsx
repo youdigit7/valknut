@@ -1,28 +1,12 @@
 import React from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Button 
+  Box, Typography, Container, Button 
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0A0A0A' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  }
-});
 
 export const EditorialBanner: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
@@ -30,7 +14,7 @@ export const EditorialBanner: React.FC = () => {
           py: { xs: 12, sm: 16, lg: 24 },
           width: '100%',
           overflow: 'hidden',
-          bgcolor: 'background.default',
+          bgcolor: 'var(--bg-main)',
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           display: 'flex',
           flexDirection: 'column',
@@ -117,7 +101,7 @@ export const EditorialBanner: React.FC = () => {
             <Typography 
               variant="body2" 
               sx={{ 
-                color: 'text.secondary', 
+                color: 'var(--text-secondary)', 
                 fontSize: { xs: '0.875rem', sm: '1rem', md: '1.125rem' }, 
                 lineHeight: 1.8,
                 maxWidth: '600px',
@@ -153,7 +137,7 @@ export const EditorialBanner: React.FC = () => {
                 sx={{
                   px: { xs: 4, sm: 5 }, py: { xs: 2, sm: 2.5 },
                   bgcolor: 'rgba(255,255,255,0.08)',
-                  color: 'white',
+                  color: 'var(--text-primary)',
                   fontWeight: 900,
                   fontSize: { xs: '0.75rem', sm: '0.875rem' },
                   letterSpacing: '0.16em',
@@ -177,6 +161,6 @@ export const EditorialBanner: React.FC = () => {
           </Box>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

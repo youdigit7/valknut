@@ -23,53 +23,8 @@ import {
 } from './studioAssets';
 import type { SigilPreset } from './studioAssets';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Grid, Button, Slider, Select, MenuItem
+  Box, Typography, Container, Grid, Button, Slider, Select, MenuItem
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#08090D', paper: '#0E1017' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  },
-  components: {
-    MuiSelect: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#141620',
-          fontFamily: '"JetBrains Mono", sans-serif',
-          fontSize: '0.75rem',
-          color: 'white',
-          borderRadius: 4,
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'rgba(255,255,255,0.15)',
-          },
-          '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#D4AF37',
-          },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#D4AF37',
-          }
-        }
-      }
-    },
-    MuiSlider: {
-      styleOverrides: {
-        root: {
-          color: '#D4AF37',
-        }
-      }
-    }
-  }
-});
 
 type StudioControlTab = 'ARTWORK' | 'TYPOGRAPHY' | 'TECHNIQUE';
 
@@ -230,8 +185,8 @@ export const CustomStudio: React.FC = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ width: '100%', py: { xs: 5, sm: 8, lg: 10 }, bgcolor: 'background.default', color: 'white', WebkitFontSmoothing: 'antialiased' }}>
+    <>
+      <Box sx={{ width: '100%', py: { xs: 5, sm: 8, lg: 10 }, bgcolor: 'var(--bg-main)', color: 'var(--text-primary)', WebkitFontSmoothing: 'antialiased' }}>
         <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 4, md: 6 } }}>
           
           {/* Studio Title & Badge */}
@@ -244,7 +199,7 @@ export const CustomStudio: React.FC = () => {
               <Typography variant="h3" sx={{ fontSize: { xs: '1.875rem', sm: '2.5rem' }, letterSpacing: '-0.02em', mb: 1, textShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>
                 INTERACTIVE <Box component="span" sx={{ color: 'primary.main' }}>CUSTOM STUDIO</Box>
               </Typography>
-              <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem', display: 'block', maxWidth: '600px' }}>
+              <Typography variant="caption" sx={{ color: 'var(--text-secondary)', fontSize: '0.75rem', display: 'block', maxWidth: '600px' }}>
                 Select luxury garment silhouette, upload high-res graphics, configure typography, and inspect live 2D CAD layer preview.
               </Typography>
             </Box>
@@ -256,13 +211,13 @@ export const CustomStudio: React.FC = () => {
                 sx={{
                   bgcolor: 'rgba(255,255,255,0.05)',
                   border: '1px solid rgba(255,255,255,0.1)',
-                  color: 'text.secondary',
+                  color: 'var(--text-secondary)',
                   fontSize: '0.75rem',
                   fontFamily: '"JetBrains Mono", sans-serif',
                   px: 2,
                   py: 1,
                   textTransform: 'none',
-                  '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' }
+                  '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' }
                 }}
               >
                 Reset Studio
@@ -273,13 +228,13 @@ export const CustomStudio: React.FC = () => {
                 sx={{
                   bgcolor: 'rgba(255,255,255,0.05)',
                   border: '1px solid rgba(255,255,255,0.1)',
-                  color: 'text.secondary',
+                  color: 'var(--text-secondary)',
                   fontSize: '0.75rem',
                   fontFamily: '"JetBrains Mono", sans-serif',
                   px: 2,
                   py: 1,
                   textTransform: 'none',
-                  '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'white' }
+                  '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' }
                 }}
               >
                 Back to Catalog
@@ -292,7 +247,7 @@ export const CustomStudio: React.FC = () => {
             
             {/* COL 1: BASE PRODUCT & GARMENT SELECTION (3 cols) */}
             <Grid size={{ xs: 12, lg: 3 }}>
-              <Box sx={{ bgcolor: 'background.paper', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 4, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+              <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 4, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"JetBrains Mono", sans-serif' }}>
                 
                 {/* 1. Base Product Selector */}
                 <Box>
@@ -325,7 +280,7 @@ export const CustomStudio: React.FC = () => {
                     <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                       2. GARMENT FABRIC SHADE
                     </Typography>
-                    <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '0.6875rem' }}>{selectedColor}</Typography>
+                    <Typography sx={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.6875rem' }}>{selectedColor}</Typography>
                   </Box>
 
                   <Grid container spacing={1}>
@@ -450,8 +405,8 @@ export const CustomStudio: React.FC = () => {
                 {/* Fabric Specs Badge */}
                 <Box sx={{ p: 2, bgcolor: '#141620', borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                   <Typography sx={{ fontSize: '0.5625rem', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase' }}>GARMENT SPECIFICATION</Typography>
-                  <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '0.6875rem' }}>{activeProduct.material}</Typography>
-                  <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>Heavyweight dropped-shoulder boxy fit with pre-shrunk anti-pilling wash.</Typography>
+                  <Typography sx={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.6875rem' }}>{activeProduct.material}</Typography>
+                  <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)' }}>Heavyweight dropped-shoulder boxy fit with pre-shrunk anti-pilling wash.</Typography>
                 </Box>
 
               </Box>
@@ -459,7 +414,7 @@ export const CustomStudio: React.FC = () => {
 
             {/* COL 2: LIVE 2D LAYERED CAD PREVIEW (5 cols) */}
             <Grid size={{ xs: 12, lg: 5 }}>
-              <Box sx={{ bgcolor: 'background.paper', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 25px 50px rgba(0,0,0,0.6)', minHeight: '580px' }}>
+              <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 25px 50px rgba(0,0,0,0.6)', minHeight: '580px' }}>
                 
                 {/* Component Preview */}
                 <StudioCanvasPreview
@@ -482,8 +437,8 @@ export const CustomStudio: React.FC = () => {
                 />
 
                 {/* Quick Summary Strip */}
-                <Box sx={{ w: '100%', width: '100%', mt: 3, pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
-                  <Typography sx={{ fontSize: 'inherit' }}>View: <Box component="strong" sx={{ color: 'white' }}>{placement.replace('_', ' ')}</Box></Typography>
+                <Box sx={{ w: '100%', width: '100%', mt: 3, pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                  <Typography sx={{ fontSize: 'inherit' }}>View: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{placement.replace('_', ' ')}</Box></Typography>
                   <Typography sx={{ fontSize: 'inherit' }}>Technique: <Box component="strong" sx={{ color: 'primary.main' }}>{printTechnique}</Box></Typography>
                 </Box>
               </Box>
@@ -494,7 +449,7 @@ export const CustomStudio: React.FC = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 
                 {/* Sub-Tabs */}
-                <Box sx={{ bgcolor: 'background.paper', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"JetBrains Mono", sans-serif' }}>
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                     {(
@@ -531,8 +486,8 @@ export const CustomStudio: React.FC = () => {
                               boxShadow: '0 4px 10px rgba(212,175,55,0.3)'
                             } : {
                               bgcolor: '#141620',
-                              color: 'text.secondary',
-                              '&:hover': { color: 'white' }
+                              color: 'var(--text-secondary)',
+                              '&:hover': { color: 'var(--text-primary)' }
                             })
                           }}
                         >
@@ -561,13 +516,13 @@ export const CustomStudio: React.FC = () => {
                         {isUploading ? (
                           <Box sx={{ p: 2, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.6875rem' }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'white', fontWeight: 'bold' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-primary)', fontWeight: 'bold' }}>
                                 <Box sx={{ animation: 'spin 2s linear infinite', display: 'flex' }}><RefreshCw size={12} color="#D4AF37" /></Box>
                                 <Typography component="span">Uploading to Cloud...</Typography>
                               </Box>
                               <Typography sx={{ color: 'primary.main', fontWeight: 'bold' }}>{uploadProgress}%</Typography>
                             </Box>
-                            <Box sx={{ width: '100%', bgcolor: '#0E1017', borderRadius: 4, height: 6, overflow: 'hidden' }}>
+                            <Box sx={{ width: '100%', bgcolor: 'var(--bg-surface)', borderRadius: 4, height: 6, overflow: 'hidden' }}>
                               <Box sx={{ bgcolor: 'primary.main', height: '100%', transition: 'width 0.3s', width: `${uploadProgress}%` }} />
                             </Box>
                           </Box>
@@ -586,10 +541,10 @@ export const CustomStudio: React.FC = () => {
                             }}
                           >
                             <Upload size={18} color="#D4AF37" style={{ margin: '0 auto 6px' }} />
-                            <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '0.75rem' }}>
+                            <Typography sx={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.75rem' }}>
                               {uploadedArtworkUrl ? 'Replace Custom Artwork' : 'Upload Vector / PNG / JPG'}
                             </Typography>
-                            <Typography sx={{ color: 'text.secondary', fontSize: '0.625rem', mt: 0.5 }}>Max 10MB • Auto-centered on {placement}</Typography>
+                            <Typography sx={{ color: 'var(--text-secondary)', fontSize: '0.625rem', mt: 0.5 }}>Max 10MB • Auto-centered on {placement}</Typography>
                           </Box>
                         )}
 
@@ -657,30 +612,30 @@ export const CustomStudio: React.FC = () => {
 
                           <Box>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
-                              <Typography sx={{ color: 'text.secondary', fontSize: 'inherit' }}>Scale:</Typography>
-                              <Typography sx={{ color: 'white', fontSize: 'inherit' }}>{artworkScale}%</Typography>
+                              <Typography sx={{ color: 'var(--text-secondary)', fontSize: 'inherit' }}>Scale:</Typography>
+                              <Typography sx={{ color: 'var(--text-primary)', fontSize: 'inherit' }}>{artworkScale}%</Typography>
                             </Box>
                             <Slider value={artworkScale} min={20} max={90} onChange={(_, v) => setArtworkScale(v as number)} size="small" />
                           </Box>
                           
                           <Box>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
-                              <Typography sx={{ color: 'text.secondary', fontSize: 'inherit' }}>Rotation:</Typography>
-                              <Typography sx={{ color: 'white', fontSize: 'inherit' }}>{artworkRotation}°</Typography>
+                              <Typography sx={{ color: 'var(--text-secondary)', fontSize: 'inherit' }}>Rotation:</Typography>
+                              <Typography sx={{ color: 'var(--text-primary)', fontSize: 'inherit' }}>{artworkRotation}°</Typography>
                             </Box>
                             <Slider value={artworkRotation} min={0} max={360} onChange={(_, v) => setArtworkRotation(v as number)} size="small" />
                           </Box>
                           
                           <Box>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
-                              <Typography sx={{ color: 'text.secondary', fontSize: 'inherit' }}>Vertical Position (Y):</Typography>
-                              <Typography sx={{ color: 'white', fontSize: 'inherit' }}>{artworkPos.y}%</Typography>
+                              <Typography sx={{ color: 'var(--text-secondary)', fontSize: 'inherit' }}>Vertical Position (Y):</Typography>
+                              <Typography sx={{ color: 'var(--text-primary)', fontSize: 'inherit' }}>{artworkPos.y}%</Typography>
                             </Box>
                             <Slider value={artworkPos.y} min={20} max={80} onChange={(_, v) => setArtworkPos({ ...artworkPos, y: v as number })} size="small" />
                           </Box>
 
                           <Box sx={{ pt: 1 }}>
-                            <Typography sx={{ color: 'text.secondary', fontSize: '0.625rem', display: 'block', mb: 1 }}>Visual Shader Effect:</Typography>
+                            <Typography sx={{ color: 'var(--text-secondary)', fontSize: '0.625rem', display: 'block', mb: 1 }}>Visual Shader Effect:</Typography>
                             <Grid container spacing={1}>
                               {(
                                 [
@@ -742,7 +697,7 @@ export const CustomStudio: React.FC = () => {
                           onChange={(e: any) => setCustomText(e.target.value)}
                           placeholder="ENTER MOTTO OR SQUAD NAME"
                           sx={{
-                            width: '100%', bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 1.5, color: 'white', fontWeight: 'bold', fontSize: '0.75rem', outline: 'none', fontFamily: '"JetBrains Mono", sans-serif',
+                            width: '100%', bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 1.5, color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.75rem', outline: 'none', fontFamily: '"JetBrains Mono", sans-serif',
                             '&:focus': { borderColor: 'primary.main' }
                           }}
                         />
@@ -763,8 +718,8 @@ export const CustomStudio: React.FC = () => {
                                   '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
                                 }}
                               >
-                                <Typography sx={{ fontFamily: f.fontFamily, fontSize: '0.875rem', fontWeight: 'bold', color: 'white' }}>{f.sample}</Typography>
-                                <Typography sx={{ fontSize: '0.5625rem', color: 'text.secondary' }}>{f.name}</Typography>
+                                <Typography sx={{ fontFamily: f.fontFamily, fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{f.sample}</Typography>
+                                <Typography sx={{ fontSize: '0.5625rem', color: 'var(--text-secondary)' }}>{f.name}</Typography>
                               </Box>
                             );
                           })}
@@ -797,16 +752,16 @@ export const CustomStudio: React.FC = () => {
                       <Box sx={{ p: 2, bgcolor: '#141620', borderRadius: 1, border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
-                            <Typography sx={{ color: 'text.secondary', fontSize: 'inherit' }}>Font Size:</Typography>
-                            <Typography sx={{ color: 'white', fontSize: 'inherit' }}>{textSize}px</Typography>
+                            <Typography sx={{ color: 'var(--text-secondary)', fontSize: 'inherit' }}>Font Size:</Typography>
+                            <Typography sx={{ color: 'var(--text-primary)', fontSize: 'inherit' }}>{textSize}px</Typography>
                           </Box>
                           <Slider value={textSize} min={14} max={44} onChange={(_, v) => setTextSize(v as number)} size="small" />
                         </Box>
                         
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
-                            <Typography sx={{ color: 'text.secondary', fontSize: 'inherit' }}>Vertical Position (Y):</Typography>
-                            <Typography sx={{ color: 'white', fontSize: 'inherit' }}>{textPos.y}%</Typography>
+                            <Typography sx={{ color: 'var(--text-secondary)', fontSize: 'inherit' }}>Vertical Position (Y):</Typography>
+                            <Typography sx={{ color: 'var(--text-primary)', fontSize: 'inherit' }}>{textPos.y}%</Typography>
                           </Box>
                           <Slider value={textPos.y} min={15} max={85} onChange={(_, v) => setTextPos({ ...textPos, y: v as number })} size="small" />
                         </Box>
@@ -833,12 +788,12 @@ export const CustomStudio: React.FC = () => {
                               }}
                             >
                               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <Typography sx={{ color: 'white', fontSize: '0.75rem', fontWeight: 'bold' }}>{tech.name}</Typography>
+                                <Typography sx={{ color: 'var(--text-primary)', fontSize: '0.75rem', fontWeight: 'bold' }}>{tech.name}</Typography>
                                 <Box sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: 'rgba(0,0,0,0.6)', color: 'primary.main', fontSize: '0.5625rem', fontWeight: 'bold' }}>
                                   {tech.fee === 0 ? 'Included' : `+ LKR ${tech.fee.toLocaleString()}`}
                                 </Box>
                               </Box>
-                              <Typography sx={{ color: 'text.secondary', fontSize: '0.625rem', lineHeight: 1.6 }}>{tech.description}</Typography>
+                              <Typography sx={{ color: 'var(--text-secondary)', fontSize: '0.625rem', lineHeight: 1.6 }}>{tech.description}</Typography>
                             </Box>
                           );
                         })}
@@ -849,7 +804,7 @@ export const CustomStudio: React.FC = () => {
                 </Box>
 
                 {/* Price Breakdown Matrix & Add To Cart CTA */}
-                <Box sx={{ bgcolor: 'background.paper', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 25px 50px rgba(0,0,0,0.8)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 25px 50px rgba(0,0,0,0.8)', fontFamily: '"JetBrains Mono", sans-serif' }}>
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                     <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em' }}>BESPOKE ORDER VALUATION</Typography>
@@ -859,25 +814,25 @@ export const CustomStudio: React.FC = () => {
                   </Box>
 
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.6875rem' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'text.secondary' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
                       <Typography component="span">Base Heavyweight Garment:</Typography>
-                      <Typography sx={{ color: 'white', fontSize: 'inherit' }}>LKR {basePrice.toLocaleString()}</Typography>
+                      <Typography sx={{ color: 'var(--text-primary)', fontSize: 'inherit' }}>LKR {basePrice.toLocaleString()}</Typography>
                     </Box>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'text.secondary' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
                       <Typography component="span">{printTechnique}:</Typography>
                       <Typography sx={{ color: 'primary.main', fontSize: 'inherit' }}>{techniqueFee === 0 ? 'Free' : `+ LKR ${techniqueFee.toLocaleString()}`}</Typography>
                     </Box>
 
                     {placementFee > 0 && (
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'text.secondary' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
                         <Typography component="span">Precision Sleeve Setup:</Typography>
                         <Typography sx={{ color: 'primary.main', fontSize: 'inherit' }}>+ LKR {placementFee.toLocaleString()}</Typography>
                       </Box>
                     )}
 
                     <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'white', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>TOTAL BESPOKE PIECE:</Typography>
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>TOTAL BESPOKE PIECE:</Typography>
                       <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, color: 'primary.main' }}>LKR {totalCustomPrice.toLocaleString()}</Typography>
                     </Box>
                   </Box>
@@ -908,7 +863,7 @@ export const CustomStudio: React.FC = () => {
                     <ShoppingBag size={16} /> ADD BESPOKE ITEM TO BAG
                   </Button>
 
-                  <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', textAlign: 'center' }}>
+                  <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)', textAlign: 'center' }}>
                     Custom garments are precision manufactured & dispatched in 3–5 working days islandwide.
                   </Typography>
                 </Box>
@@ -919,6 +874,6 @@ export const CustomStudio: React.FC = () => {
           </Grid>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

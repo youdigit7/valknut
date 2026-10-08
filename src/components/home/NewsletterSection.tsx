@@ -1,54 +1,8 @@
 import React, { useState } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import { 
-  createTheme, ThemeProvider, Box, Typography, Container, Button, TextField, CircularProgress
+  Box, Typography, Container, Button, TextField, CircularProgress
 } from '@mui/material';
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#D4AF37', dark: '#E2B714' },
-    background: { default: '#0E1017' },
-    text: { primary: '#ffffff', secondary: '#94a3b8' },
-  },
-  typography: {
-    fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
-    h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
-    h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-    body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-    caption: { fontFamily: '"JetBrains Mono", sans-serif' },
-  },
-  components: {
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root': {
-            backgroundColor: '#12141E',
-            fontFamily: '"JetBrains Mono", sans-serif',
-            fontSize: '0.875rem',
-            borderRadius: 8,
-            transition: 'all 0.3s',
-            '& fieldset': {
-              borderColor: 'rgba(255,255,255,0.15)',
-              borderWidth: '1px',
-            },
-            '&:hover fieldset': {
-              borderColor: 'rgba(212,175,55,0.5)',
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#D4AF37',
-              borderWidth: '1px',
-              boxShadow: '0 0 15px rgba(212,175,55,0.2)'
-            },
-            '& input': {
-              padding: '16px 20px',
-            }
-          }
-        }
-      }
-    }
-  }
-});
 
 export const NewsletterSection: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -68,7 +22,7 @@ export const NewsletterSection: React.FC = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Box 
         component="section" 
         sx={{ 
@@ -112,7 +66,7 @@ export const NewsletterSection: React.FC = () => {
               <Typography 
                 variant="body2" 
                 sx={{ 
-                  color: 'text.secondary', 
+                  color: 'var(--text-secondary)', 
                   maxWidth: '650px', 
                   mx: 'auto',
                   lineHeight: 1.8,
@@ -213,7 +167,7 @@ export const NewsletterSection: React.FC = () => {
             <Typography 
               variant="caption" 
               sx={{ 
-                color: 'text.secondary', 
+                color: 'var(--text-secondary)', 
                 fontSize: { xs: '0.625rem', sm: '0.6875rem' }, 
                 letterSpacing: '0.2em', 
                 textTransform: 'uppercase' 
@@ -225,6 +179,6 @@ export const NewsletterSection: React.FC = () => {
           </Box>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };

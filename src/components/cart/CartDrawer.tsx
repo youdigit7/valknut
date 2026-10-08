@@ -64,8 +64,8 @@ export const CartDrawer: React.FC = () => {
       sx={{
         '& .MuiDrawer-paper': {
           width: { xs: '100vw', sm: '400px', md: '450px' },
-          bgcolor: '#0e1017',
-          color: 'white',
+          bgcolor: 'var(--bg-surface)',
+          color: 'var(--text-primary)',
           borderLeft: '1px solid rgba(255,255,255,0.1)',
           backgroundImage: 'none',
           display: 'flex',
@@ -84,7 +84,7 @@ export const CartDrawer: React.FC = () => {
             {cart.reduce((a, b) => a + b.quantity, 0)}
           </Box>
         </Box>
-        <IconButton onClick={() => setIsCartOpen(false)} sx={{ color: 'grey.500', '&:hover': { color: 'white' } }}>
+        <IconButton onClick={() => setIsCartOpen(false)} sx={{ color: 'grey.500', '&:hover': { color: 'var(--text-primary)' } }}>
           <X size={20} />
         </IconButton>
       </Box>
@@ -153,7 +153,7 @@ export const CartDrawer: React.FC = () => {
                 <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'white', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {item.product.name}
                       </Typography>
                       <IconButton onClick={() => removeFromCart(item.id)} sx={{ p: 0.5, color: 'grey.500', '&:hover': { color: '#f87171' } }}>
@@ -161,7 +161,7 @@ export const CartDrawer: React.FC = () => {
                       </IconButton>
                     </Box>
                     <Typography sx={{ fontSize: '0.6875rem', color: 'grey.400', mt: 0.5 }}>
-                      Size: <strong style={{ color: 'white' }}>{item.selectedSize}</strong> | Colour: <strong style={{ color: 'white' }}>{item.selectedColor}</strong>
+                      Size: <strong style={{ color: 'var(--text-primary)' }}>{item.selectedSize}</strong> | Colour: <strong style={{ color: 'var(--text-primary)' }}>{item.selectedColor}</strong>
                     </Typography>
                     {item.customization && (
                       <Box sx={{ mt: 1, p: 1, bgcolor: 'rgba(212, 175, 55, 0.1)', border: '1px solid rgba(212, 175, 55, 0.3)', borderRadius: 1, color: '#D4AF37', fontFamily: 'monospace' }}>
@@ -183,11 +183,11 @@ export const CartDrawer: React.FC = () => {
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, pt: 1, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 1, bgcolor: 'rgba(255,255,255,0.05)' }}>
-                      <IconButton onClick={() => updateCartQuantity(item.id, -1)} sx={{ width: 24, height: 24, p: 0, color: 'white', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}><Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>-</Typography></IconButton>
-                      <Typography sx={{ width: 28, textAlign: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: 'white' }}>{item.quantity}</Typography>
-                      <IconButton onClick={() => updateCartQuantity(item.id, 1)} sx={{ width: 24, height: 24, p: 0, color: 'white', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}><Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>+</Typography></IconButton>
+                      <IconButton onClick={() => updateCartQuantity(item.id, -1)} sx={{ width: 24, height: 24, p: 0, color: 'var(--text-primary)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}><Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>-</Typography></IconButton>
+                      <Typography sx={{ width: 28, textAlign: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{item.quantity}</Typography>
+                      <IconButton onClick={() => updateCartQuantity(item.id, 1)} sx={{ width: 24, height: 24, p: 0, color: 'var(--text-primary)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}><Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>+</Typography></IconButton>
                     </Box>
-                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 800, color: 'white' }}>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                       LKR {(item.unitPrice * item.quantity).toLocaleString()}
                     </Typography>
                   </Box>
@@ -225,7 +225,7 @@ export const CartDrawer: React.FC = () => {
                   sx={{ 
                     '& .MuiOutlinedInput-root': { 
                       bgcolor: '#141620', 
-                      color: 'white', 
+                      color: 'var(--text-primary)', 
                       fontSize: '0.75rem',
                       textTransform: 'uppercase',
                       '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
@@ -238,7 +238,7 @@ export const CartDrawer: React.FC = () => {
                     }
                   }}
                 />
-                <Button type="submit" variant="outlined" sx={{ borderColor: 'rgba(255,255,255,0.2)', color: 'white', fontSize: '0.75rem', fontWeight: 'bold', '&:hover': { borderColor: '#d4af37', color: '#d4af37' } }}>
+                <Button type="submit" variant="outlined" sx={{ borderColor: 'rgba(255,255,255,0.2)', color: 'var(--text-primary)', fontSize: '0.75rem', fontWeight: 'bold', '&:hover': { borderColor: '#d4af37', color: '#d4af37' } }}>
                   Apply
                 </Button>
               </Box>
@@ -250,7 +250,7 @@ export const CartDrawer: React.FC = () => {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, pt: 1.5, borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '0.75rem', color: 'grey.300' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography sx={{ fontSize: 'inherit' }}>Subtotal:</Typography>
-              <Typography sx={{ fontSize: 'inherit', fontWeight: 600, color: 'white' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
+              <Typography sx={{ fontSize: 'inherit', fontWeight: 600, color: 'var(--text-primary)' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
             </Box>
             {cartDiscount > 0 && (
               <Box sx={{ display: 'flex', justifyContent: 'space-between', color: '#4ade80' }}>
@@ -260,12 +260,12 @@ export const CartDrawer: React.FC = () => {
             )}
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography sx={{ fontSize: 'inherit' }}>Estimated Shipping:</Typography>
-              <Typography sx={{ fontSize: 'inherit', fontWeight: 600, color: 'white' }}>
+              <Typography sx={{ fontSize: 'inherit', fontWeight: 600, color: 'var(--text-primary)' }}>
                 {cartShipping === 0 ? 'FREE' : `LKR ${cartShipping.toLocaleString()}`}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 1, mt: 1, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-              <Typography sx={{ fontSize: '1rem', fontWeight: 800, color: 'white' }}>TOTAL:</Typography>
+              <Typography sx={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)' }}>TOTAL:</Typography>
               <Typography sx={{ fontSize: '1.125rem', fontWeight: 800, color: '#d4af37' }}>LKR {cartTotal.toLocaleString()}</Typography>
             </Box>
           </Box>
@@ -305,7 +305,7 @@ export const CartDrawer: React.FC = () => {
                 fontWeight: 'bold',
                 fontSize: '0.75rem',
                 bgcolor: 'rgba(255,255,255,0.05)',
-                '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.2)', color: 'white' }
+                '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.2)', color: 'var(--text-primary)' }
               }}
             >
               VIEW FULL SHOPPING BAG

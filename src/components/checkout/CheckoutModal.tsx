@@ -98,7 +98,7 @@ export const CheckoutModal: React.FC = () => {
 
   const textFieldStyles = {
     '& .MuiOutlinedInput-root': {
-      color: 'white',
+      color: 'var(--text-primary)',
       fontFamily: '"JetBrains Mono", sans-serif',
       fontSize: '0.75rem',
       bgcolor: '#141620',
@@ -106,7 +106,7 @@ export const CheckoutModal: React.FC = () => {
       '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
       '&.Mui-focused fieldset': { borderColor: 'primary.main' }
     },
-    '& .MuiInputLabel-root': { color: 'text.secondary', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' },
+    '& .MuiInputLabel-root': { color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' },
     '& .MuiInputLabel-root.Mui-focused': { color: 'primary.main' }
   };
 
@@ -124,22 +124,22 @@ export const CheckoutModal: React.FC = () => {
       }}
     >
       <Fade in={isCheckoutOpen}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 900, maxHeight: '95vh', bgcolor: '#0e1017', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', outline: 'none' }}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 900, maxHeight: '95vh', bgcolor: 'var(--bg-surface)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', outline: 'none' }}>
           
           {/* Header */}
           <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: '#08090d', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Lock color="#d4af37" size={20} />
               <Box>
-                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'white', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
+                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
                   {step === 'FORM' ? 'VALKNUT EXPRESS CHECKOUT' : 'ORDER CONFIRMED'}
                 </Typography>
-                <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif' }}>
                   256-Bit SSL Encrypted Payment Gateway
                 </Typography>
               </Box>
             </Box>
-            <IconButton onClick={handleClose} sx={{ color: 'text.secondary', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+            <IconButton onClick={handleClose} sx={{ color: 'var(--text-secondary)', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }}>
               <X size={20} />
             </IconButton>
           </Box>
@@ -219,7 +219,7 @@ export const CheckoutModal: React.FC = () => {
                         <Box
                           key={method.id}
                           onClick={() => setShippingMethodId(method.id)}
-                          sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}
+                          sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}
                         >
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                             <input type="radio" checked={isSelected} readOnly style={{ accentColor: '#d4af37' }} />
@@ -250,7 +250,7 @@ export const CheckoutModal: React.FC = () => {
                   <Grid container spacing={1.5}>
                     {/* Koko Option */}
                     <Grid size={12}>
-                      <Box onClick={() => setPaymentGateway('Koko')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'Koko' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                      <Box onClick={() => setPaymentGateway('Koko')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'Koko' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: 'primary.main' }}>KOKO PAY</Typography>
@@ -263,7 +263,7 @@ export const CheckoutModal: React.FC = () => {
 
                     {/* OnePay Option */}
                     <Grid size={12}>
-                      <Box onClick={() => setPaymentGateway('OnePay')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'OnePay' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                      <Box onClick={() => setPaymentGateway('OnePay')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'OnePay' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#38bdf8' }}>ONEPAY</Typography>
@@ -276,7 +276,7 @@ export const CheckoutModal: React.FC = () => {
 
                     {/* eWAY Option */}
                     <Grid size={12}>
-                      <Box onClick={() => setPaymentGateway('eWAY')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'eWAY' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                      <Box onClick={() => setPaymentGateway('eWAY')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'eWAY' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#fbbf24' }}>eWAY / CARD</Typography>
@@ -289,7 +289,7 @@ export const CheckoutModal: React.FC = () => {
 
                     {/* COD Option */}
                     <Grid size={12}>
-                      <Box onClick={() => setPaymentGateway('Cash on Delivery')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'Cash on Delivery' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'white' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'text.secondary', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                      <Box onClick={() => setPaymentGateway('Cash on Delivery')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'Cash on Delivery' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#34d399' }}>CASH ON DELIVERY</Typography>
@@ -315,16 +315,16 @@ export const CheckoutModal: React.FC = () => {
                       <Box key={item.id} sx={{ display: 'flex', alignItems: 'center', gap: 1.5, fontSize: '0.75rem' }}>
                         <Box component="img" src={item.product.images[0]} alt={item.product.name} sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 1, bgcolor: '#141620' }} />
                         <Box sx={{ flex: 1, minWidth: 0 }}>
-                          <Typography sx={{ fontWeight: 'bold', color: 'white',  fontFamily: '"Syne", sans-serif' }}>{item.product.name}</Typography>
-                          <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif' }}>Size: {item.selectedSize} | Qty: {item.quantity}</Typography>
+                          <Typography sx={{ fontWeight: 'bold', color: 'var(--text-primary)',  fontFamily: '"Syne", sans-serif' }}>{item.product.name}</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif' }}>Size: {item.selectedSize} | Qty: {item.quantity}</Typography>
                         </Box>
-                        <Typography sx={{ fontWeight: 900, color: 'white', fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {(item.unitPrice * item.quantity).toLocaleString()}</Typography>
+                        <Typography sx={{ fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {(item.unitPrice * item.quantity).toLocaleString()}</Typography>
                       </Box>
                     ))}
                   </Box>
 
                   {/* Price Breakdown */}
-                  <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2, mt: 2, display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.secondary' }}>
+                  <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2, mt: 2, display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography sx={{ fontSize: 'inherit' }}>Subtotal:</Typography>
                       <Typography sx={{ fontSize: 'inherit' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
@@ -343,7 +343,7 @@ export const CheckoutModal: React.FC = () => {
                     </Box>
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', pt: 1, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                      <Typography sx={{ fontSize: '1rem', fontWeight: 900, color: 'white', fontFamily: '"Syne", sans-serif' }}>TOTAL AMOUNT:</Typography>
+                      <Typography sx={{ fontSize: '1rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }}>TOTAL AMOUNT:</Typography>
                       <Typography sx={{ fontSize: '1.25rem', color: 'primary.main', fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
                     </Box>
                   </Box>
@@ -378,11 +378,11 @@ export const CheckoutModal: React.FC = () => {
                 <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.25em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5, fontFamily: '"JetBrains Mono", sans-serif' }}>
                   VALKNUT ORDER CONFIRMED
                 </Typography>
-                <Typography sx={{ fontSize: { xs: '1.5rem', sm: '1.875rem' }, fontWeight: 900, color: 'white', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>
+                <Typography sx={{ fontSize: { xs: '1.5rem', sm: '1.875rem' }, fontWeight: 900, color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>
                   THANK YOU FOR YOUR ORDER
                 </Typography>
-                <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary', mt: 1, fontFamily: '"JetBrains Mono", sans-serif' }}>
-                  Order Number: <Box component="strong" sx={{ color: 'white' }}>{placedOrder?.orderNumber}</Box>
+                <Typography sx={{ fontSize: '0.875rem', color: 'var(--text-secondary)', mt: 1, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  Order Number: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{placedOrder?.orderNumber}</Box>
                 </Typography>
               </Box>
 
@@ -406,14 +406,14 @@ export const CheckoutModal: React.FC = () => {
               </Box>
 
               {/* Order Details summary box */}
-              <Box sx={{ bgcolor: '#08090d', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: 2, maxWidth: 500, mx: 'auto', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', color: 'text.secondary', fontFamily: '"JetBrains Mono", sans-serif', width: '100%' }}>
+              <Box sx={{ bgcolor: '#08090d', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: 2, maxWidth: 500, mx: 'auto', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif', width: '100%' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
                   <Typography sx={{ fontSize: 'inherit' }}>Shipping Method:</Typography>
-                  <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'white' }}>{placedOrder?.shippingInfo.shippingMethodName}</Typography>
+                  <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'var(--text-primary)' }}>{placedOrder?.shippingInfo.shippingMethodName}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
                   <Typography sx={{ fontSize: 'inherit' }}>Payment Method:</Typography>
-                  <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'white' }}>{placedOrder?.paymentGateway}</Typography>
+                  <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'var(--text-primary)' }}>{placedOrder?.paymentGateway}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
                   <Typography sx={{ fontSize: 'inherit' }}>Total Amount Paid:</Typography>
@@ -438,7 +438,7 @@ export const CheckoutModal: React.FC = () => {
 
                 <Button
                   onClick={handleClose}
-                  sx={{ flex: 1, py: 1.5, bgcolor: 'rgba(255,255,255,0.1)', color: 'white', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+                  sx={{ flex: 1, py: 1.5, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
                 >
                   <ArrowLeft size={15} /> RETURN TO STORE
                 </Button>
