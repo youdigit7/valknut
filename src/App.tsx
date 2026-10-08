@@ -256,9 +256,9 @@ const MainApp: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden flex flex-col selection:bg-[#d4af37] selection:text-black antialiased" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-primary)' }}>
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-clip flex flex-col selection:bg-[#d4af37] selection:text-black antialiased" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-primary)' }}>
       <Navbar />
-      <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden flex flex-col items-center">
+      <main className="flex-1 w-full max-w-[100vw] overflow-x-clip flex flex-col items-center">
         {renderCurrentView()}
       </main>
       <Footer />

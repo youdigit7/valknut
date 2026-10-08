@@ -145,17 +145,19 @@ export const BrandIntro: React.FC = () => {
                     }}
                   >
                     <Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, gap: 1 }}>
                         <Typography 
                           sx={{ 
-                            fontSize: { xs: '1.5rem', sm: '1.875rem', lg: '2.25rem' }, 
+                            fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem', lg: '1.25rem', xl: '1.5rem' }, 
                             fontFamily: '"Syne", sans-serif', 
                             fontWeight: 900,
                             letterSpacing: '-0.02em',
                             background: 'linear-gradient(to right, #f3e5ab, #D4AF37)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
-                            filter: 'drop-shadow(0 4px 12px rgba(212,175,55,0.4))'
+                            filter: 'drop-shadow(0 4px 12px rgba(212,175,55,0.4))',
+                            lineHeight: 1.1,
+                            wordBreak: 'break-word'
                           }}
                         >
                           {card.title}
@@ -163,8 +165,9 @@ export const BrandIntro: React.FC = () => {
                         <Box 
                           className="iconBox"
                           sx={{ 
-                            width: 44, 
-                            height: 44, 
+                            width: 40, 
+                            height: 40, 
+                            flexShrink: 0,
                             borderRadius: 3, 
                             background: 'linear-gradient(135deg, rgba(212,175,55,0.25), rgba(0,0,0,0.6))',
                             border: '1px solid rgba(212,175,55,0.5)',

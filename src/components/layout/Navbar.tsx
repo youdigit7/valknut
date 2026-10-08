@@ -71,6 +71,7 @@ export const Navbar: React.FC = () => {
   };
 
   const navLinks = [
+    { label: 'HOME', hash: '#/', cat: 'ALL' },
     { label: 'SHOP', hash: '#/shop', cat: 'ALL' },
     { label: 'COLLECTIONS', hash: '#/shop?collection=DARK+SOVEREIGN+2026', cat: 'ALL' },
     { label: 'MEN', hash: '#/shop/men', cat: 'MEN' },
@@ -84,11 +85,13 @@ export const Navbar: React.FC = () => {
         position="sticky"
         elevation={isScrolled ? 8 : 0}
         sx={{
+          top: 0,
           bgcolor: isScrolled ? (mode === 'dark' ? 'rgba(6,7,10,0.95)' : 'rgba(255,255,255,0.95)') : (mode === 'dark' ? 'rgba(6,7,10,0.8)' : 'rgba(255,255,255,0.8)'),
           backdropFilter: 'blur(24px)',
           borderBottom: '1px solid',
           borderColor: mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-          transition: 'all 0.3s ease'
+          transition: 'all 0.3s ease',
+          zIndex: 1100
         }}
       >
         {/* Top Banner */}
@@ -142,8 +145,17 @@ export const Navbar: React.FC = () => {
             {/* CENTER: DESKTOP NAV LINKS */}
             <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', bgcolor: 'rgba(10,10,10,0.6)', p: 0.5, borderRadius: 10, border: '1px solid rgba(255,255,255,0.1)', boxShadow: 'inset 0 1px 10px rgba(0,0,0,0.8), 0 4px 20px rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)' }}>
               {navLinks.map(item => {
-                const isActive = (item.cat === 'ALL' && activeCategory === 'ALL' && window.location.hash.startsWith('#/shop') && !window.location.hash.includes('/men') && !window.location.hash.includes('/women') && !window.location.hash.includes('/essentials')) ||
-                  (item.cat !== 'ALL' && (activeCategory === item.cat || window.location.hash.includes(item.cat.toLowerCase())));
+                let isActive = false;
+                if (item.label === 'HOME') {
+                  isActive = window.location.hash === '#/' || window.location.hash === '';
+                } else if (item.label === 'SHOP') {
+                  isActive = activeCategory === 'ALL' && window.location.hash.startsWith('#/shop') && !window.location.hash.includes('collection=') && !window.location.hash.includes('/men') && !window.location.hash.includes('/women') && !window.location.hash.includes('/essentials');
+                } else if (item.label === 'COLLECTIONS') {
+                  isActive = window.location.hash.includes('collection=');
+                } else {
+                  isActive = activeCategory === item.cat || window.location.hash.includes('/' + item.cat.toLowerCase());
+                }
+
                 return (
                   <Button
                     key={item.label}
@@ -153,6 +165,7 @@ export const Navbar: React.FC = () => {
                       color: isActive ? '#000' : 'text.secondary',
                       background: isActive ? 'linear-gradient(90deg, #D4AF37, #f3e5ab)' : 'transparent',
                       boxShadow: isActive ? '0 0 15px rgba(212,175,55,0.4)' : 'none',
+                      borderRadius: '40px',
                       '&:hover': {
                         color: isActive ? '#000' : 'white',
                         bgcolor: isActive ? 'transparent' : 'rgba(255,255,255,0.08)',
@@ -171,6 +184,7 @@ export const Navbar: React.FC = () => {
                   color: 'primary.main', bgcolor: 'black',
                   border: '1px solid rgba(212,175,55,0.3)',
                   boxShadow: '0 0 15px rgba(212,175,55,0.15)',
+                  borderRadius: '40px',
                   '&:hover': {
                     borderColor: 'primary.main',
                     boxShadow: '0 0 25px rgba(212,175,55,0.4)',
@@ -293,6 +307,7 @@ export const Navbar: React.FC = () => {
             <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 'bold', letterSpacing: '0.25em', display: 'block', mb: 2 }}>COLLECTIONS</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {[
+                { label: 'HOME', hash: '#/', cat: 'ALL' },
                 { label: 'SHOP ALL', hash: '#/shop', cat: 'ALL' },
                 { label: 'MEN', hash: '#/shop/men', cat: 'MEN' },
                 { label: 'WOMEN', hash: '#/shop/women', cat: 'WOMEN' },
