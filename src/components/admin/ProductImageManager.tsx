@@ -20,7 +20,7 @@ const fieldSx = {
     bgcolor: '#141620',
     color: 'var(--text-primary)',
     fontSize: '0.6875rem',
-    fontFamily: '"JetBrains Mono", sans-serif',
+    fontFamily: '"Inter", sans-serif',
     '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
     '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
     '&.Mui-focused fieldset': { borderColor: '#D4AF37' },
@@ -184,18 +184,18 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <ImageIcon size={16} color="#D4AF37" />
-          <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, letterSpacing: '0.15em', color: 'var(--text-primary)', textTransform: 'uppercase' }}>
+          <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, letterSpacing: '0.15em', color: 'var(--text-primary)', textTransform: 'uppercase' }}>
             PRODUCT MEDIA GALLERY ({images.length}/{maxImages})
           </Typography>
         </Box>
         {isFirebaseConfigured ? (
           <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, px: 1.5, py: 0.5, borderRadius: 10, bgcolor: 'rgba(6,78,59,0.6)', border: '1px solid rgba(52,211,153,0.3)' }}>
             <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#34d399', animation: 'pulse 2s infinite' }} />
-            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#34d399' }}>Firebase Bucket Online</Typography>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: '#34d399' }}>Firebase Bucket Online</Typography>
           </Box>
         ) : (
           <Box sx={{ px: 1.5, py: 0.5, borderRadius: 10, bgcolor: 'rgba(120,53,15,0.6)', border: '1px solid rgba(251,191,36,0.3)' }}>
-            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#fbbf24' }}>Local High-Res Fallback</Typography>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: '#fbbf24' }}>Local High-Res Fallback</Typography>
           </Box>
         )}
       </Box>
@@ -206,7 +206,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
           severity="error"
           action={<IconButton size="small" onClick={() => setUploadError('')}><X size={14} /></IconButton>}
           icon={<AlertCircle size={16} />}
-          sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', bgcolor: 'rgba(127,29,29,0.7)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.5)' }}
+          sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', bgcolor: 'rgba(127,29,29,0.7)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.5)' }}
         >
           {uploadError}
         </Alert>
@@ -216,11 +216,11 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
       {isUploading && (
         <Box sx={{ p: 2, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 0.5 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-            <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: 'var(--text-primary)' }}>
+            <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, color: 'var(--text-primary)' }}>
               <RefreshCw size={13} style={{ color: '#D4AF37', animation: 'spin 1s linear infinite' }} />
               Uploading {activeUploadFile}...
             </Typography>
-            <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: '#D4AF37' }}>
+            <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, color: '#D4AF37' }}>
               {uploadProgress}%
             </Typography>
           </Box>
@@ -249,7 +249,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
                   {isPrimary && (
                     <Box sx={{ position: 'absolute', top: 8, left: 8, zIndex: 10, px: 1, py: 0.25, bgcolor: 'rgba(0,0,0,0.9)', border: '1px solid #D4AF37', borderRadius: 0.25, display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <Star size={10} color="#D4AF37" fill="#D4AF37" />
-                      <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: '#D4AF37' }}>COVER</Typography>
+                      <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, color: '#D4AF37' }}>COVER</Typography>
                     </Box>
                   )}
 
@@ -276,7 +276,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
 
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     {!isPrimary && (
-                      <Button size="small" onClick={() => setPrimaryImage(idx)} title="Set as Main Cover Image" sx={{ minWidth: 'auto', px: 0.75, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', color: '#D4AF37', fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, borderRadius: 0.25, '&:hover': { bgcolor: 'rgba(212,175,55,0.2)' } }}>
+                      <Button size="small" onClick={() => setPrimaryImage(idx)} title="Set as Main Cover Image" sx={{ minWidth: 'auto', px: 0.75, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', color: '#D4AF37', fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, borderRadius: 0.25, '&:hover': { bgcolor: 'rgba(212,175,55,0.2)' } }}>
                         Set Cover
                       </Button>
                     )}
@@ -313,15 +313,15 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
               <Upload size={18} color="#D4AF37" />
             </Box>
             <Box>
-              <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: 'var(--text-primary)' }}>
+              <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, color: 'var(--text-primary)' }}>
                 Drop high-resolution images here or{' '}
                 <Box component="span" sx={{ color: '#D4AF37', textDecoration: 'underline' }}>Browse</Box>
               </Typography>
-              <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#64748b', mt: 0.5 }}>
+              <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: '#64748b', mt: 0.5 }}>
                 Supports JPG, JPEG, PNG, WEBP (Up to 10MB per file)
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#334155' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: '#334155' }}>
               <Typography sx={{ fontSize: 'inherit', fontFamily: 'inherit', color: 'inherit' }}>Automatic dimension scaling</Typography>
               <Typography sx={{ fontSize: 'inherit', fontFamily: 'inherit', color: 'inherit' }}>•</Typography>
               <Typography sx={{ fontSize: 'inherit', fontFamily: 'inherit', color: 'inherit' }}>Direct Firebase CDN Delivery</Typography>
@@ -343,7 +343,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
               autoFocus
               sx={fieldSx}
             />
-            <Button type="submit" sx={{ px: 2, py: 1, bgcolor: '#D4AF37', color: 'black', fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 0.5, flexShrink: 0, '&:hover': { bgcolor: '#E2B714' } }}>
+            <Button type="submit" sx={{ px: 2, py: 1, bgcolor: '#D4AF37', color: 'black', fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 0.5, flexShrink: 0, '&:hover': { bgcolor: '#E2B714' } }}>
               Add Link
             </Button>
             <IconButton size="small" onClick={() => setIsAddingUrl(false)} sx={{ color: '#64748b', '&:hover': { color: 'var(--text-primary)' } }}>
@@ -354,7 +354,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
           <Button
             onClick={() => setIsAddingUrl(true)}
             startIcon={<Plus size={12} />}
-            sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#D4AF37', p: 0, minWidth: 'auto', '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}
+            sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: '#D4AF37', p: 0, minWidth: 'auto', '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}
           >
             Or paste external image URL
           </Button>

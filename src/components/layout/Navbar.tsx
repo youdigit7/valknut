@@ -138,7 +138,7 @@ export const Navbar: React.FC = () => {
               />
               <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column' }}>
                 <Typography sx={{ fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: { xs: '1rem', lg: '1.25rem' }, letterSpacing: '0.22em', lineHeight: 1, color: mode === 'dark' ? 'white' : 'black' }}>VALKNUT</Typography>
-                <Typography sx={{ fontSize: '0.5rem', fontFamily: '"JetBrains Mono", sans-serif', letterSpacing: '0.4em', color: 'var(--text-secondary)', mt: 0.5, fontWeight: 'bold' }}>OFFICIAL</Typography>
+                <Typography sx={{ fontSize: '0.5rem', fontFamily: '"Inter", sans-serif', letterSpacing: '0.4em', color: 'var(--text-secondary)', mt: 0.5, fontWeight: 'bold' }}>OFFICIAL</Typography>
               </Box>
             </Box>
 
@@ -216,7 +216,7 @@ export const Navbar: React.FC = () => {
                   <MenuItem
                     key={c}
                     onClick={() => { setSelectedCurrency(c); setCurrencyAnchorEl(null); }}
-                    sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: c === selectedCurrency ? 'primary.main' : 'text.secondary', '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}
+                    sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: c === selectedCurrency ? 'primary.main' : 'text.secondary', '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}
                   >
                     {c}
                   </MenuItem>

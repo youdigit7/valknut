@@ -231,7 +231,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 py: 0.5,
                 borderRadius: 1,
                 fontSize: '0.625rem',
-                fontFamily: '"JetBrains Mono", sans-serif',
+                fontFamily: '"Inter", sans-serif',
                 fontWeight: 'bold',
                 letterSpacing: '0.2em',
                 boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
@@ -267,7 +267,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             }}
           >
             <ZoomIn size={12} color="#D4AF37" />
-            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>Hover to zoom • Click to expand</Typography>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>Hover to zoom • Click to expand</Typography>
           </Box>
 
           {/* Mobile Swipe Indicators & Arrows */}
@@ -328,7 +328,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             
             {/* Header */}
             <Box sx={{ w: '100%', width: '100%', maxWidth: 1200, display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 }}>
-              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', color: 'primary.main', textTransform: 'uppercase' }}>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', color: 'primary.main', textTransform: 'uppercase' }}>
                 {productName} — ({activeIndex + 1}/{displayImages.length})
               </Typography>
               <IconButton onClick={() => setIsLightboxOpen(false)} sx={{ color: 'var(--text-secondary)', bgcolor: 'rgba(255,255,255,0.1)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.2)' } }}>

@@ -114,7 +114,7 @@ export const LifestyleFilmSection: React.FC = () => {
                 color: 'var(--text-primary)', 
                 fontSize: { xs: '0.875rem', sm: '1rem' }, 
                 fontWeight: 'bold',
-                fontFamily: '"JetBrains Mono", sans-serif',
+                fontFamily: '"Inter", sans-serif',
                 mb: 1
               }}
             >
@@ -125,7 +125,7 @@ export const LifestyleFilmSection: React.FC = () => {
                 color: 'var(--text-primary)', 
                 fontSize: { xs: '0.875rem', sm: '1rem' }, 
                 fontWeight: 'bold',
-                fontFamily: '"JetBrains Mono", sans-serif'
+                fontFamily: '"Inter", sans-serif'
               }}
             >
               cinematic 4K cut with sound toggle

@@ -129,7 +129,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
             FILTERS
           </Typography>
           {activeFilterCount > 0 && (
-            <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: 'primary.main', color: 'black', fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: 'primary.main', color: 'black', fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {activeFilterCount}
             </Box>
           )}
@@ -140,7 +140,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
             onClick={onReset}
             variant="text"
             startIcon={<RotateCcw size={12} />}
-            sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main', p: 0, minWidth: 'auto', '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' } }}
+            sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', color: 'primary.main', p: 0, minWidth: 'auto', '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' } }}
           >
             Reset All
           </Button>
@@ -181,7 +181,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                       })
                     }}
                   >
-                    <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold' }}>{cat}</Typography>
+                    <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold' }}>{cat}</Typography>
                     <Typography sx={{ fontSize: '0.625rem', color: isSelected ? 'rgba(0,0,0,0.8)' : 'text.disabled', fontWeight: isSelected ? 'bold' : 'normal' }}>{count}</Typography>
                   </Button>
                 );
@@ -191,7 +191,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
             {/* Subcategories */}
             {Object.keys(facets.subCategories).length > 0 && (
               <Box>
-                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'text.disabled', mb: 1 }}>SUBCATEGORY</Typography>
+                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'text.disabled', mb: 1 }}>SUBCATEGORY</Typography>
                 <Box sx={{ maxHeight: 200, overflowY: 'auto', pr: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                   <Button
                     onClick={() => onChange({ subCategory: 'ALL' })}
@@ -214,7 +214,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                         }}
                       >
                         <Typography sx={{ fontSize: '0.75rem', }}>{subCat}</Typography>
-                        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.disabled' }}>({count})</Typography>
+                        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'text.disabled' }}>({count})</Typography>
                       </Button>
                     );
                   })}
@@ -262,8 +262,8 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                       ...(isSelected ? { color: 'primary.main', bgcolor: 'rgba(212,175,55,0.1)', fontWeight: 'bold' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.05)' } })
                     }}
                   >
-                    <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', }}>{col}</Typography>
-                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'text.disabled' }}>({count})</Typography>
+                    <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', }}>{col}</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'text.disabled' }}>({count})</Typography>
                   </Button>
                 );
               })}
@@ -289,9 +289,9 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
         <Collapse in={openSections.price}>
           <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: 'rgba(0,0,0,0.4)', p: 1, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1 }}>
-              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main' }}>LKR {filters.priceRange[0].toLocaleString()}</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', color: 'primary.main' }}>LKR {filters.priceRange[0].toLocaleString()}</Typography>
               <Typography sx={{ fontSize: '0.75rem', color: 'text.disabled' }}>—</Typography>
-              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main' }}>LKR {filters.priceRange[1].toLocaleString()}</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', color: 'primary.main' }}>LKR {filters.priceRange[1].toLocaleString()}</Typography>
             </Box>
 
             <Slider
@@ -324,7 +324,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                       ...(isActive ? { bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main' } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', borderColor: 'rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' } })
                     }}
                   >
-                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold' }}>{bracket.label}</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold' }}>{bracket.label}</Typography>
                   </Button>
                 );
               })}
@@ -366,7 +366,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                     })
                   }}
                 >
-                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900 }}>{size}</Typography>
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 900 }}>{size}</Typography>
                   <Typography sx={{ fontSize: '0.5625rem', color: isSelected ? 'rgba(0,0,0,0.8)' : 'text.disabled' }}>{count}</Typography>
                 </Box>
               );
@@ -415,7 +415,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                     >
                       {isSelected && <Check size={10} color={hex.toLowerCase().includes('fff') || hex.toLowerCase().includes('ede') ? 'black' : 'white'} />}
                     </Box>
-                    <Typography sx={{ fontSize: '0.6875rem', flex: 1,  fontFamily: '"JetBrains Mono", sans-serif', fontWeight: isSelected ? 'bold' : 'normal' }}>{colorName}</Typography>
+                    <Typography sx={{ fontSize: '0.6875rem', flex: 1,  fontFamily: '"Inter", sans-serif', fontWeight: isSelected ? 'bold' : 'normal' }}>{colorName}</Typography>
                     <Typography sx={{ fontSize: '0.625rem', color: 'text.disabled' }}>({count})</Typography>
                   </Box>
                 );
@@ -447,7 +447,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                 onChange={(e) => onChange({ inStockOnly: e.target.checked })}
                 sx={{ p: 0.5, color: 'rgba(255,255,255,0.2)', '&.Mui-checked': { color: 'primary.main' } }}
               />
-              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>In Stock Ready to Ship ({facets.totalInStock})</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>In Stock Ready to Ship ({facets.totalInStock})</Typography>
             </Box>
 
             {/* Sale Items Only */}
@@ -457,7 +457,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                 onChange={(e) => onChange({ isSaleOnly: e.target.checked })}
                 sx={{ p: 0.5, color: 'rgba(255,255,255,0.2)', '&.Mui-checked': { color: 'primary.main' } }}
               />
-              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'error.main', fontWeight: 'bold' }}>Special Offers & Sale ({facets.totalOnSale})</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'error.main', fontWeight: 'bold' }}>Special Offers & Sale ({facets.totalOnSale})</Typography>
             </Box>
 
             {/* New Arrivals Only */}
@@ -467,7 +467,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                 onChange={(e) => onChange({ isNewOnly: e.target.checked })}
                 sx={{ p: 0.5, color: 'rgba(255,255,255,0.2)', '&.Mui-checked': { color: 'primary.main' } }}
               />
-              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main' }}>New Drop Arrivals Only</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'primary.main' }}>New Drop Arrivals Only</Typography>
             </Box>
 
             {/* Best Sellers */}
@@ -477,7 +477,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
                 onChange={(e) => onChange({ isBestSellerOnly: e.target.checked })}
                 sx={{ p: 0.5, color: 'rgba(255,255,255,0.2)', '&.Mui-checked': { color: 'primary.main' } }}
               />
-              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>Best Sellers Restocked</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>Best Sellers Restocked</Typography>
             </Box>
           </Box>
         </Collapse>

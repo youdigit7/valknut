@@ -45,24 +45,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const isLowStock = !isSoldOut && totalStock < 10;
 
   // Colors
-  const uniqueColors = [...new Set(product.variants.map((v) => v.color))].slice(0, 4);
 
   return (
     <MuiCard
-      className={`group relative flex flex-col bg-gradient-to-b from-[#141624] via-[#0f111a] to-[#0a0b12] border border-white/10 hover:border-[#D4AF37]/60 rounded-xl p-3 transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.9),0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1.5 ${className}`}
+      className={`group relative flex flex-col bg-gradient-to-b from-[#141624] via-[#0f111a] to-[#0a0b12] border border-white/10 rounded-2xl p-3.5 transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.9),0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1.5 ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       sx={{
          backgroundImage: 'none',
          backgroundColor: 'transparent',
          boxShadow: 'none',
+         borderRadius: '16px',
+         height: '100%',
+         display: 'flex',
+         flexDirection: 'column',
       }}
     >
       {/* Visual Image Container with True 3:4 Portrait Aspect Ratio */}
-      <Box className="relative aspect-[3/4] w-full overflow-hidden bg-[#141620] rounded-lg mb-3 shadow-inner">
+      <Box className="relative shrink-0 aspect-[3/4] w-full overflow-hidden bg-[#141620] rounded-xl mb-3.5 shadow-inner">
         
         {/* Badges Overlay */}
-        <Box className="absolute top-2.5 left-2.5 z-20 flex flex-col gap-1.5 items-start">
+        <Box className="absolute top-4 left-4 z-20 flex flex-col gap-1.5 items-start">
           {badge && <Badge variant={badge.variant} size="sm">{badge.text}</Badge>}
           {isSoldOut ? (
             <Badge variant="soldout" size="sm">SOLD OUT</Badge>
@@ -79,13 +82,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             e.stopPropagation();
             onToggleWishlist?.(product);
           }}
-          className={`absolute top-2.5 right-2.5 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 border border-white/15 backdrop-blur-md ${
+          className={`absolute z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 border border-white/15 backdrop-blur-md ${
             isWishlisted
               ? 'bg-red-600 text-[var(--text-primary)] shadow-[0_0_15px_rgba(220,38,38,0.6)]'
               : 'bg-black/60 text-slate-300 hover:text-[var(--text-primary)] hover:bg-black/90 hover:scale-110 shadow-lg'
           }`}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           disableRipple
+          sx={{ position: 'absolute', top: 16, right: 16 }}
         >
           <Heart size={14} fill={isWishlisted ? 'currentColor' : 'none'} />
         </MuiIconButton>
@@ -130,7 +134,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <Typography component="span" className="text-[var(--text-primary)] text-xs font-bold">{product.name}</Typography>
             </Box>
           )}
-
           {/* 3D Modern Quick Action Bar with Frosted Glass & Gold Accent */}
           <Box className="absolute inset-x-2.5 bottom-2.5 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-3 group-hover:translate-y-0">
             <MuiButton
@@ -145,71 +148,62 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <Eye size={13} className="mr-1" />
               <Typography component="span">QUICK VIEW</Typography>
             </MuiButton>
-            {onAddToCart && !isSoldOut && (
-              <MuiIconButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onAddToCart(product);
-                }}
-                className="w-10 bg-gradient-to-br from-[#D4AF37] to-[#b39023] hover:from-[#e2b714] hover:to-[#D4AF37] text-black py-2.5 rounded-lg transition-all flex items-center justify-center shadow-[0_10px_25px_rgba(212,175,55,0.4)] hover:scale-105 active:scale-95 border-t border-white/40 cursor-pointer"
-                aria-label="Add to bag"
-                disableRipple
-                sx={{ borderRadius: '8px' }}
-              >
-                <ShoppingBag size={15} />
-              </MuiIconButton>
-            )}
           </Box>
         </Box>
       </Box>
 
-      {/* Product Information with Clear Hierarchy & Spacing */}
-      <Box className="flex flex-col space-y-1.5 sm:space-y-2 flex-1 justify-between">
-        
+      {/* Product Information - Custom Layout */}
+      <Box className="flex flex-col space-y-1 flex-1 mt-1 justify-between">
         <Box>
-          {/* Subcategory & Color Counter */}
-          <Box className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 font-mono uppercase tracking-wider mb-1">
-            <Typography component="span" className="text-slate-400 font-semibold truncate max-w-[65%] text-[11px] font-mono">{product.subCategory || product.category}</Typography>
-            {uniqueColors.length > 0 && (
-              <Typography component="span" className="text-slate-500 shrink-0 text-[11px] font-mono">{uniqueColors.length} {uniqueColors.length === 1 ? 'COLOR' : 'COLORS'}</Typography>
-            )}
-          </Box>
+          {/* Price at the Top */}
+          <Price
+            price={product.price}
+            salePrice={product.salePrice}
+            size="xl"
+            showDiscountPercent={true}
+            className="mb-1"
+          />
+
+          {/* BNPL Installments Text */}
+          <Typography component="div" className="text-[10px] sm:text-[11px] text-slate-400 font-medium pb-2.5 border-b border-white/10 mb-2.5 mt-0.5">
+            or pay in 3 x <Box component="span" className="font-bold text-[var(--text-primary)]">LKR {Math.round((product.salePrice || product.price) / 3).toLocaleString()}</Box> with <Box component="span" sx={{ color: '#ffb7d5', fontWeight: 900 }}>KOKO</Box> or <Box component="span" sx={{ color: '#00c2cb', fontWeight: 900, fontStyle: 'italic' }}>mintpay</Box>
+          </Typography>
 
           {/* Product Title */}
           <Typography
-            variant="h3"
+            component="h3"
             onClick={() => {
               window.location.hash = `#/product/${product.slug}`;
             }}
-            className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase font-heading tracking-wide leading-snug cursor-pointer hover:text-[#D4AF37] transition-colors line-clamp-2"
+            className="text-sm sm:text-base font-bold text-[var(--text-primary)] font-heading tracking-wide leading-snug cursor-pointer hover:text-[#D4AF37] transition-colors line-clamp-2"
+            sx={{ textTransform: 'capitalize' }}
           >
             {product.name}
           </Typography>
         </Box>
 
-        {/* Price Row & Swatches */}
-        <Box className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-white/5">
-          <Price
-            price={product.price}
-            salePrice={product.salePrice}
-            size="sm"
-            showDiscountPercent={true}
-          />
+        <Box sx={{ flex: 1 }} />
 
-          {/* Color Dots */}
-          {uniqueColors.length > 0 && (
-            <Box className="flex items-center gap-1.5">
-              {Array.from(new Set(product.variants.map((v) => v.colorHex))).slice(0, 3).map((hex, i) => (
-                <Box
-                  component="span"
-                  key={i}
-                  className="w-3 h-3 rounded-full border border-white/30 inline-block shadow-sm"
-                  style={{ backgroundColor: hex }}
-                />
-              ))}
-            </Box>
-          )}
-        </Box>
+        {/* Full-width Add to Cart Button */}
+        {onAddToCart && (
+          <MuiButton
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart(product);
+            }}
+            disabled={isSoldOut}
+            fullWidth
+            className={`mt-4 py-2.5 rounded text-white font-bold transition-all flex items-center justify-center gap-2 shadow-lg ${isSoldOut ? 'bg-slate-800 text-slate-500' : 'bg-[#002080] hover:bg-[#001761]'}`}
+            sx={{
+              textTransform: 'none',
+              fontSize: '1rem',
+              bgcolor: isSoldOut ? '#1e293b' : '#002080',
+              '&:hover': { bgcolor: isSoldOut ? '#1e293b' : '#001761' }
+            }}
+          >
+            <ShoppingBag size={18} /> {isSoldOut ? 'Sold Out' : 'Add To Cart'}
+          </MuiButton>
+        )}
       </Box>
     </MuiCard>
   );

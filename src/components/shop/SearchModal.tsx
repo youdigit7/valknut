@@ -144,7 +144,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   }
                 }}
                 placeholder="Search collection, product name, or SKU..."
-                sx={{ width: '100%', color: 'var(--text-primary)', '& input': { p: 0, '&::placeholder': { color: 'var(--text-secondary)', opacity: 1 } }, fontSize: { xs: '0.875rem', sm: '1rem' }, fontFamily: '"JetBrains Mono", sans-serif' }}
+                sx={{ width: '100%', color: 'var(--text-primary)', '& input': { p: 0, '&::placeholder': { color: 'var(--text-secondary)', opacity: 1 } }, fontSize: { xs: '0.875rem', sm: '1rem' }, fontFamily: '"Inter", sans-serif' }}
               />
             </Box>
 
@@ -163,7 +163,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               sx={{ px: 2, py: 1, borderRadius: 10, bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' }, minWidth: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}
               aria-label="Close search"
             >
-              <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold' }}>ESC</Typography>
+              <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold' }}>ESC</Typography>
               <X size={14} />
             </Button>
           </Box>
@@ -172,7 +172,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           <Box sx={{ px: 2.5, py: 1.5, bgcolor: 'rgba(0,0,0,0.4)', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: 1, overflowX: 'auto', '&::-webkit-scrollbar': { display: 'none' }, msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1, flexShrink: 0 }}>
               <Layers size={12} color="#D4AF37" />
-              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>QUICK:</Typography>
+              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>QUICK:</Typography>
             </Box>
             {['All', 'Hoodies', 'Oversized Tees', 'Joggers', 'Accessories', 'Men', 'Women'].map((tag) => {
               const isActive = (tag === 'All' && !selectedTag) || selectedTag === tag;
@@ -196,14 +196,14 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             {isLoading && (
               <Box sx={{ py: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
                 <CircularProgress size={28} sx={{ color: 'primary.main' }} />
-                <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)' }}>Searching archives...</Typography>
+                <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)' }}>Searching archives...</Typography>
               </Box>
             )}
 
             {!isLoading && (query.trim() !== '' || selectedTag) && (
               <Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pb: 2, mb: 2, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)' }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)' }}>
                     Found {results.length} {results.length === 1 ? 'Product' : 'Products'}
                   </Typography>
                   {results.length > 0 && (
@@ -224,7 +224,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                     <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', maxWidth: 300, lineHeight: 1.6 }}>Try searching with broader terms like &ldquo;hoodie&rdquo;, &ldquo;tee&rdquo;, or select from the quick categories above.</Typography>
                     <Button
                       onClick={() => { setQuery(''); setSelectedTag(null); }}
-                      sx={{ mt: 1, px: 2.5, py: 1, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', borderRadius: 10, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+                      sx={{ mt: 1, px: 2.5, py: 1, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', borderRadius: 10, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
                     >
                       Clear Search Query
                     </Button>
@@ -250,16 +250,16 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                             )}
                             {isSoldOut && (
                               <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(1px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Typography sx={{ fontSize: '0.5rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'error.light', textTransform: 'uppercase' }}>Sold Out</Typography>
+                                <Typography sx={{ fontSize: '0.5rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', color: 'error.light', textTransform: 'uppercase' }}>Sold Out</Typography>
                               </Box>
                             )}
                           </Box>
 
                           <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-                              <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{product.subCategory}</Typography>
+                              <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{product.subCategory}</Typography>
                               {product.collection && (
-                                <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)', textTransform: 'uppercase',  maxWidth: 120 }}>• {product.collection}</Typography>
+                                <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', textTransform: 'uppercase',  maxWidth: 120 }}>• {product.collection}</Typography>
                               )}
                             </Box>
 
@@ -268,18 +268,18 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                             </Typography>
 
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-primary)' }}>
+                              <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', color: 'var(--text-primary)' }}>
                                 LKR {(product.salePrice ?? product.price).toLocaleString()}
                               </Typography>
                               {hasSale && (
-                                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)', textDecoration: 'line-through' }}>
+                                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', textDecoration: 'line-through' }}>
                                   LKR {product.price.toLocaleString()}
                                 </Typography>
                               )}
                             </Box>
 
                             {product.variants[0]?.sku && (
-                              <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)', }}>
+                              <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', }}>
                                 SKU: {product.variants[0].sku}
                               </Typography>
                             )}
@@ -301,7 +301,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 <Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'primary.main', mb: 1.5 }}>
                     <TrendingUp size={14} />
-                    <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Popular Searches</Typography>
+                    <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Popular Searches</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                     {TRENDING_SEARCHES.map((term) => (
@@ -309,7 +309,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                         key={term}
                         onClick={() => handleApplyTrending(term)}
                         startIcon={<Tag size={11} color="rgba(212,175,55,0.7)" />}
-                        sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'none', transition: 'all 0.3s ease', boxShadow: '0 1px 2px rgba(0,0,0,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.08)', borderColor: 'rgba(212,175,55,0.5)', color: 'var(--text-primary)' } }}
+                        sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', textTransform: 'none', transition: 'all 0.3s ease', boxShadow: '0 1px 2px rgba(0,0,0,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.08)', borderColor: 'rgba(212,175,55,0.5)', color: 'var(--text-primary)' } }}
                       >
                         {term}
                       </Button>
@@ -320,7 +320,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-secondary)', mb: 1.5 }}>
                     <Sparkles size={12} color="#D4AF37" />
-                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>FEATURED VALKNUT DROPS</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>FEATURED VALKNUT DROPS</Typography>
                   </Box>
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 1.5 }}>
                     {[
@@ -333,7 +333,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                         onClick={() => { setQuery(drop.name); }}
                         sx={{ p: 2, borderRadius: 1, bgcolor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', transition: 'all 0.3s ease', boxShadow: '0 1px 2px rgba(0,0,0,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(212,175,55,0.5)', transform: 'translateY(-2px)' } }}
                       >
-                        <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main', fontWeight: 'bold', mb: 0.5, textTransform: 'uppercase' }}>COLLECTION</Typography>
+                        <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', color: 'primary.main', fontWeight: 'bold', mb: 0.5, textTransform: 'uppercase' }}>COLLECTION</Typography>
                         <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)',  fontFamily: '"Syne", sans-serif', textTransform: 'uppercase' }}>{drop.name}</Typography>
                         <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)',  mt: 0.5 }}>{drop.desc}</Typography>
                       </Box>
@@ -347,9 +347,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           {/* Footer Footer */}
           <Box sx={{ p: { xs: 2, sm: 2.5 }, bgcolor: 'rgba(0,0,0,0.6)', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyItems: 'space-between', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
             <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 1, color: 'var(--text-secondary)', flex: 1 }}>
-              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>Press</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>Press</Typography>
               <CornerDownLeft size={13} color="#D4AF37" />
-              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>to search catalog</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>to search catalog</Typography>
             </Box>
 
             <Button

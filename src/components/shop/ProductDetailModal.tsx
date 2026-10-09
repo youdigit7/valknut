@@ -141,7 +141,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
               <Box>
                 {/* Collection / Subcategory */}
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-                  <Typography sx={{ fontSize: '0.6875rem', fontWeight: 900, letterSpacing: '0.25em', color: 'primary.main', textTransform: 'uppercase', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  <Typography sx={{ fontSize: '0.6875rem', fontWeight: 900, letterSpacing: '0.25em', color: 'primary.main', textTransform: 'uppercase', fontFamily: '"Inter", sans-serif' }}>
                     {product.collection || product.category}
                   </Typography>
 
@@ -214,7 +214,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                           }}
                         >
                           <Box sx={{ width: 12, height: 12, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.4)', bgcolor: hex }} />
-                          <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: '"JetBrains Mono", sans-serif' }}>{colorName}</Typography>
+                          <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: '"Inter", sans-serif' }}>{colorName}</Typography>
                         </Button>
                       );
                     })}
@@ -278,7 +278,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                   <Box sx={{ p: 1.5, background: 'linear-gradient(to right, rgba(212,175,55,0.2), transparent)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 1, mb: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'primary.main' }}>
                       <Sparkles size={16} />
-                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif' }}>WANT TO ADD YOUR OWN LOGO OR TEXT?</Typography>
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif' }}>WANT TO ADD YOUR OWN LOGO OR TEXT?</Typography>
                     </Box>
                     <Button onClick={handleOpenStudio} sx={{ px: 1.5, py: 0.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.625rem', textTransform: 'uppercase', borderRadius: 1, transition: 'transform 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'scale(1.05)' } }}>
                       CUSTOM STUDIO
@@ -311,17 +311,17 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
               <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-secondary)' }}>
                   <ShieldCheck size={16} color="#d4af37" />
-                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}><Box component="strong" sx={{ color: 'var(--text-primary)' }}>Material:</Box> {product.material}</Typography>
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}><Box component="strong" sx={{ color: 'var(--text-primary)' }}>Material:</Box> {product.material}</Typography>
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-secondary)' }}>
                   <Truck size={16} color="#d4af37" />
-                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}><Box component="strong" sx={{ color: 'var(--text-primary)' }}>Shipping:</Box> Islandwide Express Delivery (1-3 Days)</Typography>
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}><Box component="strong" sx={{ color: 'var(--text-primary)' }}>Shipping:</Box> Islandwide Express Delivery (1-3 Days)</Typography>
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-secondary)' }}>
                   <RefreshCw size={16} color="#d4af37" />
-                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}><Box component="strong" sx={{ color: 'var(--text-primary)' }}>Returns:</Box> 7-Day Hassle Free Exchanges Guaranteed</Typography>
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}><Box component="strong" sx={{ color: 'var(--text-primary)' }}>Returns:</Box> 7-Day Hassle Free Exchanges Guaranteed</Typography>
                 </Box>
               </Box>
 

@@ -86,7 +86,7 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
   const isLightGarment = garmentColorHex.toLowerCase() === '#eaeaea' || garmentColorHex.toLowerCase() === '#eaeaeb' || garmentColorHex.toLowerCase() === '#f3f3f5' || garmentColorHex.toLowerCase() === '#ffffff';
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: 2, fontFamily: '"JetBrains Mono", sans-serif' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: 2, fontFamily: '"Inter", sans-serif' }}>
       
       {/* 1. Perspective Switcher Tabs */}
       <Box 

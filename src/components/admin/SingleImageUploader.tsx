@@ -20,7 +20,7 @@ const fieldSx = {
     bgcolor: '#141620',
     color: 'var(--text-primary)',
     fontSize: '0.6875rem',
-    fontFamily: '"JetBrains Mono", sans-serif',
+    fontFamily: '"Inter", sans-serif',
     '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
     '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
     '&.Mui-focused fieldset': { borderColor: '#D4AF37' },
@@ -95,7 +95,7 @@ export const SingleImageUploader: React.FC<SingleImageUploaderProps> = ({
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       {/* Label + Remove */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>
+        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>
           {label}
         </Typography>
         {imageUrl && (
@@ -116,7 +116,7 @@ export const SingleImageUploader: React.FC<SingleImageUploaderProps> = ({
           severity="error"
           action={<IconButton size="small" onClick={() => setErrorMsg('')}><X size={12} /></IconButton>}
           icon={<AlertCircle size={13} />}
-          sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', bgcolor: 'rgba(127,29,29,0.7)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.4)', p: 1 }}
+          sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', bgcolor: 'rgba(127,29,29,0.7)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.4)', p: 1 }}
         >
           {errorMsg}
         </Alert>
@@ -126,11 +126,11 @@ export const SingleImageUploader: React.FC<SingleImageUploaderProps> = ({
       {isUploading && (
         <Box sx={{ p: 1.5, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 0.5 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-            <Typography sx={{ display: 'flex', alignItems: 'center', gap: 0.75, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'rgba(255,255,255,0.8)' }}>
+            <Typography sx={{ display: 'flex', alignItems: 'center', gap: 0.75, fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'rgba(255,255,255,0.8)' }}>
               <RefreshCw size={11} style={{ color: '#D4AF37', animation: 'spin 1s linear infinite' }} />
               Uploading to Firebase Storage...
             </Typography>
-            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, color: '#D4AF37' }}>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, color: '#D4AF37' }}>
               {uploadProgress}%
             </Typography>
           </Box>
@@ -165,11 +165,11 @@ export const SingleImageUploader: React.FC<SingleImageUploaderProps> = ({
               startIcon={<Upload size={11} />}
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              sx={{ px: 1.5, py: 0.75, bgcolor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.075em', '&:hover': { bgcolor: 'rgba(255,255,255,0.15)', color: 'var(--text-primary)' } }}
+              sx={{ px: 1.5, py: 0.75, bgcolor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.075em', '&:hover': { bgcolor: 'rgba(255,255,255,0.15)', color: 'var(--text-primary)' } }}
             >
               Upload Local Image
             </Button>
-            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: '#64748b' }}>
+            <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: '#64748b' }}>
               JPG, PNG, WEBP (Max 10MB)
             </Typography>
           </Box>

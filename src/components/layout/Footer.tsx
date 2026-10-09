@@ -193,7 +193,7 @@ export const Footer: React.FC = () => {
                   { label: 'Payment Security', href: '#/shipping-returns' },
                   { label: '✦ Executive Admin', href: '#/admin', highlightAdmin: true }
                 ].map((link, idx) => (
-                  <Link key={idx} href={link.href} underline="none" sx={{ color: link.highlightAdmin ? 'rgba(212,175,55,0.7)' : 'text.secondary', fontSize: link.highlightAdmin ? '0.75rem' : '0.8rem', fontFamily: link.highlightAdmin ? '"JetBrains Mono", sans-serif' : 'inherit', mt: link.highlightAdmin ? 1 : 0, transition: 'color 0.2s', '&:hover': { color: link.highlightAdmin ? 'primary.main' : 'white' } }}>
+                  <Link key={idx} href={link.href} underline="none" sx={{ color: link.highlightAdmin ? 'rgba(212,175,55,0.7)' : 'text.secondary', fontSize: link.highlightAdmin ? '0.75rem' : '0.8rem', fontFamily: link.highlightAdmin ? '"Inter", sans-serif' : 'inherit', mt: link.highlightAdmin ? 1 : 0, transition: 'color 0.2s', '&:hover': { color: link.highlightAdmin ? 'primary.main' : 'white' } }}>
                     {link.label}
                   </Link>
                 ))}

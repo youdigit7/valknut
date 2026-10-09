@@ -52,7 +52,7 @@ export const ShopMobileFilterDrawer: React.FC<ShopMobileFilterDrawerProps> = ({
           <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 1 }}>
             <Filter size={16} color="#D4AF37" /> FILTER & REFINE
           </Typography>
-          <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif', mt: 0.5 }}>
+          <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif', mt: 0.5 }}>
             Customize your streetwear selection
           </Typography>
         </Box>
@@ -77,7 +77,7 @@ export const ShopMobileFilterDrawer: React.FC<ShopMobileFilterDrawerProps> = ({
           startIcon={<RotateCcw size={14} />}
           sx={{
             px: 3, py: 1.5, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1,
-            color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold',
+            color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold',
             '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' }
           }}
         >

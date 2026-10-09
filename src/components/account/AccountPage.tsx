@@ -199,14 +199,14 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
   const textFieldStyles = {
     '& .MuiOutlinedInput-root': {
       color: 'var(--text-primary)',
-      fontFamily: '"JetBrains Mono", sans-serif',
+      fontFamily: '"Inter", sans-serif',
       fontSize: '0.75rem',
       bgcolor: '#131520',
       '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
       '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
       '&.Mui-focused fieldset': { borderColor: 'primary.main' }
     },
-    '& .MuiInputLabel-root': { color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', letterSpacing: '0.1em', textTransform: 'uppercase' },
+    '& .MuiInputLabel-root': { color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', letterSpacing: '0.1em', textTransform: 'uppercase' },
     '& .MuiInputLabel-root.Mui-focused': { color: 'primary.main' }
   };
 
@@ -217,7 +217,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
       <Box sx={{ maxWidth: 1500, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
         
         {/* Breadcrumb Hierarchy */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', mb: 4 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', mb: 4 }}>
           <Box component="a" href="#/" sx={{ color: 'var(--text-secondary)', textDecoration: 'none', '&:hover': { color: 'var(--text-primary)' }, transition: 'color 0.3s' }}>Home</Box>
           <ChevronRight size={12} />
           <Box component="a" href="#/account" sx={{ color: 'primary.main', textDecoration: 'none', fontWeight: 'bold' }}>Customer Portal</Box>
@@ -236,7 +236,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
               <Box sx={{ width: 40, height: 40, border: '1px solid #D4AF37', mx: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 0.5, mb: 2 }}>
                 <Typography sx={{ color: 'primary.main', fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: '1.25rem' }}>V</Typography>
               </Box>
-              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mb: 1 }}>
+              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mb: 1 }}>
                 VALKNUT SOVEREIGN PORTAL
               </Typography>
               <Typography variant="h2" sx={{ fontSize: { xs: '1.5rem', sm: '1.875rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', letterSpacing: '-0.02em', mb: 1 }}>
@@ -255,13 +255,13 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', p: 0.5, bgcolor: '#131520', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, mb: 4 }}>
                 <Button 
                   onClick={() => setActiveTab('login')} 
-                  sx={{ py: 1, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif', transition: 'all 0.3s ease', ...(activeTab === 'login' ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 2px 10px rgba(212,175,55,0.2)' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }) }}
+                  sx={{ py: 1, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', transition: 'all 0.3s ease', ...(activeTab === 'login' ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 2px 10px rgba(212,175,55,0.2)' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }) }}
                 >
                   SIGN IN
                 </Button>
                 <Button 
                   onClick={() => setActiveTab('register')} 
-                  sx={{ py: 1, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif', transition: 'all 0.3s ease', ...(activeTab === 'register' ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 2px 10px rgba(212,175,55,0.2)' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }) }}
+                  sx={{ py: 1, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', transition: 'all 0.3s ease', ...(activeTab === 'register' ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 2px 10px rgba(212,175,55,0.2)' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }) }}
                 >
                   CREATE ACCOUNT
                 </Button>
@@ -272,7 +272,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             {activeTab === 'login' && (
               <Box component="form" onSubmit={handleLogin} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {loginError && (
-                  <Box sx={{ p: 1.5, bgcolor: 'rgba(153,27,27,0.4)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'error.light', display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ p: 1.5, bgcolor: 'rgba(153,27,27,0.4)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'error.light', display: 'flex', alignItems: 'center', gap: 1 }}>
                     <AlertCircle size={14} />
                     {loginError}
                   </Box>
@@ -290,7 +290,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                 />
                 <Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 0.5 }}>
-                    <Button onClick={() => setActiveTab('forgot-password')} sx={{ minWidth: 'auto', p: 0, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main', '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}>
+                    <Button onClick={() => setActiveTab('forgot-password')} sx={{ minWidth: 'auto', p: 0, fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'primary.main', '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' } }}>
                       Forgot Password?
                     </Button>
                   </Box>
@@ -325,7 +325,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             {activeTab === 'register' && (
               <Box component="form" onSubmit={handleRegister} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {regError && (
-                  <Box sx={{ p: 1.5, bgcolor: 'rgba(153,27,27,0.4)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'error.light', display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ p: 1.5, bgcolor: 'rgba(153,27,27,0.4)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'error.light', display: 'flex', alignItems: 'center', gap: 1 }}>
                     <AlertCircle size={14} />
                     {regError}
                   </Box>
@@ -388,7 +388,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                 </Box>
                 <FormControlLabel
                   control={<Checkbox checked={showRegPassword} onChange={(e) => setShowRegPassword(e.target.checked)} sx={{ color: 'var(--text-secondary)', '&.Mui-checked': { color: 'primary.main' } }} />}
-                  label={<Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>Show password</Typography>}
+                  label={<Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>Show password</Typography>}
                 />
                 <Button type="submit" disabled={isRegistering} sx={{ mt: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
                   {isRegistering ? 'CREATING ACCOUNT...' : 'JOIN VALKNUT VIP'}
@@ -400,7 +400,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             {activeTab === 'forgot-password' && (
               <Box component="form" onSubmit={handleForgotPassword} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {forgotMsg && (
-                  <Box sx={{ p: 1.5, bgcolor: forgotMsg.isError ? 'rgba(153,27,27,0.4)' : 'rgba(16,185,129,0.1)', border: '1px solid', borderColor: forgotMsg.isError ? 'rgba(239,68,68,0.5)' : 'rgba(16,185,129,0.3)', borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: forgotMsg.isError ? 'error.light' : 'success.main', display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ p: 1.5, bgcolor: forgotMsg.isError ? 'rgba(153,27,27,0.4)' : 'rgba(16,185,129,0.1)', border: '1px solid', borderColor: forgotMsg.isError ? 'rgba(239,68,68,0.5)' : 'rgba(16,185,129,0.3)', borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: forgotMsg.isError ? 'error.light' : 'success.main', display: 'flex', alignItems: 'center', gap: 1 }}>
                     <AlertCircle size={14} />
                     {forgotMsg.text}
                   </Box>
@@ -420,7 +420,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                   {isForgotLoading ? 'SENDING...' : 'SEND RECOVERY LINK'}
                 </Button>
                 <Box sx={{ textAlign: 'center', mt: 2 }}>
-                  <Button onClick={() => setActiveTab('login')} sx={{ minWidth: 'auto', p: 0, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'transparent' } }}>
+                  <Button onClick={() => setActiveTab('login')} sx={{ minWidth: 'auto', p: 0, fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'transparent' } }}>
                     ← Back to Sign In
                   </Button>
                 </Box>
@@ -442,11 +442,11 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                     <Typography variant="h2" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' }, fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', textTransform: 'uppercase' }}>
                       {user.name}
                     </Typography>
-                    <Typography sx={{ px: 1, py: 0.25, bgcolor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 900, textTransform: 'uppercase', borderRadius: 0.5 }}>
+                    <Typography sx={{ px: 1, py: 0.25, bgcolor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, textTransform: 'uppercase', borderRadius: 0.5 }}>
                       {user.isAdmin ? 'FOUNDER / ADMIN' : 'SOVEREIGN VIP'}
                     </Typography>
                   </Box>
-                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                     {user.email} • {user.phone}
                   </Typography>
                 </Box>
@@ -454,11 +454,11 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
 
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 {user.isAdmin && (
-                  <Button onClick={() => setIsAdminOpen(true)} startIcon={<ShieldCheck size={16} />} sx={{ px: 3, py: 1.5, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(212,175,55,0.2)' } }}>
+                  <Button onClick={() => setIsAdminOpen(true)} startIcon={<ShieldCheck size={16} />} sx={{ px: 3, py: 1.5, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(212,175,55,0.2)' } }}>
                     ADMIN SUITE
                   </Button>
                 )}
-                <Button onClick={handleLogout} startIcon={<LogOut size={16} />} sx={{ px: 3, py: 1.5, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(239,68,68,0.1)', borderColor: 'rgba(239,68,68,0.4)', color: 'error.main' } }}>
+                <Button onClick={handleLogout} startIcon={<LogOut size={16} />} sx={{ px: 3, py: 1.5, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(239,68,68,0.1)', borderColor: 'rgba(239,68,68,0.4)', color: 'error.main' } }}>
                   SIGN OUT
                 </Button>
               </Box>
@@ -481,7 +481,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                       window.location.hash = `#/account/${tab.id}`;
                     }}
                     startIcon={<Icon size={14} />}
-                    sx={{ px: 3, py: 1.5, borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.3s ease', flexShrink: 0, ...(isActive ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 4px 15px rgba(212,175,55,0.2)' } : { bgcolor: '#12141F', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' } }) }}
+                    sx={{ px: 3, py: 1.5, borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.3s ease', flexShrink: 0, ...(isActive ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 4px 15px rgba(212,175,55,0.2)' } : { bgcolor: '#12141F', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' } }) }}
                   >
                     {tab.label}
                   </Button>
@@ -494,19 +494,19 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 2 }}>
                   <Box sx={{ p: 3, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>TOTAL COMPLETED ORDERS</Typography>
-                    <Typography sx={{ fontSize: '1.875rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", sans-serif' }}>{userOrders.length}</Typography>
-                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'success.main' }}>Verified Purchases</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>TOTAL COMPLETED ORDERS</Typography>
+                    <Typography sx={{ fontSize: '1.875rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif' }}>{userOrders.length}</Typography>
+                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'success.main' }}>Verified Purchases</Typography>
                   </Box>
                   <Box sx={{ p: 3, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>VIP REWARDS LEVEL</Typography>
-                    <Typography sx={{ fontSize: '1.875rem', fontWeight: 900, color: 'primary.main', fontFamily: '"JetBrains Mono", sans-serif' }}>TIER 1</Typography>
-                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>Early Drop Access Active</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>VIP REWARDS LEVEL</Typography>
+                    <Typography sx={{ fontSize: '1.875rem', fontWeight: 900, color: 'primary.main', fontFamily: '"Inter", sans-serif' }}>TIER 1</Typography>
+                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>Early Drop Access Active</Typography>
                   </Box>
                   <Box sx={{ p: 3, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>DEFAULT SHIPPING ZONE</Typography>
-                    <Typography sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", sans-serif', mt: 1 }}>{user.address?.city || 'Colombo 03'}</Typography>
-                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>Sri Lanka Delivery</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>DEFAULT SHIPPING ZONE</Typography>
+                    <Typography sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif', mt: 1 }}>{user.address?.city || 'Colombo 03'}</Typography>
+                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>Sri Lanka Delivery</Typography>
                   </Box>
                 </Box>
 
@@ -514,16 +514,16 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                   <Box sx={{ p: { xs: 3, sm: 4 }, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                       <Box>
-                        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.2em', mb: 0.5 }}>LATEST DISPATCH STATUS</Typography>
+                        <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.2em', mb: 0.5 }}>LATEST DISPATCH STATUS</Typography>
                         <Typography variant="h3" sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', textTransform: 'uppercase' }}>ORDER #{userOrders[0].orderNumber}</Typography>
                       </Box>
-                      <Button onClick={() => setSelectedOrderDetails(userOrders[0])} endIcon={<ArrowRight size={14} />} sx={{ p: 0, minWidth: 'auto', color: 'primary.main', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' } }}>
+                      <Button onClick={() => setSelectedOrderDetails(userOrders[0])} endIcon={<ArrowRight size={14} />} sx={{ p: 0, minWidth: 'auto', color: 'primary.main', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' } }}>
                         View Breakdown
                       </Button>
                     </Box>
 
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>
                         <Typography sx={{ fontSize: 'inherit', color: 'var(--text-secondary)' }}>Current Phase: <Box component="strong" sx={{ color: 'primary.main', textTransform: 'uppercase' }}>{userOrders[0].orderStatus}</Box></Typography>
                         {userOrders[0].awbNumber && <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)' }}>AWB: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{userOrders[0].awbNumber}</Box></Typography>}
                       </Box>
@@ -533,7 +533,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                           return (
                             <Box key={step} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                               <Box sx={{ height: 6, borderRadius: 3, transition: 'all 0.3s ease', bgcolor: isDone ? 'primary.main' : 'rgba(255,255,255,0.1)' }} />
-                              <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', color: isDone ? 'white' : 'text.secondary' }}>{step}</Typography>
+                              <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', color: isDone ? 'white' : 'text.secondary' }}>{step}</Typography>
                             </Box>
                           );
                         })}
@@ -550,7 +550,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                 {userOrders.length === 0 ? (
                   <Box sx={{ p: 6, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                     <Package size={40} color="rgba(255,255,255,0.4)" />
-                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", sans-serif', letterSpacing: '0.1em' }}>No Orders Placed Yet</Typography>
+                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif', letterSpacing: '0.1em' }}>No Orders Placed Yet</Typography>
                     <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', maxWidth: 400 }}>Once you place an order, live tracking, courier AWB tracking, and digital invoices will appear here.</Typography>
                     <Button href="#/shop" sx={{ mt: 2, px: 4, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, '&:hover': { bgcolor: 'primary.dark' } }}>Explore Shop</Button>
                   </Box>
@@ -563,17 +563,17 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, sm: 'items-center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2, gap: 2 }}>
                           <Box>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                              <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main' }}>{order.orderNumber}</Typography>
-                              <Typography sx={{ px: 1, py: 0.25, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>{new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</Typography>
+                              <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, fontFamily: '"Inter", sans-serif', color: 'primary.main' }}>{order.orderNumber}</Typography>
+                              <Typography sx={{ px: 1, py: 0.25, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>{new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</Typography>
                             </Box>
-                            <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif', mt: 0.5 }}>Paid via {order.paymentGateway} ({order.paymentStatus})</Typography>
+                            <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif', mt: 0.5 }}>Paid via {order.paymentGateway} ({order.paymentStatus})</Typography>
                           </Box>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
                             <Box sx={{ textAlign: { sm: 'right' } }}>
-                              <Typography sx={{ fontSize: '1rem', fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-primary)' }}>LKR {order.totalAmount.toLocaleString()}</Typography>
-                              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>{order.items.reduce((s, i) => s + i.quantity, 0)} Items</Typography>
+                              <Typography sx={{ fontSize: '1rem', fontWeight: 900, fontFamily: '"Inter", sans-serif', color: 'var(--text-primary)' }}>LKR {order.totalAmount.toLocaleString()}</Typography>
+                              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>{order.items.reduce((s, i) => s + i.quantity, 0)} Items</Typography>
                             </Box>
-                            <Button onClick={() => setSelectedOrderDetails(order)} sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}>
+                            <Button onClick={() => setSelectedOrderDetails(order)} sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}>
                               Details
                             </Button>
                           </Box>
@@ -585,15 +585,15 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                               <Box component="img" src={item.customization?.finalPreviewDataUrl || item.imageUrl || item.product?.images?.[0] || ''} alt="" sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 0.5, bgcolor: '#1a1d2d', flexShrink: 0 }} />
                               <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
                                 <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }} noWrap>{item.productName || item.product?.name || 'Garment'}</Typography>
-                                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>Size: {item.size || item.selectedSize || 'M'} {item.color || item.selectedColor ? `• ${item.color || item.selectedColor}` : ''} • Qty: {item.quantity}</Typography>
-                                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'primary.main' }}>LKR {(item.unitPrice || 0).toLocaleString()}</Typography>
+                                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>Size: {item.size || item.selectedSize || 'M'} {item.color || item.selectedColor ? `• ${item.color || item.selectedColor}` : ''} • Qty: {item.quantity}</Typography>
+                                <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', color: 'primary.main' }}>LKR {(item.unitPrice || 0).toLocaleString()}</Typography>
                               </Box>
                             </Box>
                           ))}
                         </Box>
 
                         <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>
                             <Typography sx={{ fontSize: 'inherit', color: 'var(--text-secondary)' }}>Status: <Box component="strong" sx={{ color: 'primary.main', textTransform: 'uppercase' }}>{order.orderStatus}</Box></Typography>
                             {order.trackingLink && (
                               <Box component="a" href={order.trackingLink} target="_blank" rel="noreferrer" sx={{ color: 'primary.main', fontWeight: 'bold', textDecoration: 'none', '&:hover': { textDecoration: 'underline' }, display: 'flex', alignItems: 'center', gap: 0.5, fontSize: '0.6875rem' }}>
@@ -605,7 +605,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                             {['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered'].map((step, idx) => (
                               <Box key={step} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                                 <Box sx={{ height: 6, borderRadius: 3, transition: 'all 0.3s ease', bgcolor: stepNum >= idx + 1 ? 'primary.main' : 'rgba(255,255,255,0.1)' }} />
-                                <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', color: stepNum >= idx + 1 ? 'white' : 'text.secondary' }}>{step}</Typography>
+                                <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', color: stepNum >= idx + 1 ? 'white' : 'text.secondary' }}>{step}</Typography>
                               </Box>
                             ))}
                           </Box>
@@ -635,7 +635,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                 </Box>
 
                 <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 4, display: 'flex', flexDirection: 'column', gap: 3 }}>
-                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", sans-serif', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 1 }}>
                     <MapPin size={16} color="#D4AF37" /> Primary Delivery Address
                   </Typography>
                   
@@ -648,7 +648,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                         <InputLabel id="district-label">District / Province</InputLabel>
                         <Select labelId="district-label" label="District / Province" value={editAddress.district} onChange={(e) => setEditAddress({ ...editAddress, district: e.target.value as string })}>
                           {SRI_LANKAN_DISTRICTS.map((d) => (
-                            <MenuItem key={d} value={d} sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>{d} District</MenuItem>
+                            <MenuItem key={d} value={d} sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>{d} District</MenuItem>
                           ))}
                         </Select>
                       </FormControl>
@@ -674,7 +674,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
               <>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                   <Box>
-                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'primary.main', fontWeight: 'bold' }}>ORDER INVOICE</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'primary.main', fontWeight: 'bold' }}>ORDER INVOICE</Typography>
                     <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, fontFamily: '"Syne", sans-serif', color: 'var(--text-primary)', textTransform: 'uppercase' }}>{selectedOrderDetails.orderNumber}</Typography>
                   </Box>
                   <IconButton onClick={() => setSelectedOrderDetails(null)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }}>
@@ -690,16 +690,16 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                           <Box component="img" src={it.customization?.finalPreviewDataUrl || it.imageUrl || it.product?.images?.[0]} sx={{ width: 40, height: 48, objectFit: 'cover', borderRadius: 0.5, bgcolor: '#141620' }} />
                         ) : null}
                         <Box>
-                          <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", sans-serif' }}>{it.productName || it.product?.name || 'Garment'}</Typography>
-                          <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif' }}>Size: {it.size || it.selectedSize || 'M'} {it.color || it.selectedColor ? `• ${it.color || it.selectedColor}` : ''} • Qty: {it.quantity}</Typography>
+                          <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif' }}>{it.productName || it.product?.name || 'Garment'}</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>Size: {it.size || it.selectedSize || 'M'} {it.color || it.selectedColor ? `• ${it.color || it.selectedColor}` : ''} • Qty: {it.quantity}</Typography>
                         </Box>
                       </Box>
-                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {((it.unitPrice || 0) * (it.quantity || 1)).toLocaleString()}</Typography>
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif' }}>LKR {((it.unitPrice || 0) * (it.quantity || 1)).toLocaleString()}</Typography>
                     </Box>
                   ))}
                 </Box>
 
-                <Box sx={{ bgcolor: '#141620', p: 3, borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                <Box sx={{ bgcolor: '#141620', p: 3, borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography sx={{ fontSize: 'inherit' }}>Subtotal:</Typography>
                     <Typography sx={{ fontSize: 'inherit', color: 'var(--text-primary)', fontWeight: 'bold' }}>LKR {selectedOrderDetails.subtotal.toLocaleString()}</Typography>
@@ -720,7 +720,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                   </Box>
                 </Box>
 
-                <Box sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                <Box sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                   <Typography sx={{ fontSize: 'inherit' }}><Box component="strong" sx={{ color: 'var(--text-primary)' }}>Shipping To:</Box> {selectedOrderDetails.customerInfo.fullName}, {selectedOrderDetails.customerInfo.addressLine1}, {selectedOrderDetails.customerInfo.city}</Typography>
                   <Typography sx={{ fontSize: 'inherit' }}><Box component="strong" sx={{ color: 'var(--text-primary)' }}>Contact Phone:</Box> {selectedOrderDetails.customerInfo.phone}</Typography>
                 </Box>

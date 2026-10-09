@@ -51,7 +51,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
                 <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
                   VALKNUT OFFICIAL SIZE GUIDE
                 </Typography>
-                <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif' }}>Architectural Heavyweight Fit & Sizing Matrix</Typography>
+                <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>Architectural Heavyweight Fit & Sizing Matrix</Typography>
               </Box>
             </Box>
             <IconButton onClick={onClose} sx={{ color: 'var(--text-secondary)', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }}>
@@ -65,7 +65,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
               <Button
                 onClick={() => setActiveTab('MEN')}
                 sx={{
-                  px: 2, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif',
+                  px: 2, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', borderRadius: 1, fontFamily: '"Inter", sans-serif',
                   ...(activeTab === 'MEN' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } })
                 }}
               >
@@ -74,7 +74,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
               <Button
                 onClick={() => setActiveTab('WOMEN')}
                 sx={{
-                  px: 2, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif',
+                  px: 2, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', borderRadius: 1, fontFamily: '"Inter", sans-serif',
                   ...(activeTab === 'WOMEN' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } })
                 }}
               >
@@ -86,7 +86,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
               <Button
                 onClick={() => setUnit('CM')}
                 sx={{
-                  px: 1.5, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif', minWidth: 'auto',
+                  px: 1.5, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', borderRadius: 1, fontFamily: '"Inter", sans-serif', minWidth: 'auto',
                   ...(unit === 'CM' ? { bgcolor: 'var(--text-primary)', color: 'black', '&:hover': { bgcolor: '#f1f5f9' } } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } })
                 }}
               >
@@ -95,7 +95,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
               <Button
                 onClick={() => setUnit('INCHES')}
                 sx={{
-                  px: 1.5, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', borderRadius: 1, fontFamily: '"JetBrains Mono", sans-serif', minWidth: 'auto',
+                  px: 1.5, py: 0.5, fontSize: '0.75rem', fontWeight: 'bold', borderRadius: 1, fontFamily: '"Inter", sans-serif', minWidth: 'auto',
                   ...(unit === 'INCHES' ? { bgcolor: 'var(--text-primary)', color: 'black', '&:hover': { bgcolor: '#f1f5f9' } } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } })
                 }}
               >
@@ -130,8 +130,8 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
 
           {/* Measuring Tip */}
           <Box sx={{ bgcolor: 'rgba(255,255,255,0.03)', p: 2, borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)' }}>
-            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-primary)', mb: 0.5, fontFamily: '"JetBrains Mono", sans-serif' }}>FIT NOTE:</Typography>
-            <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)', lineHeight: 1.6, fontFamily: '"JetBrains Mono", sans-serif' }}>
+            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-primary)', mb: 0.5, fontFamily: '"Inter", sans-serif' }}>FIT NOTE:</Typography>
+            <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)', lineHeight: 1.6, fontFamily: '"Inter", sans-serif' }}>
               VALKNUT tops are cut in our signature signature relaxed/oversized drop-shoulder profile. 
               If you prefer a closer tailored fit, we recommend selecting one size down.
             </Typography>

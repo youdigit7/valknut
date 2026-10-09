@@ -70,7 +70,7 @@ export const CartPage: React.FC = () => {
       <Box sx={{ maxWidth: 1600, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
 
         {/* Breadcrumb Hierarchy */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', mb: 3 }}>
           <Box component="a" href="#/" sx={{ color: 'var(--text-secondary)', textDecoration: 'none', '&:hover': { color: 'var(--text-primary)' }, transition: 'color 0.3s' }}>Home</Box>
           <ChevronRight size={12} />
           <Box component="a" href="#/shop" sx={{ color: 'var(--text-secondary)', textDecoration: 'none', '&:hover': { color: 'var(--text-primary)' }, transition: 'color 0.3s' }}>Shop</Box>
@@ -81,7 +81,7 @@ export const CartPage: React.FC = () => {
         {/* Page Header */}
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { sm: 'flex-end' }, justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 3, mb: 4, gap: 2 }}>
           <Box>
-            <Typography sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5 }}>
+            <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5 }}>
               YOUR SELECTED PIECES
             </Typography>
             <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', letterSpacing: '-0.02em' }}>
@@ -92,7 +92,7 @@ export const CartPage: React.FC = () => {
           <Button
             href="#/shop"
             startIcon={<ArrowLeft size={14} />}
-            sx={{ color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', p: 0, minWidth: 'auto', '&:hover': { bgcolor: 'transparent', color: 'primary.main' } }}
+            sx={{ color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', p: 0, minWidth: 'auto', '&:hover': { bgcolor: 'transparent', color: 'primary.main' } }}
           >
             CONTINUE EXPLORING
           </Button>
@@ -143,7 +143,7 @@ export const CartPage: React.FC = () => {
 
                 {/* Free Shipping Progress Meter */}
                 <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1.5, boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-primary)' }}>
                       <Truck size={16} color="#D4AF37" />
                       {cartSubtotal >= FREE_SHIPPING_LIMIT ? (
@@ -183,7 +183,7 @@ export const CartPage: React.FC = () => {
                         </Box>
 
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, minWidth: 0, flex: 1 }}>
-                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.1em', color: 'primary.main', textTransform: 'uppercase' }}>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.1em', color: 'primary.main', textTransform: 'uppercase' }}>
                             {item.product.subCategory}
                           </Typography>
 
@@ -195,7 +195,7 @@ export const CartPage: React.FC = () => {
                             {item.product.name}
                           </Typography>
 
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)', flexWrap: 'wrap' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', flexWrap: 'wrap' }}>
                             <Typography sx={{ fontSize: 'inherit' }}>Size: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{item.selectedSize}</Box></Typography>
                             <Typography sx={{ fontSize: 'inherit' }}>•</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -206,7 +206,7 @@ export const CartPage: React.FC = () => {
 
                           {/* Custom Studio Label */}
                           {item.customization && (
-                            <Box sx={{ mt: 1, p: 1, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 1, color: 'primary.main', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                            <Box sx={{ mt: 1, p: 1, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 1, color: 'primary.main', fontFamily: '"Inter", sans-serif' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontWeight: 'bold', fontSize: '0.6875rem' }}>
                                 <Sparkles size={12} />
                                 <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit' }}>Bespoke: {item.customization.printTechnique} ({item.customization.placement.replace('_', ' ')})</Typography>
@@ -228,7 +228,7 @@ export const CartPage: React.FC = () => {
                           <IconButton onClick={() => updateCartQuantity(item.id, -1)} sx={{ width: 28, height: 28, borderRadius: 0, color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }}>
                             <Minus size={13} />
                           </IconButton>
-                          <Typography sx={{ width: 32, textAlign: 'center', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                          <Typography sx={{ width: 32, textAlign: 'center', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', color: 'var(--text-primary)' }}>
                             {item.quantity}
                           </Typography>
                           <IconButton onClick={() => updateCartQuantity(item.id, 1)} sx={{ width: 28, height: 28, borderRadius: 0, color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }}>
@@ -239,11 +239,11 @@ export const CartPage: React.FC = () => {
                         {/* Total and Trash */}
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                           <Box sx={{ textAlign: 'right' }}>
-                            <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-primary)' }}>
+                            <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, fontWeight: 900, fontFamily: '"Inter", sans-serif', color: 'var(--text-primary)' }}>
                               LKR {(item.unitPrice * item.quantity).toLocaleString()}
                             </Typography>
                             {item.quantity > 1 && (
-                              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                                 LKR {item.unitPrice.toLocaleString()} each
                               </Typography>
                             )}
@@ -262,19 +262,19 @@ export const CartPage: React.FC = () => {
                 {/* Trust Features Bar */}
                 <Grid container spacing={1.5}>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <Box sx={{ p: 1.5, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                    <Box sx={{ p: 1.5, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                       <Truck size={16} color="#D4AF37" />
                       <Typography sx={{ fontSize: 'inherit' }}>Fast 2-3 Day Colombo Delivery</Typography>
                     </Box>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <Box sx={{ p: 1.5, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                    <Box sx={{ p: 1.5, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                       <ShieldCheck size={16} color="#D4AF37" />
                       <Typography sx={{ fontSize: 'inherit' }}>100% Guaranteed Heavy Cotton</Typography>
                     </Box>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <Box sx={{ p: 1.5, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                    <Box sx={{ p: 1.5, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                       <CheckCircle size={16} color="#D4AF37" />
                       <Typography sx={{ fontSize: 'inherit' }}>7-Day Hassle-Free Exchange</Typography>
                     </Box>
@@ -294,12 +294,12 @@ export const CartPage: React.FC = () => {
 
                 {/* Promo Code Applicator */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', fontWeight: 'bold' }}>
+                  <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', fontWeight: 'bold' }}>
                     PROMO CODE
                   </Typography>
 
                   {appliedCoupon ? (
-                    <Box sx={{ p: 1.5, bgcolor: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.4)', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'success.main', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                    <Box sx={{ p: 1.5, bgcolor: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.4)', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'success.main', fontFamily: '"Inter", sans-serif' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontWeight: 'bold' }}>
                         <Tag size={14} />
                         <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>'{appliedCoupon.code}' APPLIED</Typography>
@@ -317,11 +317,11 @@ export const CartPage: React.FC = () => {
                         value={couponCodeInput}
                         onChange={(e) => setCouponCodeInput(e.target.value)}
                         placeholder="e.g. VALKNUT10"
-                        sx={{ flex: 1, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, px: 2, py: 1, color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', '& input::placeholder': { color: 'var(--text-secondary)', textTransform: 'none' }, '&.Mui-focused': { borderColor: 'primary.main' } }}
+                        sx={{ flex: 1, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, px: 2, py: 1, color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', '& input::placeholder': { color: 'var(--text-secondary)', textTransform: 'none' }, '&.Mui-focused': { borderColor: 'primary.main' } }}
                       />
                       <Button
                         type="submit"
-                        sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', borderRadius: 1, '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+                        sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 1, '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
                       >
                         Apply
                       </Button>
@@ -329,14 +329,14 @@ export const CartPage: React.FC = () => {
                   )}
 
                   {couponMsg && (
-                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"JetBrains Mono", sans-serif', color: couponMsg.isError ? 'error.main' : 'success.main' }}>
+                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: couponMsg.isError ? 'error.main' : 'success.main' }}>
                       {couponMsg.text}
                     </Typography>
                   )}
                 </Box>
 
                 {/* Price Breakdown */}
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)', borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography sx={{ fontSize: 'inherit' }}>Bag Subtotal:</Typography>
                     <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'var(--text-primary)' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
@@ -358,7 +358,7 @@ export const CartPage: React.FC = () => {
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                     <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Syne", sans-serif', color: 'var(--text-primary)' }}>ESTIMATED TOTAL:</Typography>
-                    <Typography sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'primary.main', fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
+                    <Typography sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'primary.main', fontFamily: '"Inter", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
                   </Box>
                 </Box>
 
@@ -373,10 +373,10 @@ export const CartPage: React.FC = () => {
 
                 {/* Payment Options Supported */}
                 <Box sx={{ pt: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 1, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                  <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', textTransform: 'uppercase', color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
+                  <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
                     ACCEPTED PAYMENT GATEWAYS
                   </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', gap: 1, fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', gap: 1, fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                     <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5 }}>Koko BNPL (3x 0%)</Box>
                     <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5 }}>OnePay</Box>
                     <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5 }}>Cash on Delivery</Box>

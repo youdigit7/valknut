@@ -59,11 +59,17 @@ export const AppThemeProvider: React.FC<{ children: ReactNode }> = ({ children }
             : { primary: '#0f172a', secondary: '#475569' },
         },
         typography: {
-          fontFamily: '"JetBrains Mono", "Roboto", "Helvetica", "Arial", sans-serif',
+          fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+          h1: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+          h2: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
           h3: { fontFamily: '"Syne", sans-serif', fontWeight: 900, textTransform: 'uppercase' },
+          h4: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
+          h5: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
           h6: { fontFamily: '"Syne", sans-serif', fontWeight: 800, textTransform: 'uppercase' },
-          body2: { fontFamily: '"JetBrains Mono", sans-serif' },
-          caption: { fontFamily: '"JetBrains Mono", sans-serif' },
+          body1: { fontFamily: '"Inter", sans-serif' },
+          body2: { fontFamily: '"Inter", sans-serif' },
+          button: { fontFamily: '"Syne", sans-serif', fontWeight: 700, letterSpacing: '0.1em' },
+          caption: { fontFamily: '"Inter", sans-serif', fontWeight: 500, letterSpacing: '0.05em' },
         },
         components: {
           MuiButton: {

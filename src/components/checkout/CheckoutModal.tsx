@@ -99,14 +99,14 @@ export const CheckoutModal: React.FC = () => {
   const textFieldStyles = {
     '& .MuiOutlinedInput-root': {
       color: 'var(--text-primary)',
-      fontFamily: '"JetBrains Mono", sans-serif',
+      fontFamily: '"Inter", sans-serif',
       fontSize: '0.75rem',
       bgcolor: '#141620',
       '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
       '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
       '&.Mui-focused fieldset': { borderColor: 'primary.main' }
     },
-    '& .MuiInputLabel-root': { color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' },
+    '& .MuiInputLabel-root': { color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' },
     '& .MuiInputLabel-root.Mui-focused': { color: 'primary.main' }
   };
 
@@ -134,7 +134,7 @@ export const CheckoutModal: React.FC = () => {
                 <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
                   {step === 'FORM' ? 'VALKNUT EXPRESS CHECKOUT' : 'ORDER CONFIRMED'}
                 </Typography>
-                <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>
                   256-Bit SSL Encrypted Payment Gateway
                 </Typography>
               </Box>
@@ -153,14 +153,14 @@ export const CheckoutModal: React.FC = () => {
                 
                 {/* Error Notice */}
                 {errorMsg && (
-                  <Box sx={{ p: 1.5, bgcolor: 'rgba(153,27,27,0.4)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: 1, color: 'error.light', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  <Box sx={{ p: 1.5, bgcolor: 'rgba(153,27,27,0.4)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: 1, color: 'error.light', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>
                     {errorMsg}
                   </Box>
                 )}
 
                 {/* 1. Contact Information */}
                 <Box>
-                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"Inter", sans-serif' }}>
                     1. CUSTOMER CONTACT INFORMATION
                   </Typography>
                   <Grid container spacing={2}>
@@ -178,7 +178,7 @@ export const CheckoutModal: React.FC = () => {
 
                 {/* 2. Delivery Address */}
                 <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 3 }}>
-                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"Inter", sans-serif' }}>
                     2. ISLANDWIDE SHIPPING ADDRESS
                   </Typography>
                   <Grid container spacing={2}>
@@ -191,7 +191,7 @@ export const CheckoutModal: React.FC = () => {
                     <Grid size={{ xs: 12, sm: 6 }}>
                       <TextField select fullWidth label="District" value={district} onChange={(e) => setDistrict(e.target.value)} variant="outlined" size="small" sx={textFieldStyles}>
                         {SRI_LANKAN_DISTRICTS.map((d) => (
-                          <MenuItem key={d} value={d} sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>{d}</MenuItem>
+                          <MenuItem key={d} value={d} sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>{d}</MenuItem>
                         ))}
                       </TextField>
                     </Grid>
@@ -206,7 +206,7 @@ export const CheckoutModal: React.FC = () => {
 
                 {/* 3. Shipping Method Selector */}
                 <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 3 }}>
-                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"Inter", sans-serif' }}>
                     3. SELECT SHIPPING METHOD
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
@@ -227,13 +227,13 @@ export const CheckoutModal: React.FC = () => {
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase' }}>{method.name}</Typography>
                                 {method.id === 'express' && (
-                                  <Typography sx={{ fontSize: '0.5rem', bgcolor: 'primary.main', color: 'black', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif' }}>VIP PRIORITY</Typography>
+                                  <Typography sx={{ fontSize: '0.5rem', bgcolor: 'primary.main', color: 'black', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900, fontFamily: '"Inter", sans-serif' }}>VIP PRIORITY</Typography>
                                 )}
                               </Box>
-                              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: isSelected ? 'rgba(255,255,255,0.7)' : 'inherit' }}>{method.estimatedDays}</Typography>
+                              <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: isSelected ? 'rgba(255,255,255,0.7)' : 'inherit' }}>{method.estimatedDays}</Typography>
                             </Box>
                           </Box>
-                          <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                          <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif' }}>
                             {isFree ? <Box component="span" sx={{ color: 'success.main' }}>FREE</Box> : `LKR ${fee.toLocaleString()}`}
                           </Typography>
                         </Box>
@@ -244,7 +244,7 @@ export const CheckoutModal: React.FC = () => {
 
                 {/* 4. Payment Gateway Selection */}
                 <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 3 }}>
-                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"Inter", sans-serif' }}>
                     4. SELECT PAYMENT METHOD
                   </Typography>
                   <Grid container spacing={1.5}>
@@ -256,7 +256,7 @@ export const CheckoutModal: React.FC = () => {
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: 'primary.main' }}>KOKO PAY</Typography>
                             <Typography sx={{ fontSize: '0.5625rem', bgcolor: 'primary.main', color: 'black', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900 }}>3 PAY</Typography>
                           </Box>
-                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: paymentGateway === 'Koko' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Pay in 3 interest-free monthly installments of LKR {Math.round(cartTotal / 3).toLocaleString()}.</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'Koko' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Pay in 3 interest-free monthly installments of LKR {Math.round(cartTotal / 3).toLocaleString()}.</Typography>
                         </Box>
                       </Box>
                     </Grid>
@@ -269,7 +269,7 @@ export const CheckoutModal: React.FC = () => {
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#38bdf8' }}>ONEPAY</Typography>
                             <Typography sx={{ fontSize: '0.5625rem', bgcolor: '#0ea5e9', color: 'black', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900 }}>INSTANT</Typography>
                           </Box>
-                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: paymentGateway === 'OnePay' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Direct Sri Lankan Internet Banking & Wallet Gateway.</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'OnePay' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Direct Sri Lankan Internet Banking & Wallet Gateway.</Typography>
                         </Box>
                       </Box>
                     </Grid>
@@ -282,7 +282,7 @@ export const CheckoutModal: React.FC = () => {
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#fbbf24' }}>eWAY / CARD</Typography>
                             <CreditCard size={14} color="#fbbf24" />
                           </Box>
-                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: paymentGateway === 'eWAY' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Visa, Mastercard, AMEX Credit / Debit Cards.</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'eWAY' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Visa, Mastercard, AMEX Credit / Debit Cards.</Typography>
                         </Box>
                       </Box>
                     </Grid>
@@ -295,7 +295,7 @@ export const CheckoutModal: React.FC = () => {
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#34d399' }}>CASH ON DELIVERY</Typography>
                             <Truck size={14} color="#34d399" />
                           </Box>
-                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', color: paymentGateway === 'Cash on Delivery' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Pay cash directly upon courier delivery.</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'Cash on Delivery' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Pay cash directly upon courier delivery.</Typography>
                         </Box>
                       </Box>
                     </Grid>
@@ -306,7 +306,7 @@ export const CheckoutModal: React.FC = () => {
               {/* Right Column: Order Summary & Pay Button */}
               <Box sx={{ flex: 5, bgcolor: '#08090d', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Box>
-                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, pb: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, pb: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', fontFamily: '"Inter", sans-serif' }}>
                     ORDER SUMMARY ({cart.length} ITEMS)
                   </Typography>
 
@@ -316,15 +316,15 @@ export const CheckoutModal: React.FC = () => {
                         <Box component="img" src={item.product.images[0]} alt={item.product.name} sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 1, bgcolor: '#141620' }} />
                         <Box sx={{ flex: 1, minWidth: 0 }}>
                           <Typography sx={{ fontWeight: 'bold', color: 'var(--text-primary)',  fontFamily: '"Syne", sans-serif' }}>{item.product.name}</Typography>
-                          <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif' }}>Size: {item.selectedSize} | Qty: {item.quantity}</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>Size: {item.selectedSize} | Qty: {item.quantity}</Typography>
                         </Box>
-                        <Typography sx={{ fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {(item.unitPrice * item.quantity).toLocaleString()}</Typography>
+                        <Typography sx={{ fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif' }}>LKR {(item.unitPrice * item.quantity).toLocaleString()}</Typography>
                       </Box>
                     ))}
                   </Box>
 
                   {/* Price Breakdown */}
-                  <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2, mt: 2, display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                  <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2, mt: 2, display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography sx={{ fontSize: 'inherit' }}>Subtotal:</Typography>
                       <Typography sx={{ fontSize: 'inherit' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
@@ -344,7 +344,7 @@ export const CheckoutModal: React.FC = () => {
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', pt: 1, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                       <Typography sx={{ fontSize: '1rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }}>TOTAL AMOUNT:</Typography>
-                      <Typography sx={{ fontSize: '1.25rem', color: 'primary.main', fontWeight: 900, fontFamily: '"JetBrains Mono", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
+                      <Typography sx={{ fontSize: '1.25rem', color: 'primary.main', fontWeight: 900, fontFamily: '"Inter", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
                     </Box>
                   </Box>
                 </Box>
@@ -356,11 +356,11 @@ export const CheckoutModal: React.FC = () => {
                   sx={{ width: '100%', py: 2, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, boxShadow: '0 10px 25px rgba(212,175,55,0.3)', transition: 'all 0.3s ease', borderRadius: 1, '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' }, '&.Mui-disabled': { opacity: 0.5, pointerEvents: 'none' } }}
                 >
                   {isSubmitting ? (
-                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: '"JetBrains Mono", sans-serif' }}>LOCKING INVENTORY & AUTHORIZING...</Typography>
+                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: '"Inter", sans-serif' }}>LOCKING INVENTORY & AUTHORIZING...</Typography>
                   ) : (
                     <>
                       <Lock size={16} />
-                      <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: '"JetBrains Mono", sans-serif' }}>CONFIRM & PAY LKR {cartTotal.toLocaleString()} VIA {paymentGateway.toUpperCase()}</Typography>
+                      <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: '"Inter", sans-serif' }}>CONFIRM & PAY LKR {cartTotal.toLocaleString()} VIA {paymentGateway.toUpperCase()}</Typography>
                     </>
                   )}
                 </Button>
@@ -375,13 +375,13 @@ export const CheckoutModal: React.FC = () => {
               </Box>
 
               <Box>
-                <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.25em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.25em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5, fontFamily: '"Inter", sans-serif' }}>
                   VALKNUT ORDER CONFIRMED
                 </Typography>
                 <Typography sx={{ fontSize: { xs: '1.5rem', sm: '1.875rem' }, fontWeight: 900, color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>
                   THANK YOU FOR YOUR ORDER
                 </Typography>
-                <Typography sx={{ fontSize: '0.875rem', color: 'var(--text-secondary)', mt: 1, fontFamily: '"JetBrains Mono", sans-serif' }}>
+                <Typography sx={{ fontSize: '0.875rem', color: 'var(--text-secondary)', mt: 1, fontFamily: '"Inter", sans-serif' }}>
                   Order Number: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{placedOrder?.orderNumber}</Box>
                 </Typography>
               </Box>
@@ -391,22 +391,22 @@ export const CheckoutModal: React.FC = () => {
                 <Box sx={{ p: 1.5, bgcolor: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1.5, color: '#6ee7b7' }}>
                   <MessageSquare size={20} />
                   <Box>
-                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif' }}>SMS Sent to {placedOrder?.customerInfo.phone}</Typography>
-                    <Typography sx={{ fontSize: '0.625rem', color: '#34d399', fontFamily: '"JetBrains Mono", sans-serif' }}>Order confirmation & courier dispatch updates scheduled via SMS Gateway.</Typography>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif' }}>SMS Sent to {placedOrder?.customerInfo.phone}</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', color: '#34d399', fontFamily: '"Inter", sans-serif' }}>Order confirmation & courier dispatch updates scheduled via SMS Gateway.</Typography>
                   </Box>
                 </Box>
 
                 <Box sx={{ p: 1.5, bgcolor: 'rgba(14,165,233,0.1)', border: '1px solid rgba(14,165,233,0.3)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1.5, color: '#7dd3fc' }}>
                   <Mail size={20} />
                   <Box>
-                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"JetBrains Mono", sans-serif' }}>Email Receipt Dispatched</Typography>
-                    <Typography sx={{ fontSize: '0.625rem', color: '#38bdf8', fontFamily: '"JetBrains Mono", sans-serif' }}>Invoice sent to {placedOrder?.customerInfo.email}</Typography>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif' }}>Email Receipt Dispatched</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', color: '#38bdf8', fontFamily: '"Inter", sans-serif' }}>Invoice sent to {placedOrder?.customerInfo.email}</Typography>
                   </Box>
                 </Box>
               </Box>
 
               {/* Order Details summary box */}
-              <Box sx={{ bgcolor: '#08090d', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: 2, maxWidth: 500, mx: 'auto', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", sans-serif', width: '100%' }}>
+              <Box sx={{ bgcolor: '#08090d', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: 2, maxWidth: 500, mx: 'auto', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif', width: '100%' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
                   <Typography sx={{ fontSize: 'inherit' }}>Shipping Method:</Typography>
                   <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'var(--text-primary)' }}>{placedOrder?.shippingInfo.shippingMethodName}</Typography>
@@ -431,14 +431,14 @@ export const CheckoutModal: React.FC = () => {
                     handleClose();
                     window.location.hash = `#/track-order?order=${placedOrder?.orderNumber}`;
                   }}
-                  sx={{ flex: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}
+                  sx={{ flex: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}
                 >
                   <Package size={15} /> TRACK ORDER
                 </Button>
 
                 <Button
                   onClick={handleClose}
-                  sx={{ flex: 1, py: 1.5, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+                  sx={{ flex: 1, py: 1.5, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
                 >
                   <ArrowLeft size={15} /> RETURN TO STORE
                 </Button>

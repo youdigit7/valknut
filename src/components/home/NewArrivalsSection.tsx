@@ -75,7 +75,7 @@ export const NewArrivalsSection: React.FC = () => {
                 fontSize: '0.8rem',
                 letterSpacing: '0.15em',
                 fontWeight: 'bold',
-                fontFamily: '"JetBrains Mono", sans-serif',
+                fontFamily: '"Inter", sans-serif',
                 '&:hover': {
                   bgcolor: 'transparent',
                   color: 'primary.main',

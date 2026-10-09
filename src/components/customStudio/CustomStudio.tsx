@@ -192,7 +192,7 @@ export const CustomStudio: React.FC = () => {
           {/* Studio Title & Badge */}
           <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'flex-end' }, justifyContent: 'space-between', gap: 3, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 4 }}>
             <Box>
-              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: 5, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: 'primary.main', fontSize: '0.625rem', fontFamily: '"JetBrains Mono", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase', mb: 2 }}>
+              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: 5, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: 'primary.main', fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase', mb: 2 }}>
                 <Sparkles size={13} />
                 <Typography component="span">VALKNUT BESPOKE APPAREL STUDIO</Typography>
               </Box>
@@ -213,7 +213,7 @@ export const CustomStudio: React.FC = () => {
                   border: '1px solid rgba(255,255,255,0.1)',
                   color: 'var(--text-secondary)',
                   fontSize: '0.75rem',
-                  fontFamily: '"JetBrains Mono", sans-serif',
+                  fontFamily: '"Inter", sans-serif',
                   px: 2,
                   py: 1,
                   textTransform: 'none',
@@ -230,7 +230,7 @@ export const CustomStudio: React.FC = () => {
                   border: '1px solid rgba(255,255,255,0.1)',
                   color: 'var(--text-secondary)',
                   fontSize: '0.75rem',
-                  fontFamily: '"JetBrains Mono", sans-serif',
+                  fontFamily: '"Inter", sans-serif',
                   px: 2,
                   py: 1,
                   textTransform: 'none',
@@ -247,7 +247,7 @@ export const CustomStudio: React.FC = () => {
             
             {/* COL 1: BASE PRODUCT & GARMENT SELECTION (3 cols) */}
             <Grid size={{ xs: 12, lg: 3 }}>
-              <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 4, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+              <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 4, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"Inter", sans-serif' }}>
                 
                 {/* 1. Base Product Selector */}
                 <Box>
@@ -267,7 +267,7 @@ export const CustomStudio: React.FC = () => {
                     }}
                   >
                     {customizableProducts.map(p => (
-                      <MenuItem key={p.id} value={p.id} sx={{ fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                      <MenuItem key={p.id} value={p.id} sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>
                         {p.name} — LKR {(p.salePrice ?? p.price).toLocaleString()}
                       </MenuItem>
                     ))}
@@ -437,7 +437,7 @@ export const CustomStudio: React.FC = () => {
                 />
 
                 {/* Quick Summary Strip */}
-                <Box sx={{ w: '100%', width: '100%', mt: 3, pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"JetBrains Mono", sans-serif', color: 'var(--text-secondary)' }}>
+                <Box sx={{ w: '100%', width: '100%', mt: 3, pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                   <Typography sx={{ fontSize: 'inherit' }}>View: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{placement.replace('_', ' ')}</Box></Typography>
                   <Typography sx={{ fontSize: 'inherit' }}>Technique: <Box component="strong" sx={{ color: 'primary.main' }}>{printTechnique}</Box></Typography>
                 </Box>
@@ -449,7 +449,7 @@ export const CustomStudio: React.FC = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 
                 {/* Sub-Tabs */}
-                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"Inter", sans-serif' }}>
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                     {(
@@ -697,7 +697,7 @@ export const CustomStudio: React.FC = () => {
                           onChange={(e: any) => setCustomText(e.target.value)}
                           placeholder="ENTER MOTTO OR SQUAD NAME"
                           sx={{
-                            width: '100%', bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 1.5, color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.75rem', outline: 'none', fontFamily: '"JetBrains Mono", sans-serif',
+                            width: '100%', bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 1.5, color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.75rem', outline: 'none', fontFamily: '"Inter", sans-serif',
                             '&:focus': { borderColor: 'primary.main' }
                           }}
                         />
@@ -804,7 +804,7 @@ export const CustomStudio: React.FC = () => {
                 </Box>
 
                 {/* Price Breakdown Matrix & Add To Cart CTA */}
-                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 25px 50px rgba(0,0,0,0.8)', fontFamily: '"JetBrains Mono", sans-serif' }}>
+                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 25px 50px rgba(0,0,0,0.8)', fontFamily: '"Inter", sans-serif' }}>
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                     <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em' }}>BESPOKE ORDER VALUATION</Typography>

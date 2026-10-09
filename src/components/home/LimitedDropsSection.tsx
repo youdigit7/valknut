@@ -192,7 +192,7 @@ export const LimitedDropsSection: React.FC = () => {
                           textTransform: 'uppercase', 
                           borderRadius: 1,
                           boxShadow: '0 4px 12px rgba(147,51,234,0.4)',
-                          fontFamily: '"JetBrains Mono", sans-serif'
+                          fontFamily: '"Inter", sans-serif'
                         }}
                       >
                         LIMITED DROP
