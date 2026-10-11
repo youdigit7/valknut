@@ -33,7 +33,6 @@ interface ProductDetailsPageProps {
 export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) => {
   const { 
     products, 
-    setSelectedProduct,
     addToCart, 
     setIsCartOpen, 
     setIsCheckoutOpen, 
