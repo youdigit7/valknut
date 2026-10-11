@@ -36,7 +36,7 @@ export const ShopMobileFilterDrawer: React.FC<ShopMobileFilterDrawerProps> = ({
           sx: {
             width: { xs: '85vw', sm: 400 },
             bgcolor: 'var(--bg-main)',
-            borderRight: '1px solid rgba(255,255,255,0.1)',
+            borderRight: '1px solid var(--border-subtle)',
             backgroundImage: 'none',
             display: 'flex',
             flexDirection: 'column'
@@ -47,7 +47,7 @@ export const ShopMobileFilterDrawer: React.FC<ShopMobileFilterDrawerProps> = ({
         keepMounted: true, // Better open performance on mobile.
       }}
     >
-      <Box sx={{ p: 3, borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: 'var(--bg-surface)' }}>
+      <Box sx={{ p: 3, borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: 'var(--bg-surface)' }}>
         <Box>
           <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 1 }}>
             <Filter size={16} color="#D4AF37" /> FILTER & REFINE
@@ -61,7 +61,7 @@ export const ShopMobileFilterDrawer: React.FC<ShopMobileFilterDrawerProps> = ({
         </IconButton>
       </Box>
 
-      <Box sx={{ flex: 1, overflowY: 'auto', p: 3, '&::-webkit-scrollbar': { width: 6 }, '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(255,255,255,0.2)', borderRadius: 3 } }}>
+      <Box sx={{ flex: 1, overflowY: 'auto', p: 3, '&::-webkit-scrollbar': { width: 6 }, '&::-webkit-scrollbar-thumb': { bgcolor: 'var(--border-strong)', borderRadius: 3 } }}>
         <ShopSidebarFilters
           filters={filters}
           facets={facets}
@@ -71,14 +71,14 @@ export const ShopMobileFilterDrawer: React.FC<ShopMobileFilterDrawerProps> = ({
         />
       </Box>
 
-      <Box sx={{ p: 3, borderTop: '1px solid rgba(255,255,255,0.1)', bgcolor: 'var(--bg-surface)', display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Box sx={{ p: 3, borderTop: '1px solid var(--border-subtle)', bgcolor: 'var(--bg-surface)', display: 'flex', alignItems: 'center', gap: 2 }}>
         <Button
           onClick={onReset}
           startIcon={<RotateCcw size={14} />}
           sx={{
-            px: 3, py: 1.5, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1,
+            px: 3, py: 1.5, bgcolor: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: 1,
             color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold',
-            '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' }
+            '&:hover': { bgcolor: 'var(--bg-card)', color: 'var(--text-primary)' }
           }}
         >
           RESET

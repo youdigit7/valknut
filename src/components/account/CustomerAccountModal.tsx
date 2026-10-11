@@ -56,9 +56,9 @@ export const CustomerAccountModal: React.FC = () => {
       color: 'var(--text-primary)',
       fontFamily: '"Inter", sans-serif',
       fontSize: '0.75rem',
-      bgcolor: '#141620',
-      '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
-      '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+      bgcolor: 'var(--bg-card)',
+      '& fieldset': { borderColor: 'var(--border-subtle)' },
+      '&:hover fieldset': { borderColor: 'var(--border-strong)' },
       '&.Mui-focused fieldset': { borderColor: 'primary.main' }
     },
     '& .MuiInputLabel-root': { color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' },
@@ -79,10 +79,10 @@ export const CustomerAccountModal: React.FC = () => {
       }}
     >
       <Fade in={isAccountOpen}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 768, maxHeight: '90vh', bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', outline: 'none' }}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 768, maxHeight: '90vh', bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 2, boxShadow: 'var(--shadow-card)', display: 'flex', flexDirection: 'column', outline: 'none' }}>
           
           {/* Header */}
-          <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: '#08090d', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: 'var(--bg-main)', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <User color="#d4af37" size={22} />
               <Box>
@@ -94,7 +94,7 @@ export const CustomerAccountModal: React.FC = () => {
                 </Typography>
               </Box>
             </Box>
-            <IconButton onClick={() => setIsAccountOpen(false)} sx={{ color: 'var(--text-secondary)', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+            <IconButton onClick={() => setIsAccountOpen(false)} sx={{ color: 'var(--text-secondary)', bgcolor: 'var(--border-subtle)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'var(--border-strong)' } }}>
               <X size={20} />
             </IconButton>
           </Box>
@@ -115,7 +115,7 @@ export const CustomerAccountModal: React.FC = () => {
               <Box component="form" onSubmit={handleLoginSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <TextField fullWidth required label="Full Name" value={nameInput} onChange={(e) => setNameInput(e.target.value)} placeholder="e.g. Kasun Perera" variant="outlined" sx={textFieldStyles} />
                 <TextField fullWidth required type="email" label="Email Address" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} placeholder="kasun@example.com" variant="outlined" sx={textFieldStyles} />
-                <Button type="submit" sx={{ mt: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
+                <Button type="submit" sx={{ mt: 1, py: 1.5, bgcolor: 'primary.main', color: '#000000', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
                   SIGN IN TO ACCOUNT
                 </Button>
               </Box>
@@ -125,17 +125,17 @@ export const CustomerAccountModal: React.FC = () => {
             <Box sx={{ p: { xs: 2, sm: 3 }, overflowY: 'auto', maxHeight: 'calc(90vh - 77px)', display: 'flex', flexDirection: 'column', gap: 3 }}>
               
               {/* Navigation Tabs */}
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyItems: 'center', justifyContent: 'space-between', gap: 2, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyItems: 'center', justifyContent: 'space-between', gap: 2, borderBottom: '1px solid var(--border-subtle)', pb: 2 }}>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Button
                     onClick={() => setActiveTab('ORDERS')}
-                    sx={{ px: 2, py: 1, borderRadius: 1, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', ...(activeTab === 'ORDERS' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' } }) }}
+                    sx={{ px: 2, py: 1, borderRadius: 1, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', ...(activeTab === 'ORDERS' ? { bgcolor: 'primary.main', color: '#000000', '&:hover': { bgcolor: 'primary.dark' } } : { bgcolor: 'var(--border-subtle)', color: 'var(--text-secondary)', '&:hover': { bgcolor: 'var(--border-strong)', color: 'var(--text-primary)' } }) }}
                   >
                     ORDER HISTORY ({userOrders.length})
                   </Button>
                   <Button
                     onClick={() => setActiveTab('PROFILE')}
-                    sx={{ px: 2, py: 1, borderRadius: 1, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', ...(activeTab === 'PROFILE' ? { bgcolor: 'primary.main', color: 'black', '&:hover': { bgcolor: 'primary.dark' } } : { bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' } }) }}
+                    sx={{ px: 2, py: 1, borderRadius: 1, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', ...(activeTab === 'PROFILE' ? { bgcolor: 'primary.main', color: '#000000', '&:hover': { bgcolor: 'primary.dark' } } : { bgcolor: 'var(--border-subtle)', color: 'var(--text-secondary)', '&:hover': { bgcolor: 'var(--border-strong)', color: 'var(--text-primary)' } }) }}
                   >
                     PROFILE DETAILS
                   </Button>
@@ -154,7 +154,7 @@ export const CustomerAccountModal: React.FC = () => {
                   <Button
                     onClick={logoutUser}
                     startIcon={<LogOut size={14} />}
-                    sx={{ px: 1.5, py: 0.5, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 1, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', '&:hover': { bgcolor: 'rgba(153,27,27,0.4)', color: 'error.light' } }}
+                    sx={{ px: 1.5, py: 0.5, bgcolor: 'var(--border-subtle)', borderRadius: 1, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', '&:hover': { bgcolor: 'rgba(153,27,27,0.4)', color: 'error.light' } }}
                   >
                     Sign Out
                   </Button>
@@ -166,7 +166,7 @@ export const CustomerAccountModal: React.FC = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {userOrders.length === 0 ? (
                     <Box sx={{ textAlign: 'center', py: 6, display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'center' }}>
-                      <Package color="rgba(255,255,255,0.4)" size={32} />
+                      <Package color="var(--text-secondary)" size={32} />
                       <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>No orders found under your account.</Typography>
                     </Box>
                   ) : (
@@ -174,10 +174,10 @@ export const CustomerAccountModal: React.FC = () => {
                       const stepNum = getStatusStep(order.orderStatus);
 
                       return (
-                        <Box key={order.id} sx={{ bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Box key={order.id} sx={{ bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 2, p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 2 }}>
                           
                           {/* Top Summary Bar */}
-                          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 2, borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 2 }}>
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 2, borderBottom: '1px solid var(--border-subtle)', pb: 2 }}>
                             <Box>
                               <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', fontFamily: '"Inter", sans-serif' }}>{order.orderNumber}</Typography>
                               <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>Placed on {new Date(order.createdAt).toLocaleDateString()}</Typography>
@@ -198,9 +198,9 @@ export const CustomerAccountModal: React.FC = () => {
                               return (
                                 <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 2, fontSize: '0.75rem' }}>
                                   {img ? (
-                                    <Box component="img" src={img} alt={name} sx={{ width: 40, height: 48, objectFit: 'cover', borderRadius: 1, bgcolor: '#141620' }} />
+                                    <Box component="img" src={img} alt={name} sx={{ width: 40, height: 48, objectFit: 'cover', borderRadius: 1, bgcolor: 'var(--bg-card-inner)', border: '1px solid var(--border-subtle)' }} />
                                   ) : (
-                                    <Box sx={{ width: 40, height: 48, bgcolor: '#141620', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif' }}>VK</Box>
+                                    <Box sx={{ width: 40, height: 48, bgcolor: 'var(--bg-card-inner)', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif' }}>VK</Box>
                                   )}
                                   <Box sx={{ flex: 1 }}>
                                     <Typography sx={{ fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif' }}>{name}</Typography>
@@ -212,7 +212,7 @@ export const CustomerAccountModal: React.FC = () => {
                           </Box>
 
                           {/* Live Tracking Progress Timeline */}
-                          <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                          <Box sx={{ pt: 2, borderTop: '1px solid var(--border-subtle)' }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5, fontSize: '0.6875rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Typography sx={{ fontSize: 'inherit' }}>SHIPPING STATUS:</Typography>
@@ -233,8 +233,8 @@ export const CustomerAccountModal: React.FC = () => {
                                 const isCompleted = stepNum >= (idx + 1);
                                 return (
                                   <Box sx={{ flex: 1, textAlign: 'center' }} key={stName}>
-                                    <Box sx={{ height: 6, borderRadius: 3, mb: 0.5, bgcolor: isCompleted ? 'primary.main' : 'rgba(255,255,255,0.1)' }} />
-                                    <Typography sx={{ fontSize: '0.5625rem', fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Inter", sans-serif', color: isCompleted ? 'white' : 'text.secondary' }}>{stName}</Typography>
+                                    <Box sx={{ height: 6, borderRadius: 3, mb: 0.5, bgcolor: isCompleted ? 'primary.main' : 'var(--border-subtle)' }} />
+                                    <Typography sx={{ fontSize: '0.5625rem', fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Inter", sans-serif', color: isCompleted ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{stName}</Typography>
                                   </Box>
                                 );
                               })}
@@ -265,16 +265,16 @@ export const CustomerAccountModal: React.FC = () => {
 
               {/* Profile Tab View */}
               {activeTab === 'PROFILE' && (
-                <Box sx={{ bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', gap: 2, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 1.5 }}>
+                <Box sx={{ bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 2, p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', gap: 2, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 1.5 }}>
                     <Typography sx={{ fontSize: 'inherit' }}>Name:</Typography>
                     <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'var(--text-primary)' }}>{user.name}</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 1.5 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 1.5 }}>
                     <Typography sx={{ fontSize: 'inherit' }}>Email:</Typography>
                     <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'var(--text-primary)' }}>{user.email}</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 1.5 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 1.5 }}>
                     <Typography sx={{ fontSize: 'inherit' }}>Phone:</Typography>
                     <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'var(--text-primary)' }}>{user.phone}</Typography>
                   </Box>

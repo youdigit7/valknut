@@ -101,9 +101,9 @@ export const CheckoutModal: React.FC = () => {
       color: 'var(--text-primary)',
       fontFamily: '"Inter", sans-serif',
       fontSize: '0.75rem',
-      bgcolor: '#141620',
-      '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
-      '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+      bgcolor: 'var(--bg-card)',
+      '& fieldset': { borderColor: 'var(--border-subtle)' },
+      '&:hover fieldset': { borderColor: 'var(--border-strong)' },
       '&.Mui-focused fieldset': { borderColor: 'primary.main' }
     },
     '& .MuiInputLabel-root': { color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' },
@@ -124,10 +124,10 @@ export const CheckoutModal: React.FC = () => {
       }}
     >
       <Fade in={isCheckoutOpen}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 900, maxHeight: '95vh', bgcolor: 'var(--bg-surface)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', outline: 'none' }}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 900, maxHeight: '95vh', bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 2, boxShadow: 'var(--shadow-card)', display: 'flex', flexDirection: 'column', outline: 'none' }}>
           
           {/* Header */}
-          <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: '#08090d', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: 'var(--bg-main)', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Lock color="#d4af37" size={20} />
               <Box>
@@ -139,7 +139,7 @@ export const CheckoutModal: React.FC = () => {
                 </Typography>
               </Box>
             </Box>
-            <IconButton onClick={handleClose} sx={{ color: 'var(--text-secondary)', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+            <IconButton onClick={handleClose} sx={{ color: 'var(--text-secondary)', bgcolor: 'var(--border-subtle)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'var(--border-strong)' } }}>
               <X size={20} />
             </IconButton>
           </Box>
@@ -177,7 +177,7 @@ export const CheckoutModal: React.FC = () => {
                 </Box>
 
                 {/* 2. Delivery Address */}
-                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 3 }}>
+                <Box sx={{ borderTop: '1px solid var(--border-subtle)', pt: 3 }}>
                   <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"Inter", sans-serif' }}>
                     2. ISLANDWIDE SHIPPING ADDRESS
                   </Typography>
@@ -205,7 +205,7 @@ export const CheckoutModal: React.FC = () => {
                 </Box>
 
                 {/* 3. Shipping Method Selector */}
-                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 3 }}>
+                <Box sx={{ borderTop: '1px solid var(--border-subtle)', pt: 3 }}>
                   <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"Inter", sans-serif' }}>
                     3. SELECT SHIPPING METHOD
                   </Typography>
@@ -219,7 +219,7 @@ export const CheckoutModal: React.FC = () => {
                         <Box
                           key={method.id}
                           onClick={() => setShippingMethodId(method.id)}
-                          sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}
+                          sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'var(--border-subtle)', bgcolor: 'var(--bg-card)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'var(--border-strong)' } }) }}
                         >
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                             <input type="radio" checked={isSelected} readOnly style={{ accentColor: '#d4af37' }} />
@@ -227,7 +227,7 @@ export const CheckoutModal: React.FC = () => {
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase' }}>{method.name}</Typography>
                                 {method.id === 'express' && (
-                                  <Typography sx={{ fontSize: '0.5rem', bgcolor: 'primary.main', color: 'black', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900, fontFamily: '"Inter", sans-serif' }}>VIP PRIORITY</Typography>
+                                  <Typography sx={{ fontSize: '0.5rem', bgcolor: 'primary.main', color: '#000000', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900, fontFamily: '"Inter", sans-serif' }}>VIP PRIORITY</Typography>
                                 )}
                               </Box>
                               <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: isSelected ? 'rgba(255,255,255,0.7)' : 'inherit' }}>{method.estimatedDays}</Typography>
@@ -243,59 +243,60 @@ export const CheckoutModal: React.FC = () => {
                 </Box>
 
                 {/* 4. Payment Gateway Selection */}
-                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 3 }}>
+                {/* 4. Payment Gateway Selection */}
+                <Box sx={{ borderTop: '1px solid var(--border-subtle)', pt: 3 }}>
                   <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, fontFamily: '"Inter", sans-serif' }}>
                     4. SELECT PAYMENT METHOD
                   </Typography>
                   <Grid container spacing={1.5}>
                     {/* Koko Option */}
                     <Grid size={12}>
-                      <Box onClick={() => setPaymentGateway('Koko')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'Koko' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                      <Box onClick={() => setPaymentGateway('Koko')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'Koko' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'var(--border-subtle)', bgcolor: 'var(--bg-card)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'var(--border-strong)' } }) }}>
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: 'primary.main' }}>KOKO PAY</Typography>
-                            <Typography sx={{ fontSize: '0.5625rem', bgcolor: 'primary.main', color: 'black', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900 }}>3 PAY</Typography>
+                            <Typography sx={{ fontSize: '0.5625rem', bgcolor: 'primary.main', color: '#000000', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900 }}>3 PAY</Typography>
                           </Box>
-                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'Koko' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Pay in 3 interest-free monthly installments of LKR {Math.round(cartTotal / 3).toLocaleString()}.</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'Koko' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Pay in 3 interest-free monthly installments of LKR {Math.round(cartTotal / 3).toLocaleString()}.</Typography>
                         </Box>
                       </Box>
                     </Grid>
 
                     {/* OnePay Option */}
                     <Grid size={12}>
-                      <Box onClick={() => setPaymentGateway('OnePay')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'OnePay' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                      <Box onClick={() => setPaymentGateway('OnePay')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'OnePay' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'var(--border-subtle)', bgcolor: 'var(--bg-card)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'var(--border-strong)' } }) }}>
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#38bdf8' }}>ONEPAY</Typography>
-                            <Typography sx={{ fontSize: '0.5625rem', bgcolor: '#0ea5e9', color: 'black', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900 }}>INSTANT</Typography>
+                            <Typography sx={{ fontSize: '0.5625rem', bgcolor: '#0ea5e9', color: '#000000', px: 0.5, py: 0.25, borderRadius: 0.5, fontWeight: 900 }}>INSTANT</Typography>
                           </Box>
-                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'OnePay' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Direct Sri Lankan Internet Banking & Wallet Gateway.</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'OnePay' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Direct Sri Lankan Internet Banking & Wallet Gateway.</Typography>
                         </Box>
                       </Box>
                     </Grid>
 
                     {/* eWAY Option */}
                     <Grid size={12}>
-                      <Box onClick={() => setPaymentGateway('eWAY')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'eWAY' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                      <Box onClick={() => setPaymentGateway('eWAY')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'eWAY' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'var(--border-subtle)', bgcolor: 'var(--bg-card)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'var(--border-strong)' } }) }}>
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#fbbf24' }}>eWAY / CARD</Typography>
                             <CreditCard size={14} color="#fbbf24" />
                           </Box>
-                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'eWAY' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Visa, Mastercard, AMEX Credit / Debit Cards.</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'eWAY' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Visa, Mastercard, AMEX Credit / Debit Cards.</Typography>
                         </Box>
                       </Box>
                     </Grid>
 
                     {/* COD Option */}
                     <Grid size={12}>
-                      <Box onClick={() => setPaymentGateway('Cash on Delivery')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'Cash on Delivery' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } }) }}>
+                      <Box onClick={() => setPaymentGateway('Cash on Delivery')} sx={{ p: 1.5, borderRadius: 1, border: '1px solid', cursor: 'pointer', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...(paymentGateway === 'Cash on Delivery' ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.15)', color: 'var(--text-primary)' } : { borderColor: 'var(--border-subtle)', bgcolor: 'var(--bg-card)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'var(--border-strong)' } }) }}>
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
                             <Typography sx={{ fontWeight: 900, fontSize: '0.75rem', color: '#34d399' }}>CASH ON DELIVERY</Typography>
                             <Truck size={14} color="#34d399" />
                           </Box>
-                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'Cash on Delivery' ? 'rgba(255,255,255,0.7)' : 'inherit' }}>Pay cash directly upon courier delivery.</Typography>
+                          <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: paymentGateway === 'Cash on Delivery' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Pay cash directly upon courier delivery.</Typography>
                         </Box>
                       </Box>
                     </Grid>
@@ -304,16 +305,16 @@ export const CheckoutModal: React.FC = () => {
               </Box>
 
               {/* Right Column: Order Summary & Pay Button */}
-              <Box sx={{ flex: 5, bgcolor: '#08090d', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <Box sx={{ flex: 5, bgcolor: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: 2, p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Box>
-                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, pb: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', fontFamily: '"Inter", sans-serif' }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, color: 'primary.main', letterSpacing: '0.1em', textTransform: 'uppercase', mb: 2, pb: 1, borderBottom: '1px solid var(--border-subtle)', fontFamily: '"Inter", sans-serif' }}>
                     ORDER SUMMARY ({cart.length} ITEMS)
                   </Typography>
 
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, maxHeight: 220, overflowY: 'auto', pr: 1, '&::-webkit-scrollbar': { display: 'none' }, msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
                     {cart.map(item => (
                       <Box key={item.id} sx={{ display: 'flex', alignItems: 'center', gap: 1.5, fontSize: '0.75rem' }}>
-                        <Box component="img" src={item.product.images[0]} alt={item.product.name} sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 1, bgcolor: '#141620' }} />
+                        <Box component="img" src={item.product.images[0]} alt={item.product.name} sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 1, bgcolor: 'var(--bg-card-inner)', border: '1px solid var(--border-subtle)' }} />
                         <Box sx={{ flex: 1, minWidth: 0 }}>
                           <Typography sx={{ fontWeight: 'bold', color: 'var(--text-primary)',  fontFamily: '"Outfit", sans-serif' }}>{item.product.name}</Typography>
                           <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>Size: {item.selectedSize} | Qty: {item.quantity}</Typography>
@@ -324,10 +325,10 @@ export const CheckoutModal: React.FC = () => {
                   </Box>
 
                   {/* Price Breakdown */}
-                  <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2, mt: 2, display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
+                  <Box sx={{ borderTop: '1px solid var(--border-subtle)', pt: 2, mt: 2, display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography sx={{ fontSize: 'inherit' }}>Subtotal:</Typography>
-                      <Typography sx={{ fontSize: 'inherit' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
+                      <Typography sx={{ fontSize: 'inherit', color: 'var(--text-primary)' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
                     </Box>
 
                     {cartDiscount > 0 && (
@@ -339,10 +340,10 @@ export const CheckoutModal: React.FC = () => {
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography sx={{ fontSize: 'inherit' }}>Islandwide Delivery ({shippingMethodId === 'standard' ? 'Standard' : 'VIP Express'}):</Typography>
-                      <Typography sx={{ fontSize: 'inherit' }}>{cartShipping === 0 ? 'FREE' : `LKR ${cartShipping.toLocaleString()}`}</Typography>
+                      <Typography sx={{ fontSize: 'inherit', color: cartShipping === 0 ? 'success.main' : 'var(--text-primary)' }}>{cartShipping === 0 ? 'FREE' : `LKR ${cartShipping.toLocaleString()}`}</Typography>
                     </Box>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', pt: 1, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', pt: 1, borderTop: '1px solid var(--border-subtle)' }}>
                       <Typography sx={{ fontSize: '1rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>TOTAL AMOUNT:</Typography>
                       <Typography sx={{ fontSize: '1.25rem', color: 'primary.main', fontWeight: 900, fontFamily: '"Inter", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
                     </Box>
@@ -353,7 +354,7 @@ export const CheckoutModal: React.FC = () => {
                 <Button
                   type="submit"
                   disabled={isSubmitting || cart.length === 0}
-                  sx={{ width: '100%', py: 2, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, boxShadow: '0 10px 25px rgba(212,175,55,0.3)', transition: 'all 0.3s ease', borderRadius: 1, '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' }, '&.Mui-disabled': { opacity: 0.5, pointerEvents: 'none' } }}
+                  sx={{ width: '100%', py: 2, bgcolor: 'primary.main', color: '#000000', fontWeight: 900, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, boxShadow: '0 10px 25px rgba(212,175,55,0.3)', transition: 'all 0.3s ease', borderRadius: 1, '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' }, '&.Mui-disabled': { opacity: 0.5, pointerEvents: 'none' } }}
                 >
                   {isSubmitting ? (
                     <Typography sx={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: '"Inter", sans-serif' }}>LOCKING INVENTORY & AUTHORIZING...</Typography>
@@ -406,16 +407,16 @@ export const CheckoutModal: React.FC = () => {
               </Box>
 
               {/* Order Details summary box */}
-              <Box sx={{ bgcolor: '#08090d', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: 2, maxWidth: 500, mx: 'auto', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif', width: '100%' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
+              <Box sx={{ bgcolor: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: 1, p: 2, maxWidth: 500, mx: 'auto', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif', width: '100%' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 1 }}>
                   <Typography sx={{ fontSize: 'inherit' }}>Shipping Method:</Typography>
                   <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'var(--text-primary)' }}>{placedOrder?.shippingInfo.shippingMethodName}</Typography>
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 1 }}>
                   <Typography sx={{ fontSize: 'inherit' }}>Payment Method:</Typography>
                   <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'var(--text-primary)' }}>{placedOrder?.paymentGateway}</Typography>
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 1 }}>
                   <Typography sx={{ fontSize: 'inherit' }}>Total Amount Paid:</Typography>
                   <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'primary.main' }}>LKR {placedOrder?.totalAmount.toLocaleString()}</Typography>
                 </Box>
@@ -431,14 +432,14 @@ export const CheckoutModal: React.FC = () => {
                     handleClose();
                     window.location.hash = `#/track-order?order=${placedOrder?.orderNumber}`;
                   }}
-                  sx={{ flex: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}
+                  sx={{ flex: 1, py: 1.5, bgcolor: 'primary.main', color: '#000000', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}
                 >
                   <Package size={15} /> TRACK ORDER
                 </Button>
 
                 <Button
                   onClick={handleClose}
-                  sx={{ flex: 1, py: 1.5, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+                  sx={{ flex: 1, py: 1.5, bgcolor: 'var(--border-subtle)', color: 'var(--text-primary)', fontWeight: 900, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, borderRadius: 1, transition: 'all 0.3s ease', border: '1px solid var(--border-subtle)', '&:hover': { bgcolor: 'var(--border-strong)' } }}
                 >
                   <ArrowLeft size={15} /> RETURN TO STORE
                 </Button>

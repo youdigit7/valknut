@@ -4,8 +4,12 @@ import {
   Box, Typography, Container, Button 
 } from '@mui/material';
 import editorialBg from '../../assets/background-images/home2.jpeg';
+import { useAppTheme } from '../../context/ThemeContext';
 
 export const EditorialBanner: React.FC = () => {
+  const { mode } = useAppTheme();
+  const isDark = mode === 'dark';
+
   return (
     <>
       <Box 
@@ -15,8 +19,8 @@ export const EditorialBanner: React.FC = () => {
           py: { xs: 12, sm: 16, lg: 24 },
           width: '100%',
           overflow: 'hidden',
-          bgcolor: 'var(--bg-main)',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          bgcolor: 'var(--bg-main)', 
+          borderBottom: '1px solid var(--border-subtle)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -35,11 +39,11 @@ export const EditorialBanner: React.FC = () => {
               height: '100%', 
               objectFit: 'cover', 
               objectPosition: 'center', 
-              filter: 'brightness(0.35) contrast(1.2)' 
+              filter: isDark ? 'brightness(0.35) contrast(1.2)' : 'brightness(0.85) contrast(1.05)' 
             }}
           />
-          <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #0A0A0A, rgba(10,10,10,0.7), #0A0A0A)' }} />
-          <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0A0A0A, transparent, #0A0A0A)' }} />
+          <Box sx={{ position: 'absolute', inset: 0, background: isDark ? 'linear-gradient(to right, #06070a, rgba(6,7,10,0.7), #06070a)' : 'linear-gradient(to right, #f8fafc, rgba(248,250,252,0.8), #f8fafc)' }} />
+          <Box sx={{ position: 'absolute', inset: 0, background: isDark ? 'linear-gradient(to top, #06070a, transparent, #06070a)' : 'linear-gradient(to top, #f8fafc, transparent, #f8fafc)' }} />
         </Box>
 
         <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 10 }}>

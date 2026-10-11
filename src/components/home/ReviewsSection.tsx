@@ -44,18 +44,18 @@ const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
   return (
     <Box 
       sx={{ 
-        bgcolor: '#12141E', 
+        bgcolor: 'var(--bg-card)', 
         p: { xs: 3, sm: 4 }, 
         borderRadius: 3, 
-        border: '1px solid rgba(255,255,255,0.05)',
+        border: '1px solid var(--border-subtle)',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+        boxShadow: 'var(--shadow-card)',
         transition: 'all 0.3s ease',
         '&:hover': {
-          borderColor: 'rgba(212,175,55,0.4)',
-          boxShadow: '0 15px 40px rgba(0,0,0,0.8), 0 0 20px rgba(212,175,55,0.1)',
+          borderColor: 'var(--border-gold)',
+          boxShadow: '0 15px 40px rgba(0,0,0,0.2), 0 0 20px rgba(212,175,55,0.1)',
           transform: 'translateY(-4px)'
         }
       }}
@@ -66,7 +66,7 @@ const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
           <Star 
             key={i} 
             size={16} 
-            color={i < review.stars ? '#D4AF37' : '#334155'}
+            color={i < review.stars ? '#D4AF37' : '#94a3b8'}
             fill={i < review.stars ? '#D4AF37' : 'none'}
           />
         ))}
@@ -80,7 +80,6 @@ const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
           letterSpacing: '0.1em',
           mb: 1.5,
           color: 'var(--text-primary)',
-          textShadow: '0 2px 10px rgba(0,0,0,0.5)'
         }}
       >
         {review.title}
@@ -107,7 +106,7 @@ const ReviewCard: React.FC<{ review: ReviewData }> = ({ review }) => {
           borderRadius: 2, 
           overflow: 'hidden',
           mb: 3,
-          border: '1px solid rgba(255,255,255,0.1)',
+          border: '1px solid var(--border-subtle)',
           '&::after': {
             content: '""',
             position: 'absolute',
@@ -167,7 +166,7 @@ export const ReviewsSection: React.FC = () => {
         sx={{ 
           py: { xs: 8, sm: 12, lg: 16 }, 
           bgcolor: 'var(--bg-main)', 
-          borderTop: '1px solid rgba(255,255,255,0.05)',
+          borderTop: '1px solid var(--border-subtle)',
           width: '100%',
           overflow: 'hidden'
         }}

@@ -190,13 +190,13 @@ export const CustomStudio: React.FC = () => {
         <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 4, md: 6 } }}>
           
           {/* Studio Title & Badge */}
-          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'flex-end' }, justifyContent: 'space-between', gap: 3, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 4 }}>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'flex-end' }, justifyContent: 'space-between', gap: 3, borderBottom: '1px solid var(--border-subtle)', pb: 4 }}>
             <Box>
               <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: 5, bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: 'primary.main', fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase', mb: 2 }}>
                 <Sparkles size={13} />
                 <Typography component="span">VALKNUT BESPOKE APPAREL STUDIO</Typography>
               </Box>
-              <Typography variant="h3" sx={{ fontSize: { xs: '1.875rem', sm: '2.5rem' }, letterSpacing: '-0.02em', mb: 1, textShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>
+              <Typography variant="h3" sx={{ fontSize: { xs: '1.875rem', sm: '2.5rem' }, letterSpacing: '-0.02em', mb: 1 }}>
                 INTERACTIVE <Box component="span" sx={{ color: 'primary.main' }}>CUSTOM STUDIO</Box>
               </Typography>
               <Typography variant="caption" sx={{ color: 'var(--text-secondary)', fontSize: '0.75rem', display: 'block', maxWidth: '600px' }}>
@@ -209,15 +209,15 @@ export const CustomStudio: React.FC = () => {
                 onClick={handleResetCustomization}
                 startIcon={<RotateCcw size={13} />}
                 sx={{
-                  bgcolor: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  bgcolor: 'var(--bg-card)',
+                  border: '1px solid var(--border-subtle)',
                   color: 'var(--text-secondary)',
                   fontSize: '0.75rem',
                   fontFamily: '"Inter", sans-serif',
                   px: 2,
                   py: 1,
                   textTransform: 'none',
-                  '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' }
+                  '&:hover': { bgcolor: 'var(--bg-surface)', color: 'var(--text-primary)' }
                 }}
               >
                 Reset Studio
@@ -226,15 +226,15 @@ export const CustomStudio: React.FC = () => {
               <Button
                 href="#/shop"
                 sx={{
-                  bgcolor: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  bgcolor: 'var(--bg-card)',
+                  border: '1px solid var(--border-subtle)',
                   color: 'var(--text-secondary)',
                   fontSize: '0.75rem',
                   fontFamily: '"Inter", sans-serif',
                   px: 2,
                   py: 1,
                   textTransform: 'none',
-                  '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' }
+                  '&:hover': { bgcolor: 'var(--bg-surface)', color: 'var(--text-primary)' }
                 }}
               >
                 Back to Catalog
@@ -247,7 +247,7 @@ export const CustomStudio: React.FC = () => {
             
             {/* COL 1: BASE PRODUCT & GARMENT SELECTION (3 cols) */}
             <Grid size={{ xs: 12, lg: 3 }}>
-              <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 4, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"Inter", sans-serif' }}>
+              <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 4, boxShadow: '0 20px 40px rgba(0,0,0,0.1)', fontFamily: '"Inter", sans-serif' }}>
                 
                 {/* 1. Base Product Selector */}
                 <Box>
@@ -299,19 +299,19 @@ export const CustomStudio: React.FC = () => {
                               p: 1.5,
                               borderRadius: 1,
                               border: '1px solid',
-                              borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)',
-                              bgcolor: isSelected ? 'rgba(212,175,55,0.15)' : '#141620',
-                              color: isSelected ? 'white' : 'text.secondary',
+                              borderColor: isSelected ? 'primary.main' : 'var(--border-subtle)',
+                              bgcolor: isSelected ? 'rgba(212,175,55,0.15)' : 'var(--bg-card)',
+                              color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)',
                               display: 'flex',
                               flexDirection: 'column',
                               alignItems: 'center',
                               gap: 1,
                               cursor: 'pointer',
                               transition: 'all 0.3s ease',
-                              '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                              '&:hover': { borderColor: isSelected ? 'primary.main' : 'var(--border-strong)' }
                             }}
                           >
-                            <Box sx={{ width: 20, height: 20, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.3)', bgcolor: c.hex, boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)' }} />
+                            <Box sx={{ width: 20, height: 20, borderRadius: '50%', border: '1px solid var(--border-subtle)', bgcolor: c.hex, boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)' }} />
                             <Typography sx={{ fontSize: '0.5625rem', textAlign: 'center', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                               {c.name.split(' ')[0]}
                             </Typography>
@@ -340,14 +340,14 @@ export const CustomStudio: React.FC = () => {
                               py: 1,
                               borderRadius: 1,
                               border: '1px solid',
-                              borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)',
-                              bgcolor: isSelected ? 'primary.main' : '#141620',
-                              color: isSelected ? 'black' : 'text.secondary',
+                              borderColor: isSelected ? 'primary.main' : 'var(--border-subtle)',
+                              bgcolor: isSelected ? 'primary.main' : 'var(--bg-card)',
+                              color: isSelected ? '#000000' : 'var(--text-secondary)',
                               fontWeight: 'bold',
                               fontSize: '0.75rem',
                               cursor: 'pointer',
                               transition: 'all 0.3s ease',
-                              '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                              '&:hover': { borderColor: isSelected ? 'primary.main' : 'var(--border-strong)' }
                             }}
                           >
                             {sz}
@@ -383,15 +383,15 @@ export const CustomStudio: React.FC = () => {
                               p: 1.5,
                               borderRadius: 1,
                               border: '1px solid',
-                              borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)',
-                              bgcolor: isSelected ? 'rgba(212,175,55,0.2)' : '#141620',
-                              color: isSelected ? 'primary.main' : 'text.secondary',
+                              borderColor: isSelected ? 'primary.main' : 'var(--border-subtle)',
+                              bgcolor: isSelected ? 'rgba(212,175,55,0.2)' : 'var(--bg-card)',
+                              color: isSelected ? 'primary.main' : 'var(--text-secondary)',
                               fontWeight: 'bold',
                               fontSize: '0.625rem',
                               textAlign: 'center',
                               cursor: 'pointer',
                               transition: 'all 0.3s ease',
-                              '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                              '&:hover': { borderColor: isSelected ? 'primary.main' : 'var(--border-strong)' }
                             }}
                           >
                             {loc.label}
@@ -403,7 +403,7 @@ export const CustomStudio: React.FC = () => {
                 </Box>
 
                 {/* Fabric Specs Badge */}
-                <Box sx={{ p: 2, bgcolor: '#141620', borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                <Box sx={{ p: 2, bgcolor: 'var(--bg-card)', borderRadius: 1, border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                   <Typography sx={{ fontSize: '0.5625rem', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase' }}>GARMENT SPECIFICATION</Typography>
                   <Typography sx={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.6875rem' }}>{activeProduct.material}</Typography>
                   <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)' }}>Heavyweight dropped-shoulder boxy fit with pre-shrunk anti-pilling wash.</Typography>
@@ -414,7 +414,7 @@ export const CustomStudio: React.FC = () => {
 
             {/* COL 2: LIVE 2D LAYERED CAD PREVIEW (5 cols) */}
             <Grid size={{ xs: 12, lg: 5 }}>
-              <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 25px 50px rgba(0,0,0,0.6)', minHeight: '580px' }}>
+              <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 25px 50px rgba(0,0,0,0.1)', minHeight: '580px' }}>
                 
                 {/* Component Preview */}
                 <StudioCanvasPreview
@@ -437,7 +437,7 @@ export const CustomStudio: React.FC = () => {
                 />
 
                 {/* Quick Summary Strip */}
-                <Box sx={{ w: '100%', width: '100%', mt: 3, pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
+                <Box sx={{ w: '100%', width: '100%', mt: 3, pt: 2, borderTop: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                   <Typography sx={{ fontSize: 'inherit' }}>View: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{placement.replace('_', ' ')}</Box></Typography>
                   <Typography sx={{ fontSize: 'inherit' }}>Technique: <Box component="strong" sx={{ color: 'primary.main' }}>{printTechnique}</Box></Typography>
                 </Box>
@@ -449,9 +449,9 @@ export const CustomStudio: React.FC = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 
                 {/* Sub-Tabs */}
-                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', fontFamily: '"Inter", sans-serif' }}>
+                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 20px 40px rgba(0,0,0,0.1)', fontFamily: '"Inter", sans-serif' }}>
                   
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, borderBottom: '1px solid var(--border-subtle)', pb: 2 }}>
                     {(
                       [
                         { id: 'ARTWORK', label: '1. ARTWORK', icon: Upload },
@@ -482,10 +482,10 @@ export const CustomStudio: React.FC = () => {
                             transition: 'all 0.3s ease',
                             ...(isActive ? {
                               bgcolor: 'primary.main',
-                              color: 'black',
+                              color: '#000000',
                               boxShadow: '0 4px 10px rgba(212,175,55,0.3)'
                             } : {
-                              bgcolor: '#141620',
+                              bgcolor: 'var(--bg-card)',
                               color: 'var(--text-secondary)',
                               '&:hover': { color: 'var(--text-primary)' }
                             })
@@ -514,7 +514,7 @@ export const CustomStudio: React.FC = () => {
                         )}
 
                         {isUploading ? (
-                          <Box sx={{ p: 2, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                          <Box sx={{ p: 2, bgcolor: 'var(--bg-card)', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.6875rem' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-primary)', fontWeight: 'bold' }}>
                                 <Box sx={{ animation: 'spin 2s linear infinite', display: 'flex' }}><RefreshCw size={12} color="#D4AF37" /></Box>
@@ -530,8 +530,8 @@ export const CustomStudio: React.FC = () => {
                           <Box
                             onClick={() => fileInputRef.current?.click()}
                             sx={{
-                              border: '1px dashed rgba(255,255,255,0.2)',
-                              bgcolor: '#141620',
+                              border: '1px dashed var(--border-subtle)',
+                              bgcolor: 'var(--bg-card)',
                               p: 2,
                               borderRadius: 1,
                               textAlign: 'center',
@@ -557,7 +557,7 @@ export const CustomStudio: React.FC = () => {
                         />
                       </Box>
 
-                      <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                      <Box sx={{ pt: 2, borderTop: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                         <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                           OR SELECT NORSE HERALDRY PRESET
                         </Typography>
@@ -576,8 +576,8 @@ export const CustomStudio: React.FC = () => {
                                     p: 1,
                                     borderRadius: 1,
                                     border: '1px solid',
-                                    borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)',
-                                    bgcolor: isSelected ? 'rgba(212,175,55,0.2)' : '#141620',
+                                    borderColor: isSelected ? 'primary.main' : 'var(--border-subtle)',
+                                    bgcolor: isSelected ? 'rgba(212,175,55,0.2)' : 'var(--bg-card)',
                                     color: isSelected ? 'primary.main' : 'text.secondary',
                                     display: 'flex',
                                     flexDirection: 'column',
@@ -585,7 +585,7 @@ export const CustomStudio: React.FC = () => {
                                     justifyContent: 'center',
                                     cursor: 'pointer',
                                     transition: 'all 0.3s ease',
-                                    '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                                    '&:hover': { borderColor: isSelected ? 'primary.main' : 'var(--border-strong)' }
                                   }}
                                 >
                                   <svg viewBox="0 0 100 100" style={{ width: 24, height: 24, fill: 'currentColor' }}>
@@ -602,7 +602,7 @@ export const CustomStudio: React.FC = () => {
                       </Box>
 
                       {(uploadedArtworkUrl || selectedSigil) && (
-                        <Box sx={{ p: 2, bgcolor: '#141620', borderRadius: 1, border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Box sx={{ p: 2, bgcolor: 'var(--bg-card)', borderRadius: 1, border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: 2 }}>
                           <Box sx={{ display: 'flex', itemsCenter: 'center', justifyContent: 'space-between' }}>
                             <Typography sx={{ fontSize: '0.625rem', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase' }}>ARTWORK ADJUSTMENTS</Typography>
                             <Box component="button" onClick={handleRemoveArtwork} sx={{ fontSize: '0.625rem', color: '#f87171', display: 'flex', alignItems: 'center', gap: 0.5, border: 'none', bgcolor: 'transparent', cursor: 'pointer', '&:hover': { color: '#fca5a5' } }}>
@@ -654,9 +654,9 @@ export const CustomStudio: React.FC = () => {
                                       py: 0.5,
                                       borderRadius: 1,
                                       border: '1px solid',
-                                      borderColor: artworkEffect === eff.id ? 'primary.main' : 'rgba(255,255,255,0.1)',
-                                      bgcolor: artworkEffect === eff.id ? 'primary.main' : '#0E1017',
-                                      color: artworkEffect === eff.id ? 'black' : 'text.secondary',
+                                      borderColor: artworkEffect === eff.id ? 'primary.main' : 'var(--border-subtle)',
+                                      bgcolor: artworkEffect === eff.id ? 'primary.main' : 'var(--bg-card-inner)',
+                                      color: artworkEffect === eff.id ? '#000000' : 'var(--text-secondary)',
                                       fontWeight: artworkEffect === eff.id ? 'bold' : 'normal',
                                       fontSize: '0.5625rem',
                                       cursor: 'pointer',
@@ -685,7 +685,7 @@ export const CustomStudio: React.FC = () => {
                           <Box 
                             component="button" 
                             onClick={() => setTextUppercase(!textUppercase)} 
-                            sx={{ fontSize: '0.5625rem', px: 1, py: 0.5, borderRadius: 1, border: '1px solid', borderColor: textUppercase ? 'primary.main' : 'rgba(255,255,255,0.1)', bgcolor: textUppercase ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)', color: textUppercase ? 'primary.main' : 'text.secondary', cursor: 'pointer' }}
+                            sx={{ fontSize: '0.5625rem', px: 1, py: 0.5, borderRadius: 1, border: '1px solid', borderColor: textUppercase ? 'primary.main' : 'var(--border-subtle)', bgcolor: textUppercase ? 'rgba(212,175,55,0.2)' : 'var(--bg-card)', color: textUppercase ? 'primary.main' : 'var(--text-secondary)', cursor: 'pointer' }}
                           >
                             ALL CAPS
                           </Box>
@@ -697,7 +697,7 @@ export const CustomStudio: React.FC = () => {
                           onChange={(e: any) => setCustomText(e.target.value)}
                           placeholder="ENTER MOTTO OR SQUAD NAME"
                           sx={{
-                            width: '100%', bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 1.5, color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.75rem', outline: 'none', fontFamily: '"Inter", sans-serif',
+                            width: '100%', bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 1, p: 1.5, color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.75rem', outline: 'none', fontFamily: '"Inter", sans-serif',
                             '&:focus': { borderColor: 'primary.main' }
                           }}
                         />
@@ -714,8 +714,8 @@ export const CustomStudio: React.FC = () => {
                                 key={f.id}
                                 onClick={() => setTextFont(f.fontFamily)}
                                 sx={{
-                                  width: '100%', p: 1.5, borderRadius: 1, border: '1px solid', borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)', bgcolor: isSelected ? 'rgba(212,175,55,0.15)' : '#141620', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', transition: 'all 0.3s ease',
-                                  '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                                  width: '100%', p: 1.5, borderRadius: 1, border: '1px solid', borderColor: isSelected ? 'primary.main' : 'var(--border-subtle)', bgcolor: isSelected ? 'rgba(212,175,55,0.15)' : 'var(--bg-card)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', transition: 'all 0.3s ease',
+                                  '&:hover': { borderColor: isSelected ? 'primary.main' : 'var(--border-strong)' }
                                 }}
                               >
                                 <Typography sx={{ fontFamily: f.fontFamily, fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{f.sample}</Typography>
@@ -738,7 +738,7 @@ export const CustomStudio: React.FC = () => {
                                 onClick={() => setTextColor(tc.hex)}
                                 title={tc.name}
                                 sx={{
-                                  p: 0.5, borderRadius: '50%', border: '1px solid', borderColor: 'rgba(255,255,255,0.2)', cursor: 'pointer', transition: 'all 0.3s ease', bgcolor: 'transparent',
+                                  p: 0.5, borderRadius: '50%', border: '1px solid', borderColor: 'var(--border-subtle)', cursor: 'pointer', transition: 'all 0.3s ease', bgcolor: 'transparent',
                                   ...(isSelected ? { borderColor: 'primary.main', boxShadow: '0 0 0 2px rgba(212,175,55,0.4)' } : {})
                                 }}
                               >
@@ -749,7 +749,7 @@ export const CustomStudio: React.FC = () => {
                         </Box>
                       </Box>
 
-                      <Box sx={{ p: 2, bgcolor: '#141620', borderRadius: 1, border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Box sx={{ p: 2, bgcolor: 'var(--bg-card)', borderRadius: 1, border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
                             <Typography sx={{ color: 'var(--text-secondary)', fontSize: 'inherit' }}>Font Size:</Typography>
@@ -783,13 +783,13 @@ export const CustomStudio: React.FC = () => {
                               key={tech.id}
                               onClick={() => setPrintTechnique(tech.id)}
                               sx={{
-                                p: 2, borderRadius: 1, border: '1px solid', borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.1)', bgcolor: isSelected ? 'rgba(212,175,55,0.15)' : '#141620', cursor: 'pointer', transition: 'all 0.3s ease', display: 'flex', flexDirection: 'column', gap: 1,
-                                '&:hover': { borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.3)' }
+                                p: 2, borderRadius: 1, border: '1px solid', borderColor: isSelected ? 'primary.main' : 'var(--border-subtle)', bgcolor: isSelected ? 'rgba(212,175,55,0.15)' : 'var(--bg-card)', cursor: 'pointer', transition: 'all 0.3s ease', display: 'flex', flexDirection: 'column', gap: 1,
+                                '&:hover': { borderColor: isSelected ? 'primary.main' : 'var(--border-strong)' }
                               }}
                             >
                               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <Typography sx={{ color: 'var(--text-primary)', fontSize: '0.75rem', fontWeight: 'bold' }}>{tech.name}</Typography>
-                                <Box sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: 'rgba(0,0,0,0.6)', color: 'primary.main', fontSize: '0.5625rem', fontWeight: 'bold' }}>
+                                <Box sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: 'var(--bg-card-inner)', color: 'primary.main', fontSize: '0.5625rem', fontWeight: 'bold' }}>
                                   {tech.fee === 0 ? 'Included' : `+ LKR ${tech.fee.toLocaleString()}`}
                                 </Box>
                               </Box>
@@ -804,9 +804,9 @@ export const CustomStudio: React.FC = () => {
                 </Box>
 
                 {/* Price Breakdown Matrix & Add To Cart CTA */}
-                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 25px 50px rgba(0,0,0,0.8)', fontFamily: '"Inter", sans-serif' }}>
+                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: 2, p: 3, display: 'flex', flexDirection: 'column', gap: 3, boxShadow: '0 25px 50px rgba(0,0,0,0.1)', fontFamily: '"Inter", sans-serif' }}>
                   
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 2 }}>
                     <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em' }}>BESPOKE ORDER VALUATION</Typography>
                     <Box sx={{ color: '#34d399', fontSize: '0.625rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <ShieldCheck size={12} /> <Typography component="span">CRAFT VERIFIED</Typography>
@@ -831,7 +831,7 @@ export const CustomStudio: React.FC = () => {
                       </Box>
                     )}
 
-                    <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                    <Box sx={{ pt: 2, borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                       <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif' }}>TOTAL BESPOKE PIECE:</Typography>
                       <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, color: 'primary.main' }}>LKR {totalCustomPrice.toLocaleString()}</Typography>
                     </Box>
@@ -843,7 +843,7 @@ export const CustomStudio: React.FC = () => {
                       w: '100%',
                       py: 2,
                       background: 'linear-gradient(90deg, #e6c042, #D4AF37, #aa8010)',
-                      color: 'black',
+                      color: '#000000',
                       fontWeight: 900,
                       fontSize: '0.75rem',
                       letterSpacing: '0.2em',

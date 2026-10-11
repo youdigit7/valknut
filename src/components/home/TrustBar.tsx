@@ -35,7 +35,7 @@ export const TrustBar: React.FC = () => {
         sx={{ 
           py: { xs: 5, sm: 8, lg: 10 }, 
           bgcolor: 'var(--bg-main)', 
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          borderBottom: '1px solid var(--border-subtle)',
           width: '100%',
           display: 'flex',
           justifyContent: 'center'
@@ -53,8 +53,8 @@ export const TrustBar: React.FC = () => {
                     gap: { xs: 2, sm: 2.5 }, 
                     p: { xs: 2, sm: 3 }, 
                     borderRadius: 3, 
-                    bgcolor: 'rgba(18,20,30,0.5)',
-                    border: '1px solid rgba(255,255,255,0.05)',
+                    bgcolor: 'var(--bg-surface)',
+                    border: '1px solid var(--border-subtle)',
                     transition: 'all 0.3s ease',
                     cursor: 'default',
                     height: '100%',

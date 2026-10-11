@@ -4,6 +4,7 @@ import type { Product } from '../../types/ecommerce';
 import { Badge } from './Badge';
 import { Price } from './Price';
 import { Box, Typography, IconButton as MuiIconButton, Button as MuiButton, Card as MuiCard } from '@mui/material';
+import { useAppTheme } from '../../context/ThemeContext';
 
 export interface ProductCardProps {
   product: Product;
@@ -22,6 +23,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isWishlisted = false,
   className = '',
 }) => {
+  const { mode } = useAppTheme();
+  const isDark = mode === 'dark';
   const [isHovered, setIsHovered] = useState(false);
 
   const primaryImage = product.images[0] || '';
@@ -44,11 +47,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const isSoldOut = totalStock === 0;
   const isLowStock = !isSoldOut && totalStock < 10;
 
-  // Colors
-
   return (
     <MuiCard
-      className={`group relative flex flex-col bg-gradient-to-b from-[#141624] via-[#0f111a] to-[#0a0b12] border border-white/10 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.9),0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1.5 ${className}`}
+      className={`group relative flex flex-col rounded-2xl p-4 sm:p-5 transition-all duration-300 ${
+        isDark
+          ? 'bg-gradient-to-b from-[#141624] via-[#0f111a] to-[#0a0b12] border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.9),0_0_25px_rgba(212,175,55,0.25)]'
+          : 'bg-white border border-slate-200/90 shadow-[0_8px_25px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.12),0_0_25px_rgba(212,175,55,0.2)]'
+      } hover:-translate-y-1.5 ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       sx={{
@@ -62,7 +67,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       }}
     >
       {/* Visual Image Container with True 3:4 Portrait Aspect Ratio */}
-      <Box className="relative shrink-0 aspect-[3/4] w-full overflow-hidden bg-[#141620] rounded-xl mb-4 shadow-inner">
+      <Box className={`relative shrink-0 aspect-[3/4] w-full overflow-hidden rounded-xl mb-4 shadow-inner ${isDark ? 'bg-[#141620]' : 'bg-slate-100'}`}>
         
         {/* Badges Overlay */}
         <Box className="absolute top-4 left-4 z-20 flex flex-col gap-1.5 items-start">
@@ -82,10 +87,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             e.stopPropagation();
             onToggleWishlist?.(product);
           }}
-          className={`absolute z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 border border-white/15 backdrop-blur-md ${
+          className={`absolute z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 border backdrop-blur-md ${
+            isDark ? 'border-white/15' : 'border-black/10'
+          } ${
             isWishlisted
-              ? 'bg-red-600 text-[var(--text-primary)] shadow-[0_0_15px_rgba(220,38,38,0.6)]'
-              : 'bg-black/60 text-slate-300 hover:text-[var(--text-primary)] hover:bg-black/90 hover:scale-110 shadow-lg'
+              ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.6)]'
+              : isDark
+                ? 'bg-black/60 text-slate-300 hover:text-white hover:bg-black/90 hover:scale-110 shadow-lg'
+                : 'bg-white/90 text-slate-700 hover:text-black hover:bg-white hover:scale-110 shadow-md'
           }`}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           disableRipple
@@ -127,7 +136,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               )}
             </>
           ) : (
-            <Box className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-[#151824]">
+            <Box className={`w-full h-full flex flex-col items-center justify-center p-4 text-center ${isDark ? 'bg-[#151824]' : 'bg-slate-100'}`}>
               <Typography component="span" className="text-[#D4AF37] text-xs font-mono font-bold tracking-[0.2em] uppercase mb-1">
                 VALKNUT
               </Typography>
@@ -141,9 +150,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 e.stopPropagation();
                 onQuickView?.(product);
               }}
-              className="flex-1 bg-white hover:bg-[#D4AF37] text-black py-2.5 px-3 text-[10px] sm:text-[11px] font-black tracking-[0.14em] uppercase rounded-lg transition-all flex items-center justify-center gap-1.5 shadow-[0_10px_25px_rgba(0,0,0,0.8)] border border-white/20 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              className={`flex-1 py-2.5 px-3 text-[10px] sm:text-[11px] font-black tracking-[0.14em] uppercase rounded-lg transition-all flex items-center justify-center gap-1.5 shadow-[0_10px_25px_rgba(0,0,0,0.8)] border cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
+                isDark 
+                  ? 'bg-white hover:bg-[#D4AF37] text-black border-white/20' 
+                  : 'bg-slate-900 hover:bg-[#D4AF37] text-white hover:text-black border-black/10'
+              }`}
               disableRipple
-              sx={{ color: 'black', '&:hover': { backgroundColor: '#D4AF37' } }}
+              sx={{ color: isDark ? 'black' : 'white', '&:hover': { backgroundColor: '#D4AF37', color: 'black' } }}
             >
               <Eye size={13} className="mr-1" />
               <Typography component="span">QUICK VIEW</Typography>
@@ -187,7 +200,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </Box>
 
           {/* BNPL Installments Text with Margins */}
-          <Typography component="div" className="text-[10px] sm:text-[11px] text-slate-400 font-medium pb-2.5 border-b border-white/10 mb-3 mt-0.5">
+          <Typography component="div" className={`text-[10px] sm:text-[11px] font-medium pb-2.5 border-b mb-3 mt-0.5 ${isDark ? 'text-slate-400 border-white/10' : 'text-slate-500 border-black/10'}`}>
             or pay in 3 x <Box component="span" className="font-bold text-[var(--text-primary)]">LKR {Math.round((product.salePrice || product.price) / 3).toLocaleString()}</Box> with <Box component="span" sx={{ color: '#ffb7d5', fontWeight: 900 }}>KOKO</Box> or <Box component="span" sx={{ color: '#00c2cb', fontWeight: 900, fontStyle: 'italic' }}>mintpay</Box>
           </Typography>
         </Box>
@@ -205,7 +218,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             fullWidth
             className={`mt-2 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-lg ${
               isSoldOut 
-                ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
+                ? isDark ? 'bg-slate-800 text-slate-500 cursor-not-allowed' : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                 : 'bg-[#D4AF37] hover:bg-[#e2b714] text-black active:scale-[0.98]'
             }`}
             sx={{
@@ -214,12 +227,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               letterSpacing: '0.1em',
               fontWeight: 800,
               fontFamily: '"Outfit", sans-serif',
-              bgcolor: isSoldOut ? '#1e293b' : '#D4AF37',
-              color: isSoldOut ? '#64748b' : '#000000',
+              bgcolor: isSoldOut ? (isDark ? '#1e293b' : '#e2e8f0') : '#D4AF37',
+              color: isSoldOut ? (isDark ? '#64748b' : '#94a3b8') : '#000000',
               borderRadius: '12px',
               py: 1.25,
               '&:hover': { 
-                bgcolor: isSoldOut ? '#1e293b' : '#e2b714',
+                bgcolor: isSoldOut ? (isDark ? '#1e293b' : '#e2e8f0') : '#e2b714',
                 boxShadow: isSoldOut ? 'none' : '0 8px 25px rgba(212,175,55,0.45)'
               }
             }}

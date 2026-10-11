@@ -66,7 +66,7 @@ export const CartPage: React.FC = () => {
     .slice(0, 4);
 
   return (
-    <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: 'var(--bg-main)', py: { xs: 4, sm: 6 }, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+    <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: 'var(--bg-main)', py: { xs: 4, sm: 6 }, borderBottom: '1px solid var(--border-subtle)' }}>
       <Box sx={{ maxWidth: 1600, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
 
         {/* Breadcrumb Hierarchy */}
@@ -79,7 +79,7 @@ export const CartPage: React.FC = () => {
         </Box>
 
         {/* Page Header */}
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { sm: 'flex-end' }, justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 3, mb: 4, gap: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { sm: 'flex-end' }, justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 3, mb: 4, gap: 2 }}>
           <Box>
             <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5 }}>
               YOUR SELECTED PIECES
@@ -100,7 +100,7 @@ export const CartPage: React.FC = () => {
 
         {/* Empty State */}
         {cart.length === 0 ? (
-          <Box sx={{ py: 8, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 3, alignItems: 'center' }}>
+          <Box sx={{ py: 8, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 3, alignItems: 'center' }}>
             <EmptyState
               title="YOUR SHOPPING BAG IS EMPTY"
               description="Looks like you haven't added any luxury streetwear garments or bespoke items to your bag yet."
@@ -142,7 +142,7 @@ export const CartPage: React.FC = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
 
                 {/* Free Shipping Progress Meter */}
-                <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1.5, boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
+                <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1.5, boxShadow: 'var(--shadow-card)' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-primary)' }}>
                       <Truck size={16} color="#D4AF37" />
@@ -159,20 +159,20 @@ export const CartPage: React.FC = () => {
                     </Box>
                   </Box>
 
-                  <LinearProgress variant="determinate" value={progressPercent} sx={{ height: 8, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { background: 'linear-gradient(to right, #D4AF37, #E2B714)', borderRadius: 4 } }} />
+                  <LinearProgress variant="determinate" value={progressPercent} sx={{ height: 8, borderRadius: 4, bgcolor: 'var(--border-subtle)', '& .MuiLinearProgress-bar': { background: 'linear-gradient(to right, #D4AF37, #E2B714)', borderRadius: 4 } }} />
                 </Box>
 
                 {/* Items List Card */}
-                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+                <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: 'var(--shadow-card)' }}>
                   {cart.map((item, idx) => (
-                    <Box key={item.id} sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 2, sm: 3 }, alignItems: { sm: 'center' }, justifyContent: 'space-between', borderBottom: idx < cart.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                    <Box key={item.id} sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 2, sm: 3 }, alignItems: { sm: 'center' }, justifyContent: 'space-between', borderBottom: idx < cart.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
 
                       {/* Item Thumbnail & Basic Info */}
                       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flex: 1, minWidth: 0 }}>
                         <Box
                           component="a"
                           href={`#/product/${item.product.slug}`}
-                          sx={{ width: { xs: 80, sm: 96 }, height: { xs: 96, sm: 112 }, borderRadius: 1, overflow: 'hidden', bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', flexShrink: 0, position: 'relative', display: 'block', '&:hover img': { transform: 'scale(1.05)' } }}
+                          sx={{ width: { xs: 80, sm: 96 }, height: { xs: 96, sm: 112 }, borderRadius: 1, overflow: 'hidden', bgcolor: 'var(--bg-main)', border: '1px solid var(--border-subtle)', flexShrink: 0, position: 'relative', display: 'block', '&:hover img': { transform: 'scale(1.05)' } }}
                         >
                           <Box
                             component="img"
@@ -222,9 +222,9 @@ export const CartPage: React.FC = () => {
                       </Box>
 
                       {/* Quantity & Item Subtotal */}
-                      <Box sx={{ display: 'flex', flexDirection: { xs: 'row', sm: 'column' }, alignItems: { xs: 'center', sm: 'flex-end' }, justifyContent: 'space-between', width: { xs: '100%', sm: 'auto' }, gap: 2, pt: { xs: 2, sm: 0 }, borderTop: { xs: '1px solid rgba(255,255,255,0.05)', sm: 'none' } }}>
+                      <Box sx={{ display: 'flex', flexDirection: { xs: 'row', sm: 'column' }, alignItems: { xs: 'center', sm: 'flex-end' }, justifyContent: 'space-between', width: { xs: '100%', sm: 'auto' }, gap: 2, pt: { xs: 2, sm: 0 }, borderTop: { xs: '1px solid var(--border-subtle)', sm: 'none' } }}>
                         {/* Quantity Controller */}
-                        <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: '#131520', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 0.25 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: 1, p: 0.25 }}>
                           <IconButton onClick={() => updateCartQuantity(item.id, -1)} sx={{ width: 28, height: 28, borderRadius: 0, color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }}>
                             <Minus size={13} />
                           </IconButton>
@@ -268,13 +268,13 @@ export const CartPage: React.FC = () => {
                     </Box>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <Box sx={{ p: 1.5, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
+                    <Box sx={{ p: 1.5, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                       <ShieldCheck size={16} color="#D4AF37" />
                       <Typography sx={{ fontSize: 'inherit' }}>100% Guaranteed Heavy Cotton</Typography>
                     </Box>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <Box sx={{ p: 1.5, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
+                    <Box sx={{ p: 1.5, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                       <CheckCircle size={16} color="#D4AF37" />
                       <Typography sx={{ fontSize: 'inherit' }}>7-Day Hassle-Free Exchange</Typography>
                     </Box>
@@ -286,9 +286,9 @@ export const CartPage: React.FC = () => {
 
             {/* Right Column (4 Cols): Order Summary & Checkout Panel */}
             <Grid size={{ xs: 12, lg: 4 }} sx={{ position: { lg: 'sticky' }, top: { lg: 112 } }}>
-              <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 4 }, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, p: { xs: 3, sm: 4 }, boxShadow: 'var(--shadow-card)', display: 'flex', flexDirection: 'column', gap: 3 }}>
 
-                <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', borderBottom: '1px solid var(--border-subtle)', pb: 2 }}>
                   ORDER SUMMARY
                 </Typography>
 
@@ -317,11 +317,11 @@ export const CartPage: React.FC = () => {
                         value={couponCodeInput}
                         onChange={(e) => setCouponCodeInput(e.target.value)}
                         placeholder="e.g. VALKNUT10"
-                        sx={{ flex: 1, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, px: 2, py: 1, color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', '& input::placeholder': { color: 'var(--text-secondary)', textTransform: 'none' }, '&.Mui-focused': { borderColor: 'primary.main' } }}
+                        sx={{ flex: 1, bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 1, px: 2, py: 1, color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', '& input::placeholder': { color: 'var(--text-secondary)', textTransform: 'none' }, '&.Mui-focused': { borderColor: 'primary.main' } }}
                       />
                       <Button
                         type="submit"
-                        sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 1, '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+                        sx={{ px: 2, py: 1, bgcolor: 'var(--border-subtle)', color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 1, '&:hover': { bgcolor: 'var(--border-strong)' } }}
                       >
                         Apply
                       </Button>
@@ -336,7 +336,7 @@ export const CartPage: React.FC = () => {
                 </Box>
 
                 {/* Price Breakdown */}
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', borderTop: '1px solid rgba(255,255,255,0.1)', pt: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', borderTop: '1px solid var(--border-subtle)', pt: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography sx={{ fontSize: 'inherit' }}>Bag Subtotal:</Typography>
                     <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: 'var(--text-primary)' }}>LKR {cartSubtotal.toLocaleString()}</Typography>
@@ -351,12 +351,12 @@ export const CartPage: React.FC = () => {
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography sx={{ fontSize: 'inherit' }}>Estimated Shipping:</Typography>
-                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: cartShipping === 0 ? 'success.main' : 'white' }}>
+                    <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: cartShipping === 0 ? 'success.main' : 'var(--text-primary)' }}>
                       {cartShipping === 0 ? 'FREE' : `LKR ${cartShipping.toLocaleString()}`}
                     </Typography>
                   </Box>
 
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 2, borderTop: '1px solid var(--border-subtle)' }}>
                     <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif', color: 'var(--text-primary)' }}>ESTIMATED TOTAL:</Typography>
                     <Typography sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'primary.main', fontFamily: '"Inter", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
                   </Box>
@@ -366,20 +366,20 @@ export const CartPage: React.FC = () => {
                 <Button
                   onClick={handleProceedCheckout}
                   endIcon={<ArrowRight size={16} />}
-                  sx={{ width: '100%', py: 2, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', borderRadius: 1, boxShadow: '0 4px 20px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)', boxShadow: '0 6px 25px rgba(212,175,55,0.3)' } }}
+                  sx={{ width: '100%', py: 2, bgcolor: 'primary.main', color: '#000000', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', borderRadius: 1, boxShadow: '0 4px 20px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)', boxShadow: '0 6px 25px rgba(212,175,55,0.3)' } }}
                 >
                   PROCEED TO CHECKOUT
                 </Button>
 
                 {/* Payment Options Supported */}
-                <Box sx={{ pt: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 1, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                <Box sx={{ pt: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 1, borderTop: '1px solid var(--border-subtle)' }}>
                   <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
                     ACCEPTED PAYMENT GATEWAYS
                   </Typography>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', gap: 1, fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
-                    <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5 }}>Koko BNPL (3x 0%)</Box>
-                    <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5 }}>OnePay</Box>
-                    <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5 }}>Cash on Delivery</Box>
+                    <Box sx={{ px: 1, py: 0.25, bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 0.5 }}>Koko BNPL (3x 0%)</Box>
+                    <Box sx={{ px: 1, py: 0.25, bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 0.5 }}>OnePay</Box>
+                    <Box sx={{ px: 1, py: 0.25, bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 0.5 }}>Cash on Delivery</Box>
                   </Box>
                 </Box>
 

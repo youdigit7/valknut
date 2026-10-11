@@ -201,9 +201,9 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
       color: 'var(--text-primary)',
       fontFamily: '"Inter", sans-serif',
       fontSize: '0.75rem',
-      bgcolor: '#131520',
-      '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
-      '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+      bgcolor: 'var(--bg-card)',
+      '& fieldset': { borderColor: 'var(--border-subtle)' },
+      '&:hover fieldset': { borderColor: 'var(--border-strong)' },
       '&.Mui-focused fieldset': { borderColor: 'primary.main' }
     },
     '& .MuiInputLabel-root': { color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', letterSpacing: '0.1em', textTransform: 'uppercase' },
@@ -213,7 +213,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
   const isAuthView = !user || activeTab === 'login' || activeTab === 'register' || activeTab === 'forgot-password';
 
   return (
-    <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: 'var(--bg-main)', py: { xs: 4, sm: 6 }, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+    <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: 'var(--bg-main)', py: { xs: 4, sm: 6 }, borderBottom: '1px solid var(--border-subtle)' }}>
       <Box sx={{ maxWidth: 1500, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
         
         {/* Breadcrumb Hierarchy */}
@@ -230,7 +230,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
         </Box>
 
         {isAuthView ? (
-          <Box sx={{ maxWidth: 500, mx: 'auto', my: 4, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 5 }, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', animation: 'fadeIn 0.5s ease-out' }}>
+          <Box sx={{ maxWidth: 500, mx: 'auto', my: 4, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, p: { xs: 3, sm: 5 }, boxShadow: '0 20px 40px rgba(0,0,0,0.15)', animation: 'fadeIn 0.5s ease-out' }}>
             
             <Box sx={{ textAlign: 'center', mb: 4 }}>
               <Box sx={{ width: 40, height: 40, border: '1px solid #D4AF37', mx: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 0.5, mb: 2 }}>
@@ -252,16 +252,16 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             </Box>
 
             {activeTab !== 'forgot-password' && (
-              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', p: 0.5, bgcolor: '#131520', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, mb: 4 }}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', p: 0.5, bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 1, mb: 4 }}>
                 <Button 
                   onClick={() => setActiveTab('login')} 
-                  sx={{ py: 1, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', transition: 'all 0.3s ease', ...(activeTab === 'login' ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 2px 10px rgba(212,175,55,0.2)' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }) }}
+                  sx={{ py: 1, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', transition: 'all 0.3s ease', ...(activeTab === 'login' ? { bgcolor: 'primary.main', color: '#000000', boxShadow: '0 2px 10px rgba(212,175,55,0.2)' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }) }}
                 >
                   SIGN IN
                 </Button>
                 <Button 
                   onClick={() => setActiveTab('register')} 
-                  sx={{ py: 1, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', transition: 'all 0.3s ease', ...(activeTab === 'register' ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 2px 10px rgba(212,175,55,0.2)' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }) }}
+                  sx={{ py: 1, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', transition: 'all 0.3s ease', ...(activeTab === 'register' ? { bgcolor: 'primary.main', color: '#000000', boxShadow: '0 2px 10px rgba(212,175,55,0.2)' } : { color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' } }) }}
                 >
                   CREATE ACCOUNT
                 </Button>
@@ -432,9 +432,9 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, animation: 'fadeIn 0.5s ease-out' }}>
             
             {/* Top Customer Banner */}
-            <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'center' }, justifyContent: 'space-between', gap: 3, boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+            <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'center' }, justifyContent: 'space-between', gap: 3, boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                <Box sx={{ width: 64, height: 64, borderRadius: 1, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'primary.main', fontFamily: '"Outfit", sans-serif', fontWeight: 900, fontSize: '1.5rem', boxShadow: '0 4px 15px rgba(212,175,55,0.1)', flexShrink: 0 }}>
+                <Box sx={{ width: 64, height: 64, borderRadius: 1, bgcolor: 'var(--bg-card)', border: '1px solid rgba(212,175,55,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'primary.main', fontFamily: '"Outfit", sans-serif', fontWeight: 900, fontSize: '1.5rem', boxShadow: '0 4px 15px rgba(212,175,55,0.1)', flexShrink: 0 }}>
                   {user.name.charAt(0).toUpperCase()}
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
@@ -458,14 +458,14 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                     ADMIN SUITE
                   </Button>
                 )}
-                <Button onClick={handleLogout} startIcon={<LogOut size={16} />} sx={{ px: 3, py: 1.5, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(239,68,68,0.1)', borderColor: 'rgba(239,68,68,0.4)', color: 'error.main' } }}>
+                <Button onClick={handleLogout} startIcon={<LogOut size={16} />} sx={{ px: 3, py: 1.5, bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)', fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(239,68,68,0.1)', borderColor: 'rgba(239,68,68,0.4)', color: 'error.main' } }}>
                   SIGN OUT
                 </Button>
               </Box>
             </Box>
 
             {/* Navigation Tabs Bar */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2, overflowX: 'auto', '&::-webkit-scrollbar': { display: 'none' }, msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, borderBottom: '1px solid var(--border-subtle)', pb: 2, overflowX: 'auto', '&::-webkit-scrollbar': { display: 'none' }, msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
               {[
                 { id: 'dashboard', label: 'OVERVIEW', icon: Sparkles },
                 { id: 'orders', label: `ORDERS (${userOrders.length})`, icon: Package },
@@ -481,7 +481,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                       window.location.hash = `#/account/${tab.id}`;
                     }}
                     startIcon={<Icon size={14} />}
-                    sx={{ px: 3, py: 1.5, borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.3s ease', flexShrink: 0, ...(isActive ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 4px 15px rgba(212,175,55,0.2)' } : { bgcolor: '#12141F', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' } }) }}
+                    sx={{ px: 3, py: 1.5, borderRadius: 0.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.3s ease', flexShrink: 0, ...(isActive ? { bgcolor: 'primary.main', color: '#000000', boxShadow: '0 4px 15px rgba(212,175,55,0.2)' } : { bgcolor: 'var(--bg-card)', color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)', '&:hover': { bgcolor: 'var(--bg-surface)', color: 'var(--text-primary)' } }) }}
                   >
                     {tab.label}
                   </Button>
@@ -493,17 +493,17 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             {activeTab === 'dashboard' && (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 2 }}>
-                  <Box sx={{ p: 3, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Box sx={{ p: 3, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>TOTAL COMPLETED ORDERS</Typography>
                     <Typography sx={{ fontSize: '1.875rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif' }}>{userOrders.length}</Typography>
                     <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'success.main' }}>Verified Purchases</Typography>
                   </Box>
-                  <Box sx={{ p: 3, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Box sx={{ p: 3, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>VIP REWARDS LEVEL</Typography>
                     <Typography sx={{ fontSize: '1.875rem', fontWeight: 900, color: 'primary.main', fontFamily: '"Inter", sans-serif' }}>TIER 1</Typography>
                     <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>Early Drop Access Active</Typography>
                   </Box>
-                  <Box sx={{ p: 3, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Box sx={{ p: 3, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>DEFAULT SHIPPING ZONE</Typography>
                     <Typography sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif', mt: 1 }}>{user.address?.city || 'Colombo 03'}</Typography>
                     <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>Sri Lanka Delivery</Typography>
@@ -511,8 +511,8 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                 </Box>
 
                 {userOrders.length > 0 && (
-                  <Box sx={{ p: { xs: 3, sm: 4 }, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                  <Box sx={{ p: { xs: 3, sm: 4 }, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 2 }}>
                       <Box>
                         <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.2em', mb: 0.5 }}>LATEST DISPATCH STATUS</Typography>
                         <Typography variant="h3" sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase' }}>ORDER #{userOrders[0].orderNumber}</Typography>
@@ -532,8 +532,8 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                           const isDone = getStatusStep(userOrders[0].orderStatus) >= idx + 1;
                           return (
                             <Box key={step} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                              <Box sx={{ height: 6, borderRadius: 3, transition: 'all 0.3s ease', bgcolor: isDone ? 'primary.main' : 'rgba(255,255,255,0.1)' }} />
-                              <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', color: isDone ? 'white' : 'text.secondary' }}>{step}</Typography>
+                              <Box sx={{ height: 6, borderRadius: 3, transition: 'all 0.3s ease', bgcolor: isDone ? 'primary.main' : 'var(--border-subtle)' }} />
+                              <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', color: isDone ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{step}</Typography>
                             </Box>
                           );
                         })}
@@ -548,23 +548,23 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             {activeTab === 'orders' && (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 {userOrders.length === 0 ? (
-                  <Box sx={{ p: 6, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                    <Package size={40} color="rgba(255,255,255,0.4)" />
+                  <Box sx={{ p: 6, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <Package size={40} color="var(--text-secondary)" />
                     <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif', letterSpacing: '0.1em' }}>No Orders Placed Yet</Typography>
                     <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', maxWidth: 400 }}>Once you place an order, live tracking, courier AWB tracking, and digital invoices will appear here.</Typography>
-                    <Button href="#/shop" sx={{ mt: 2, px: 4, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, '&:hover': { bgcolor: 'primary.dark' } }}>Explore Shop</Button>
+                    <Button href="#/shop" sx={{ mt: 2, px: 4, py: 1.5, bgcolor: 'primary.main', color: '#000000', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, '&:hover': { bgcolor: 'primary.dark' } }}>Explore Shop</Button>
                   </Box>
                 ) : (
                   userOrders.map((order) => {
                     const stepNum = getStatusStep(order.orderStatus);
                     return (
-                      <Box key={order.id} sx={{ p: { xs: 3, sm: 4 }, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
+                      <Box key={order.id} sx={{ p: { xs: 3, sm: 4 }, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 3 }}>
                         
-                        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, sm: 'items-center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2, gap: 2 }}>
+                        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, sm: 'items-center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 2, gap: 2 }}>
                           <Box>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                               <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, fontFamily: '"Inter", sans-serif', color: 'primary.main' }}>{order.orderNumber}</Typography>
-                              <Typography sx={{ px: 1, py: 0.25, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>{new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</Typography>
+                              <Typography sx={{ px: 1, py: 0.25, bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 0.5, fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>{new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</Typography>
                             </Box>
                             <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif', mt: 0.5 }}>Paid via {order.paymentGateway} ({order.paymentStatus})</Typography>
                           </Box>
@@ -573,7 +573,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                               <Typography sx={{ fontSize: '1rem', fontWeight: 900, fontFamily: '"Inter", sans-serif', color: 'var(--text-primary)' }}>LKR {order.totalAmount.toLocaleString()}</Typography>
                               <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>{order.items.reduce((s, i) => s + i.quantity, 0)} Items</Typography>
                             </Box>
-                            <Button onClick={() => setSelectedOrderDetails(order)} sx={{ px: 2, py: 1, bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}>
+                            <Button onClick={() => setSelectedOrderDetails(order)} sx={{ px: 2, py: 1, bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', color: 'var(--text-primary)', fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 0.5, '&:hover': { bgcolor: 'var(--bg-surface)' } }}>
                               Details
                             </Button>
                           </Box>
@@ -581,8 +581,8 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
 
                         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(3, 1fr)' }, gap: 2 }}>
                           {order.items.map((item: any, idx: number) => (
-                            <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 1.5, bgcolor: '#141620', borderRadius: 0.5, border: '1px solid rgba(255,255,255,0.05)' }}>
-                              <Box component="img" src={item.customization?.finalPreviewDataUrl || item.imageUrl || item.product?.images?.[0] || ''} alt="" sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 0.5, bgcolor: '#1a1d2d', flexShrink: 0 }} />
+                            <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 1.5, bgcolor: 'var(--bg-card)', borderRadius: 0.5, border: '1px solid var(--border-subtle)' }}>
+                              <Box component="img" src={item.customization?.finalPreviewDataUrl || item.imageUrl || item.product?.images?.[0] || ''} alt="" sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 0.5, bgcolor: 'var(--bg-card-inner)', flexShrink: 0 }} />
                               <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
                                 <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }} noWrap>{item.productName || item.product?.name || 'Garment'}</Typography>
                                 <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>Size: {item.size || item.selectedSize || 'M'} {item.color || item.selectedColor ? `• ${item.color || item.selectedColor}` : ''} • Qty: {item.quantity}</Typography>
@@ -592,7 +592,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                           ))}
                         </Box>
 
-                        <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                        <Box sx={{ pt: 2, borderTop: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>
                             <Typography sx={{ fontSize: 'inherit', color: 'var(--text-secondary)' }}>Status: <Box component="strong" sx={{ color: 'primary.main', textTransform: 'uppercase' }}>{order.orderStatus}</Box></Typography>
                             {order.trackingLink && (
@@ -604,8 +604,8 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 1, textAlign: 'center' }}>
                             {['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered'].map((step, idx) => (
                               <Box key={step} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                <Box sx={{ height: 6, borderRadius: 3, transition: 'all 0.3s ease', bgcolor: stepNum >= idx + 1 ? 'primary.main' : 'rgba(255,255,255,0.1)' }} />
-                                <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', color: stepNum >= idx + 1 ? 'white' : 'text.secondary' }}>{step}</Typography>
+                                <Box sx={{ height: 6, borderRadius: 3, transition: 'all 0.3s ease', bgcolor: stepNum >= idx + 1 ? 'primary.main' : 'var(--border-subtle)' }} />
+                                <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', textTransform: 'uppercase', color: stepNum >= idx + 1 ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{step}</Typography>
                               </Box>
                             ))}
                           </Box>
@@ -620,21 +620,21 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
 
             {/* TAB 3: PROFILE & DELIVERY ADDRESS */}
             {activeTab === 'profile' && (
-              <Box component="form" onSubmit={handleSaveProfile} sx={{ p: { xs: 3, sm: 4 }, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <Box component="form" onSubmit={handleSaveProfile} sx={{ p: { xs: 3, sm: 4 }, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <Box>
                   <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', letterSpacing: '0.1em' }}>PERSONAL & DELIVERY PROFILE</Typography>
                   <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', mt: 0.5 }}>Update your contact information and primary Sri Lanka delivery destination for 1-click checkout.</Typography>
                 </Box>
 
-                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 4 }}>
+                <Box sx={{ borderTop: '1px solid var(--border-subtle)', pt: 4 }}>
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>
                     <TextField fullWidth required label="Full Name" value={editName} onChange={(e) => setEditName(e.target.value)} variant="outlined" sx={textFieldStyles} />
-                    <TextField fullWidth disabled label="Email Address (Account Linked)" value={user.email} variant="outlined" sx={{...textFieldStyles, '& .MuiOutlinedInput-root': { ...textFieldStyles['& .MuiOutlinedInput-root'], bgcolor: 'rgba(255,255,255,0.02)', color: 'var(--text-secondary)' }}} />
+                    <TextField fullWidth disabled label="Email Address (Account Linked)" value={user.email} variant="outlined" sx={{...textFieldStyles, '& .MuiOutlinedInput-root': { ...textFieldStyles['& .MuiOutlinedInput-root'], bgcolor: 'var(--bg-card)', color: 'var(--text-secondary)' }}} />
                     <TextField fullWidth required type="tel" label="Mobile Number (For Delivery SMS)" value={editPhone} onChange={(e) => setEditPhone(e.target.value)} variant="outlined" sx={textFieldStyles} />
                   </Box>
                 </Box>
 
-                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', pt: 4, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box sx={{ borderTop: '1px solid var(--border-subtle)', pt: 4, display: 'flex', flexDirection: 'column', gap: 3 }}>
                   <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 1 }}>
                     <MapPin size={16} color="#D4AF37" /> Primary Delivery Address
                   </Typography>
@@ -657,8 +657,8 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                   </Box>
                 </Box>
 
-                <Box sx={{ pt: 3, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button type="submit" disabled={isSavingProfile} startIcon={<Check size={16} />} sx={{ px: 4, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
+                <Box sx={{ pt: 3, borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button type="submit" disabled={isSavingProfile} startIcon={<Check size={16} />} sx={{ px: 4, py: 1.5, bgcolor: 'primary.main', color: '#000000', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.2em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
                     {isSavingProfile ? 'SAVING...' : 'SAVE PROFILE'}
                   </Button>
                 </Box>
@@ -668,26 +668,26 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
           </Box>
         )}
 
-        <Modal open={!!selectedOrderDetails} onClose={() => setSelectedOrderDetails(null)} closeAfterTransition slotProps={{ backdrop: { sx: { bgcolor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)' } } }}>
-          <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '90%', maxWidth: 700, maxHeight: '90vh', overflowY: 'auto', bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 2, p: { xs: 3, sm: 5 }, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <Modal open={!!selectedOrderDetails} onClose={() => setSelectedOrderDetails(null)} closeAfterTransition slotProps={{ backdrop: { sx: { bgcolor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(10px)' } } }}>
+          <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '90%', maxWidth: 700, maxHeight: '90vh', overflowY: 'auto', bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 2, p: { xs: 3, sm: 5 }, boxShadow: '0 25px 50px rgba(0,0,0,0.25)', display: 'flex', flexDirection: 'column', gap: 4 }}>
             {selectedOrderDetails && (
               <>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', pb: 2 }}>
                   <Box>
                     <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'primary.main', fontWeight: 'bold' }}>ORDER INVOICE</Typography>
                     <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, fontFamily: '"Outfit", sans-serif', color: 'var(--text-primary)', textTransform: 'uppercase' }}>{selectedOrderDetails.orderNumber}</Typography>
                   </Box>
-                  <IconButton onClick={() => setSelectedOrderDetails(null)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+                  <IconButton onClick={() => setSelectedOrderDetails(null)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'var(--border-subtle)' } }}>
                     <X size={20} />
                   </IconButton>
                 </Box>
 
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxHeight: 300, overflowY: 'auto', pr: 1, '&::-webkit-scrollbar': { width: 6 }, '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(255,255,255,0.2)', borderRadius: 3 } }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxHeight: 300, overflowY: 'auto', pr: 1, '&::-webkit-scrollbar': { width: 6 }, '&::-webkit-scrollbar-thumb': { bgcolor: 'var(--border-subtle)', borderRadius: 3 } }}>
                   {selectedOrderDetails.items.map((it: any, idx: number) => (
-                    <Box key={idx} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pb: 2, borderBottom: idx < selectedOrderDetails.items.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                    <Box key={idx} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pb: 2, borderBottom: idx < selectedOrderDetails.items.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         {it.customization?.finalPreviewDataUrl || it.imageUrl || it.product?.images?.[0] ? (
-                          <Box component="img" src={it.customization?.finalPreviewDataUrl || it.imageUrl || it.product?.images?.[0]} sx={{ width: 40, height: 48, objectFit: 'cover', borderRadius: 0.5, bgcolor: '#141620' }} />
+                          <Box component="img" src={it.customization?.finalPreviewDataUrl || it.imageUrl || it.product?.images?.[0]} sx={{ width: 40, height: 48, objectFit: 'cover', borderRadius: 0.5, bgcolor: 'var(--bg-card-inner)' }} />
                         ) : null}
                         <Box>
                           <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif' }}>{it.productName || it.product?.name || 'Garment'}</Typography>
@@ -699,7 +699,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                   ))}
                 </Box>
 
-                <Box sx={{ bgcolor: '#141620', p: 3, borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
+                <Box sx={{ bgcolor: 'var(--bg-card)', p: 3, borderRadius: 1, border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: 1.5, fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography sx={{ fontSize: 'inherit' }}>Subtotal:</Typography>
                     <Typography sx={{ fontSize: 'inherit', color: 'var(--text-primary)', fontWeight: 'bold' }}>LKR {selectedOrderDetails.subtotal.toLocaleString()}</Typography>
@@ -714,7 +714,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                     <Typography sx={{ fontSize: 'inherit' }}>Shipping:</Typography>
                     <Typography sx={{ fontSize: 'inherit', color: 'var(--text-primary)', fontWeight: 'bold' }}>{selectedOrderDetails.shippingCharge === 0 ? 'FREE' : `LKR ${selectedOrderDetails.shippingCharge}`}</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 2, borderTop: '1px solid var(--border-subtle)' }}>
                     <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, color: 'var(--text-primary)' }}>TOTAL PAID:</Typography>
                     <Typography sx={{ fontSize: '1rem', fontWeight: 900, color: 'primary.main' }}>LKR {selectedOrderDetails.totalAmount.toLocaleString()}</Typography>
                   </Box>

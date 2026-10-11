@@ -4,8 +4,12 @@ import {
   Box, Typography, Container, Grid, Button
 } from '@mui/material';
 import introTexture from '../../assets/background-images/ChatGPT Image Jun 27, 2026, 09_21_22 AM.png';
+import { useAppTheme } from '../../context/ThemeContext';
 
 export const BrandIntro: React.FC = () => {
+  const { mode } = useAppTheme();
+  const isDark = mode === 'dark';
+
   return (
     <>
       <Box 
@@ -13,7 +17,7 @@ export const BrandIntro: React.FC = () => {
         sx={{ 
           py: { xs: 10, sm: 14 }, 
           bgcolor: 'var(--bg-main)', 
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          borderBottom: '1px solid var(--border-subtle)',
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
@@ -53,7 +57,9 @@ export const BrandIntro: React.FC = () => {
                 gap: 1.5, 
                 px: 2, 
                 py: 0.75, 
-                background: 'linear-gradient(90deg, rgba(212,175,55,0.15), rgba(0,0,0,0.4), rgba(212,175,55,0.15))',
+                background: isDark
+                  ? 'linear-gradient(90deg, rgba(212,175,55,0.15), rgba(0,0,0,0.4), rgba(212,175,55,0.15))'
+                  : 'linear-gradient(90deg, rgba(212,175,55,0.15), rgba(255,255,255,0.85), rgba(212,175,55,0.15))',
                 border: '1px solid rgba(212,175,55,0.4)',
                 borderRadius: '50px',
                 mb: 4,
@@ -147,18 +153,24 @@ export const BrandIntro: React.FC = () => {
                     sx={{ 
                       p: 3, 
                       borderRadius: 4, 
-                      background: 'linear-gradient(180deg, rgba(24,26,40,0.85), rgba(16,18,29,0.9), rgba(11,12,20,1))',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      borderTopColor: 'rgba(255,255,255,0.3)',
+                      background: isDark
+                        ? 'linear-gradient(180deg, rgba(24,26,40,0.85), rgba(16,18,29,0.9), rgba(11,12,20,1))'
+                        : 'linear-gradient(180deg, #ffffff, #f8fafc, #f1f5f9)',
+                      border: '1px solid var(--border-subtle)',
+                      borderTopColor: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.1)',
                       backdropFilter: 'blur(20px)',
-                      boxShadow: '0 20px 50px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.15)',
+                      boxShadow: isDark
+                        ? '0 20px 50px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.15)'
+                        : '0 10px 30px rgba(0,0,0,0.06), inset 0 1px 1px rgba(255,255,255,0.8)',
                       transition: 'all 0.3s',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
                       height: '100%',
                       '&:hover': {
-                        boxShadow: '0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(212,175,55,0.25)',
+                        boxShadow: isDark
+                          ? '0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(212,175,55,0.25)'
+                          : '0 15px 40px rgba(0,0,0,0.12), 0 0 25px rgba(212,175,55,0.2)',
                         borderColor: 'rgba(212,175,55,0.6)',
                         transform: 'translateY(-8px)',
                         '& .iconBox': { transform: 'scale(1.1)' }
@@ -190,7 +202,9 @@ export const BrandIntro: React.FC = () => {
                             height: 40, 
                             flexShrink: 0,
                             borderRadius: 3, 
-                            background: 'linear-gradient(135deg, rgba(212,175,55,0.25), rgba(0,0,0,0.6))',
+                            background: isDark
+                              ? 'linear-gradient(135deg, rgba(212,175,55,0.25), rgba(0,0,0,0.6))'
+                              : 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(255,255,255,0.9))',
                             border: '1px solid rgba(212,175,55,0.5)',
                             boxShadow: '0 0 20px rgba(212,175,55,0.25)',
                             display: 'flex',

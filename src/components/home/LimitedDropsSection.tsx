@@ -37,7 +37,7 @@ export const LimitedDropsSection: React.FC = () => {
         sx={{ 
           py: { xs: 8, sm: 12, lg: 16 }, 
           bgcolor: 'var(--bg-main)', 
-          borderTop: '1px solid rgba(255,255,255,0.05)',
+          borderTop: '1px solid var(--border-subtle)',
           width: '100%',
           overflow: 'hidden'
         }}
@@ -70,7 +70,7 @@ export const LimitedDropsSection: React.FC = () => {
                       letterSpacing: '-0.02em',
                       lineHeight: 0.95,
                       mb: 3,
-                      textShadow: '0 4px 20px rgba(0,0,0,0.5)'
+                      color: 'var(--text-primary)'
                     }}
                   >
                     LIMITED DROPS
@@ -102,16 +102,14 @@ export const LimitedDropsSection: React.FC = () => {
                       sx={{ 
                         width: { xs: 64, sm: 80 }, 
                         height: { xs: 80, sm: 100 }, 
-                        bgcolor: '#12141E', 
-                        border: '1px solid rgba(255,255,255,0.1)', 
-                        borderTop: '1px solid rgba(255,255,255,0.2)',
+                        bgcolor: 'var(--bg-card)', 
+                        border: '1px solid var(--border-subtle)', 
                         borderRadius: 2, 
                         display: 'flex', 
                         flexDirection: 'column', 
                         alignItems: 'center', 
                         justifyContent: 'center',
-                        boxShadow: '0 10px 25px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.05)',
-                        background: 'linear-gradient(180deg, rgba(24,26,40,1) 0%, rgba(16,18,29,1) 100%)',
+                        boxShadow: 'var(--shadow-card)',
                         position: 'relative',
                         overflow: 'hidden'
                       }}

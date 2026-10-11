@@ -98,7 +98,7 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
           p: 0.5, 
           bgcolor: 'var(--bg-surface)', 
           borderRadius: 2, 
-          border: '1px solid rgba(255,255,255,0.1)', 
+          border: '1px solid var(--border-subtle)', 
           width: '100%', 
           maxWidth: '400px'
         }}
@@ -131,14 +131,14 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
                 border: 'none',
                 ...(isActive ? {
                   bgcolor: '#D4AF37',
-                  color: 'black',
+                  color: '#000000',
                   boxShadow: '0 4px 10px rgba(212,175,55,0.3)',
                 } : {
                   bgcolor: 'transparent',
                   color: 'var(--text-secondary)',
                   '&:hover': {
                     color: 'var(--text-primary)',
-                    bgcolor: 'rgba(255,255,255,0.05)'
+                    bgcolor: 'var(--border-subtle)'
                   }
                 })
               }}
@@ -158,14 +158,14 @@ export const StudioCanvasPreview: React.FC<StudioCanvasPreviewProps> = ({
           aspectRatio: '4/5',
           borderRadius: 4,
           overflow: 'hidden',
-          border: '1px solid rgba(255,255,255,0.1)',
-          boxShadow: '0 25px 50px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.1)',
+          border: '1px solid var(--border-subtle)',
+          boxShadow: '0 25px 50px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           userSelect: 'none',
           transition: 'all 0.3s ease',
-          background: `radial-gradient(circle at 50% 40%, ${garmentColorHex} 0%, #060709 100%)`
+          background: `radial-gradient(circle at 50% 40%, ${garmentColorHex} 0%, var(--bg-card-inner) 100%)`
         }}
       >
         {/* Background Grid Pattern & Ambient Studio Lighting */}

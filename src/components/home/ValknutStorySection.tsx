@@ -13,7 +13,7 @@ export const ValknutStorySection: React.FC = () => {
         sx={{ 
           py: { xs: 8, sm: 12, lg: 16 }, 
           bgcolor: 'var(--bg-main)', 
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          borderBottom: '1px solid var(--border-subtle)',
           width: '100%',
           overflow: 'hidden'
         }}
@@ -127,11 +127,11 @@ export const ValknutStorySection: React.FC = () => {
                 sx={{ 
                   position: 'relative', 
                   aspectRatio: '4/3', 
-                  bgcolor: '#12141E', 
-                  border: '1px solid rgba(255,255,255,0.1)', 
+                  bgcolor: 'var(--bg-card-inner)', 
+                  border: '1px solid var(--border-subtle)', 
                   borderRadius: 2, 
                   overflow: 'hidden', 
-                  boxShadow: '0 25px 50px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.1)',
+                  boxShadow: 'var(--shadow-card)',
                   cursor: 'pointer',
                   '&:hover': {
                     borderColor: 'rgba(212,175,55,0.4)',

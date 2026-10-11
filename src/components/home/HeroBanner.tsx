@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStore } from '../../context/StoreContext';
+import { useAppTheme } from '../../context/ThemeContext';
 import { ArrowRight, Compass, ShieldCheck, Sparkles } from 'lucide-react';
 import { 
   Box, Typography, Button, IconButton 
@@ -8,6 +9,7 @@ import heroBg from '../../assets/background-images/home1.jpeg';
 
 export const HeroBanner: React.FC = () => {
   const { setActiveCategory } = useStore();
+  const { mode } = useAppTheme();
 
   const handleShopNow = () => {
     setActiveCategory('ALL');
@@ -53,12 +55,12 @@ export const HeroBanner: React.FC = () => {
               height: '100%', 
               objectFit: 'cover', 
               objectPosition: 'center', 
-              filter: 'brightness(0.55) contrast(1.15)' 
+              filter: mode === 'dark' ? 'brightness(0.55) contrast(1.15)' : 'brightness(0.75) contrast(1.1)' 
             }}
           />
-          <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0A0A0A, rgba(10,10,10,0.55), transparent)' }} />
-          <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.7), transparent, transparent)' }} />
-          <Box sx={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle, transparent 20%, #0A0A0A 120%)', opacity: 0.7 }} />
+          <Box sx={{ position: 'absolute', inset: 0, background: mode === 'dark' ? 'linear-gradient(to top, #06070a, rgba(6,7,10,0.6), transparent)' : 'linear-gradient(to top, #f8fafc, rgba(248,250,252,0.7), transparent)' }} />
+          <Box sx={{ position: 'absolute', inset: 0, background: mode === 'dark' ? 'linear-gradient(to bottom, rgba(0,0,0,0.7), transparent, transparent)' : 'linear-gradient(to bottom, rgba(255,255,255,0.4), transparent, transparent)' }} />
+          <Box sx={{ position: 'absolute', inset: 0, background: mode === 'dark' ? 'radial-gradient(circle, transparent 20%, #06070a 120%)' : 'radial-gradient(circle, transparent 20%, #f8fafc 120%)', opacity: 0.7 }} />
         </Box>
 
         {/* 3D Glow Core */}
@@ -87,7 +89,7 @@ export const HeroBanner: React.FC = () => {
               gap: 1.5, 
               px: 2, 
               py: 1, 
-              bgcolor: 'rgba(0,0,0,0.6)', 
+              bgcolor: mode === 'dark' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.85)', 
               border: '1px solid rgba(212,175,55,0.5)', 
               borderRadius: '50px',
               mb: { xs: 2, sm: 3 },

@@ -142,7 +142,17 @@ export const Navbar: React.FC = () => {
             </Box>
 
             {/* CENTER: DESKTOP NAV LINKS */}
-            <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', bgcolor: 'rgba(10,10,10,0.6)', p: 0.5, borderRadius: 10, border: '1px solid rgba(255,255,255,0.1)', boxShadow: 'inset 0 1px 10px rgba(0,0,0,0.8), 0 4px 20px rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)' }}>
+            <Box sx={{ 
+              display: { xs: 'none', lg: 'flex' }, 
+              alignItems: 'center', 
+              bgcolor: mode === 'dark' ? 'rgba(10,10,10,0.6)' : 'rgba(255,255,255,0.7)', 
+              p: 0.5, 
+              borderRadius: 10, 
+              border: '1px solid',
+              borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)', 
+              boxShadow: mode === 'dark' ? 'inset 0 1px 10px rgba(0,0,0,0.8), 0 4px 20px rgba(0,0,0,0.5)' : '0 4px 20px rgba(0,0,0,0.06)', 
+              backdropFilter: 'blur(10px)' 
+            }}>
               {navLinks.map(item => {
                 let isActive = false;
                 if (item.label === 'HOME') {
@@ -166,8 +176,8 @@ export const Navbar: React.FC = () => {
                       boxShadow: isActive ? '0 0 15px rgba(212,175,55,0.4)' : 'none',
                       borderRadius: '40px',
                       '&:hover': {
-                        color: isActive ? '#000' : 'white',
-                        bgcolor: isActive ? 'transparent' : 'rgba(255,255,255,0.08)',
+                        color: isActive ? '#000' : (mode === 'dark' ? 'white' : 'black'),
+                        bgcolor: isActive ? 'transparent' : (mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'),
                       }
                     }}
                   >
@@ -175,12 +185,12 @@ export const Navbar: React.FC = () => {
                   </Button>
                 );
               })}
-              <Box sx={{ width: '1px', height: 16, bgcolor: 'rgba(255,255,255,0.1)', mx: 1 }} />
+              <Box sx={{ width: '1px', height: 16, bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', mx: 1 }} />
               <Button
                 onClick={() => handleNavigate('#/custom-studio')}
                 sx={{
                   px: { lg: 2, xl: 3 }, py: 1, fontSize: '0.7rem', letterSpacing: '0.15em',
-                  color: 'primary.main', bgcolor: 'black',
+                  color: 'primary.main', bgcolor: mode === 'dark' ? 'black' : 'white',
                   border: '1px solid rgba(212,175,55,0.3)',
                   boxShadow: '0 0 15px rgba(212,175,55,0.15)',
                   borderRadius: '40px',
@@ -200,7 +210,14 @@ export const Navbar: React.FC = () => {
             <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1.5 }}>
               <Button
                 onClick={(e) => setCurrencyAnchorEl(e.currentTarget)}
-                sx={{ minWidth: 0, px: 2, py: 1, fontSize: '0.65rem', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)', '&:hover': { color: 'var(--text-primary)', borderColor: 'primary.main' } }}
+                sx={{ 
+                  minWidth: 0, px: 2, py: 1, fontSize: '0.65rem', 
+                  color: 'var(--text-secondary)', 
+                  border: '1px solid',
+                  borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', 
+                  bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)', 
+                  '&:hover': { color: 'var(--text-primary)', borderColor: 'primary.main' } 
+                }}
                 endIcon={<ChevronDown size={12} />}
               >
                 {selectedCurrency}
@@ -209,13 +226,13 @@ export const Navbar: React.FC = () => {
                 anchorEl={currencyAnchorEl}
                 open={Boolean(currencyAnchorEl)}
                 onClose={() => setCurrencyAnchorEl(null)}
-                slotProps={{ paper: { sx: { bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', mt: 1, boxShadow: '0 20px 50px rgba(0,0,0,0.9)' } } }}
+                slotProps={{ paper: { sx: { bgcolor: 'var(--bg-surface)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', mt: 1, boxShadow: mode === 'dark' ? '0 20px 50px rgba(0,0,0,0.9)' : '0 10px 30px rgba(0,0,0,0.1)' } } }}
               >
                 {currencies.map(c => (
                   <MenuItem
                     key={c}
                     onClick={() => { setSelectedCurrency(c); setCurrencyAnchorEl(null); }}
-                    sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: c === selectedCurrency ? 'primary.main' : 'text.secondary', '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}
+                    sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: c === selectedCurrency ? 'primary.main' : 'text.secondary', '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }}
                   >
                     {c}
                   </MenuItem>
@@ -224,22 +241,30 @@ export const Navbar: React.FC = () => {
 
               <Button
                 onClick={() => setIsSearchOpen(true)}
-                sx={{ minWidth: 0, px: 2, py: 1, fontSize: '0.7rem', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', borderColor: 'primary.main' }, display: 'flex', gap: 1 }}
+                sx={{ 
+                  minWidth: 0, px: 2, py: 1, fontSize: '0.7rem', 
+                  color: 'var(--text-secondary)', 
+                  border: '1px solid',
+                  borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', 
+                  bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)', 
+                  '&:hover': { color: mode === 'dark' ? 'white' : 'black', borderColor: 'primary.main' }, 
+                  display: 'flex', gap: 1 
+                }}
               >
                 <Search size={14} color="#D4AF37" /> Search...
-                <Box component="span" sx={{ ml: 1, fontSize: '0.6rem', bgcolor: 'rgba(0,0,0,0.4)', px: 1, borderRadius: 1, border: '1px solid rgba(255,255,255,0.05)' }}>⌘K</Box>
+                <Box component="span" sx={{ ml: 1, fontSize: '0.6rem', bgcolor: mode === 'dark' ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.06)', px: 1, borderRadius: 1, border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.08)' }}>⌘K</Box>
               </Button>
 
-              <IconButton onClick={toggleTheme} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
+              <IconButton onClick={toggleTheme} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }}>
                 {mode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
               </IconButton>
-              <IconButton onClick={() => setIsAccountOpen(true)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
+              <IconButton onClick={() => setIsAccountOpen(true)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }}>
                 <User size={18} />
               </IconButton>
-              <IconButton onClick={() => handleNavigate('#/lookbook')} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
+              <IconButton onClick={() => handleNavigate('#/lookbook')} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }}>
                 <Heart size={18} />
               </IconButton>
-              <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
+              <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }}>
                 <Badge badgeContent={cartItemsCount} color="primary" sx={{ '& .MuiBadge-badge': { color: 'black', fontWeight: 'bold' } }}>
                   <ShoppingBag size={18} />
                 </Badge>
@@ -248,21 +273,21 @@ export const Navbar: React.FC = () => {
 
             {/* MOBILE / TABLET RIGHT ACTIONS */}
             <Box sx={{ display: { xs: 'flex', lg: 'none' }, alignItems: 'center', gap: 1 }}>
-              <IconButton onClick={toggleTheme} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+              <IconButton onClick={toggleTheme} sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
                 {mode === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
               </IconButton>
-              <IconButton onClick={() => setIsSearchOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+              <IconButton onClick={() => setIsSearchOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
                 <Search size={16} />
               </IconButton>
-              <IconButton onClick={() => setIsAccountOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+              <IconButton onClick={() => setIsAccountOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
                 <User size={16} />
               </IconButton>
-              <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+              <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
                 <Badge badgeContent={cartItemsCount} color="primary" sx={{ '& .MuiBadge-badge': { color: 'black', fontWeight: 'bold' } }}>
                   <ShoppingBag size={16} />
                 </Badge>
               </IconButton>
-              <IconButton onClick={() => setIsMobileMenuOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+              <IconButton onClick={() => setIsMobileMenuOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
                 <Menu size={16} />
               </IconButton>
             </Box>

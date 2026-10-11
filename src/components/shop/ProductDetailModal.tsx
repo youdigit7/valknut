@@ -93,19 +93,19 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
         }}
       >
         <Fade in={!!product}>
-          <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 1000, maxHeight: '92vh', bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: { xs: 'column', md: 'row' }, overflow: 'hidden', outline: 'none' }}>
+          <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: 1000, maxHeight: '92vh', bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 2, boxShadow: 'var(--shadow-card)', display: 'flex', flexDirection: { xs: 'column', md: 'row' }, overflow: 'hidden', outline: 'none' }}>
             
             {/* Close Button */}
             <IconButton
               onClick={onClose}
-              sx={{ position: 'absolute', top: 16, right: 16, zIndex: 20, bgcolor: 'rgba(0,0,0,0.6)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(0,0,0,0.8)' } }}
+              sx={{ position: 'absolute', top: 16, right: 16, zIndex: 20, bgcolor: 'rgba(0,0,0,0.6)', color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)', backdropFilter: 'blur(10px)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(0,0,0,0.8)' } }}
               aria-label="Close modal"
             >
               <X size={20} />
             </IconButton>
 
             {/* Left Column: Image Gallery */}
-            <Box sx={{ width: { xs: '100%', md: '50%' }, bgcolor: '#141620', p: { xs: 2, md: 4 }, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderBottom: { xs: '1px solid rgba(255,255,255,0.1)', md: 'none' }, borderRight: { md: '1px solid rgba(255,255,255,0.1)' } }}>
+            <Box sx={{ width: { xs: '100%', md: '50%' }, bgcolor: 'var(--bg-main)', p: { xs: 2, md: 4 }, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderBottom: { xs: '1px solid var(--border-subtle)', md: 'none' }, borderRight: { md: '1px solid var(--border-subtle)' } }}>
               {/* Main Featured Image */}
               <Box sx={{ position: 'relative', width: '100%', aspectRatio: '4/5', borderRadius: 1, overflow: 'hidden', mb: 2 }}>
                 <Box
@@ -194,7 +194,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                 </Box>
 
                 {/* Description */}
-                <Typography sx={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, mb: 3, fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
+                <Typography sx={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.7, mb: 3, fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
                   {product.description}
                 </Typography>
 
@@ -215,7 +215,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                           onClick={() => setSelectedColor(colorName)}
                           sx={{
                             px: 1.5, py: 0.75, borderRadius: '10px', border: '1px solid', fontSize: '0.75rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1, transition: 'all 0.3s ease', textTransform: 'none',
-                            ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.12)', color: 'var(--text-primary)' } : { borderColor: 'rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.04)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' } })
+                            ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'rgba(212,175,55,0.12)', color: 'var(--text-primary)' } : { borderColor: 'var(--border-subtle)', bgcolor: 'var(--bg-main)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'var(--border-strong)' } })
                           }}
                         >
                           <Box sx={{ width: 14, height: 14, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.4)', bgcolor: hex }} />
@@ -250,7 +250,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                           onClick={() => setSelectedSize(sz as any)}
                           sx={{
                             width: 48, height: 46, borderRadius: '10px', fontWeight: 800, fontSize: '0.8125rem', fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid', transition: 'all 0.3s ease', minWidth: 'auto', p: 0,
-                            ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'primary.main', color: 'black', boxShadow: '0 8px 16px rgba(212,175,55,0.3)', transform: 'scale(1.05)' } : { borderColor: 'rgba(255,255,255,0.12)', bgcolor: 'rgba(255,255,255,0.04)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'rgba(255,255,255,0.4)' } })
+                            ...(isSelected ? { borderColor: 'primary.main', bgcolor: 'primary.main', color: 'black', boxShadow: '0 8px 16px rgba(212,175,55,0.3)', transform: 'scale(1.05)' } : { borderColor: 'var(--border-subtle)', bgcolor: 'var(--bg-main)', color: 'var(--text-secondary)', '&:hover': { borderColor: 'var(--border-strong)' } })
                           }}
                         >
                           {sz}
@@ -265,14 +265,14 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                   <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
                     Quantity:
                   </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '10px', bgcolor: 'rgba(255,255,255,0.04)', height: 42 }}>
-                    <IconButton onClick={() => setQuantity(q => Math.max(1, q - 1))} sx={{ width: 38, height: 38, color: 'var(--text-primary)', borderRadius: '10px', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid var(--border-subtle)', borderRadius: '10px', bgcolor: 'var(--bg-main)', height: 42 }}>
+                    <IconButton onClick={() => setQuantity(q => Math.max(1, q - 1))} sx={{ width: 38, height: 38, color: 'var(--text-primary)', borderRadius: '10px', '&:hover': { bgcolor: 'var(--border-subtle)' } }}>
                       <Typography sx={{ fontSize: '1rem', fontWeight: 'bold' }}>-</Typography>
                     </IconButton>
                     <Typography sx={{ width: 38, textAlign: 'center', fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>
                       {quantity}
                     </Typography>
-                    <IconButton onClick={() => setQuantity(q => q + 1)} sx={{ width: 38, height: 38, color: 'var(--text-primary)', borderRadius: '10px', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}>
+                    <IconButton onClick={() => setQuantity(q => q + 1)} sx={{ width: 38, height: 38, color: 'var(--text-primary)', borderRadius: '10px', '&:hover': { bgcolor: 'var(--border-subtle)' } }}>
                       <Typography sx={{ fontSize: '1rem', fontWeight: 'bold' }}>+</Typography>
                     </IconButton>
                   </Box>
@@ -297,7 +297,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                     onClick={handleAddToCart}
                     disabled={isOutOfStock}
                     startIcon={<ShoppingBag size={18} />}
-                    sx={{ width: '100%', height: 50, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.8125rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '12px', letterSpacing: '0.12em', transition: 'all 0.3s ease', boxShadow: '0 8px 25px rgba(212,175,55,0.25)', '&:hover': { bgcolor: '#e2b714', transform: 'translateY(-2px)' }, '&.Mui-disabled': { bgcolor: 'rgba(255,255,255,0.1)', color: 'text.disabled' } }}
+                    sx={{ width: '100%', height: 50, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.8125rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '12px', letterSpacing: '0.12em', transition: 'all 0.3s ease', boxShadow: '0 8px 25px rgba(212,175,55,0.25)', '&:hover': { bgcolor: '#e2b714', transform: 'translateY(-2px)' }, '&.Mui-disabled': { bgcolor: 'var(--border-subtle)', color: 'text.disabled' } }}
                   >
                     {isOutOfStock ? 'OUT OF STOCK' : 'ADD TO BAG'}
                   </Button>
@@ -305,7 +305,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                   <Button
                     onClick={handleBuyNow}
                     disabled={isOutOfStock}
-                    sx={{ width: '100%', height: 50, bgcolor: '#FFFFFF', color: '#000000', fontWeight: 900, fontSize: '0.8125rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '12px', letterSpacing: '0.12em', transition: 'all 0.3s ease', boxShadow: '0 4px 15px rgba(255,255,255,0.1)', '&:hover': { bgcolor: '#f1f5f9' }, '&.Mui-disabled': { opacity: 0.5 } }}
+                    sx={{ width: '100%', height: 50, bgcolor: 'var(--text-primary)', color: 'var(--bg-main)', fontWeight: 900, fontSize: '0.8125rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '12px', letterSpacing: '0.12em', transition: 'all 0.3s ease', boxShadow: 'var(--shadow-card)', '&:hover': { opacity: 0.9 }, '&.Mui-disabled': { opacity: 0.5 } }}
                   >
                     BUY IT NOW
                   </Button>
@@ -313,7 +313,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
               </Box>
 
               {/* Specs & Shipping Accordions */}
-              <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.08)', pt: 2.5, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+              <Box sx={{ borderTop: '1px solid var(--border-subtle)', pt: 2.5, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--text-secondary)' }}>
                   <ShieldCheck size={16} color="#d4af37" />
                   <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Plus Jakarta Sans", sans-serif' }}><Box component="strong" sx={{ color: 'var(--text-primary)' }}>Material:</Box> {product.material}</Typography>

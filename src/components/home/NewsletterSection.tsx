@@ -27,8 +27,8 @@ export const NewsletterSection: React.FC = () => {
         component="section" 
         sx={{ 
           py: { xs: 10, sm: 14, lg: 16 }, 
-          background: 'linear-gradient(to bottom, #0E1017, #0A0A0A)', 
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          background: 'linear-gradient(to bottom, var(--bg-surface), var(--bg-main))', 
+          borderBottom: '1px solid var(--border-subtle)',
           width: '100%',
           overflow: 'hidden'
         }}

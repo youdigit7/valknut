@@ -24,20 +24,41 @@ export const AppThemeProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   useEffect(() => {
     localStorage.setItem('valknut_theme_mode', mode);
+    const root = document.documentElement;
     if (mode === 'dark') {
-      document.documentElement.classList.add('dark');
-      document.documentElement.style.setProperty('--bg-main', '#0A0A0A');
-      document.documentElement.style.setProperty('--bg-surface', '#0e1017');
-      document.documentElement.style.setProperty('--bg-card', 'rgba(18, 20, 29, 0.75)');
-      document.documentElement.style.setProperty('--text-primary', '#f8fafc');
-      document.documentElement.style.setProperty('--text-secondary', '#94a3b8');
+      root.classList.add('dark');
+      root.classList.remove('light');
+      root.setAttribute('data-theme', 'dark');
+      root.style.colorScheme = 'dark';
+      root.style.setProperty('--bg-main', '#06070a');
+      root.style.setProperty('--bg-surface', '#0e1017');
+      root.style.setProperty('--bg-card', '#12141d');
+      root.style.setProperty('--bg-card-inner', '#141620');
+      root.style.setProperty('--bg-glass', 'rgba(255, 255, 255, 0.03)');
+      root.style.setProperty('--text-primary', '#f8fafc');
+      root.style.setProperty('--text-secondary', '#94a3b8');
+      root.style.setProperty('--text-muted', '#64748b');
+      root.style.setProperty('--border-subtle', 'rgba(255, 255, 255, 0.08)');
+      root.style.setProperty('--border-strong', 'rgba(255, 255, 255, 0.16)');
+      root.style.setProperty('--border-gold', 'rgba(212, 175, 55, 0.3)');
+      root.style.setProperty('--shadow-card', '0 10px 30px rgba(0, 0, 0, 0.6)');
     } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.style.setProperty('--bg-main', '#f8fafc');
-      document.documentElement.style.setProperty('--bg-surface', '#ffffff');
-      document.documentElement.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.9)');
-      document.documentElement.style.setProperty('--text-primary', '#0f172a');
-      document.documentElement.style.setProperty('--text-secondary', '#475569');
+      root.classList.remove('dark');
+      root.classList.add('light');
+      root.setAttribute('data-theme', 'light');
+      root.style.colorScheme = 'light';
+      root.style.setProperty('--bg-main', '#f8fafc');
+      root.style.setProperty('--bg-surface', '#ffffff');
+      root.style.setProperty('--bg-card', '#ffffff');
+      root.style.setProperty('--bg-card-inner', '#f1f5f9');
+      root.style.setProperty('--bg-glass', 'rgba(0, 0, 0, 0.03)');
+      root.style.setProperty('--text-primary', '#090d16');
+      root.style.setProperty('--text-secondary', '#475569');
+      root.style.setProperty('--text-muted', '#64748b');
+      root.style.setProperty('--border-subtle', 'rgba(0, 0, 0, 0.08)');
+      root.style.setProperty('--border-strong', 'rgba(0, 0, 0, 0.16)');
+      root.style.setProperty('--border-gold', 'rgba(184, 144, 28, 0.4)');
+      root.style.setProperty('--shadow-card', '0 8px 24px rgba(0, 0, 0, 0.06)');
     }
   }, [mode]);
 
@@ -52,11 +73,12 @@ export const AppThemeProvider: React.FC<{ children: ReactNode }> = ({ children }
           mode,
           primary: { main: '#D4AF37', dark: '#E2B714' },
           background: mode === 'dark'
-            ? { default: '#06070a', paper: '#0A0C10' }
+            ? { default: '#06070a', paper: '#0e1017' }
             : { default: '#f8fafc', paper: '#ffffff' },
           text: mode === 'dark'
-            ? { primary: '#ffffff', secondary: '#94a3b8' }
-            : { primary: '#0f172a', secondary: '#475569' },
+            ? { primary: '#f8fafc', secondary: '#94a3b8' }
+            : { primary: '#090d16', secondary: '#475569' },
+          divider: mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
         },
         typography: {
           fontFamily: '"Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif',

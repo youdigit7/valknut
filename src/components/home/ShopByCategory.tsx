@@ -179,7 +179,7 @@ export const ShopByCategory: React.FC = () => {
           position: 'relative',
           py: { xs: 10, sm: 14 }, 
           bgcolor: 'var(--bg-main)', 
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          borderBottom: '1px solid var(--border-subtle)',
           width: '100%',
           overflow: 'hidden'
         }}

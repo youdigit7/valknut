@@ -114,7 +114,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 height: { xs: 80, sm: 96 },
                 borderRadius: 1,
                 overflow: 'hidden',
-                bgcolor: '#141620',
+                bgcolor: 'var(--bg-card-inner)',
                 flexShrink: 0,
                 transition: 'all 0.3s ease',
                 cursor: 'pointer',
@@ -125,9 +125,9 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                   boxShadow: '0 0 10px rgba(212,175,55,0.3)',
                   opacity: 1
                 } : {
-                  borderColor: 'rgba(255,255,255,0.1)',
+                  borderColor: 'var(--border-subtle)',
                   opacity: 0.6,
-                  '&:hover': { opacity: 1, borderColor: 'rgba(255,255,255,0.3)' }
+                  '&:hover': { opacity: 1, borderColor: 'var(--border-strong)' }
                 })
               }}
             >
@@ -161,12 +161,12 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             aspectRatio: '3/4',
             maxHeight: 640,
             width: '100%',
-            bgcolor: '#12141F',
+            bgcolor: 'var(--bg-card-inner)',
             borderRadius: 1,
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid var(--border-subtle)',
             overflow: 'hidden',
             cursor: 'crosshair',
-            boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
             userSelect: 'none',
             '&:hover .overlay-action': { opacity: 1 }
           }}

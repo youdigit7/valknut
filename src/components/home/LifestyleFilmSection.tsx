@@ -13,8 +13,8 @@ export const LifestyleFilmSection: React.FC = () => {
         sx={{ 
           py: { xs: 8, sm: 12, lg: 16 }, 
           bgcolor: 'var(--bg-main)', 
-          borderTop: '1px solid rgba(255,255,255,0.05)',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          borderTop: '1px solid var(--border-subtle)',
+          borderBottom: '1px solid var(--border-subtle)',
           width: '100%',
           overflow: 'hidden'
         }}
@@ -53,11 +53,11 @@ export const LifestyleFilmSection: React.FC = () => {
             sx={{ 
               position: 'relative',
               aspectRatio: { xs: '9/16', sm: '16/9' },
-              bgcolor: '#12141E',
-              border: '1px solid rgba(255,255,255,0.1)',
+              bgcolor: 'var(--bg-card-inner)',
+              border: '1px solid var(--border-subtle)',
               borderRadius: 3,
               overflow: 'hidden',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1)',
+              boxShadow: 'var(--shadow-card)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',

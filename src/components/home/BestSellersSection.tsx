@@ -20,7 +20,7 @@ export const BestSellersSection: React.FC = () => {
         sx={{ 
           py: { xs: 7, sm: 10, lg: 12 }, 
           bgcolor: 'var(--bg-main)', 
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          borderBottom: '1px solid var(--border-subtle)',
           width: '100%',
           overflow: 'hidden'
         }}

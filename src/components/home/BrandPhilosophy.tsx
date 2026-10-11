@@ -13,7 +13,7 @@ export const BrandPhilosophy: React.FC = () => {
         sx={{ 
           py: { xs: 10, sm: 14, lg: 16 }, 
           bgcolor: 'var(--bg-main)', 
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          borderBottom: '1px solid var(--border-subtle)',
           width: '100%',
           overflow: 'hidden'
         }}
@@ -157,9 +157,9 @@ export const BrandPhilosophy: React.FC = () => {
                           p: 3, 
                           height: '100%',
                           bgcolor: 'var(--bg-surface)', 
-                          border: '1px solid rgba(255,255,255,0.05)', 
+                          border: '1px solid var(--border-subtle)', 
                           borderRadius: 3, 
-                          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                          boxShadow: 'var(--shadow-card)',
                           transition: 'all 0.3s',
                           display: 'flex',
                           flexDirection: 'column',

@@ -42,7 +42,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       sx={{
         position: 'relative',
         bgcolor: 'var(--bg-surface)',
-        border: '1px solid rgba(255,255,255,0.1)',
+        border: '1px solid var(--border-subtle)',
         borderRadius: 2,
         overflow: 'hidden',
         transition: 'all 0.3s ease',
@@ -62,7 +62,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     >
       {/* Product Image Area */}
       <Box 
-        sx={{ position: 'relative', width: '100%', aspectRatio: '4/5', bgcolor: '#141620', overflow: 'hidden' }}
+        sx={{ position: 'relative', width: '100%', aspectRatio: '4/5', bgcolor: 'var(--bg-card-inner)', overflow: 'hidden' }}
         onMouseEnter={() => product.images.length > 1 && setCurrentImgIndex(1)}
         onMouseLeave={() => setCurrentImgIndex(0)}
       >
@@ -203,7 +203,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </Box>
 
         {/* Price & Variant Swatches */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pt: 1, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pt: 1, borderTop: '1px solid var(--border-subtle)' }}>
           <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
             <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, color: 'var(--text-primary)' }}>
               LKR {displayPrice.toLocaleString()}
