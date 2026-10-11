@@ -166,8 +166,83 @@ export function buildStoragePath(scope: MediaScope, identifier?: string, origina
   }
 }
 
+export interface CloudinaryConfig {
+  cloudName: string;
+  uploadPreset: string;
+}
+
+export function getCloudinaryConfig(): CloudinaryConfig {
+  const localCloudName = typeof window !== 'undefined' ? localStorage.getItem('valknut_cloudinary_cloud_name') : null;
+  const localPreset = typeof window !== 'undefined' ? localStorage.getItem('valknut_cloudinary_upload_preset') : null;
+  return {
+    cloudName: localCloudName || (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string) || '',
+    uploadPreset: localPreset || (import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string) || ''
+  };
+}
+
+export function saveCloudinaryConfig(cloudName: string, uploadPreset: string): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('valknut_cloudinary_cloud_name', cloudName.trim());
+    localStorage.setItem('valknut_cloudinary_upload_preset', uploadPreset.trim());
+  }
+}
+
+export function isCloudinaryConfigured(): boolean {
+  const { cloudName, uploadPreset } = getCloudinaryConfig();
+  return Boolean(cloudName && uploadPreset);
+}
+
 /**
- * Uploads a file to Firebase Storage with progress tracking, client validation, and local fallback
+ * Checks Firebase Storage bucket availability
+ */
+export async function checkFirebaseStorageStatus(): Promise<{
+  status: 'online' | 'unprovisioned' | 'unconfigured' | 'error';
+  message: string;
+  bucket: string;
+}> {
+  const bucket = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'valknut-c8268.firebasestorage.app';
+  const apiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+
+  if (!apiKey || !bucket) {
+    return {
+      status: 'unconfigured',
+      message: 'Firebase Storage credentials are not set in .env',
+      bucket: bucket || 'None'
+    };
+  }
+
+  try {
+    const res = await fetch(`https://firebasestorage.googleapis.com/v0/b/${bucket}/o?key=${apiKey}`);
+    if (res.status === 200) {
+      return {
+        status: 'online',
+        message: 'Firebase Cloud Storage bucket is online and ready.',
+        bucket
+      };
+    } else if (res.status === 404) {
+      return {
+        status: 'unprovisioned',
+        message: 'Bucket not provisioned yet. In Firebase Console, go to Build → Storage and click "Get started".',
+        bucket
+      };
+    } else {
+      return {
+        status: 'error',
+        message: `HTTP ${res.status}: ${res.statusText}`,
+        bucket
+      };
+    }
+  } catch (err: any) {
+    return {
+      status: 'error',
+      message: err.message || 'Network error reaching Firebase Storage.',
+      bucket
+    };
+  }
+}
+
+/**
+ * Uploads a file to Firebase Storage, Cloudinary, or resilient Local Fallback
  */
 export async function uploadMediaFile(
   file: File | Blob,
@@ -206,7 +281,7 @@ export async function uploadMediaFile(
 
   const storagePath = buildStoragePath(scope, identifier, originalName);
 
-  // 1. Firebase Cloud Storage Upload (If configured)
+  // 1. Try Firebase Cloud Storage Upload (If configured and available)
   if (storage && isFirebaseConfigured) {
     try {
       const fileRef = ref(storage, storagePath);
@@ -219,7 +294,7 @@ export async function uploadMediaFile(
         }
       });
 
-      return new Promise<UploadMediaResult>((resolve, reject) => {
+      const fbResult = await new Promise<UploadMediaResult>((resolve, reject) => {
         uploadTask.on(
           'state_changed',
           (snapshot) => {
@@ -227,8 +302,7 @@ export async function uploadMediaFile(
             if (onProgress) onProgress(Math.round(progress));
           },
           (error) => {
-            console.error('Firebase Storage upload error:', error);
-            reject(new Error(`Firebase Storage error: ${error.message}`));
+            reject(error);
           },
           async () => {
             const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
@@ -243,12 +317,50 @@ export async function uploadMediaFile(
           }
         );
       });
+
+      return fbResult;
     } catch (firebaseErr: any) {
-      console.warn('Firebase storage failed, switching to local Data URL fallback:', firebaseErr);
+      console.warn('Firebase Storage upload failed, checking alternative providers:', firebaseErr);
     }
   }
 
-  // 2. Local Fallback (Base64 / Data URL) for development & offline modes
+  // 2. Try Cloudinary Upload (If configured)
+  const cloudConfig = getCloudinaryConfig();
+  if (cloudConfig.cloudName && cloudConfig.uploadPreset) {
+    try {
+      if (onProgress) onProgress(30);
+      const formData = new FormData();
+      formData.append('file', fileToUpload);
+      formData.append('upload_preset', cloudConfig.uploadPreset);
+      formData.append('folder', `valknut/${scope}`);
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudConfig.cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (onProgress) onProgress(80);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (onProgress) onProgress(100);
+        return {
+          url: data.secure_url || data.url,
+          storagePath: `cloudinary://${data.public_id}`,
+          fileName: originalName,
+          sizeBytes: data.bytes || fileToUpload.size,
+          type: data.format ? `image/${data.format}` : (fileToUpload.type || 'image/webp')
+        };
+      } else {
+        const errJson = await response.json().catch(() => ({}));
+        console.warn('Cloudinary upload warning:', errJson);
+      }
+    } catch (cldErr) {
+      console.warn('Cloudinary upload network error:', cldErr);
+    }
+  }
+
+  // 3. Resilient Local Fallback (Base64 / Data URL) for instant offline testing
   return new Promise<UploadMediaResult>((resolve, reject) => {
     let currentPct = 0;
     const interval = setInterval(() => {
@@ -273,7 +385,7 @@ export async function uploadMediaFile(
     };
     reader.onerror = () => {
       clearInterval(interval);
-      reject(new Error('Failed to read image file data.'));
+      reject(new Error('Failed to process image file.'));
     };
     reader.readAsDataURL(fileToUpload);
   });

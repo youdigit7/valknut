@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useStore } from '../../context/StoreContext';
 import type {
   Product,
@@ -16,7 +16,15 @@ import type {
 import { SUPABASE_SETUP_SQL } from '../../lib/supabase';
 import { ProductImageManager } from './ProductImageManager';
 import { SingleImageUploader } from './SingleImageUploader';
-import { FIREBASE_STORAGE_RULES, syncProductMediaToSupabase } from '../../services/mediaService';
+import {
+  FIREBASE_STORAGE_RULES,
+  syncProductMediaToSupabase,
+  checkFirebaseStorageStatus,
+  getCloudinaryConfig,
+  saveCloudinaryConfig,
+  isCloudinaryConfigured,
+  uploadMediaFile
+} from '../../services/mediaService';
 import {
   getAdminCategories,
   saveAdminCategory,
@@ -28,6 +36,7 @@ import {
   saveAdminHomepageConfig,
   getAdminCustomersList
 } from '../../services/adminService';
+import { loginAdmin } from '../../services/authService';
 import {
   ShieldCheck,
   Package,
@@ -49,20 +58,29 @@ import {
   XCircle,
   Copy,
   Check,
-  Cloud
+  Cloud,
+  Eye,
+  EyeOff,
+  Palette,
+  HardDrive,
+  Upload,
+  RefreshCw,
+  Server
 } from 'lucide-react';
-import { Box, Typography, Paper, Tabs, Tab, Chip, Alert, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Typography, Paper, Chip, Alert, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress } from '@mui/material';
 import { Button, Input, IconButton } from '../ui';
 
 type AdminTab =
   | 'METRICS'
   | 'PRODUCTS'
+  | 'STUDIOS'
+  | 'ORDERS'
   | 'CATEGORIES'
   | 'COLLECTIONS'
-  | 'ORDERS'
   | 'CUSTOMERS'
   | 'COUPONS'
   | 'HOMEPAGE'
+  | 'STORAGE'
   | 'DATABASE';
 
 export const AdminDashboard: React.FC = () => {
@@ -78,7 +96,7 @@ export const AdminDashboard: React.FC = () => {
     addCoupon,
     deleteCoupon,
     user,
-    loginUser,
+    setUserProfile,
     showToast
   } = useStore();
 
@@ -89,6 +107,15 @@ export const AdminDashboard: React.FC = () => {
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
   const [authError, setAuthError] = useState('');
+  const [isAdminLoggingIn, setIsAdminLoggingIn] = useState(false);
+  const [showAdminPass, setShowAdminPass] = useState(false);
+
+  // Products Tab Filtering & Search
+  const [productCategoryFilter, setProductCategoryFilter] = useState<'ALL' | 'MEN' | 'WOMEN' | 'ESSENTIALS'>('ALL');
+  const [productSearchQuery, setProductSearchQuery] = useState('');
+
+  // Studio Submissions / Custom Orders State
+  const [studioStatusFilter, setStudioStatusFilter] = useState<string>('ALL');
 
   // Categories & Collections state
   const [categories, setCategories] = useState<CategoryItem[]>(() => getAdminCategories());
@@ -174,23 +201,90 @@ export const AdminDashboard: React.FC = () => {
   const [copiedSql, setCopiedSql] = useState(false);
   const [copiedStorageRules, setCopiedStorageRules] = useState(false);
 
-  // Quick Demo Admin Login Handler
-  const handleAdminLogin = (e: React.FormEvent) => {
+  // Cloud Media Storage Management State
+  const [firebaseStatus, setFirebaseStatus] = useState<{ status: string; message: string; bucket: string } | null>(null);
+  const [isCheckingStorage, setIsCheckingStorage] = useState(false);
+  const [cldCloudName, setCldCloudName] = useState(() => getCloudinaryConfig().cloudName);
+  const [cldPreset, setCldPreset] = useState(() => getCloudinaryConfig().uploadPreset);
+  const [testUploadFile, setTestUploadFile] = useState<File | null>(null);
+  const [isTestingUpload, setIsTestingUpload] = useState(false);
+  const [testUploadProgress, setTestUploadProgress] = useState(0);
+  const [testUploadResult, setTestUploadResult] = useState<any>(null);
+  const [testUploadError, setTestUploadError] = useState('');
+
+  const handleCheckFirebaseStatus = async () => {
+    setIsCheckingStorage(true);
+    try {
+      const res = await checkFirebaseStorageStatus();
+      setFirebaseStatus(res);
+    } catch (e: any) {
+      setFirebaseStatus({ status: 'error', message: e.message || 'Error checking status', bucket: '' });
+    } finally {
+      setIsCheckingStorage(false);
+    }
+  };
+
+  const handleSaveCloudinary = (e: React.FormEvent) => {
+    e.preventDefault();
+    saveCloudinaryConfig(cldCloudName, cldPreset);
+    showToast('Cloudinary credentials saved successfully.', 'success');
+  };
+
+  const handleRunTestUpload = async () => {
+    if (!testUploadFile) return;
+    setIsTestingUpload(true);
+    setTestUploadProgress(10);
+    setTestUploadError('');
+    setTestUploadResult(null);
+
+    try {
+      const res = await uploadMediaFile(testUploadFile, {
+        scope: 'products',
+        identifier: 'test-sandbox',
+        fileName: testUploadFile.name,
+        optimize: true,
+        onProgress: (p) => setTestUploadProgress(p)
+      });
+      setTestUploadResult(res);
+      showToast('Media upload succeeded!', 'success');
+    } catch (err: any) {
+      setTestUploadError(err.message || 'Test upload failed.');
+    } finally {
+      setIsTestingUpload(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'STORAGE') {
+      handleCheckFirebaseStatus();
+    }
+  }, [activeTab]);
+
+  // Executive Admin Login Handler
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
+    setIsAdminLoggingIn(true);
 
-    const emailClean = adminEmail.trim().toLowerCase();
-    if (emailClean.includes('admin') || emailClean.includes('valknut') || emailClean === 'founder@valknutofficial.com') {
-      loginUser(adminEmail, 'VALKNUT Director');
-      showToast('Admin access granted.', 'success');
-    } else {
-      setAuthError('Unauthorized. Only validated VALKNUT administrators can access this portal.');
+    try {
+      const res = await loginAdmin(adminEmail, adminPassword);
+      if (res.success && res.user) {
+        setUserProfile(res.user);
+        showToast('Administrative privileges verified. Access granted.', 'success');
+      } else {
+        setAuthError(res.message || 'Invalid administrator username or security key.');
+      }
+    } catch (err: any) {
+      setAuthError(err.message || 'Authentication error.');
+    } finally {
+      setIsAdminLoggingIn(false);
     }
   };
 
   const handleFillDemoAdmin = () => {
     setAdminEmail('admin@valknutofficial.com');
     setAdminPassword('valknut2026');
+    showToast('Loaded verified Executive Admin credentials (admin@valknutofficial.com)', 'info');
   };
 
   // Metrics Calculations
@@ -199,8 +293,33 @@ export const AdminDashboard: React.FC = () => {
   const pendingOrdersCount = useMemo(() => orders.filter(o => o.orderStatus === 'Pending' || o.orderStatus === 'Payment Pending' || o.orderStatus === 'Processing').length, [orders]);
   const lowStockProducts = useMemo(() => products.filter(p => p.variants.some(v => (v.stock ?? 0) <= 5)), [products]);
 
+  // Studio Orders Calculation
+  const studioOrders = useMemo(() => {
+    return orders.filter(o => {
+      const hasStudio = o.items.some((it: any) => Boolean(it.customization));
+      if (!hasStudio) return false;
+      if (studioStatusFilter === 'ALL') return true;
+      return o.orderStatus.toLowerCase() === studioStatusFilter.toLowerCase();
+    });
+  }, [orders, studioStatusFilter]);
+
+  // Filtered Products Calculation
+  const filteredProducts = useMemo(() => {
+    return products.filter((prod) => {
+      const matchCategory = productCategoryFilter === 'ALL' || prod.category === productCategoryFilter;
+      const q = productSearchQuery.trim().toLowerCase();
+      const matchSearch = !q ||
+        prod.name.toLowerCase().includes(q) ||
+        prod.slug.toLowerCase().includes(q) ||
+        prod.subCategory.toLowerCase().includes(q) ||
+        prod.tags.some(t => t.toLowerCase().includes(q)) ||
+        prod.variants.some(v => v.sku?.toLowerCase().includes(q));
+      return matchCategory && matchSearch;
+    });
+  }, [products, productCategoryFilter, productSearchQuery]);
+
   // Product Open Form
-  const openProductForm = (p?: Product) => {
+  const openProductForm = (p?: Product, defaultCategory?: CategoryType) => {
     if (p) {
       setEditingProduct(p);
       setProdName(p.name);
@@ -221,13 +340,14 @@ export const AdminDashboard: React.FC = () => {
       setProdIsLimitedEdition(Boolean(p.isLimitedEdition));
       setProdVariants(p.variants);
     } else {
+      const cat = defaultCategory || (productCategoryFilter !== 'ALL' ? productCategoryFilter : 'MEN');
       setEditingProduct(null);
       setProdName('');
       setProdSlug('');
-      setProdPrice(8500);
+      setProdPrice(cat === 'ESSENTIALS' ? 5200 : 8500);
       setProdSalePrice(undefined);
-      setProdCategory('MEN');
-      setProdSubCategory('Oversized T-Shirts');
+      setProdCategory(cat);
+      setProdSubCategory(cat === 'ESSENTIALS' ? 'Accessories' : 'Oversized T-Shirts');
       setProdCollection('SHADOW OPS 2026');
       setProdDescription('Engineered luxury garment constructed from heavyweight combed cotton.');
       setProdMaterial('100% Combed Organic Cotton (320 GSM)');
@@ -506,28 +626,38 @@ export const AdminDashboard: React.FC = () => {
           <form onSubmit={handleAdminLogin} className="space-y-4 font-mono text-xs">
             <Input
               label="Admin Email Identifier"
-              type="email"
+              type="text"
               required
               value={adminEmail}
               onChange={(e) => setAdminEmail(e.target.value)}
               placeholder="admin@valknutofficial.com"
             />
-            <Input
-              label="Security Password / Token"
-              type="password"
-              required
-              value={adminPassword}
-              onChange={(e) => setAdminPassword(e.target.value)}
-              placeholder="••••••••••••"
-            />
+            <div className="relative">
+              <Input
+                label="Security Password / Token"
+                type={showAdminPass ? 'text' : 'password'}
+                required
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                placeholder="••••••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowAdminPass(!showAdminPass)}
+                className="absolute right-3 top-8 text-slate-400 hover:text-white transition-colors"
+              >
+                {showAdminPass ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
             <Button
               type="submit"
               variant="gold"
               fullWidth
-              leftIcon={<ShieldCheck size={16} />}
-              className="py-4 mt-2"
+              disabled={isAdminLoggingIn}
+              leftIcon={isAdminLoggingIn ? <CircularProgress size={16} color="inherit" /> : <ShieldCheck size={16} />}
+              className="py-4 mt-2 font-bold tracking-widest uppercase"
             >
-              AUTHORIZE ACCESS
+              {isAdminLoggingIn ? 'AUTHENTICATING...' : 'AUTHORIZE ACCESS'}
             </Button>
           </form>
 
@@ -537,9 +667,9 @@ export const AdminDashboard: React.FC = () => {
               fullWidth
               size="sm"
               onClick={handleFillDemoAdmin}
-              className="py-2.5"
+              className="py-2.5 text-xs text-[#D4AF37] border-[#D4AF37]/30 hover:bg-[#D4AF37]/10"
             >
-              Use Verified Demo Admin Credentials
+              Use Verified Admin Credentials (admin@valknutofficial.com)
             </Button>
             <Typography
               component="a"
@@ -621,29 +751,176 @@ export const AdminDashboard: React.FC = () => {
       {/* Main Container */}
       <Box className="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-        {/* Navigation Tabs Bar */}
-        <Box className="border-b border-white/10 pb-3">
-          <Tabs
-            value={activeTab}
-            onChange={(_, val) => setActiveTab(val)}
-            variant="scrollable"
-            scrollButtons="auto"
-            sx={{
-              '& .MuiTabs-indicator': { backgroundColor: '#D4AF37' },
-              '& .MuiTab-root': { color: '#94a3b8', fontFamily: 'monospace', fontWeight: 700, minHeight: '40px', padding: '10px 20px', transition: 'all 0.2s', fontSize: '0.75rem' },
-              '& .Mui-selected': { color: '#D4AF37 !important' },
-            }}
-          >
-            <Tab icon={<TrendingUp size={16} />} iconPosition="start" label="OVERVIEW" value="METRICS" />
-            <Tab icon={<Package size={16} />} iconPosition="start" label={`PRODUCTS (${products.length})`} value="PRODUCTS" />
-            <Tab icon={<Layers size={16} />} iconPosition="start" label={`CATEGORIES (${categories.length})`} value="CATEGORIES" />
-            <Tab icon={<Sparkles size={16} />} iconPosition="start" label={`COLLECTIONS (${collections.length})`} value="COLLECTIONS" />
-            <Tab icon={<ShoppingBag size={16} />} iconPosition="start" label={`ORDERS (${orders.length})`} value="ORDERS" />
-            <Tab icon={<Users size={16} />} iconPosition="start" label={`CUSTOMERS (${customers.length})`} value="CUSTOMERS" />
-            <Tab icon={<Tag size={16} />} iconPosition="start" label={`COUPONS (${coupons.length})`} value="COUPONS" />
-            <Tab icon={<Home size={16} />} iconPosition="start" label="HOMEPAGE CMS" value="HOMEPAGE" />
-            <Tab icon={<Database size={16} />} iconPosition="start" label="DATABASE & RLS" value="DATABASE" />
-          </Tabs>
+        {/* Executive Grouped Navigation Bar */}
+        <Box className="bg-[#0E1017] border border-white/10 rounded-xl p-3 shadow-xl space-y-2">
+          <Box className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            {/* 1. OPERATIONS */}
+            <Box className="flex items-center gap-1.5 bg-[#141620] p-1.5 rounded-lg border border-white/5 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setActiveTab('METRICS')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'METRICS'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <TrendingUp size={16} />
+                <span>Overview</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('PRODUCTS')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'PRODUCTS'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Package size={16} />
+                <span>Products</span>
+                <span className={`text-[11px] px-2 py-0.5 rounded-full font-mono font-bold ${activeTab === 'PRODUCTS' ? 'bg-black text-[#D4AF37]' : 'bg-white/10 text-slate-300'}`}>
+                  {products.length}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('STUDIOS')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'STUDIOS'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Palette size={16} />
+                <span>3D Studios</span>
+                <span className={`text-[11px] px-2 py-0.5 rounded-full font-mono font-bold ${activeTab === 'STUDIOS' ? 'bg-black text-[#D4AF37]' : 'bg-white/10 text-slate-300'}`}>
+                  {studioOrders.length}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('ORDERS')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'ORDERS'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <ShoppingBag size={16} />
+                <span>Orders</span>
+                <span className={`text-[11px] px-2 py-0.5 rounded-full font-mono font-bold ${activeTab === 'ORDERS' ? 'bg-black text-[#D4AF37]' : 'bg-white/10 text-slate-300'}`}>
+                  {orders.length}
+                </span>
+              </button>
+            </Box>
+
+            {/* Divider */}
+            <Box className="w-[1px] h-7 bg-white/10 hidden md:block flex-shrink-0" />
+
+            {/* 2. STOREFRONT & CATALOG */}
+            <Box className="flex items-center gap-1.5 bg-[#141620] p-1.5 rounded-lg border border-white/5 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setActiveTab('CATEGORIES')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'CATEGORIES'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Layers size={16} />
+                <span>Categories</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('COLLECTIONS')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'COLLECTIONS'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Sparkles size={16} />
+                <span>Collections</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('CUSTOMERS')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'CUSTOMERS'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Users size={16} />
+                <span>Customers</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('COUPONS')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'COUPONS'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Tag size={16} />
+                <span>Coupons</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('HOMEPAGE')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'HOMEPAGE'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Home size={16} />
+                <span>Homepage CMS</span>
+              </button>
+            </Box>
+
+            {/* Divider */}
+            <Box className="w-[1px] h-7 bg-white/10 hidden md:block flex-shrink-0" />
+
+            {/* 3. CLOUD & INFRASTRUCTURE */}
+            <Box className="flex items-center gap-1.5 bg-[#141620] p-1.5 rounded-lg border border-white/5 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setActiveTab('STORAGE')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'STORAGE'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Cloud size={16} />
+                <span>Media Storage</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('DATABASE')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-bold font-sans transition-all cursor-pointer ${
+                  activeTab === 'DATABASE'
+                    ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Database size={16} />
+                <span>Database & SQL</span>
+              </button>
+            </Box>
+          </Box>
         </Box>
 
         {/* 1. METRICS TAB */}
@@ -808,13 +1085,74 @@ export const AdminDashboard: React.FC = () => {
                 </Box>
               </Box>
 
-              <Button
-                onClick={() => openProductForm()}
-                className="px-5 py-3 text-xs font-mono font-extrabold tracking-wider bg-[#D4AF37] hover:bg-[#E2B714] text-black shadow-lg shadow-[#D4AF37]/20"
-              >
-                <Plus size={16} className="mr-2 inline" />
-                CREATE PRODUCT
-              </Button>
+              <Box className="flex items-center gap-2 flex-wrap">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => openProductForm(undefined, 'MEN')}
+                  className="px-3 py-2 text-xs font-mono border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10"
+                >
+                  + Add Men's
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => openProductForm(undefined, 'WOMEN')}
+                  className="px-3 py-2 text-xs font-mono border-sky-400/50 text-sky-400 hover:bg-sky-400/10"
+                >
+                  + Add Women's
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => openProductForm(undefined, 'ESSENTIALS')}
+                  className="px-3 py-2 text-xs font-mono border-emerald-400/50 text-emerald-400 hover:bg-emerald-400/10"
+                >
+                  + Add Essentials
+                </Button>
+                <Button
+                  onClick={() => openProductForm()}
+                  className="px-4 py-2 text-xs font-mono font-extrabold tracking-wider bg-[#D4AF37] hover:bg-[#E2B714] text-black shadow-lg shadow-[#D4AF37]/20"
+                >
+                  <Plus size={15} className="mr-1.5 inline" />
+                  NEW ITEM
+                </Button>
+              </Box>
+            </Box>
+
+            {/* Category Filter & Garment Search Bar */}
+            <Box className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-[#0E1017] p-3 rounded-md border border-white/10">
+              <Box className="flex items-center gap-1.5 flex-wrap">
+                {(['ALL', 'MEN', 'WOMEN', 'ESSENTIALS'] as const).map((cat) => {
+                  const count = cat === 'ALL' ? products.length : products.filter(p => p.category === cat).length;
+                  const isSelected = productCategoryFilter === cat;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setProductCategoryFilter(cat)}
+                      className={`px-3 py-1.5 rounded text-xs font-mono font-bold tracking-wider transition-all ${
+                        isSelected 
+                          ? 'bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/30' 
+                          : 'bg-white/5 text-slate-300 hover:bg-white/10'
+                      }`}
+                    >
+                      {cat} ({count})
+                    </button>
+                  );
+                })}
+              </Box>
+
+              <Box className="relative w-full md:w-80">
+                <Search size={14} className="absolute left-3 top-2.5 text-slate-400" />
+                <input
+                  type="text"
+                  value={productSearchQuery}
+                  onChange={(e) => setProductSearchQuery(e.target.value)}
+                  placeholder="Filter by name, SKU, category..."
+                  className="w-full pl-9 pr-3 py-1.5 bg-[#141620] border border-white/10 rounded text-xs text-[var(--text-primary)] font-mono placeholder:text-slate-500 focus:border-[#D4AF37] outline-none"
+                />
+              </Box>
             </Box>
 
             {/* Products Table */}
@@ -831,7 +1169,7 @@ export const AdminDashboard: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {products.map((prod) => {
+                  {filteredProducts.map((prod) => {
                     const totalStock = prod.variants.reduce((sum, v) => sum + (v.stock ?? 0), 0);
                     const isLowStock = totalStock <= 10;
 
@@ -1216,6 +1554,209 @@ export const AdminDashboard: React.FC = () => {
           </Box>
         )}
 
+        {/* 3D CUSTOM STUDIOS & BESPOKE TAB */}
+        {activeTab === 'STUDIOS' && (
+          <Box className="space-y-6 animate-fade-in">
+            <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[var(--bg-surface)] border border-white/10 p-5 rounded-md" sx={{ backgroundColor: '#0E1017' }}>
+              <Box className="flex items-center gap-3">
+                <Palette className="text-[#D4AF37]" size={24} />
+                <Box>
+                  <Typography variant="h6" className="text-base font-black uppercase text-[var(--text-primary)] font-syne">
+                    BESPOKE 3D APPAREL STUDIO COMMISSIONS
+                  </Typography>
+                  <Typography variant="body2" className="text-xs font-mono text-slate-400">
+                    Manage customized heavyweight hoodies, oversized tees, client vector uploads, and 3D puff rubber prints.
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Box className="flex items-center gap-1.5 flex-wrap">
+                {['ALL', 'Pending', 'Processing', 'Shipped', 'Delivered'].map((st) => (
+                  <Chip
+                    key={st}
+                    label={st.toUpperCase()}
+                    onClick={() => setStudioStatusFilter(st)}
+                    size="small"
+                    sx={{
+                      cursor: 'pointer',
+                      fontSize: '10px',
+                      fontFamily: 'monospace',
+                      backgroundColor: studioStatusFilter === st ? '#D4AF37' : 'rgba(255,255,255,0.05)',
+                      color: studioStatusFilter === st ? '#000' : '#94a3b8',
+                      fontWeight: studioStatusFilter === st ? 800 : 500,
+                      border: '1px solid ' + (studioStatusFilter === st ? '#D4AF37' : 'rgba(255,255,255,0.1)')
+                    }}
+                  />
+                ))}
+                <Chip
+                  label={`${studioOrders.length} COMMISSIONS`}
+                  sx={{ backgroundColor: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.4)', fontWeight: 'bold', fontSize: '11px', fontFamily: 'monospace' }}
+                />
+              </Box>
+            </Box>
+
+            {studioOrders.length === 0 ? (
+              <Paper className="p-12 text-center bg-[#0E1017] border border-white/10 rounded-md space-y-3">
+                <Palette size={40} className="mx-auto text-slate-600" />
+                <Typography className="text-sm font-bold text-slate-300 uppercase font-mono">
+                  NO BESPOKE STUDIO COMMISSIONS FOUND
+                </Typography>
+                <Typography className="text-xs text-slate-500 font-mono max-w-md mx-auto">
+                  When customers design customized garments in the Interactive Custom Studio, their specifications, artwork uploads, and print placement instructions will appear here.
+                </Typography>
+                <Button
+                  variant="gold"
+                  size="sm"
+                  onClick={() => {
+                    if (setIsAdminOpen) setIsAdminOpen(false);
+                    window.location.hash = '#/custom-studio';
+                  }}
+                  className="mt-2 text-xs py-2 px-4"
+                >
+                  Open Custom Studio Storefront
+                </Button>
+              </Paper>
+            ) : (
+              <Box className="space-y-4">
+                {studioOrders.map((order) => {
+                  const customItems = order.items.filter((it: any) => Boolean(it.customization));
+
+                  return (
+                    <Paper key={order.id} className="bg-[#0E1017] border border-white/10 rounded-md p-5 space-y-4 shadow-xl">
+                      {/* Order Summary Header */}
+                      <Box className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                        <Box className="flex items-center gap-3">
+                          <Box className="w-9 h-9 rounded bg-[#D4AF37]/10 border border-[#D4AF37] flex items-center justify-center font-mono font-bold text-xs text-[#D4AF37]">
+                            3D
+                          </Box>
+                          <Box>
+                            <Box className="flex items-center gap-2">
+                              <Typography className="font-mono font-black text-sm text-[var(--text-primary)]">
+                                {order.orderNumber}
+                              </Typography>
+                              <Chip
+                                size="small"
+                                label={order.orderStatus}
+                                sx={{ height: '20px', fontSize: '10px', backgroundColor: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)', fontFamily: 'monospace' }}
+                              />
+                            </Box>
+                            <Typography className="text-[11px] text-slate-400 font-mono">
+                              Client: <strong className="text-[var(--text-primary)]">{order.customerInfo.fullName}</strong> • Mobile: {order.customerInfo.phone} • Email: {order.customerInfo.email}
+                            </Typography>
+                            <Typography className="text-[10px] text-slate-500 font-mono">
+                              Destination: {order.customerInfo.addressLine1}, {order.customerInfo.city}, {order.customerInfo.district}
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        <Box className="flex items-center gap-3 flex-wrap">
+                          <Typography className="text-xs font-mono font-bold text-[#D4AF37]">
+                            Total: LKR {order.totalAmount.toLocaleString()}
+                          </Typography>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedOrderForAwb(order);
+                              setAwbNumberInput(order.awbNumber || '');
+                              setAwbCourier(order.courierName || 'Pronto Lanka Express');
+                              setAwbStatusSelect(order.orderStatus);
+                            }}
+                            className="text-[10px] py-1 px-3 border-white/20 text-slate-300"
+                          >
+                            Update Logistics & AWB
+                          </Button>
+                        </Box>
+                      </Box>
+
+                      {/* Custom Items Grid */}
+                      <Box className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {customItems.map((item: any, idx: number) => {
+                          const cust = item.customization;
+                          return (
+                            <Box key={idx} className="bg-[#141620] border border-white/10 rounded p-4 space-y-3">
+                              <Box className="flex items-start justify-between gap-3">
+                                <Box>
+                                  <Typography className="text-xs font-bold uppercase text-[var(--text-primary)] font-heading">
+                                    {item.productName || item.product?.name || 'VALKNUT Bespoke Garment'}
+                                  </Typography>
+                                  <Typography className="text-[11px] text-slate-400 font-mono">
+                                    Size: <strong className="text-white">{item.selectedSize || item.size}</strong> • Garment Color: <strong className="text-white">{item.selectedColor || item.color}</strong> • Qty: {item.quantity}
+                                  </Typography>
+                                </Box>
+                                <Chip
+                                  size="small"
+                                  label={cust?.printTechnique || '3D Puff Rubber'}
+                                  sx={{ height: '22px', fontSize: '10px', backgroundColor: '#D4AF37', color: 'black', fontWeight: 'bold' }}
+                                />
+                              </Box>
+
+                              {/* Custom Spec Grid */}
+                              <Box className="grid grid-cols-2 gap-2 text-[11px] font-mono bg-black/40 p-3 rounded border border-white/5">
+                                <Box>
+                                  <Typography className="text-slate-500 text-[10px]">PRINT PLACEMENT</Typography>
+                                  <Typography className="text-slate-200 font-bold">{cust?.placement || 'FRONT CHEST'}</Typography>
+                                </Box>
+                                <Box>
+                                  <Typography className="text-slate-500 text-[10px]">TECHNIQUE CHARGE</Typography>
+                                  <Typography className="text-[#D4AF37] font-bold">+LKR {(cust?.techniqueFee || 0).toLocaleString()}</Typography>
+                                </Box>
+
+                                {cust?.customText && (
+                                  <Box className="col-span-2 pt-2 border-t border-white/5">
+                                    <Typography className="text-slate-500 text-[10px]">CUSTOM TYPOGRAPHY</Typography>
+                                    <Typography className="text-slate-100 font-bold">
+                                      "{cust.customText}"
+                                    </Typography>
+                                    <Typography className="text-[10px] text-slate-400">
+                                      Font: {cust.textFont || 'Outfit'} • Color: {cust.textColor || '#D4AF37'} • Size: {cust.textSize || 24}px
+                                    </Typography>
+                                  </Box>
+                                )}
+
+                                {cust?.uploadedArtworkUrl && (
+                                  <Box className="col-span-2 pt-2 border-t border-white/5 flex items-center justify-between">
+                                    <Box className="flex items-center gap-2">
+                                      <img 
+                                        src={cust.uploadedArtworkUrl} 
+                                        alt="Uploaded Artwork" 
+                                        className="w-10 h-10 object-contain rounded bg-white/10 p-1 border border-white/10" 
+                                      />
+                                      <Box>
+                                        <Typography className="text-slate-500 text-[10px]">CLIENT VECTOR ARTWORK</Typography>
+                                        <Typography className="text-slate-200 text-[11px] font-bold truncate max-w-[160px]">{cust.artworkName || 'Custom File'}</Typography>
+                                      </Box>
+                                    </Box>
+                                    <a
+                                      href={cust.uploadedArtworkUrl}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="px-2.5 py-1 bg-[#D4AF37]/20 hover:bg-[#D4AF37]/30 text-[#D4AF37] rounded text-[10px] font-bold transition-colors flex items-center gap-1"
+                                    >
+                                      <ExternalLink size={12} /> View File
+                                    </a>
+                                  </Box>
+                                )}
+
+                                {cust?.selectedSigilPreset && (
+                                  <Box className="col-span-2 pt-2 border-t border-white/5">
+                                    <Typography className="text-slate-500 text-[10px]">SELECTED SIGIL PRESET</Typography>
+                                    <Typography className="text-[#D4AF37] font-bold">{cust.selectedSigilPreset}</Typography>
+                                  </Box>
+                                )}
+                              </Box>
+                            </Box>
+                          );
+                        })}
+                      </Box>
+                    </Paper>
+                  );
+                })}
+              </Box>
+            )}
+          </Box>
+        )}
+
         {/* 6. CUSTOMER MANAGEMENT TAB */}
         {activeTab === 'CUSTOMERS' && (
           <Box className="space-y-6 animate-fade-in">
@@ -1498,7 +2039,337 @@ export const AdminDashboard: React.FC = () => {
           </Box>
         )}
 
-        {/* 9. DATABASE & SUPABASE TAB */}
+        {/* 9. MEDIA & CLOUD STORAGE TAB */}
+        {activeTab === 'STORAGE' && (
+          <Box className="space-y-6 animate-fade-in">
+            {/* Header Card */}
+            <Box className="bg-[var(--bg-surface)] border border-white/10 p-6 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl" sx={{ backgroundColor: '#0E1017' }}>
+              <Box className="flex items-center gap-4">
+                <Box className="w-12 h-12 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] flex-shrink-0">
+                  <Cloud size={26} />
+                </Box>
+                <Box>
+                  <Typography variant="h5" className="text-xl font-bold uppercase text-[var(--text-primary)] font-syne tracking-tight">
+                    MEDIA & CLOUD STORAGE INFRASTRUCTURE
+                  </Typography>
+                  <Typography variant="body2" className="text-sm text-slate-400 mt-0.5">
+                    Configure Firebase Storage, Cloudinary CDN, and inspect bucket readiness to eliminate Supabase egress constraints.
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Box className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCheckFirebaseStatus}
+                  disabled={isCheckingStorage}
+                  leftIcon={<RefreshCw size={14} className={isCheckingStorage ? 'animate-spin' : ''} />}
+                  className="px-4 py-2 border-white/20 text-slate-300 hover:text-white"
+                >
+                  {isCheckingStorage ? 'Testing Connection...' : 'Check Bucket Status'}
+                </Button>
+              </Box>
+            </Box>
+
+            {/* Two Column Grid: Firebase vs Cloudinary */}
+            <Box className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+              {/* CARD 1: Firebase Cloud Storage */}
+              <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-xl space-y-5 shadow-xl flex flex-col justify-between">
+                <Box className="space-y-4">
+                  <Box className="flex items-center justify-between border-b border-white/10 pb-4">
+                    <Box className="flex items-center gap-3">
+                      <HardDrive className="text-[#D4AF37]" size={22} />
+                      <Box>
+                        <Typography className="text-base font-bold text-white uppercase font-syne">
+                          Firebase Cloud Storage
+                        </Typography>
+                        <Typography className="text-xs text-slate-400">
+                          Google Cloud Bucket Integration
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {firebaseStatus?.status === 'online' ? (
+                      <Chip
+                        label="BUCKET ONLINE"
+                        size="small"
+                        sx={{ backgroundColor: 'rgba(5, 150, 105, 0.2)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.4)', fontWeight: 'bold', fontSize: '11px' }}
+                      />
+                    ) : firebaseStatus?.status === 'unprovisioned' ? (
+                      <Chip
+                        label="NEEDS PROVISIONING (404)"
+                        size="small"
+                        sx={{ backgroundColor: 'rgba(217, 119, 6, 0.2)', color: '#fbbf24', border: '1px solid rgba(245, 158, 11, 0.4)', fontWeight: 'bold', fontSize: '11px' }}
+                      />
+                    ) : (
+                      <Chip
+                        label="INITIALIZED IN .ENV"
+                        size="small"
+                        sx={{ backgroundColor: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', border: '1px solid rgba(59, 130, 246, 0.4)', fontWeight: 'bold', fontSize: '11px' }}
+                      />
+                    )}
+                  </Box>
+
+                  {/* Credentials Inspection */}
+                  <Box className="space-y-2.5 text-xs font-mono bg-[#141620] p-4 rounded-lg border border-white/5">
+                    <Box className="flex justify-between items-center py-1 border-b border-white/5">
+                      <span className="text-slate-400">Project ID:</span>
+                      <strong className="text-white">valknut-c8268</strong>
+                    </Box>
+                    <Box className="flex justify-between items-center py-1 border-b border-white/5">
+                      <span className="text-slate-400">Target Bucket:</span>
+                      <strong className="text-[#D4AF37]">valknut-c8268.firebasestorage.app</strong>
+                    </Box>
+                    <Box className="flex justify-between items-center py-1">
+                      <span className="text-slate-400">Status Check:</span>
+                      <span className={firebaseStatus?.status === 'online' ? 'text-emerald-400' : 'text-amber-400'}>
+                        {firebaseStatus?.message || 'Ready for test check.'}
+                      </span>
+                    </Box>
+                  </Box>
+
+                  {/* Actionable Provisioning Notice */}
+                  {firebaseStatus?.status === 'unprovisioned' && (
+                    <Alert
+                      severity="warning"
+                      className="bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs leading-relaxed"
+                      sx={{ '& .MuiAlert-icon': { color: '#fbbf24' } }}
+                    >
+                      <strong className="block mb-1 font-bold text-amber-300">Firebase Storage Bucket Not Created Yet:</strong>
+                      In your Firebase Console, click <strong>Build &rarr; Storage</strong>, click <strong>Get Started</strong>, select test/production rules, and click <strong>Done</strong>. Your bucket will immediately become active.
+                    </Alert>
+                  )}
+                </Box>
+
+                <Box className="pt-4 border-t border-white/10 flex items-center justify-between">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    rightIcon={<ExternalLink size={14} />}
+                    onClick={() => window.open('https://console.firebase.google.com/project/valknut-c8268/storage', '_blank')}
+                    className="text-xs border-[#D4AF37]/40 text-[#D4AF37] hover:bg-[#D4AF37]/10"
+                  >
+                    Open Firebase Storage Console
+                  </Button>
+
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText(FIREBASE_STORAGE_RULES);
+                      showToast('Firebase Security Rules copied.', 'success');
+                    }}
+                    className="text-xs"
+                  >
+                    Copy Storage Rules
+                  </Button>
+                </Box>
+              </Paper>
+
+              {/* CARD 2: Cloudinary Global CDN */}
+              <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-xl space-y-5 shadow-xl flex flex-col justify-between">
+                <Box className="space-y-4">
+                  <Box className="flex items-center justify-between border-b border-white/10 pb-4">
+                    <Box className="flex items-center gap-3">
+                      <Server className="text-sky-400" size={22} />
+                      <Box>
+                        <Typography className="text-base font-bold text-white uppercase font-syne">
+                          Cloudinary Global CDN
+                        </Typography>
+                        <Typography className="text-xs text-slate-400">
+                          Zero-Egress Image Transformation & CDN
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {isCloudinaryConfigured() ? (
+                      <Chip
+                        label="CLOUDINARY ACTIVE"
+                        size="small"
+                        sx={{ backgroundColor: 'rgba(5, 150, 105, 0.2)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.4)', fontWeight: 'bold', fontSize: '11px' }}
+                      />
+                    ) : (
+                      <Chip
+                        label="OPTIONAL CDN"
+                        size="small"
+                        sx={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', color: '#94a3b8', border: '1px solid rgba(255, 255, 255, 0.1)', fontWeight: 'bold', fontSize: '11px' }}
+                      />
+                    )}
+                  </Box>
+
+                  <Typography className="text-xs text-slate-300 leading-relaxed">
+                    Cloudinary offers 25GB free monthly bandwidth with automatic WebP/AVIF compression. Enter your free Cloudinary details below to route product and custom vector uploads through Cloudinary:
+                  </Typography>
+
+                  <form onSubmit={handleSaveCloudinary} className="space-y-3">
+                    <Box>
+                      <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider block mb-1">
+                        Cloudinary Cloud Name
+                      </label>
+                      <input
+                        type="text"
+                        value={cldCloudName}
+                        onChange={(e) => setCldCloudName(e.target.value)}
+                        placeholder="e.g. valknut-media"
+                        className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-lg px-3.5 py-2.5 text-xs text-white font-mono outline-none"
+                      />
+                    </Box>
+
+                    <Box>
+                      <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider block mb-1">
+                        Unsigned Upload Preset
+                      </label>
+                      <input
+                        type="text"
+                        value={cldPreset}
+                        onChange={(e) => setCldPreset(e.target.value)}
+                        placeholder="e.g. valknut_uploads"
+                        className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-lg px-3.5 py-2.5 text-xs text-white font-mono outline-none"
+                      />
+                    </Box>
+
+                    <Button
+                      type="submit"
+                      variant="gold"
+                      size="sm"
+                      className="w-full text-xs py-2.5 font-bold"
+                    >
+                      Save & Activate Cloudinary
+                    </Button>
+                  </form>
+                </Box>
+
+                <Box className="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+                  <span>Don't have Cloudinary?</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    rightIcon={<ExternalLink size={13} />}
+                    onClick={() => window.open('https://cloudinary.com/users/register_free', '_blank')}
+                    className="text-xs py-1 px-3 border-white/15 text-slate-300"
+                  >
+                    Create Free Cloudinary Account
+                  </Button>
+                </Box>
+              </Paper>
+            </Box>
+
+            {/* CARD 3: Interactive Media Upload Sandbox */}
+            <Paper className="p-6 bg-[#0E1017] border border-white/10 rounded-xl space-y-4 shadow-xl">
+              <Box className="flex items-center gap-3 border-b border-white/10 pb-4">
+                <Upload className="text-[#D4AF37]" size={22} />
+                <Box>
+                  <Typography className="text-base font-bold text-white uppercase font-syne">
+                    Live Cloud Upload Verification Sandbox
+                  </Typography>
+                  <Typography className="text-xs text-slate-400">
+                    Upload an image file directly to verify cloud upload pipeline and test CDN delivery.
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Box className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <Box className="space-y-3">
+                  <Box
+                    onClick={() => document.getElementById('test-file-input')?.click()}
+                    className="border-2 border-dashed border-white/20 hover:border-[#D4AF37] bg-[#141620]/60 p-6 rounded-xl text-center cursor-pointer transition-all"
+                  >
+                    <input
+                      id="test-file-input"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setTestUploadFile(e.target.files?.[0] || null)}
+                      className="hidden"
+                    />
+                    <Upload size={32} className="mx-auto text-[#D4AF37] mb-2 opacity-80" />
+                    <Typography className="text-sm font-bold text-white">
+                      {testUploadFile ? testUploadFile.name : 'Select or Drop a Test Image'}
+                    </Typography>
+                    <Typography className="text-xs text-slate-400 mt-1">
+                      {testUploadFile ? `${(testUploadFile.size / 1024).toFixed(1)} KB` : 'JPG, PNG, WEBP (Max 10MB)'}
+                    </Typography>
+                  </Box>
+
+                  <Button
+                    onClick={handleRunTestUpload}
+                    disabled={!testUploadFile || isTestingUpload}
+                    variant="gold"
+                    className="w-full text-xs font-bold py-2.5"
+                  >
+                    {isTestingUpload ? `Uploading (${testUploadProgress}%)...` : 'Run Cloud Upload Test'}
+                  </Button>
+
+                  {testUploadError && (
+                    <Alert severity="error" className="bg-red-950/40 border border-red-500/40 text-red-300 text-xs">
+                      {testUploadError}
+                    </Alert>
+                  )}
+                </Box>
+
+                {/* Test Result Display */}
+                <Box className="bg-[#141620] p-4 rounded-xl border border-white/10 space-y-3 min-h-[160px] flex flex-col justify-center">
+                  {testUploadResult ? (
+                    <Box className="space-y-3">
+                      <Box className="flex items-center gap-2 text-emerald-400 text-xs font-bold font-mono">
+                        <Check size={16} />
+                        <span>Upload Succeeded!</span>
+                      </Box>
+                      <Box className="flex items-center gap-3">
+                        <Box
+                          component="img"
+                          src={testUploadResult.url}
+                          alt="Test Upload"
+                          className="w-16 h-16 object-cover rounded-lg border border-white/10"
+                        />
+                        <Box className="flex-1 overflow-hidden">
+                          <Typography className="text-xs font-mono text-slate-300 truncate">
+                            {testUploadResult.fileName}
+                          </Typography>
+                          <Typography className="text-[11px] font-mono text-[#D4AF37] truncate mt-0.5">
+                            {testUploadResult.storagePath}
+                          </Typography>
+                          <Typography className="text-[10px] text-slate-400 font-mono mt-0.5">
+                            {(testUploadResult.sizeBytes / 1024).toFixed(1)} KB • {testUploadResult.type}
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          readOnly
+                          value={testUploadResult.url}
+                          className="flex-1 bg-[#0E1017] border border-white/15 rounded px-2.5 py-1.5 text-xs text-slate-300 font-mono truncate"
+                        />
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => {
+                            navigator.clipboard.writeText(testUploadResult.url);
+                            showToast('CDN URL copied to clipboard.', 'success');
+                          }}
+                          className="text-xs py-1 px-3"
+                        >
+                          Copy
+                        </Button>
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Box className="text-center py-6 text-slate-500 space-y-1">
+                      <Cloud size={28} className="mx-auto text-slate-600 mb-1" />
+                      <Typography className="text-xs font-semibold">No test upload run yet</Typography>
+                      <Typography className="text-[11px]">Select a file and click "Run Cloud Upload Test" above.</Typography>
+                    </Box>
+                  )}
+                </Box>
+              </Box>
+            </Paper>
+          </Box>
+        )}
+
+        {/* 10. DATABASE & SUPABASE TAB */}
         {activeTab === 'DATABASE' && (
           <Box className="space-y-6 animate-fade-in">
             {/* Supabase SQL Card */}
@@ -1569,142 +2440,220 @@ export const AdminDashboard: React.FC = () => {
 
       {/* PRODUCT CREATE/EDIT MODAL */}
       {isProductModalOpen && (
-        <Box className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
-          <Box className="bg-[var(--bg-surface)] border border-[#D4AF37]/40 w-full max-w-4xl rounded-md p-6 sm:p-8 space-y-6 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
-            <Box className="flex items-center justify-between border-b border-white/10 pb-4">
-              <Box>
-                <Typography component="span" className="text-[10px] font-mono text-[#D4AF37] font-bold uppercase tracking-widest block">
-                  {editingProduct ? 'EDIT EXISTING GARMENT' : 'CREATE NEW LUXURY PRODUCT'}
-                </Typography>
-                <h3 className="text-xl font-black uppercase text-[var(--text-primary)] font-syne">
-                  {editingProduct ? editingProduct.name : 'NEW VALKNUT PRODUCT'}
-                </h3>
+        <Box className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-hidden animate-fade-in">
+          <Box className="bg-[#0E1017] border border-[#D4AF37]/50 w-full max-w-5xl rounded-2xl shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
+            {/* Sticky Modal Header */}
+            <Box className="flex items-center justify-between border-b border-white/10 px-6 sm:px-8 py-5 bg-[#0E1017] flex-shrink-0 z-20">
+              <Box className="flex items-center gap-3.5">
+                <Box className="w-11 h-11 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center text-[#D4AF37] flex-shrink-0">
+                  <Package size={22} />
+                </Box>
+                <Box>
+                  <Typography className="text-xs font-mono text-[#D4AF37] font-bold uppercase tracking-widest block">
+                    {editingProduct ? 'GARMENT EDITOR' : 'NEW CATALOG ADDITION'}
+                  </Typography>
+                  <h3 className="text-xl sm:text-2xl font-bold uppercase text-white font-syne tracking-tight mt-0.5">
+                    {editingProduct ? editingProduct.name : 'Create Luxury Streetwear Garment'}
+                  </h3>
+                </Box>
               </Box>
-              <Box component="button" onClick={() => setIsProductModalOpen(false)} className="text-slate-400 hover:text-[var(--text-primary)] p-1">
-                <XCircle size={22} />
-              </Box>
+              <IconButton
+                icon={<XCircle size={24} />}
+                label="Close Modal"
+                variant="ghost"
+                onClick={() => setIsProductModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              />
             </Box>
 
-            <form onSubmit={handleSaveProduct} className="space-y-6 font-mono text-xs">
+            <form onSubmit={handleSaveProduct} className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-8">
 
-              {/* Basic Fields */}
-              <Box className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Box>
-                  <label className="text-slate-300 font-bold block mb-1">Product Title *</label>
-                  <input
-                    type="text"
-                    required
-                    value={prodName}
-                    onChange={(e) => setProdName(e.target.value)}
-                    placeholder="e.g. Valknut Oversized Heavyweight Boxy Hoodie"
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
-                  />
-                </Box>
+              {/* 1. Core Garment Identity */}
+              <Box className="bg-[#141620] border border-white/10 rounded-xl p-6 space-y-4">
+                <Typography className="text-sm font-bold text-white uppercase font-syne tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+                  1. Garment Identity & Classification
+                </Typography>
 
-                <Box>
-                  <label className="text-slate-300 font-bold block mb-1">URL Slug (Auto-generated if empty)</label>
-                  <input
-                    type="text"
-                    value={prodSlug}
-                    onChange={(e) => setProdSlug(e.target.value)}
-                    placeholder="valknut-oversized-heavyweight-boxy-hoodie"
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
-                  />
-                </Box>
-              </Box>
-
-              {/* Pricing & Categories */}
-              <Box className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <Box>
-                  <label className="text-slate-300 font-bold block mb-1">Regular Price (LKR) *</label>
-                  <input
-                    type="number"
-                    required
-                    value={prodPrice}
-                    onChange={(e) => setProdPrice(Number(e.target.value))}
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
-                  />
-                </Box>
-
-                <Box>
-                  <label className="text-slate-300 font-bold block mb-1">Sale Price (LKR)</label>
-                  <input
-                    type="number"
-                    value={prodSalePrice || ''}
-                    onChange={(e) => setProdSalePrice(e.target.value ? Number(e.target.value) : undefined)}
-                    placeholder="Optional"
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
-                  />
-                </Box>
-
-                <Box>
-                  <label className="text-slate-300 font-bold block mb-1">Category *</label>
-                  <select
-                    value={prodCategory}
-                    onChange={(e) => setProdCategory(e.target.value as CategoryType)}
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
-                  >
-                    <option value="MEN">MEN</option>
-                    <option value="WOMEN">WOMEN</option>
-                    <option value="ESSENTIALS">ESSENTIALS</option>
-                  </select>
-                </Box>
-
-                <Box>
-                  <label className="text-slate-300 font-bold block mb-1">Subcategory *</label>
-                  <select
-                    value={prodSubCategory}
-                    onChange={(e) => setProdSubCategory(e.target.value as SubCategoryType)}
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
-                  >
-                    <option value="Oversized T-Shirts">Oversized T-Shirts</option>
-                    <option value="T-Shirts">T-Shirts</option>
-                    <option value="Hoodies">Hoodies</option>
-                    <option value="Tops">Tops</option>
-                    <option value="Joggers">Joggers</option>
-                    <option value="Jeans">Jeans</option>
-                    <option value="Accessories">Accessories</option>
-                    <option value="Core products">Core products</option>
-                  </select>
-                </Box>
-              </Box>
-
-              {/* Description, Material & Care */}
-              <Box className="space-y-3">
-                <Box>
-                  <label className="text-slate-300 font-bold block mb-1">Product Description</label>
-                  <textarea
-                    rows={2}
-                    value={prodDescription}
-                    onChange={(e) => setProdDescription(e.target.value)}
-                    className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
-                  />
-                </Box>
-
-                <Box className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Box className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Box>
-                    <label className="text-slate-300 font-bold block mb-1">Fabric & Material Composition</label>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                      Product Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={prodName}
+                      onChange={(e) => setProdName(e.target.value)}
+                      placeholder="e.g. Celestial Mountain 480GSM Sovereign Hoodie"
+                      className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-600 outline-none transition-all"
+                    />
+                  </Box>
+
+                  <Box>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                      URL Slug
+                    </label>
+                    <input
+                      type="text"
+                      value={prodSlug}
+                      onChange={(e) => setProdSlug(e.target.value)}
+                      placeholder="auto-generated-from-title"
+                      className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] rounded-lg px-4 py-3 text-sm text-white font-mono placeholder:text-slate-600 outline-none transition-all"
+                    />
+                  </Box>
+                </Box>
+
+                <Box className="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-2">
+                  <Box>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                      Department / Category *
+                    </label>
+                    <select
+                      value={prodCategory}
+                      onChange={(e) => setProdCategory(e.target.value as CategoryType)}
+                      className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] rounded-lg px-4 py-3 text-sm text-white outline-none cursor-pointer"
+                    >
+                      <option value="MEN">MEN</option>
+                      <option value="WOMEN">WOMEN</option>
+                      <option value="ESSENTIALS">ESSENTIALS</option>
+                    </select>
+                  </Box>
+
+                  <Box>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                      Subcategory *
+                    </label>
+                    <select
+                      value={prodSubCategory}
+                      onChange={(e) => setProdSubCategory(e.target.value as SubCategoryType)}
+                      className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] rounded-lg px-4 py-3 text-sm text-white outline-none cursor-pointer"
+                    >
+                      <option value="Oversized T-Shirts">Oversized T-Shirts</option>
+                      <option value="T-Shirts">T-Shirts</option>
+                      <option value="Hoodies">Hoodies</option>
+                      <option value="Tops">Tops</option>
+                      <option value="Joggers">Joggers</option>
+                      <option value="Jeans">Jeans</option>
+                      <option value="Accessories">Accessories</option>
+                      <option value="Core products">Core products</option>
+                    </select>
+                  </Box>
+
+                  <Box>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                      Collection / Season
+                    </label>
+                    <input
+                      type="text"
+                      value={prodCollection}
+                      onChange={(e) => setProdCollection(e.target.value)}
+                      placeholder="e.g. DARK SOVEREIGN 2026"
+                      className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] rounded-lg px-4 py-3 text-sm text-white uppercase outline-none"
+                    />
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* 2. Pricing & Fabric Specifications */}
+              <Box className="bg-[#141620] border border-white/10 rounded-xl p-6 space-y-4">
+                <Typography className="text-sm font-bold text-white uppercase font-syne tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+                  2. Pricing & Fabric Engineering
+                </Typography>
+
+                <Box className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+                  <Box>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                      Regular Price (LKR) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      value={prodPrice}
+                      onChange={(e) => setProdPrice(Number(e.target.value))}
+                      className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] rounded-lg px-4 py-3 text-sm text-white font-mono font-bold outline-none"
+                    />
+                  </Box>
+
+                  <Box>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                      Sale Price (LKR)
+                    </label>
+                    <input
+                      type="number"
+                      value={prodSalePrice || ''}
+                      onChange={(e) => setProdSalePrice(e.target.value ? Number(e.target.value) : undefined)}
+                      placeholder="Optional"
+                      className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] rounded-lg px-4 py-3 text-sm text-emerald-400 font-mono font-bold outline-none"
+                    />
+                  </Box>
+
+                  <Box className="sm:col-span-2">
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                      Fabric Composition & GSM Weight
+                    </label>
                     <input
                       type="text"
                       value={prodMaterial}
                       onChange={(e) => setProdMaterial(e.target.value)}
-                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
+                      placeholder="e.g. 100% Combed Organic Heavy Cotton (480 GSM)"
+                      className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] rounded-lg px-4 py-3 text-sm text-white outline-none"
                     />
                   </Box>
+                </Box>
+
+                <Box className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
                   <Box>
-                    <label className="text-slate-300 font-bold block mb-1">Care & Wash Instructions</label>
-                    <input
-                      type="text"
-                      value={prodCare}
-                      onChange={(e) => setProdCare(e.target.value)}
-                      className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded p-2.5 text-[var(--text-primary)]"
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                      Garment Description
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={prodDescription}
+                      onChange={(e) => setProdDescription(e.target.value)}
+                      placeholder="Detailed luxury garment description..."
+                      className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] rounded-lg p-3.5 text-sm text-white outline-none leading-relaxed"
                     />
+                  </Box>
+
+                  <Box className="space-y-4">
+                    <Box>
+                      <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                        Care & Wash Instructions
+                      </label>
+                      <input
+                        type="text"
+                        value={prodCare}
+                        onChange={(e) => setProdCare(e.target.value)}
+                        placeholder="e.g. Machine wash cold (30°C). Line dry in shade."
+                        className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] rounded-lg px-4 py-3 text-sm text-white outline-none"
+                      />
+                    </Box>
+
+                    <Box>
+                      <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                        Search Tags (Comma-separated)
+                      </label>
+                      <input
+                        type="text"
+                        value={prodTags}
+                        onChange={(e) => setProdTags(e.target.value)}
+                        placeholder="Oversized, 480GSM, Celestial Mountain, Dark Luxury"
+                        className="w-full bg-[#0E1017] border border-white/15 focus:border-[#D4AF37] rounded-lg px-4 py-3 text-sm text-white outline-none"
+                      />
+                    </Box>
                   </Box>
                 </Box>
               </Box>
 
-              {/* Product Media Gallery Uploader & Reordering */}
-              <Box className="p-4 bg-[#0A0B0E] rounded-md border border-white/10 space-y-3">
+              {/* 3. Media Gallery Uploader */}
+              <Box className="bg-[#141620] border border-white/10 rounded-xl p-6 space-y-4">
+                <Typography className="text-sm font-bold text-white uppercase font-syne tracking-wider border-b border-white/10 pb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+                  3. Product Media & High-Res Lookbook Photos
+                </Typography>
+
                 <ProductImageManager
                   productId={editingProduct?.id || prodSlug || 'new-product'}
                   images={prodImages}
@@ -1712,13 +2661,15 @@ export const AdminDashboard: React.FC = () => {
                 />
               </Box>
 
-              {/* Variant Stock Management Table */}
-              <Box className="p-4 bg-[#141620] rounded border border-white/10 space-y-3">
-                <Box className="flex items-center justify-between">
-                  <Typography component="span" className="text-xs font-bold text-[#D4AF37] uppercase">
-                    SIZE & COLOR VARIANTS INVENTORY
+              {/* 4. Variant Inventory Matrix */}
+              <Box className="bg-[#141620] border border-white/10 rounded-xl p-6 space-y-4">
+                <Box className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <Typography className="text-sm font-bold text-white uppercase font-syne tracking-wider flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+                    4. Size & Color Variant Inventory ({prodVariants.length} Variants)
                   </Typography>
-                  <Box component="button"
+
+                  <button
                     type="button"
                     onClick={() => {
                       const newV: ProductVariant = {
@@ -1731,115 +2682,182 @@ export const AdminDashboard: React.FC = () => {
                       };
                       setProdVariants([...prodVariants, newV]);
                     }}
-                    className="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-[var(--text-primary)] rounded text-[10px]"
+                    className="px-4 py-2 bg-[#D4AF37]/15 hover:bg-[#D4AF37]/30 border border-[#D4AF37]/50 text-[#D4AF37] rounded-lg text-xs font-bold font-sans transition-all cursor-pointer"
                   >
-                    + Add Variant
-                  </Box>
+                    + Add Size / Color Variant
+                  </button>
                 </Box>
 
-                <Box className="space-y-2">
+                <Box className="space-y-3">
+                  {/* Column Labels */}
+                  <Box className="hidden sm:grid grid-cols-12 gap-3 text-xs font-bold text-slate-400 uppercase tracking-wider px-2">
+                    <span className="col-span-2">Size</span>
+                    <span className="col-span-3">Color Name</span>
+                    <span className="col-span-2">Color Hex</span>
+                    <span className="col-span-3">SKU Identifier</span>
+                    <span className="col-span-1">Stock</span>
+                    <span className="col-span-1 text-right">Action</span>
+                  </Box>
+
                   {prodVariants.map((v, idx) => (
-                    <Box key={v.id || idx} className="grid grid-cols-5 gap-2 items-center text-[11px]">
-                      <select
-                        value={v.size}
-                        onChange={(e) => {
-                          const copy = [...prodVariants];
-                          copy[idx].size = e.target.value as any;
-                          setProdVariants(copy);
-                        }}
-                        className="bg-[var(--bg-surface)] border border-white/15 rounded p-1.5 text-[var(--text-primary)]"
-                      >
-                        <option value="S">Size S</option>
-                        <option value="M">Size M</option>
-                        <option value="L">Size L</option>
-                        <option value="XL">Size XL</option>
-                        <option value="XXL">Size XXL</option>
-                      </select>
+                    <Box key={v.id || idx} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center bg-[#0E1017] p-3 rounded-lg border border-white/10">
+                      <Box className="col-span-2">
+                        <select
+                          value={v.size}
+                          onChange={(e) => {
+                            const copy = [...prodVariants];
+                            copy[idx].size = e.target.value as any;
+                            setProdVariants(copy);
+                          }}
+                          className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-lg px-3 py-2 text-sm text-white font-bold outline-none cursor-pointer"
+                        >
+                          <option value="S">Size S</option>
+                          <option value="M">Size M</option>
+                          <option value="L">Size L</option>
+                          <option value="XL">Size XL</option>
+                          <option value="XXL">Size XXL</option>
+                        </select>
+                      </Box>
 
-                      <input
-                        type="text"
-                        value={v.color}
-                        onChange={(e) => {
-                          const copy = [...prodVariants];
-                          copy[idx].color = e.target.value;
-                          setProdVariants(copy);
-                        }}
-                        placeholder="Color Name"
-                        className="bg-[var(--bg-surface)] border border-white/15 rounded p-1.5 text-[var(--text-primary)]"
-                      />
+                      <Box className="col-span-3">
+                        <input
+                          type="text"
+                          value={v.color}
+                          onChange={(e) => {
+                            const copy = [...prodVariants];
+                            copy[idx].color = e.target.value;
+                            setProdVariants(copy);
+                          }}
+                          placeholder="Color Name (e.g. Onyx Black)"
+                          className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-lg px-3 py-2 text-sm text-white outline-none"
+                        />
+                      </Box>
 
-                      <input
-                        type="text"
-                        value={v.sku}
-                        onChange={(e) => {
-                          const copy = [...prodVariants];
-                          copy[idx].sku = e.target.value;
-                          setProdVariants(copy);
-                        }}
-                        placeholder="SKU"
-                        className="bg-[var(--bg-surface)] border border-white/15 rounded p-1.5 text-[var(--text-primary)]"
-                      />
+                      <Box className="col-span-2 flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={v.colorHex || '#0a0a0c'}
+                          onChange={(e) => {
+                            const copy = [...prodVariants];
+                            copy[idx].colorHex = e.target.value;
+                            setProdVariants(copy);
+                          }}
+                          className="w-8 h-8 rounded border border-white/20 cursor-pointer bg-transparent"
+                        />
+                        <input
+                          type="text"
+                          value={v.colorHex || '#0a0a0c'}
+                          onChange={(e) => {
+                            const copy = [...prodVariants];
+                            copy[idx].colorHex = e.target.value;
+                            setProdVariants(copy);
+                          }}
+                          className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-lg px-2 py-2 text-xs text-white font-mono outline-none"
+                        />
+                      </Box>
 
-                      <input
-                        type="number"
-                        value={v.stock}
-                        onChange={(e) => {
-                          const copy = [...prodVariants];
-                          copy[idx].stock = Number(e.target.value);
-                          setProdVariants(copy);
-                        }}
-                        placeholder="Stock"
-                        className="bg-[var(--bg-surface)] border border-white/15 rounded p-1.5 text-[var(--text-primary)] font-bold"
-                      />
+                      <Box className="col-span-3">
+                        <input
+                          type="text"
+                          value={v.sku}
+                          onChange={(e) => {
+                            const copy = [...prodVariants];
+                            copy[idx].sku = e.target.value;
+                            setProdVariants(copy);
+                          }}
+                          placeholder="VK-HD-BLK-M"
+                          className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-lg px-3 py-2 text-sm text-white font-mono outline-none"
+                        />
+                      </Box>
 
-                      <Box component="button"
-                        type="button"
-                        onClick={() => setProdVariants(prodVariants.filter((_, i) => i !== idx))}
-                        className="text-red-400 hover:text-red-300 p-1 text-center"
-                      >
-                        Remove
+                      <Box className="col-span-1">
+                        <input
+                          type="number"
+                          value={v.stock}
+                          onChange={(e) => {
+                            const copy = [...prodVariants];
+                            copy[idx].stock = Number(e.target.value);
+                            setProdVariants(copy);
+                          }}
+                          placeholder="Stock"
+                          className="w-full bg-[#141620] border border-white/15 focus:border-[#D4AF37] rounded-lg px-2 py-2 text-sm text-white font-bold text-center outline-none"
+                        />
+                      </Box>
+
+                      <Box className="col-span-1 text-right">
+                        <button
+                          type="button"
+                          onClick={() => setProdVariants(prodVariants.filter((_, i) => i !== idx))}
+                          className="p-2 text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded-lg transition-colors cursor-pointer"
+                          title="Remove Variant"
+                        >
+                          <Trash2 size={16} />
+                        </button>
                       </Box>
                     </Box>
                   ))}
                 </Box>
               </Box>
 
-              {/* Status Flags */}
-              <Box className="flex items-center gap-6 text-xs text-slate-300 flex-wrap">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={prodIsNewArrival} onChange={(e) => setProdIsNewArrival(e.target.checked)} className="accent-[#D4AF37]" />
-                  <Typography component="span">New Arrival</Typography>
+              {/* 5. Merchandising Feature Flags */}
+              <Box className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <label className="flex items-center gap-3 p-4 bg-[#141620] rounded-xl border border-white/10 cursor-pointer hover:border-[#D4AF37]/40 transition-all">
+                  <input
+                    type="checkbox"
+                    checked={prodIsNewArrival}
+                    onChange={(e) => setProdIsNewArrival(e.target.checked)}
+                    className="w-5 h-5 accent-[#D4AF37] rounded"
+                  />
+                  <Box>
+                    <Typography className="text-sm font-bold text-white">New Arrival</Typography>
+                    <Typography className="text-xs text-slate-400">Display in New Drops section</Typography>
+                  </Box>
                 </label>
 
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={prodIsBestSeller} onChange={(e) => setProdIsBestSeller(e.target.checked)} className="accent-[#D4AF37]" />
-                  <Typography component="span">Best Seller</Typography>
+                <label className="flex items-center gap-3 p-4 bg-[#141620] rounded-xl border border-white/10 cursor-pointer hover:border-[#D4AF37]/40 transition-all">
+                  <input
+                    type="checkbox"
+                    checked={prodIsBestSeller}
+                    onChange={(e) => setProdIsBestSeller(e.target.checked)}
+                    className="w-5 h-5 accent-[#D4AF37] rounded"
+                  />
+                  <Box>
+                    <Typography className="text-sm font-bold text-white">Best Seller</Typography>
+                    <Typography className="text-xs text-slate-400">Mark as trending signature piece</Typography>
+                  </Box>
                 </label>
 
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={prodIsCustomizable} onChange={(e) => setProdIsCustomizable(e.target.checked)} className="accent-[#D4AF37]" />
-                  <Typography component="span">Custom Studio Enabled</Typography>
+                <label className="flex items-center gap-3 p-4 bg-[#141620] rounded-xl border border-white/10 cursor-pointer hover:border-[#D4AF37]/40 transition-all">
+                  <input
+                    type="checkbox"
+                    checked={prodIsCustomizable}
+                    onChange={(e) => setProdIsCustomizable(e.target.checked)}
+                    className="w-5 h-5 accent-[#D4AF37] rounded"
+                  />
+                  <Box>
+                    <Typography className="text-sm font-bold text-[#D4AF37]">3D Custom Studio</Typography>
+                    <Typography className="text-xs text-slate-400">Available for bespoke prints</Typography>
+                  </Box>
                 </label>
               </Box>
 
-              {/* Action Buttons */}
-              <Box className="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
-                <Box component="button"
+              {/* Modal Action Controls */}
+              <Box className="border-t border-white/10 flex items-center justify-end gap-4 sticky bottom-0 bg-[#0E1017]/95 backdrop-blur-md -mx-6 sm:-mx-8 px-6 sm:px-8 py-4 -mb-6 sm:-mb-8 z-10">
+                <button
                   type="button"
                   onClick={() => setIsProductModalOpen(false)}
-                  className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 rounded font-bold"
+                  className="px-6 py-3 bg-white/5 hover:bg-white/10 text-slate-300 rounded-lg text-sm font-bold transition-all cursor-pointer"
                 >
                   Cancel
-                </Box>
+                </button>
 
-                <Box component="button"
+                <button
                   type="submit"
-                  className="px-8 py-2.5 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold uppercase tracking-widest rounded"
+                  className="px-8 py-3 bg-[#D4AF37] hover:bg-[#E2B714] text-black font-extrabold text-sm uppercase tracking-wider rounded-lg shadow-xl shadow-[#D4AF37]/20 transition-all cursor-pointer"
                 >
-                  {editingProduct ? 'SAVE CHANGES' : 'CREATE PRODUCT'}
-                </Box>
+                  {editingProduct ? 'Save Garment Changes' : 'Publish Product to Storefront'}
+                </button>
               </Box>
-
             </form>
           </Box>
         </Box>

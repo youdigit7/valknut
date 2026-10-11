@@ -90,7 +90,8 @@ interface StoreContextType {
 
   // User Auth & Profile
   user: UserProfile | null;
-  loginUser: (email: string, name: string) => void;
+  loginUser: (email: string, name: string, isAdmin?: boolean, extra?: Partial<UserProfile>) => void;
+  setUserProfile: (profile: UserProfile | null) => void;
   logoutUser: () => void;
 
   // Notifications
@@ -135,8 +136,21 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   });
 
   const [user, setUser] = useState<UserProfile | null>(() => {
-    const saved = localStorage.getItem('valknut_user');
-    return saved ? JSON.parse(saved) : { id: 'u-1', email: 'guest@valknutofficial.com', name: 'VALKNUT Member', phone: '+94770000000', isAdmin: true };
+    try {
+      const saved = localStorage.getItem('valknut_user');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Clean out legacy mock default
+        if (parsed?.email === 'guest@valknutofficial.com') {
+          localStorage.removeItem('valknut_user');
+          return null;
+        }
+        return parsed;
+      }
+    } catch (e) {
+      console.warn('Failed to parse cached user:', e);
+    }
+    return null;
   });
 
   const [notificationLogs, setNotificationLogs] = useState<NotificationLog[]>(() => {
@@ -405,22 +419,46 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   // User Auth
-  const loginUser = (email: string, name: string) => {
+  const loginUser = (
+    email: string, 
+    name: string, 
+    isAdmin?: boolean, 
+    extra?: Partial<UserProfile>
+  ) => {
+    const determinedAdmin = typeof isAdmin === 'boolean' 
+      ? isAdmin 
+      : Boolean(email.toLowerCase().includes('admin') || email.toLowerCase().includes('valknut') || email.toLowerCase() === 'founder@valknutofficial.com');
+
     const newUser: UserProfile = {
-      id: `u-${Date.now()}`,
+      id: extra?.id || `u-${Date.now()}`,
       email,
       name,
-      phone: '+94770000000',
-      isAdmin: email.toLowerCase().includes('admin') || email.toLowerCase().includes('valknut')
+      phone: extra?.phone || '+94770000000',
+      address: extra?.address,
+      isAdmin: determinedAdmin
     };
     setUser(newUser);
     localStorage.setItem('valknut_user', JSON.stringify(newUser));
     showToast(`Welcome back, ${name}.`, 'success');
   };
 
+  const setUserProfile = (profile: UserProfile | null) => {
+    setUser(profile);
+    if (profile) {
+      localStorage.setItem('valknut_user', JSON.stringify(profile));
+    } else {
+      localStorage.removeItem('valknut_user');
+      localStorage.removeItem('valknut_auth_session');
+    }
+  };
+
   const logoutUser = () => {
     setUser(null);
     localStorage.removeItem('valknut_user');
+    localStorage.removeItem('valknut_auth_session');
+    if (isSupabaseConfigured && supabase) {
+      supabase.auth.signOut().catch(() => {});
+    }
     showToast('Signed out of VALKNUT.', 'info');
   };
 
@@ -481,6 +519,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       deleteCoupon,
       user,
       loginUser,
+      setUserProfile,
       logoutUser,
       notificationLogs,
       toast,

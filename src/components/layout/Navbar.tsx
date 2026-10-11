@@ -13,12 +13,14 @@ import {
   ChevronRight,
   Sparkles,
   Sun,
-  Moon
+  Moon,
+  ShieldCheck,
+  LogOut
 } from 'lucide-react';
 import { SearchModal } from '../shop/SearchModal';
 import {
   Box, Typography, Container,
-  Button, IconButton, Badge, Drawer, Menu as MuiMenu, MenuItem, AppBar, Toolbar
+  Button, IconButton, Badge, Drawer, Menu as MuiMenu, MenuItem, AppBar, Toolbar, Divider
 } from '@mui/material';
 import darkLogo from '../../assets/logos/symbol-dark.png';
 import lightLogo from '../../assets/logos/symbol-light.png';
@@ -28,8 +30,11 @@ export const Navbar: React.FC = () => {
     cart,
     setIsCartOpen,
     setIsAccountOpen,
+    setIsAdminOpen,
     activeCategory,
-    setActiveCategory
+    setActiveCategory,
+    user,
+    logoutUser
   } = useStore();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -37,6 +42,7 @@ export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState('LKR');
   const [currencyAnchorEl, setCurrencyAnchorEl] = useState<null | HTMLElement>(null);
+  const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
   const { mode, toggleTheme } = useAppTheme();
 
   const cartItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -233,9 +239,120 @@ export const Navbar: React.FC = () => {
               <IconButton onClick={toggleTheme} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
                 {mode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
               </IconButton>
-              <IconButton onClick={() => setIsAccountOpen(true)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
+              <IconButton 
+                onClick={(e) => setUserAnchorEl(e.currentTarget)} 
+                sx={{ 
+                  color: user ? '#D4AF37' : 'var(--text-secondary)', 
+                  '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } 
+                }}
+                aria-label="Account and admin menu"
+              >
                 <User size={18} />
               </IconButton>
+              <MuiMenu
+                anchorEl={userAnchorEl}
+                open={Boolean(userAnchorEl)}
+                onClose={() => setUserAnchorEl(null)}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      bgcolor: '#0E1017',
+                      border: '1px solid rgba(212,175,55,0.3)',
+                      mt: 1.5,
+                      minWidth: 230,
+                      boxShadow: '0 20px 50px rgba(0,0,0,0.9)',
+                      p: 1
+                    }
+                  }
+                }}
+              >
+                <Box sx={{ px: 2, py: 1.5, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, letterSpacing: '0.2em', color: '#D4AF37', textTransform: 'uppercase' }}>
+                    {user ? (user.isAdmin ? 'EXECUTIVE ACCESS' : 'VALKNUT VIP') : 'SOVEREIGN PORTAL'}
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.8125rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>
+                    {user ? user.name : 'Guest Customer'}
+                  </Typography>
+                </Box>
+
+                <MenuItem
+                  onClick={() => {
+                    setUserAnchorEl(null);
+                    setIsAccountOpen(true);
+                  }}
+                  sx={{
+                    fontSize: '0.75rem',
+                    fontFamily: '"Inter", sans-serif',
+                    color: 'var(--text-primary)',
+                    py: 1.25,
+                    px: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    '&:hover': { bgcolor: 'rgba(255,255,255,0.06)' }
+                  }}
+                >
+                  <User size={15} color="#D4AF37" />
+                  <Box>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 600 }}>Customer Portal</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)' }}>Orders, address & profile</Typography>
+                  </Box>
+                </MenuItem>
+
+                <MenuItem
+                  onClick={() => {
+                    setUserAnchorEl(null);
+                    handleNavigate('#/admin');
+                    setIsAdminOpen(true);
+                  }}
+                  sx={{
+                    fontSize: '0.75rem',
+                    fontFamily: '"Inter", sans-serif',
+                    color: '#D4AF37',
+                    py: 1.25,
+                    px: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    bgcolor: 'rgba(212,175,55,0.05)',
+                    borderRadius: 1,
+                    my: 0.5,
+                    '&:hover': { bgcolor: 'rgba(212,175,55,0.15)' }
+                  }}
+                >
+                  <ShieldCheck size={15} color="#D4AF37" />
+                  <Box>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: '#D4AF37' }}>Open Admin</Typography>
+                    <Typography sx={{ fontSize: '0.625rem', color: 'rgba(255,255,255,0.6)' }}>Products, orders & studio</Typography>
+                  </Box>
+                </MenuItem>
+
+                {user && (
+                  <>
+                    <Divider sx={{ my: 0.5, borderColor: 'rgba(255,255,255,0.08)' }} />
+                    <MenuItem
+                      onClick={() => {
+                        setUserAnchorEl(null);
+                        logoutUser();
+                      }}
+                      sx={{
+                        fontSize: '0.75rem',
+                        fontFamily: '"Inter", sans-serif',
+                        color: '#f87171',
+                        py: 1,
+                        px: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1.5,
+                        '&:hover': { bgcolor: 'rgba(239,68,68,0.1)' }
+                      }}
+                    >
+                      <LogOut size={15} />
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 600 }}>Sign Out</Typography>
+                    </MenuItem>
+                  </>
+                )}
+              </MuiMenu>
               <IconButton onClick={() => handleNavigate('#/lookbook')} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: 'rgba(255,255,255,0.05)' } }}>
                 <Heart size={18} />
               </IconButton>
@@ -254,7 +371,7 @@ export const Navbar: React.FC = () => {
               <IconButton onClick={() => setIsSearchOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
                 <Search size={16} />
               </IconButton>
-              <IconButton onClick={() => setIsAccountOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
+              <IconButton onClick={(e) => setUserAnchorEl(e.currentTarget)} sx={{ color: user ? '#D4AF37' : 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
                 <User size={16} />
               </IconButton>
               <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
@@ -339,6 +456,26 @@ export const Navbar: React.FC = () => {
                   {label}
                 </Button>
               ))}
+            </Box>
+          </Box>
+
+          <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.05)', pt: 3 }}>
+            <Typography variant="caption" sx={{ color: '#D4AF37', fontWeight: 'bold', letterSpacing: '0.25em', display: 'block', mb: 2 }}>PORTAL ACCESS</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Button 
+                onClick={() => { setIsMobileMenuOpen(false); setIsAccountOpen(true); }}
+                startIcon={<User size={15} color="#D4AF37" />}
+                sx={{ justifyContent: 'flex-start', color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', py: 1.5, px: 2, borderRadius: 2 }}
+              >
+                CUSTOMER PORTAL {user ? `(${user.name})` : '(SIGN IN)'}
+              </Button>
+              <Button 
+                onClick={() => { setIsMobileMenuOpen(false); handleNavigate('#/admin'); setIsAdminOpen(true); }}
+                startIcon={<ShieldCheck size={15} color="#D4AF37" />}
+                sx={{ justifyContent: 'flex-start', color: '#D4AF37', bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', py: 1.5, px: 2, borderRadius: 2 }}
+              >
+                OPEN ADMIN PORTAL
+              </Button>
             </Box>
           </Box>
         </Box>

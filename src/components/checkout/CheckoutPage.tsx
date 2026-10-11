@@ -19,9 +19,11 @@ import {
   Sparkles,
   AlertCircle,
   Copy,
-  Check
+  Check,
+  User
 } from 'lucide-react';
-import { Box, Typography, Button, Grid, TextField, MenuItem, CircularProgress, InputBase } from '@mui/material';
+import { Box, Typography, Button, Grid, TextField, MenuItem, CircularProgress, InputBase, FormControlLabel, Checkbox } from '@mui/material';
+import { registerCustomer } from '../../services/authService';
 
 const SRI_LANKAN_DISTRICTS = [
   'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya',
@@ -45,7 +47,9 @@ export const CheckoutPage: React.FC = () => {
     setShippingMethodId,
     availableShippingMethods,
     createOrder,
-    user
+    user,
+    setIsAccountOpen,
+    setUserProfile
   } = useStore();
 
   const [step, setStep] = useState<'CHECKOUT' | 'CONFIRMATION'>('CHECKOUT');
@@ -53,6 +57,10 @@ export const CheckoutPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [copiedOrderNum, setCopiedOrderNum] = useState(false);
+
+  // Guest Account Creation Option
+  const [createAccountWithOrder, setCreateAccountWithOrder] = useState(false);
+  const [accountPassword, setAccountPassword] = useState('');
 
   // Form State
   const [fullName, setFullName] = useState(user?.name || '');
@@ -124,9 +132,27 @@ export const CheckoutPage: React.FC = () => {
     };
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       const order = await createOrder(shippingInfo, paymentGateway, notes, shippingMethodId);
       setPlacedOrder(order);
+
+      // Auto-register customer if opted in
+      if (!user && createAccountWithOrder && accountPassword.trim().length >= 6) {
+        try {
+          const authRes = await registerCustomer(
+            shippingInfo.email,
+            accountPassword.trim(),
+            shippingInfo.fullName,
+            shippingInfo.phone,
+            shippingInfo
+          );
+          if (authRes.success && authRes.user) {
+            setUserProfile(authRes.user);
+          }
+        } catch (e) {
+          console.warn('Account registration notice:', e);
+        }
+      }
+
       setStep('CONFIRMATION');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -377,6 +403,31 @@ export const CheckoutPage: React.FC = () => {
                 </Box>
               )}
 
+              {/* GUEST SIGN-IN ENCOURAGEMENT BANNER */}
+              {!user && (
+                <Box sx={{ p: 2, bgcolor: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <Box sx={{ width: 32, height: 32, borderRadius: '50%', bgcolor: 'rgba(212,175,55,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <User size={16} color="#D4AF37" />
+                    </Box>
+                    <Box>
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        ALREADY A VALKNUT MEMBER?
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)' }}>
+                        Sign in to autofill your saved delivery address & track live courier dispatches.
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Button
+                    onClick={() => setIsAccountOpen(true)}
+                    sx={{ px: 2.5, py: 0.75, fontSize: '0.6875rem', fontWeight: 900, color: 'black', bgcolor: '#D4AF37', borderRadius: 1, '&:hover': { bgcolor: '#E2B714' } }}
+                  >
+                    SIGN IN
+                  </Button>
+                </Box>
+              )}
+
               {/* SECTION 1: CUSTOMER INFORMATION */}
               <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 4 }, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1.5 }}>
@@ -399,6 +450,43 @@ export const CheckoutPage: React.FC = () => {
                   <Grid size={12}>
                     <TextField fullWidth required type="tel" label="Contact Phone Number *" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+94 77 123 4567" variant="outlined" sx={textFieldStyles} helperText="Pronto Lanka & Fargo Express courier drivers will contact this number before delivering." slotProps={{ formHelperText: { sx: {} } }} />
                   </Grid>
+
+                  {!user && (
+                    <Grid size={12}>
+                      <Box sx={{ pt: 1, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox 
+                              checked={createAccountWithOrder} 
+                              onChange={(e) => setCreateAccountWithOrder(e.target.checked)} 
+                              sx={{ color: '#D4AF37', '&.Mui-checked': { color: '#D4AF37' } }} 
+                            />
+                          }
+                          label={
+                            <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-primary)', fontWeight: 600 }}>
+                              Create a VALKNUT Member Account with this order (save address & track dispatch)
+                            </Typography>
+                          }
+                        />
+                        {createAccountWithOrder && (
+                          <Box sx={{ mt: 1.5, maxWidth: 360 }}>
+                            <TextField
+                              fullWidth
+                              required
+                              type="password"
+                              label="Create Account Password *"
+                              value={accountPassword}
+                              onChange={(e) => setAccountPassword(e.target.value)}
+                              placeholder="••••••••••••"
+                              variant="outlined"
+                              sx={textFieldStyles}
+                              helperText="Minimum 6 characters. You will be automatically logged in."
+                            />
+                          </Box>
+                        )}
+                      </Box>
+                    </Grid>
+                  )}
                 </Grid>
               </Box>
 
