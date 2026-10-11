@@ -77,7 +77,7 @@ export const CartDrawer: React.FC = () => {
       <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5, alignItems: 'center' }}>
           <ShoppingBag color="#d4af37" size={22} />
-          <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 1, fontFamily: 'Syne, sans-serif' }}>
+          <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 1, fontFamily: 'Outfit, sans-serif' }}>
             YOUR SHOPPING BAG
           </Typography>
           <Box sx={{ bgcolor: '#d4af37', color: 'black', px: 1, py: 0.25, borderRadius: 10, fontSize: '0.75rem', fontWeight: 800 }}>

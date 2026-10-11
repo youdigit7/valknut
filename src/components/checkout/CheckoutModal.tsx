@@ -131,7 +131,7 @@ export const CheckoutModal: React.FC = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Lock color="#d4af37" size={20} />
               <Box>
-                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
+                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Outfit", sans-serif' }}>
                   {step === 'FORM' ? 'VALKNUT EXPRESS CHECKOUT' : 'ORDER CONFIRMED'}
                 </Typography>
                 <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>
@@ -315,7 +315,7 @@ export const CheckoutModal: React.FC = () => {
                       <Box key={item.id} sx={{ display: 'flex', alignItems: 'center', gap: 1.5, fontSize: '0.75rem' }}>
                         <Box component="img" src={item.product.images[0]} alt={item.product.name} sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 1, bgcolor: '#141620' }} />
                         <Box sx={{ flex: 1, minWidth: 0 }}>
-                          <Typography sx={{ fontWeight: 'bold', color: 'var(--text-primary)',  fontFamily: '"Syne", sans-serif' }}>{item.product.name}</Typography>
+                          <Typography sx={{ fontWeight: 'bold', color: 'var(--text-primary)',  fontFamily: '"Outfit", sans-serif' }}>{item.product.name}</Typography>
                           <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>Size: {item.selectedSize} | Qty: {item.quantity}</Typography>
                         </Box>
                         <Typography sx={{ fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif' }}>LKR {(item.unitPrice * item.quantity).toLocaleString()}</Typography>
@@ -343,7 +343,7 @@ export const CheckoutModal: React.FC = () => {
                     </Box>
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', pt: 1, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                      <Typography sx={{ fontSize: '1rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }}>TOTAL AMOUNT:</Typography>
+                      <Typography sx={{ fontSize: '1rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>TOTAL AMOUNT:</Typography>
                       <Typography sx={{ fontSize: '1.25rem', color: 'primary.main', fontWeight: 900, fontFamily: '"Inter", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
                     </Box>
                   </Box>
@@ -378,7 +378,7 @@ export const CheckoutModal: React.FC = () => {
                 <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.25em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5, fontFamily: '"Inter", sans-serif' }}>
                   VALKNUT ORDER CONFIRMED
                 </Typography>
-                <Typography sx={{ fontSize: { xs: '1.5rem', sm: '1.875rem' }, fontWeight: 900, color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>
+                <Typography sx={{ fontSize: { xs: '1.5rem', sm: '1.875rem' }, fontWeight: 900, color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif' }}>
                   THANK YOU FOR YOUR ORDER
                 </Typography>
                 <Typography sx={{ fontSize: '0.875rem', color: 'var(--text-secondary)', mt: 1, fontFamily: '"Inter", sans-serif' }}>

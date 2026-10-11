@@ -43,7 +43,7 @@ export const CustomStudio: React.FC = () => {
 
   const [customText, setCustomText] = useState('VALKNUT SQUAD');
   const [textColor, setTextColor] = useState('#D4AF37');
-  const [textFont, setTextFont] = useState('Syne');
+  const [textFont, setTextFont] = useState('Outfit');
   const [textSize, setTextSize] = useState(24);
   const [textUppercase, setTextUppercase] = useState(true);
   const [textPos, setTextPos] = useState({ x: 50, y: 38 });
@@ -127,7 +127,7 @@ export const CustomStudio: React.FC = () => {
   const handleResetCustomization = () => {
     setCustomText('VALKNUT SQUAD');
     setTextColor('#D4AF37');
-    setTextFont('Syne');
+    setTextFont('Outfit');
     setTextSize(24);
     setTextUppercase(true);
     setTextPos({ x: 50, y: 38 });
@@ -832,7 +832,7 @@ export const CustomStudio: React.FC = () => {
                     )}
 
                     <Box sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>TOTAL BESPOKE PIECE:</Typography>
+                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif' }}>TOTAL BESPOKE PIECE:</Typography>
                       <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, color: 'primary.main' }}>LKR {totalCustomPrice.toLocaleString()}</Typography>
                     </Box>
                   </Box>

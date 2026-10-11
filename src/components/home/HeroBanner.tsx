@@ -4,6 +4,7 @@ import { ArrowRight, Compass, ShieldCheck, Sparkles } from 'lucide-react';
 import { 
   Box, Typography, Button, IconButton 
 } from '@mui/material';
+import heroBg from '../../assets/background-images/home1.jpeg';
 
 export const HeroBanner: React.FC = () => {
   const { setActiveCategory } = useStore();
@@ -42,25 +43,19 @@ export const HeroBanner: React.FC = () => {
       >
         {/* Background Image & Overlays */}
         <Box sx={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-          <Box component="picture">
-            <source
-              media="(max-width: 768px)"
-              srcSet="https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=800&q=85"
-            />
-            <Box
-              component="img"
-              src="https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=2000&q=90"
-              alt="VALKNUT Official Editorial Campaign"
-              loading="eager"
-              sx={{ 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'cover', 
-                objectPosition: 'top', 
-                filter: 'brightness(0.55) contrast(1.2)' 
-              }}
-            />
-          </Box>
+          <Box
+            component="img"
+            src={heroBg}
+            alt="VALKNUT Official Editorial Campaign"
+            loading="eager"
+            sx={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover', 
+              objectPosition: 'center', 
+              filter: 'brightness(0.55) contrast(1.15)' 
+            }}
+          />
           <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0A0A0A, rgba(10,10,10,0.55), transparent)' }} />
           <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.7), transparent, transparent)' }} />
           <Box sx={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle, transparent 20%, #0A0A0A 120%)', opacity: 0.7 }} />

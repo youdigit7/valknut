@@ -38,9 +38,9 @@ export const TOKENS = {
   },
   typography: {
     fontFamilies: {
-      heading: "'Syne', 'Cinzel', -apple-system, sans-serif",
-      body: "'Inter', system-ui, -apple-system, sans-serif",
-      display: "'Cinzel', 'Syne', serif",
+      heading: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
+      body: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
+      display: "'Outfit', 'Cinzel', sans-serif",
     },
     sizes: {
       xs: '0.75rem',    // 12px

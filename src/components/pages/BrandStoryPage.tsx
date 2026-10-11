@@ -7,6 +7,7 @@ import {
   Box, Typography, Button, 
   Container, Card, CardContent, Breadcrumbs, Link, Zoom, Fade, Paper, Chip
 } from '@mui/material';
+import aboutUsImg from '../../assets/background-images/About Us .png';
 
 export const BrandStoryPage: React.FC = () => {
   const { setActiveCategory } = useStore();
@@ -18,7 +19,7 @@ export const BrandStoryPage: React.FC = () => {
     canonicalUrl: 'https://valknutofficial.com/#/brand-story',
     ogTitle: 'Brand Story & Philosophy — VALKNUT Official',
     ogDescription: 'OWN YOUR MIND. CONTROL YOUR WORLD. Built for those who think different.',
-    ogImage: 'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1200&q=85',
+    ogImage: aboutUsImg,
     jsonLd: [
       getBreadcrumbSchema([
         { name: 'Home', url: '/#/' },
@@ -130,15 +131,27 @@ export const BrandStoryPage: React.FC = () => {
                 </Box>
                 
                 <Box>
-                  <Paper elevation={0} sx={{ p: 4, textAlign: 'center', bgcolor: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 4 }}>
-                    <Box sx={{ width: 80, height: 80, mx: 'auto', mb: 3, border: '1px solid rgba(212,175,55,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'inset 0 0 20px rgba(212,175,55,0.1)' }}>
-                      <Typography sx={{ fontSize: '2rem', fontWeight: 'bold', color: 'primary.main', fontFamily: 'serif' }}>VK</Typography>
-                    </Box>
-                    <Typography variant="h6" sx={{ letterSpacing: '0.1em', mb: 1 }}>VALKNUT ESSENTIAL</Typography>
-                    <Typography variant="caption" sx={{ color: 'var(--text-secondary)', letterSpacing: '0.1em', display: 'block', mb: 3 }}>Sri Lanka • Est 2026</Typography>
-                    <Box sx={{ display: 'inline-block', py: 1, px: 2, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, typography: 'caption', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>
-                      valknutofficial.com
-                    </Box>
+                  <Paper 
+                    elevation={0} 
+                    sx={{ 
+                      borderRadius: 3, 
+                      overflow: 'hidden', 
+                      border: '1px solid rgba(212,175,55,0.3)', 
+                      boxShadow: '0 20px 50px rgba(0,0,0,0.8)',
+                      bgcolor: '#0a0b12'
+                    }}
+                  >
+                    <Box 
+                      component="img"
+                      src={aboutUsImg}
+                      alt="About VALKNUT Official Sri Lanka"
+                      sx={{ 
+                        width: '100%', 
+                        height: 'auto', 
+                        display: 'block', 
+                        objectFit: 'cover' 
+                      }}
+                    />
                   </Paper>
                 </Box>
               </Box>

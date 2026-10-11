@@ -232,38 +232,79 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                 
                 {/* Header & Badges */}
                 <Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-                    {hasSale && <Chip label="SALE" sx={{ bgcolor: 'rgba(220,38,38,0.2)', border: '1px solid rgba(220,38,38,0.4)', color: '#f87171', fontSize: '0.625rem', fontWeight: 'bold', height: 24 }} />}
-                    {product.isBestSeller && <Chip label="BEST SELLER" sx={{ bgcolor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.625rem', fontWeight: 'bold', height: 24 }} />}
-                    {product.isNewArrival && <Chip label="NEW DROP" sx={{ bgcolor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'var(--text-primary)', fontSize: '0.625rem', fontWeight: 'bold', height: 24 }} />}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2.5 }}>
+                    {hasSale && <Chip label="SALE" sx={{ bgcolor: 'rgba(220,38,38,0.2)', border: '1px solid rgba(220,38,38,0.4)', color: '#f87171', fontSize: '0.625rem', fontWeight: 'bold', height: 24, borderRadius: '6px' }} />}
+                    {product.isBestSeller && <Chip label="BEST SELLER" sx={{ bgcolor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.625rem', fontWeight: 'bold', height: 24, borderRadius: '6px' }} />}
+                    {product.isNewArrival && <Chip label="NEW DROP" sx={{ bgcolor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'var(--text-primary)', fontSize: '0.625rem', fontWeight: 'bold', height: 24, borderRadius: '6px' }} />}
                   </Box>
 
-                  <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.2em', color: 'primary.main', textTransform: 'uppercase', mb: 1 }}>
-                    {product.subCategory}
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Outfit", sans-serif', fontWeight: 700, letterSpacing: '0.2em', color: 'primary.main', textTransform: 'uppercase', mb: 1.5 }}>
+                    {product.subCategory || product.category}
                   </Typography>
 
-                  <Typography variant="h2" sx={{ fontSize: { xs: '2rem', sm: '2.5rem' }, mb: 2, color: 'var(--text-primary)' }}>
+                  <Typography variant="h1" sx={{ fontSize: { xs: '2rem', sm: '2.5rem', md: '2.75rem' }, fontWeight: 800, fontFamily: '"Outfit", sans-serif', letterSpacing: '-0.02em', mb: 2.5, color: 'var(--text-primary)', lineHeight: 1.15 }}>
                     {product.name}
                   </Typography>
 
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2, mb: 3 }}>
-                    <Typography sx={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-primary)' }}>
+                  {/* Price Section */}
+                  <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 2, mb: 2.5 }}>
+                    <Typography sx={{ fontSize: { xs: '1.75rem', sm: '2rem' }, fontWeight: 900, fontFamily: '"Outfit", sans-serif', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
                       LKR {displayPrice.toLocaleString()}
                     </Typography>
                     {hasSale && (
                       <>
-                        <Typography sx={{ fontSize: '1rem', color: 'var(--text-secondary)', textDecoration: 'line-through', mb: 0.5 }}>
+                        <Typography sx={{ fontSize: '1.125rem', color: 'var(--text-secondary)', textDecoration: 'line-through', fontWeight: 500 }}>
                           LKR {currentPrice.toLocaleString()}
                         </Typography>
-                        <Chip label={`SAVE ${discountPercent}%`} sx={{ bgcolor: 'rgba(212,175,55,0.2)', color: 'primary.main', fontSize: '0.625rem', fontWeight: 'bold', height: 20, mb: 1 }} />
+                        <Chip label={`SAVE ${discountPercent}%`} sx={{ bgcolor: 'rgba(212,175,55,0.2)', color: 'primary.main', border: '1px solid rgba(212,175,55,0.4)', fontSize: '0.6875rem', fontWeight: 'bold', height: 22, borderRadius: '6px' }} />
                       </>
                     )}
                   </Box>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 1 }}>
-                      SKU: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{activeSku}</Box>
+
+                  {/* Installment Plan Banner */}
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 1.5, 
+                    p: 2, 
+                    mb: 3, 
+                    borderRadius: '12px', 
+                    bgcolor: 'rgba(255, 255, 255, 0.03)', 
+                    border: '1px solid rgba(255, 255, 255, 0.08)' 
+                  }}>
+                    <CreditCard size={18} color="#D4AF37" />
+                    <Typography sx={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                      Or 3 interest-free payments of <Box component="strong" sx={{ color: 'var(--text-primary)' }}>LKR {Math.round(displayPrice / 3).toLocaleString()}</Box> with <Box component="span" sx={{ color: '#e879f9', fontWeight: 800 }}>KOKO</Box> or <Box component="span" sx={{ color: '#2dd4bf', fontWeight: 800 }}>mintpay</Box>
                     </Typography>
+                  </Box>
+
+                  {/* Prominent Description Overview */}
+                  <Box sx={{ mb: 3.5 }}>
+                    <Typography sx={{ 
+                      fontSize: '0.9375rem', 
+                      lineHeight: 1.75, 
+                      color: 'rgba(255, 255, 255, 0.75)',
+                      fontFamily: '"Plus Jakarta Sans", sans-serif'
+                    }}>
+                      {product.description}
+                    </Typography>
+                  </Box>
+                  
+                  {/* SKU & Wishlist & Stock indicator */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 1 }}>
+                        SKU: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{activeSku}</Box>
+                      </Typography>
+                      <Box sx={{ width: 1, height: 12, bgcolor: 'rgba(255,255,255,0.2)' }} />
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: isOutOfStock ? 'error.main' : currentStock <= 5 ? 'warning.main' : 'success.main' }} />
+                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: isOutOfStock ? 'error.main' : currentStock <= 5 ? 'warning.main' : 'success.main' }}>
+                          {isOutOfStock ? 'Out of Stock' : currentStock <= 5 ? `Low Stock (${currentStock} left)` : 'In Stock'}
+                        </Typography>
+                      </Box>
+                    </Box>
+
                     <IconButton 
                       onClick={handleToggleWishlist}
                       sx={{ color: isWishlisted ? 'error.main' : 'text.secondary', transition: 'all 0.3s ease', '&:hover': { color: 'error.main', transform: 'scale(1.1)' } }}
@@ -273,13 +314,13 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                   </Box>
                 </Box>
 
-                <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+                <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)', my: 1 }} />
 
                 {/* 1. Color Selector */}
-                <Box>
+                <Box sx={{ mb: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
-                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-primary)' }}>
-                      Color: <Box component="span" sx={{ color: 'var(--text-secondary)', fontWeight: 'normal', ml: 0.5 }}>{selectedColor}</Box>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-primary)', letterSpacing: '0.05em' }}>
+                      Color: <Box component="span" sx={{ color: 'primary.main', fontWeight: 600, ml: 0.5 }}>{selectedColor}</Box>
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
@@ -292,10 +333,10 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                           onClick={() => setSelectedColor(c.color)}
                           title={c.color}
                           sx={{
-                            width: 40, height: 40, borderRadius: '50%', p: 0.5, border: '1px solid',
-                            borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.2)',
+                            width: 44, height: 44, borderRadius: '50%', p: 0.5, border: '2px solid',
+                            borderColor: isSelected ? 'primary.main' : 'rgba(255,255,255,0.15)',
                             cursor: 'pointer', transition: 'all 0.3s ease', bgcolor: 'transparent',
-                            ...(isSelected && { boxShadow: '0 0 10px rgba(212,175,55,0.4)' }),
+                            ...(isSelected && { boxShadow: '0 0 12px rgba(212,175,55,0.45)', transform: 'scale(1.05)' }),
                             '&:hover': { borderColor: isSelected ? 'primary.main' : 'white' }
                           }}
                         >
@@ -307,19 +348,19 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                 </Box>
 
                 {/* 2. Size Selector */}
-                <Box>
+                <Box sx={{ mb: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
-                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-primary)' }}>
-                      Size: <Box component="span" sx={{ color: 'var(--text-secondary)', fontWeight: 'normal', ml: 0.5 }}>{selectedSize}</Box>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-primary)', letterSpacing: '0.05em' }}>
+                      Size: <Box component="span" sx={{ color: 'primary.main', fontWeight: 600, ml: 0.5 }}>{selectedSize}</Box>
                     </Typography>
                     <Button
                       onClick={() => setIsSizeChartOpen(true)}
-                      sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', p: 0, minWidth: 'auto', display: 'flex', alignItems: 'center', gap: 0.5, '&:hover': { color: 'primary.main', bgcolor: 'transparent' } }}
+                      sx={{ fontSize: '0.75rem', fontFamily: '"Plus Jakarta Sans", sans-serif', color: 'var(--text-secondary)', p: 0, minWidth: 'auto', display: 'flex', alignItems: 'center', gap: 0.5, '&:hover': { color: 'primary.main', bgcolor: 'transparent' } }}
                     >
-                      <Ruler size={12} /> Size Guide
+                      <Ruler size={13} /> Size Guide
                     </Button>
                   </Box>
-                  <Grid container spacing={1}>
+                  <Grid container spacing={1.5}>
                     {allPossibleSizes.map((sz) => {
                       const isAvailableForSize = product.variants.some((v) => v.color === selectedColor && v.size === sz && (v.stock > 0 || v.stockCount! > 0));
                       const isSelected = selectedSize === sz;
@@ -330,18 +371,18 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                             disabled={!isAvailableForSize}
                             onClick={() => { setSelectedSize(sz); setQuantity(1); }}
                             sx={{
-                              width: '100%', py: 1.5, borderRadius: 1, border: '1px solid', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5, cursor: isAvailableForSize ? 'pointer' : 'not-allowed', transition: 'all 0.3s ease', position: 'relative', overflow: 'hidden',
+                              width: '100%', py: 1.75, borderRadius: '12px', border: '1px solid', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5, cursor: isAvailableForSize ? 'pointer' : 'not-allowed', transition: 'all 0.3s ease', position: 'relative', overflow: 'hidden',
                               ...(isSelected ? {
                                 bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main', boxShadow: '0 10px 20px rgba(212,175,55,0.3)', transform: 'scale(1.02)'
                               } : isAvailableForSize ? {
-                                bgcolor: '#12141F', color: 'var(--text-primary)', borderColor: 'rgba(255,255,255,0.1)', '&:hover': { borderColor: 'rgba(255,255,255,0.3)' }
+                                bgcolor: '#12141F', color: 'var(--text-primary)', borderColor: 'rgba(255,255,255,0.12)', '&:hover': { borderColor: 'rgba(255,255,255,0.35)', bgcolor: 'rgba(255,255,255,0.05)' }
                               } : {
                                 bgcolor: 'rgba(255,255,255,0.02)', color: 'text.disabled', borderColor: 'rgba(255,255,255,0.05)', textDecoration: 'line-through'
                               })
                             }}
                           >
-                            <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, fontFamily: '"Inter", sans-serif' }}>{sz}</Typography>
-                            <Typography sx={{ fontSize: '0.5rem', fontFamily: '"Inter", sans-serif', color: isSelected ? 'rgba(0,0,0,0.7)' : isAvailableForSize ? 'text.secondary' : 'error.main', fontWeight: 'bold' }}>
+                            <Typography sx={{ fontSize: '0.875rem', fontWeight: 800, fontFamily: '"Outfit", sans-serif' }}>{sz}</Typography>
+                            <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Plus Jakarta Sans", sans-serif', color: isSelected ? 'rgba(0,0,0,0.8)' : isAvailableForSize ? 'text.secondary' : 'error.main', fontWeight: 700 }}>
                               {isAvailableForSize ? 'IN STOCK' : 'OUT'}
                             </Typography>
                           </Box>
@@ -352,27 +393,27 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                 </Box>
 
                 {/* 3. Quantity & Action Buttons */}
-                <Box sx={{ pt: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Box sx={{ pt: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2.5 }}>
                     
                     {/* Quantity Control */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: '#12141F', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 0.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', height: 52, bgcolor: '#12141F', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', px: 1 }}>
                       <IconButton
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                         disabled={quantity <= 1 || isOutOfStock}
-                        sx={{ width: 32, height: 32, color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.1)' } }}
+                        sx={{ width: 34, height: 34, color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.1)' } }}
                       >
-                        <Minus size={14} />
+                        <Minus size={15} />
                       </IconButton>
-                      <Typography sx={{ width: 40, textAlign: 'center', fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif' }}>
+                      <Typography sx={{ width: 44, textAlign: 'center', fontSize: '0.9375rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>
                         {quantity}
                       </Typography>
                       <IconButton
                         onClick={() => setQuantity((q) => Math.min(Math.min(currentStock || 10, 10), q + 1))}
                         disabled={quantity >= (currentStock || 10) || isOutOfStock}
-                        sx={{ width: 32, height: 32, color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.1)' } }}
+                        sx={{ width: 34, height: 34, color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.1)' } }}
                       >
-                        <Plus size={14} />
+                        <Plus size={15} />
                       </IconButton>
                     </Box>
 
@@ -381,12 +422,12 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                       onClick={handleAddToCart}
                       disabled={isOutOfStock}
                       sx={{
-                        flex: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', letterSpacing: '0.2em', textTransform: 'uppercase', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, transition: 'all 0.3s ease', boxShadow: '0 10px 25px rgba(212,175,55,0.3)',
-                        '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)', boxShadow: '0 15px 35px rgba(212,175,55,0.4)' },
+                        flex: 1, height: 52, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.8125rem', letterSpacing: '0.15em', textTransform: 'uppercase', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, transition: 'all 0.3s ease', boxShadow: '0 8px 25px rgba(212,175,55,0.25)',
+                        '&:hover': { bgcolor: '#e2b714', transform: 'translateY(-2px)', boxShadow: '0 12px 30px rgba(212,175,55,0.35)' },
                         '&.Mui-disabled': { bgcolor: 'rgba(255,255,255,0.1)', color: 'text.disabled' }
                       }}
                     >
-                      <ShoppingBag size={16} />
+                      <ShoppingBag size={18} />
                       {isOutOfStock ? 'OUT OF STOCK' : 'ADD TO BAG'}
                     </Button>
                   </Box>
@@ -396,11 +437,11 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                     <Button
                       onClick={handleBuyNow}
                       sx={{
-                        w: '100%', width: '100%', py: 1.5, bgcolor: 'var(--text-primary)', color: 'black', fontWeight: 900, fontSize: '0.75rem', letterSpacing: '0.2em', textTransform: 'uppercase', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, transition: 'all 0.3s ease', mb: 2,
-                        '&:hover': { bgcolor: '#e2e8f0' }
+                        width: '100%', height: 52, bgcolor: '#FFFFFF', color: '#000000', fontWeight: 900, fontSize: '0.8125rem', letterSpacing: '0.15em', textTransform: 'uppercase', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, transition: 'all 0.3s ease', mb: 2, boxShadow: '0 4px 15px rgba(255,255,255,0.1)',
+                        '&:hover': { bgcolor: '#f1f5f9', transform: 'translateY(-2px)', boxShadow: '0 8px 20px rgba(255,255,255,0.2)' }
                       }}
                     >
-                      <CreditCard size={16} /> BUY IT NOW
+                      <CreditCard size={18} /> BUY IT NOW
                     </Button>
                   )}
 
@@ -409,42 +450,42 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                     <Button
                       onClick={handleOpenCustomStudio}
                       sx={{
-                        w: '100%', width: '100%', py: 1.5, bgcolor: 'transparent', color: 'primary.main', border: '1px solid rgba(212,175,55,0.5)', fontWeight: 'bold', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, transition: 'all 0.3s ease',
-                        '&:hover': { bgcolor: 'rgba(212,175,55,0.1)' }
+                        width: '100%', height: 48, bgcolor: 'rgba(212,175,55,0.05)', color: 'primary.main', border: '1px solid rgba(212,175,55,0.4)', fontWeight: 700, fontSize: '0.75rem', fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, transition: 'all 0.3s ease',
+                        '&:hover': { bgcolor: 'rgba(212,175,55,0.12)', borderColor: 'primary.main' }
                       }}
                     >
-                      <Sparkles size={14} /> CUSTOMIZE GRAPHICS IN 3D STUDIO (+LKR 1,500)
+                      <Sparkles size={16} /> CUSTOMIZE GRAPHICS IN 3D STUDIO (+LKR 1,500)
                     </Button>
                   )}
                 </Box>
 
                 {/* Sharing & Trust Strip */}
-                <Box sx={{ pt: 3, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <ShieldCheck size={14} color="#D4AF37" /> 100% Guaranteed Authentic
+                <Box sx={{ pt: 3.5, borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Plus Jakarta Sans", sans-serif', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <ShieldCheck size={16} color="#D4AF37" /> 100% Guaranteed Authentic
                   </Typography>
 
                   {/* Share Menu */}
                   <Box sx={{ position: 'relative' }}>
                     <Button
                       onClick={() => setIsShareDropdownOpen(!isShareDropdownOpen)}
-                      sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)', minWidth: 'auto', p: 0, textTransform: 'none', display: 'flex', alignItems: 'center', gap: 0.5, '&:hover': { color: 'var(--text-primary)', bgcolor: 'transparent' } }}
+                      sx={{ fontSize: '0.75rem', fontFamily: '"Plus Jakarta Sans", sans-serif', color: 'var(--text-secondary)', minWidth: 'auto', p: 0, textTransform: 'none', display: 'flex', alignItems: 'center', gap: 0.5, '&:hover': { color: 'var(--text-primary)', bgcolor: 'transparent' } }}
                     >
-                      <Share2 size={12} /> Share Drop
+                      <Share2 size={13} /> Share Drop
                     </Button>
 
                     {isShareDropdownOpen && (
-                      <Box sx={{ position: 'absolute', right: 0, bottom: '100%', mb: 1, bgcolor: '#12141F', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 1, p: 1, minWidth: 170, boxShadow: '0 25px 50px rgba(0,0,0,0.8)', zIndex: 30, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                        <Button onClick={handleCopyLink} sx={{ justifyContent: 'flex-start', color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', p: 1, textTransform: 'none', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }} startIcon={<Copy size={12} />}>Copy Link</Button>
-                        <Button onClick={handleShareWhatsApp} sx={{ justifyContent: 'flex-start', color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', p: 1, textTransform: 'none', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }} startIcon={<MessageCircle size={12} />}>WhatsApp</Button>
-                        <Button onClick={handleShareTwitter} sx={{ justifyContent: 'flex-start', color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', p: 1, textTransform: 'none', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }} startIcon={<Share2 size={12} />}>X / Twitter</Button>
+                      <Box sx={{ position: 'absolute', right: 0, bottom: '100%', mb: 1, bgcolor: '#12141F', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '10px', p: 1, minWidth: 170, boxShadow: '0 25px 50px rgba(0,0,0,0.8)', zIndex: 30, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                        <Button onClick={handleCopyLink} sx={{ justifyContent: 'flex-start', color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Plus Jakarta Sans", sans-serif', p: 1, textTransform: 'none', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }} startIcon={<Copy size={12} />}>Copy Link</Button>
+                        <Button onClick={handleShareWhatsApp} sx={{ justifyContent: 'flex-start', color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Plus Jakarta Sans", sans-serif', p: 1, textTransform: 'none', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }} startIcon={<MessageCircle size={12} />}>WhatsApp</Button>
+                        <Button onClick={handleShareTwitter} sx={{ justifyContent: 'flex-start', color: 'var(--text-secondary)', fontSize: '0.75rem', fontFamily: '"Plus Jakarta Sans", sans-serif', p: 1, textTransform: 'none', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }} startIcon={<Share2 size={12} />}>X / Twitter</Button>
                       </Box>
                     )}
                   </Box>
                 </Box>
 
                 {/* Accordion Specs: Description, Material, Shipping, Returns */}
-                <Box sx={{ pt: 3, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box sx={{ pt: 3.5, borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: 3 }}>
                   <Box>
                     <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-primary)', mb: 1 }}>Product Overview & Story</Typography>
                     <Typography sx={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{product.description}</Typography>

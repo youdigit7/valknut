@@ -182,7 +182,7 @@ export const CheckoutPage: React.FC = () => {
             <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mt: 3, mb: 1 }}>
               VALKNUT ORDER CONFIRMED
             </Typography>
-            <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', letterSpacing: '-0.02em', mb: 2 }}>
+            <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', letterSpacing: '-0.02em', mb: 2 }}>
               THANK YOU FOR YOUR ORDER
             </Typography>
             <Typography sx={{ color: 'var(--text-secondary)', fontSize: '0.875rem', maxWidth: 400, mx: 'auto' }}>
@@ -271,7 +271,7 @@ export const CheckoutPage: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box component="img" src={item.imageUrl} alt={item.productName} sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 1, bgcolor: '#141620', border: '1px solid rgba(255,255,255,0.1)' }} />
                       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>{item.productName}</Typography>
+                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif' }}>{item.productName}</Typography>
                         <Typography sx={{ fontSize: '0.6875rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>SKU: {item.sku} | Size: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{item.size}</Box> | Color: <Box component="strong" sx={{ color: 'var(--text-primary)' }}>{item.color}</Box></Typography>
                         {item.customization && (
                           <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'primary.main' }}>Bespoke: {item.customization.printTechnique}</Typography>
@@ -302,7 +302,7 @@ export const CheckoutPage: React.FC = () => {
                   <Typography sx={{ fontSize: 'inherit', color: placedOrder.shippingCharge === 0 ? 'success.main' : 'white' }}>{placedOrder.shippingCharge === 0 ? 'FREE' : `LKR ${placedOrder.shippingCharge.toLocaleString()}`}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', pt: 1, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                  <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }}>TOTAL PAID:</Typography>
+                  <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>TOTAL PAID:</Typography>
                   <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, color: 'primary.main' }}>LKR {placedOrder.totalAmount.toLocaleString()}</Typography>
                 </Box>
               </Box>
@@ -345,7 +345,7 @@ export const CheckoutPage: React.FC = () => {
                 256-BIT ENCRYPTED EXPRESS CHECKOUT
               </Typography>
             </Box>
-            <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', letterSpacing: '-0.02em' }}>
+            <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', letterSpacing: '-0.02em' }}>
               VALKNUT OFFICIAL CHECKOUT
             </Typography>
           </Box>
@@ -358,7 +358,7 @@ export const CheckoutPage: React.FC = () => {
         {cart.length === 0 ? (
           <Box sx={{ py: 10, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
             <Package size={40} color="rgba(255,255,255,0.4)" />
-            <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }}>Your Shopping Bag Is Empty</Typography>
+            <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>Your Shopping Bag Is Empty</Typography>
             <Typography sx={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Please add some items to your bag before proceeding to checkout.</Typography>
             <Button href="#/shop" sx={{ mt: 2, py: 1.5, px: 4, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, '&:hover': { bgcolor: 'primary.dark' } }}>
               BROWSE VALKNUT COLLECTION
@@ -382,7 +382,7 @@ export const CheckoutPage: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <Box sx={{ width: 24, height: 24, borderRadius: '50%', bgcolor: 'primary.main', color: 'black', fontSize: '0.75rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: '"Inter", sans-serif' }}>1</Box>
-                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }}>CUSTOMER INFORMATION</Typography>
+                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>CUSTOMER INFORMATION</Typography>
                   </Box>
                   {user && (
                     <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'success.main', bgcolor: 'rgba(16,185,129,0.1)', px: 1, py: 0.25, borderRadius: 0.5, border: '1px solid rgba(16,185,129,0.3)' }}>LOGGED IN: {user.name}</Typography>
@@ -406,7 +406,7 @@ export const CheckoutPage: React.FC = () => {
               <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 4 }, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1.5 }}>
                   <Box sx={{ width: 24, height: 24, borderRadius: '50%', bgcolor: 'primary.main', color: 'black', fontSize: '0.75rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: '"Inter", sans-serif' }}>2</Box>
-                  <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }}>ISLANDWIDE DELIVERY ADDRESS</Typography>
+                  <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>ISLANDWIDE DELIVERY ADDRESS</Typography>
                 </Box>
 
                 <Grid container spacing={2}>
@@ -440,7 +440,7 @@ export const CheckoutPage: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <Box sx={{ width: 24, height: 24, borderRadius: '50%', bgcolor: 'primary.main', color: 'black', fontSize: '0.75rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: '"Inter", sans-serif' }}>3</Box>
-                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }}>SHIPPING METHOD</Typography>
+                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>SHIPPING METHOD</Typography>
                   </Box>
                   <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>ISLANDWIDE COVERAGE</Typography>
                 </Box>
@@ -487,7 +487,7 @@ export const CheckoutPage: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <Box sx={{ width: 24, height: 24, borderRadius: '50%', bgcolor: 'primary.main', color: 'black', fontSize: '0.75rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: '"Inter", sans-serif' }}>4</Box>
-                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }}>PAYMENT METHOD</Typography>
+                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>PAYMENT METHOD</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'primary.main' }}>
                     <ShieldCheck size={13} />
@@ -559,7 +559,7 @@ export const CheckoutPage: React.FC = () => {
               <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 4 }, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
-                  <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }}>ORDER SUMMARY</Typography>
+                  <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }}>ORDER SUMMARY</Typography>
                   <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Inter", sans-serif', color: 'primary.main' }}>{cart.reduce((a, b) => a + b.quantity, 0)} ITEMS</Typography>
                 </Box>
 
@@ -635,7 +635,7 @@ export const CheckoutPage: React.FC = () => {
                     <Typography sx={{ fontSize: 'inherit', fontWeight: 'bold', color: cartShipping === 0 ? 'success.main' : 'white' }}>{cartShipping === 0 ? 'FREE' : `LKR ${cartShipping.toLocaleString()}`}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                    <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Syne", sans-serif', color: 'var(--text-primary)' }}>FINAL TOTAL:</Typography>
+                    <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif', color: 'var(--text-primary)' }}>FINAL TOTAL:</Typography>
                     <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, color: 'primary.main', fontFamily: '"Inter", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
                   </Box>
                 </Box>

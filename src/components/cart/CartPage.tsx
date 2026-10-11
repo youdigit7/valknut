@@ -84,7 +84,7 @@ export const CartPage: React.FC = () => {
             <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5 }}>
               YOUR SELECTED PIECES
             </Typography>
-            <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', letterSpacing: '-0.02em' }}>
+            <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', letterSpacing: '-0.02em' }}>
               SHOPPING BAG
             </Typography>
           </Box>
@@ -113,7 +113,7 @@ export const CartPage: React.FC = () => {
             {/* Quick Best Sellers Suggestion */}
             {recommendedDrops.length > 0 && (
               <Box sx={{ pt: 6, mt: 3, borderTop: '1px solid rgba(255,255,255,0.1)', width: '100%', maxWidth: 1000, textAlign: 'left' }}>
-                <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', mb: 3 }}>
+                <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', mb: 3 }}>
                   TRENDING VALKNUT DROPS
                 </Typography>
                 <Grid container spacing={2}>
@@ -190,7 +190,7 @@ export const CartPage: React.FC = () => {
                           <Typography
                             component="a"
                             href={`#/product/${item.product.slug}`}
-                            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif', textDecoration: 'none', transition: 'color 0.3s', '&:hover': { color: 'primary.main' }, display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif', textDecoration: 'none', transition: 'color 0.3s', '&:hover': { color: 'primary.main' }, display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                           >
                             {item.product.name}
                           </Typography>
@@ -288,7 +288,7 @@ export const CartPage: React.FC = () => {
             <Grid size={{ xs: 12, lg: 4 }} sx={{ position: { lg: 'sticky' }, top: { lg: 112 } }}>
               <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 4 }, boxShadow: '0 25px 50px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 3 }}>
 
-                <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
+                <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                   ORDER SUMMARY
                 </Typography>
 
@@ -357,7 +357,7 @@ export const CartPage: React.FC = () => {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                    <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Syne", sans-serif', color: 'var(--text-primary)' }}>ESTIMATED TOTAL:</Typography>
+                    <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif', color: 'var(--text-primary)' }}>ESTIMATED TOTAL:</Typography>
                     <Typography sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'primary.main', fontFamily: '"Inter", sans-serif' }}>LKR {cartTotal.toLocaleString()}</Typography>
                   </Box>
                 </Box>

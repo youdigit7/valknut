@@ -3,6 +3,7 @@ import {
   Box, Typography, Container
 } from '@mui/material';
 import { Play } from 'lucide-react';
+import lifestyleImg from '../../assets/background-images/WhatsApp Image 2026-09-29 at 7.10.53 PM.jpeg';
 
 export const LifestyleFilmSection: React.FC = () => {
   return (
@@ -68,6 +69,9 @@ export const LifestyleFilmSection: React.FC = () => {
               '&:hover': {
                 borderColor: 'rgba(212,175,55,0.4)',
                 boxShadow: '0 25px 60px rgba(0,0,0,0.8), inset 0 1px 1px rgba(212,175,55,0.2), 0 0 40px rgba(212,175,55,0.1)',
+                '& .lifestyle-bg': {
+                  transform: 'scale(1.05)'
+                },
                 '& .play-button': {
                   transform: 'scale(1.1)',
                   boxShadow: '0 0 30px rgba(212,175,55,0.6)'
@@ -75,6 +79,34 @@ export const LifestyleFilmSection: React.FC = () => {
               }
             }}
           >
+            {/* Background Poster Image */}
+            <Box
+              component="img"
+              className="lifestyle-bg"
+              src={lifestyleImg}
+              alt="VALKNUT Lifestyle Campaign Film"
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                filter: 'brightness(0.55) contrast(1.15)',
+                transition: 'transform 0.7s ease',
+                zIndex: 0
+              }}
+            />
+            {/* Overlay Gradient */}
+            <Box 
+              sx={{ 
+                position: 'absolute', 
+                inset: 0, 
+                background: 'linear-gradient(to top, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.3) 50%, rgba(10,10,10,0.7) 100%)', 
+                zIndex: 1 
+              }} 
+            />
+            
+            <Box sx={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {/* Play Button */}
             <Box
               className="play-button"
@@ -142,6 +174,7 @@ export const LifestyleFilmSection: React.FC = () => {
             >
               Sits full-width. Mobile receives a 9:16 vertical version optimised for Instagram/TikTok traffic.
             </Typography>
+            </Box>
           </Box>
 
         </Container>

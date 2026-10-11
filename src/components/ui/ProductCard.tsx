@@ -48,21 +48,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <MuiCard
-      className={`group relative flex flex-col bg-gradient-to-b from-[#141624] via-[#0f111a] to-[#0a0b12] border border-white/10 rounded-2xl p-3.5 transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.9),0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1.5 ${className}`}
+      className={`group relative flex flex-col bg-gradient-to-b from-[#141624] via-[#0f111a] to-[#0a0b12] border border-white/10 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.9),0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1.5 ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       sx={{
          backgroundImage: 'none',
          backgroundColor: 'transparent',
          boxShadow: 'none',
-         borderRadius: '16px',
+         borderRadius: '20px',
          height: '100%',
          display: 'flex',
          flexDirection: 'column',
       }}
     >
       {/* Visual Image Container with True 3:4 Portrait Aspect Ratio */}
-      <Box className="relative shrink-0 aspect-[3/4] w-full overflow-hidden bg-[#141620] rounded-xl mb-3.5 shadow-inner">
+      <Box className="relative shrink-0 aspect-[3/4] w-full overflow-hidden bg-[#141620] rounded-xl mb-4 shadow-inner">
         
         {/* Badges Overlay */}
         <Box className="absolute top-4 left-4 z-20 flex flex-col gap-1.5 items-start">
@@ -152,21 +152,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </Box>
       </Box>
 
-      {/* Product Information - Custom Layout */}
-      <Box className="flex flex-col space-y-1 flex-1 mt-1 justify-between">
+      {/* Product Information - Custom Layout with Generous Margins */}
+      <Box className="flex flex-col flex-1 mt-1 justify-between">
         <Box>
-          {/* Price at the Top */}
-          <Price
-            price={product.price}
-            salePrice={product.salePrice}
-            size="xl"
-            showDiscountPercent={true}
-            className="mb-1"
-          />
-
-          {/* BNPL Installments Text */}
-          <Typography component="div" className="text-[10px] sm:text-[11px] text-slate-400 font-medium pb-2.5 border-b border-white/10 mb-2.5 mt-0.5">
-            or pay in 3 x <Box component="span" className="font-bold text-[var(--text-primary)]">LKR {Math.round((product.salePrice || product.price) / 3).toLocaleString()}</Box> with <Box component="span" sx={{ color: '#ffb7d5', fontWeight: 900 }}>KOKO</Box> or <Box component="span" sx={{ color: '#00c2cb', fontWeight: 900, fontStyle: 'italic' }}>mintpay</Box>
+          {/* Category Eyebrow */}
+          <Typography
+            component="span"
+            className="text-[10px] sm:text-[11px] font-bold text-[#D4AF37] uppercase tracking-[0.2em] mb-1.5 block"
+            sx={{ fontFamily: '"Outfit", sans-serif' }}
+          >
+            {product.subCategory || product.category}
           </Typography>
 
           {/* Product Title */}
@@ -175,16 +170,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             onClick={() => {
               window.location.hash = `#/product/${product.slug}`;
             }}
-            className="text-sm sm:text-base font-bold text-[var(--text-primary)] font-heading tracking-wide leading-snug cursor-pointer hover:text-[#D4AF37] transition-colors line-clamp-2"
-            sx={{ textTransform: 'capitalize' }}
+            className="text-sm sm:text-base font-bold text-[var(--text-primary)] tracking-normal leading-snug cursor-pointer hover:text-[#D4AF37] transition-colors line-clamp-2 mb-2.5"
+            sx={{ fontFamily: '"Outfit", sans-serif' }}
           >
             {product.name}
+          </Typography>
+
+          {/* Price */}
+          <Box className="flex items-baseline gap-2 mb-2">
+            <Price
+              price={product.price}
+              salePrice={product.salePrice}
+              size="lg"
+              showDiscountPercent={true}
+            />
+          </Box>
+
+          {/* BNPL Installments Text with Margins */}
+          <Typography component="div" className="text-[10px] sm:text-[11px] text-slate-400 font-medium pb-2.5 border-b border-white/10 mb-3 mt-0.5">
+            or pay in 3 x <Box component="span" className="font-bold text-[var(--text-primary)]">LKR {Math.round((product.salePrice || product.price) / 3).toLocaleString()}</Box> with <Box component="span" sx={{ color: '#ffb7d5', fontWeight: 900 }}>KOKO</Box> or <Box component="span" sx={{ color: '#00c2cb', fontWeight: 900, fontStyle: 'italic' }}>mintpay</Box>
           </Typography>
         </Box>
 
         <Box sx={{ flex: 1 }} />
 
-        {/* Full-width Add to Cart Button */}
+        {/* Full-width Add to Cart Button with Generous Margin and Luxury Gold Button */}
         {onAddToCart && (
           <MuiButton
             onClick={(e) => {
@@ -193,15 +203,28 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             }}
             disabled={isSoldOut}
             fullWidth
-            className={`mt-4 py-2.5 rounded text-white font-bold transition-all flex items-center justify-center gap-2 shadow-lg ${isSoldOut ? 'bg-slate-800 text-slate-500' : 'bg-[#002080] hover:bg-[#001761]'}`}
+            className={`mt-2 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-lg ${
+              isSoldOut 
+                ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
+                : 'bg-[#D4AF37] hover:bg-[#e2b714] text-black active:scale-[0.98]'
+            }`}
             sx={{
-              textTransform: 'none',
-              fontSize: '1rem',
-              bgcolor: isSoldOut ? '#1e293b' : '#002080',
-              '&:hover': { bgcolor: isSoldOut ? '#1e293b' : '#001761' }
+              textTransform: 'uppercase',
+              fontSize: '0.8125rem',
+              letterSpacing: '0.1em',
+              fontWeight: 800,
+              fontFamily: '"Outfit", sans-serif',
+              bgcolor: isSoldOut ? '#1e293b' : '#D4AF37',
+              color: isSoldOut ? '#64748b' : '#000000',
+              borderRadius: '12px',
+              py: 1.25,
+              '&:hover': { 
+                bgcolor: isSoldOut ? '#1e293b' : '#e2b714',
+                boxShadow: isSoldOut ? 'none' : '0 8px 25px rgba(212,175,55,0.45)'
+              }
             }}
           >
-            <ShoppingBag size={18} /> {isSoldOut ? 'Sold Out' : 'Add To Cart'}
+            <ShoppingBag size={16} /> {isSoldOut ? 'Sold Out' : 'Add To Bag'}
           </MuiButton>
         )}
       </Box>

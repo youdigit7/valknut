@@ -52,12 +52,12 @@ export const Price: React.FC<PriceProps> = ({
 
   return (
     <Box className={`inline-flex items-baseline gap-2.5 flex-wrap ${className}`}>
-      <Typography component="span" className={`${sizeClasses.current} text-[#D4AF37] font-mono tracking-tight`}>
+      <Typography component="span" className={`${sizeClasses.current} text-[#D4AF37]`} sx={{ fontFamily: '"Outfit", sans-serif', letterSpacing: '0.02em', fontWeight: 900 }}>
         {currency} {currentPrice.toLocaleString()}
       </Typography>
 
       {isSale && originalPrice && (
-        <Typography component="span" className={`${sizeClasses.original} text-slate-400 line-through font-mono`}>
+        <Typography component="span" className={`${sizeClasses.original} text-slate-400 line-through`} sx={{ fontFamily: '"Outfit", sans-serif' }}>
           {currency} {originalPrice.toLocaleString()}
         </Typography>
       )}

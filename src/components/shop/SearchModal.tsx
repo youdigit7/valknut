@@ -263,7 +263,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                               )}
                             </Box>
 
-                            <Typography component="h4" sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif',  transition: 'color 0.3s ease' }}>
+                            <Typography component="h4" sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif',  transition: 'color 0.3s ease' }}>
                               {product.name}
                             </Typography>
 
@@ -334,7 +334,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                         sx={{ p: 2, borderRadius: 1, bgcolor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', transition: 'all 0.3s ease', boxShadow: '0 1px 2px rgba(0,0,0,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(212,175,55,0.5)', transform: 'translateY(-2px)' } }}
                       >
                         <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif', color: 'primary.main', fontWeight: 'bold', mb: 0.5, textTransform: 'uppercase' }}>COLLECTION</Typography>
-                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)',  fontFamily: '"Syne", sans-serif', textTransform: 'uppercase' }}>{drop.name}</Typography>
+                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)',  fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase' }}>{drop.name}</Typography>
                         <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)',  mt: 0.5 }}>{drop.desc}</Typography>
                       </Box>
                     ))}

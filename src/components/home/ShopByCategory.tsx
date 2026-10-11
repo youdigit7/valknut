@@ -3,6 +3,9 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { 
   Box, Typography, Container, Grid, Button
 } from '@mui/material';
+import menImg from '../../assets/men.jpeg';
+import womenImg from '../../assets/women.jpeg';
+import accessoriesImg from '../../assets/acessories.jpeg';
 
 interface CategoryCardProps {
   title: string;
@@ -265,7 +268,7 @@ export const ShopByCategory: React.FC = () => {
                 title="MEN"
                 subtitle="480GSM Boxy Hoodies, Oversized Graphic Tees, Tactical Cargos"
                 itemCount="14 PIECES"
-                imageUrl="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=85"
+                imageUrl={menImg}
                 href="#/category/men"
               />
             </Grid>
@@ -274,7 +277,7 @@ export const ShopByCategory: React.FC = () => {
                 title="WOMEN"
                 subtitle="Sculpted Heavyweight Crop Tops, Wide-Leg Fleece Pants, Oversized Outerwear"
                 itemCount="9 PIECES"
-                imageUrl="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85"
+                imageUrl={womenImg}
                 href="#/category/women"
               />
             </Grid>
@@ -283,7 +286,7 @@ export const ShopByCategory: React.FC = () => {
                 title="ESSENTIALS"
                 subtitle="Embroidered Caps, Stainless Steel Vacuum Bottles, Dark Silver Hardware"
                 itemCount="7 PIECES"
-                imageUrl="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=85"
+                imageUrl={accessoriesImg}
                 href="#/category/essentials"
               />
             </Grid>

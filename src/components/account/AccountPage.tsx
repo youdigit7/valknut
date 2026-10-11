@@ -234,12 +234,12 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             
             <Box sx={{ textAlign: 'center', mb: 4 }}>
               <Box sx={{ width: 40, height: 40, border: '1px solid #D4AF37', mx: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 0.5, mb: 2 }}>
-                <Typography sx={{ color: 'primary.main', fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: '1.25rem' }}>V</Typography>
+                <Typography sx={{ color: 'primary.main', fontFamily: '"Outfit", sans-serif', fontWeight: 900, fontSize: '1.25rem' }}>V</Typography>
               </Box>
               <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', mb: 1 }}>
                 VALKNUT SOVEREIGN PORTAL
               </Typography>
-              <Typography variant="h2" sx={{ fontSize: { xs: '1.5rem', sm: '1.875rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', letterSpacing: '-0.02em', mb: 1 }}>
+              <Typography variant="h2" sx={{ fontSize: { xs: '1.5rem', sm: '1.875rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', letterSpacing: '-0.02em', mb: 1 }}>
                 {activeTab === 'register' ? 'CREATE VIP ACCOUNT' : activeTab === 'forgot-password' ? 'RESET PASSWORD' : 'MEMBER SIGN IN'}
               </Typography>
               <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
@@ -434,12 +434,12 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             {/* Top Customer Banner */}
             <Box sx={{ bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'center' }, justifyContent: 'space-between', gap: 3, boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                <Box sx={{ width: 64, height: 64, borderRadius: 1, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'primary.main', fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: '1.5rem', boxShadow: '0 4px 15px rgba(212,175,55,0.1)', flexShrink: 0 }}>
+                <Box sx={{ width: 64, height: 64, borderRadius: 1, bgcolor: '#141620', border: '1px solid rgba(212,175,55,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'primary.main', fontFamily: '"Outfit", sans-serif', fontWeight: 900, fontSize: '1.5rem', boxShadow: '0 4px 15px rgba(212,175,55,0.1)', flexShrink: 0 }}>
                   {user.name.charAt(0).toUpperCase()}
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <Typography variant="h2" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' }, fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', textTransform: 'uppercase' }}>
+                    <Typography variant="h2" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' }, fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase' }}>
                       {user.name}
                     </Typography>
                     <Typography sx={{ px: 1, py: 0.25, bgcolor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: 'primary.main', fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, textTransform: 'uppercase', borderRadius: 0.5 }}>
@@ -515,7 +515,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                       <Box>
                         <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.2em', mb: 0.5 }}>LATEST DISPATCH STATUS</Typography>
-                        <Typography variant="h3" sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', textTransform: 'uppercase' }}>ORDER #{userOrders[0].orderNumber}</Typography>
+                        <Typography variant="h3" sx={{ fontSize: '1.125rem', fontWeight: 900, color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase' }}>ORDER #{userOrders[0].orderNumber}</Typography>
                       </Box>
                       <Button onClick={() => setSelectedOrderDetails(userOrders[0])} endIcon={<ArrowRight size={14} />} sx={{ p: 0, minWidth: 'auto', color: 'primary.main', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' } }}>
                         View Breakdown
@@ -584,7 +584,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                             <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 1.5, bgcolor: '#141620', borderRadius: 0.5, border: '1px solid rgba(255,255,255,0.05)' }}>
                               <Box component="img" src={item.customization?.finalPreviewDataUrl || item.imageUrl || item.product?.images?.[0] || ''} alt="" sx={{ width: 48, height: 56, objectFit: 'cover', borderRadius: 0.5, bgcolor: '#1a1d2d', flexShrink: 0 }} />
                               <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-                                <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif' }} noWrap>{item.productName || item.product?.name || 'Garment'}</Typography>
+                                <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif' }} noWrap>{item.productName || item.product?.name || 'Garment'}</Typography>
                                 <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-secondary)' }}>Size: {item.size || item.selectedSize || 'M'} {item.color || item.selectedColor ? `• ${item.color || item.selectedColor}` : ''} • Qty: {item.quantity}</Typography>
                                 <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', color: 'primary.main' }}>LKR {(item.unitPrice || 0).toLocaleString()}</Typography>
                               </Box>
@@ -622,7 +622,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             {activeTab === 'profile' && (
               <Box component="form" onSubmit={handleSaveProfile} sx={{ p: { xs: 3, sm: 4 }, bgcolor: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <Box>
-                  <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', letterSpacing: '0.1em' }}>PERSONAL & DELIVERY PROFILE</Typography>
+                  <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', letterSpacing: '0.1em' }}>PERSONAL & DELIVERY PROFILE</Typography>
                   <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', mt: 0.5 }}>Update your contact information and primary Sri Lanka delivery destination for 1-click checkout.</Typography>
                 </Box>
 
@@ -675,7 +675,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 2 }}>
                   <Box>
                     <Typography sx={{ fontSize: '0.625rem', fontFamily: '"Inter", sans-serif', color: 'primary.main', fontWeight: 'bold' }}>ORDER INVOICE</Typography>
-                    <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, fontFamily: '"Syne", sans-serif', color: 'var(--text-primary)', textTransform: 'uppercase' }}>{selectedOrderDetails.orderNumber}</Typography>
+                    <Typography sx={{ fontSize: '1.25rem', fontWeight: 900, fontFamily: '"Outfit", sans-serif', color: 'var(--text-primary)', textTransform: 'uppercase' }}>{selectedOrderDetails.orderNumber}</Typography>
                   </Box>
                   <IconButton onClick={() => setSelectedOrderDetails(null)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: 'var(--text-primary)', bgcolor: 'rgba(255,255,255,0.1)' } }}>
                     <X size={20} />

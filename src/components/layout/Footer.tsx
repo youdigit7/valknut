@@ -4,7 +4,7 @@ import {
   Box, Typography, Container, 
   Grid, Link, IconButton, Paper, TextField, Button
 } from '@mui/material';
-import logoUrl from '../../assets/PHOTO-2026-10-06-23-18-52.jpg';
+import darkLogo from '../../assets/logos/symbol-dark.png';
 
 
 
@@ -86,11 +86,11 @@ export const Footer: React.FC = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                 <Box 
                   component="img"
-                  src={logoUrl}
+                  src={darkLogo}
                   alt="Valknut Logo"
-                  sx={{ width: 40, height: 40, borderRadius: 1, objectFit: 'cover', border: '1.5px solid rgba(212,175,55,0.8)' }} 
+                  sx={{ width: 40, height: 40, objectFit: 'contain', filter: 'drop-shadow(0 2px 8px rgba(212,175,55,0.4))' }} 
                 />
-                <Typography sx={{ fontSize: '1.5rem', fontWeight: 900, letterSpacing: '0.25em', fontFamily: '"Syne", sans-serif' }}>VALKNUT</Typography>
+                <Typography sx={{ fontSize: '1.5rem', fontWeight: 900, letterSpacing: '0.2em', fontFamily: '"Outfit", sans-serif' }}>VALKNUT</Typography>
               </Box>
               <Typography variant="body2" sx={{ color: 'var(--text-secondary)', lineHeight: 1.8, mb: 4, maxWidth: '400px' }}>
                 High-end streetwear rooted in Norse symbolism and modern minimalism. Designed in Sri Lanka and engineered for the world.

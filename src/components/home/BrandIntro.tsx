@@ -3,6 +3,7 @@ import { Layers, Sparkles, Truck, CheckCircle2, ArrowRight, Compass } from 'luci
 import { 
   Box, Typography, Container, Grid, Button
 } from '@mui/material';
+import introTexture from '../../assets/background-images/ChatGPT Image Jun 27, 2026, 09_21_22 AM.png';
 
 export const BrandIntro: React.FC = () => {
   return (
@@ -18,10 +19,30 @@ export const BrandIntro: React.FC = () => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          position: 'relative'
         }}
       >
-        <Container maxWidth="lg">
+        {/* Subtle Ambient Background Texture */}
+        <Box 
+          component="img"
+          src={introTexture}
+          alt=""
+          aria-hidden="true"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: 0.12,
+            filter: 'contrast(1.2) brightness(0.8)',
+            pointerEvents: 'none',
+            zIndex: 0
+          }}
+        />
+
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', mx: 'auto' }}>
             
             {/* Eyebrow Tag with 3D Pill */}
@@ -149,7 +170,7 @@ export const BrandIntro: React.FC = () => {
                         <Typography 
                           sx={{ 
                             fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem', lg: '1.25rem', xl: '1.5rem' }, 
-                            fontFamily: '"Syne", sans-serif', 
+                            fontFamily: '"Outfit", sans-serif', 
                             fontWeight: 900,
                             letterSpacing: '-0.02em',
                             background: 'linear-gradient(to right, #f3e5ab, #D4AF37)',
@@ -193,7 +214,7 @@ export const BrandIntro: React.FC = () => {
                       >
                         {card.subtitle}
                       </Typography>
-                      <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold', fontFamily: '"Syne", sans-serif', color: 'var(--text-primary)' }}>
+                      <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold', fontFamily: '"Outfit", sans-serif', color: 'var(--text-primary)' }}>
                         {card.desc}
                       </Typography>
                     </Box>

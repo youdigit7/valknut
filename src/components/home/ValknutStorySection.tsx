@@ -3,6 +3,7 @@ import { ArrowRight, Play } from 'lucide-react';
 import { 
   Box, Typography, Container, Grid, Button
 } from '@mui/material';
+import storyImg from '../../assets/background-images/Our story.png';
 
 export const ValknutStorySection: React.FC = () => {
   return (
@@ -148,14 +149,14 @@ export const ValknutStorySection: React.FC = () => {
                 <Box
                   component="img"
                   className="bg-img"
-                  src="https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1200&q=85"
-                  alt="VALKNUT Brand Film"
+                  src={storyImg}
+                  alt="THE VALKNUT STORY"
                   loading="lazy"
                   sx={{
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
-                    filter: 'brightness(0.7) contrast(1.25)',
+                    filter: 'brightness(0.75) contrast(1.15)',
                     transition: 'transform 0.7s ease'
                   }}
                 />

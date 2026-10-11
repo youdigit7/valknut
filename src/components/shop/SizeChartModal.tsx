@@ -48,7 +48,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <Ruler color="#d4af37" size={24} />
               <Box>
-                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
+                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Outfit", sans-serif' }}>
                   VALKNUT OFFICIAL SIZE GUIDE
                 </Typography>
                 <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>Architectural Heavyweight Fit & Sizing Matrix</Typography>

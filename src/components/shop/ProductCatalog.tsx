@@ -475,7 +475,7 @@ export const ProductCatalog: React.FC = () => {
               <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 900, letterSpacing: '0.3em', color: 'primary.main', textTransform: 'uppercase', display: 'block', mb: 0.5 }}>
                 VALKNUT ARCHITECTURAL STREETWEAR
               </Typography>
-              <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem', lg: '3rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', letterSpacing: '-0.02em', fontFamily: '"Syne", sans-serif' }}>
+              <Typography variant="h1" sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem', lg: '3rem' }, fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', letterSpacing: '-0.02em', fontFamily: '"Outfit", sans-serif' }}>
                 {filters.subCategory !== 'ALL'
                   ? `${filters.category !== 'ALL' ? filters.category + ' ' : ''}${filters.subCategory}`
                   : filters.category === 'ALL'
@@ -503,7 +503,7 @@ export const ProductCatalog: React.FC = () => {
                 key={cat}
                 onClick={() => handleFilterChange({ category: cat as CategoryType | 'ALL', subCategory: 'ALL' })}
                 sx={{
-                  px: 2.5, py: 1.25, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Syne", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.3s', flexShrink: 0,
+                  px: 2.5, py: 1.25, borderRadius: 0.5, fontSize: '0.75rem', fontWeight: 'bold', fontFamily: '"Outfit", sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.3s', flexShrink: 0,
                   ...(isActive ? { bgcolor: 'primary.main', color: 'black', boxShadow: '0 4px 15px rgba(212,175,55,0.2)' } : { bgcolor: '#12141F', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)' } })
                 }}
               >

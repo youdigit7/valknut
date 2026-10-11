@@ -3,6 +3,7 @@ import { Shield, Zap, Lock } from 'lucide-react';
 import { 
   Box, Typography, Container, Grid 
 } from '@mui/material';
+import standardImg from '../../assets/background-images/The Valknut Standard.png';
 
 export const BrandPhilosophy: React.FC = () => {
   return (
@@ -40,15 +41,15 @@ export const BrandPhilosophy: React.FC = () => {
               >
                 <Box 
                   component="img"
-                  src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=85" 
-                  alt="VALKNUT Brand Craftsmanship" 
+                  src={standardImg} 
+                  alt="VALKNUT Brand Craftsmanship - The Valknut Standard" 
                   loading="lazy"
                   sx={{ 
                     width: '100%', 
                     height: { xs: 320, sm: 460, lg: 540 }, 
                     objectFit: 'cover', 
                     borderRadius: 3, 
-                    filter: 'contrast(1.1) brightness(0.9)' 
+                    filter: 'contrast(1.05) brightness(0.95)' 
                   }}
                 />
                 
@@ -84,7 +85,7 @@ export const BrandPhilosophy: React.FC = () => {
                       color: 'var(--text-primary)', 
                       fontSize: { xs: '1rem', sm: '1.25rem' }, 
                       fontWeight: 900, 
-                      fontFamily: '"Syne", sans-serif', 
+                      fontFamily: '"Outfit", sans-serif', 
                       textTransform: 'uppercase', 
                       lineHeight: 1.2 
                     }}

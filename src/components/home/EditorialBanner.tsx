@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { 
   Box, Typography, Container, Button 
 } from '@mui/material';
+import editorialBg from '../../assets/background-images/home2.jpeg';
 
 export const EditorialBanner: React.FC = () => {
   return (
@@ -26,7 +27,7 @@ export const EditorialBanner: React.FC = () => {
         <Box sx={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <Box
             component="img"
-            src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=2000&q=85"
+            src={editorialBg}
             alt="VALKNUT Custom Studio Craftsmanship"
             loading="lazy"
             sx={{ 
@@ -34,7 +35,7 @@ export const EditorialBanner: React.FC = () => {
               height: '100%', 
               objectFit: 'cover', 
               objectPosition: 'center', 
-              filter: 'brightness(0.25) contrast(1.25)' 
+              filter: 'brightness(0.35) contrast(1.2)' 
             }}
           />
           <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #0A0A0A, rgba(10,10,10,0.7), #0A0A0A)' }} />

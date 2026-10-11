@@ -125,7 +125,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pb: 2, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <SlidersHorizontal size={16} color="#D4AF37" />
-          <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', fontFamily: '"Syne", sans-serif', color: 'var(--text-primary)' }}>
+          <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', fontFamily: '"Outfit", sans-serif', color: 'var(--text-primary)' }}>
             FILTERS
           </Typography>
           {activeFilterCount > 0 && (

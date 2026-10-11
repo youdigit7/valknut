@@ -20,7 +20,8 @@ import {
   Box, Typography, Container,
   Button, IconButton, Badge, Drawer, Menu as MuiMenu, MenuItem, AppBar, Toolbar
 } from '@mui/material';
-import logoUrl from '../../assets/PHOTO-2026-10-06-23-18-52.jpg';
+import darkLogo from '../../assets/logos/symbol-dark.png';
+import lightLogo from '../../assets/logos/symbol-light.png';
 
 export const Navbar: React.FC = () => {
   const {
@@ -123,21 +124,19 @@ export const Navbar: React.FC = () => {
             >
               <Box 
                 component="img"
-                src={logoUrl}
+                src={mode === 'dark' ? darkLogo : lightLogo}
                 alt="Valknut Logo"
                 sx={{ 
-                  width: { xs: 32, lg: 40 }, height: { xs: 32, lg: 40 }, 
-                  borderRadius: 2, 
-                  objectFit: 'cover',
-                  boxShadow: mode === 'dark' ? '0 4px 15px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.25)' : '0 4px 15px rgba(0,0,0,0.1)', 
-                  transition: 'all 0.3s', 
-                  border: '1px solid',
-                  borderColor: mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
-                  '&:hover': { borderColor: 'primary.main', boxShadow: '0 0 20px rgba(212,175,55,0.35)' } 
+                  width: { xs: 34, lg: 40 }, 
+                  height: { xs: 34, lg: 40 }, 
+                  objectFit: 'contain',
+                  filter: mode === 'dark' ? 'drop-shadow(0 2px 8px rgba(212,175,55,0.35))' : 'none',
+                  transition: 'all 0.3s ease',
+                  '&:hover': { transform: 'scale(1.06)', filter: 'drop-shadow(0 0 14px rgba(212,175,55,0.6))' } 
                 }} 
               />
               <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column' }}>
-                <Typography sx={{ fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: { xs: '1rem', lg: '1.25rem' }, letterSpacing: '0.22em', lineHeight: 1, color: mode === 'dark' ? 'white' : 'black' }}>VALKNUT</Typography>
+                <Typography sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 900, fontSize: { xs: '1.1rem', lg: '1.35rem' }, letterSpacing: '0.2em', lineHeight: 1, color: mode === 'dark' ? 'white' : 'black' }}>VALKNUT</Typography>
                 <Typography sx={{ fontSize: '0.5rem', fontFamily: '"Inter", sans-serif', letterSpacing: '0.4em', color: 'var(--text-secondary)', mt: 0.5, fontWeight: 'bold' }}>OFFICIAL</Typography>
               </Box>
             </Box>
@@ -283,11 +282,11 @@ export const Navbar: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Box 
               component="img"
-              src={logoUrl}
+              src={mode === 'dark' ? darkLogo : lightLogo}
               alt="Valknut Logo"
-              sx={{ width: 32, height: 32, borderRadius: 2, objectFit: 'cover', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(212,175,55,0.3)' : 'rgba(0,0,0,0.1)' }} 
+              sx={{ width: 32, height: 32, objectFit: 'contain' }} 
             />
-            <Typography sx={{ fontFamily: '"Syne", sans-serif', fontWeight: 900, fontSize: '1.2rem', letterSpacing: '0.2em' }}>VALKNUT</Typography>
+            <Typography sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 900, fontSize: '1.25rem', letterSpacing: '0.2em' }}>VALKNUT</Typography>
           </Box>
           <IconButton onClick={() => setIsMobileMenuOpen(false)} sx={{ color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.05)', bgcolor: 'rgba(255,255,255,0.03)' }}>
             <X size={16} />

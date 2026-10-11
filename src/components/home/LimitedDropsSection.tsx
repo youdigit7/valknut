@@ -124,7 +124,7 @@ export const LimitedDropsSection: React.FC = () => {
                           color: 'primary.main', 
                           fontSize: { xs: '1.75rem', sm: '2.5rem' }, 
                           fontWeight: 900, 
-                          fontFamily: '"Syne", sans-serif',
+                          fontFamily: '"Outfit", sans-serif',
                           lineHeight: 1,
                           textShadow: '0 4px 10px rgba(212,175,55,0.3)',
                           zIndex: 1

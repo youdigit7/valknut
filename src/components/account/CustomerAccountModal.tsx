@@ -86,7 +86,7 @@ export const CustomerAccountModal: React.FC = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <User color="#d4af37" size={22} />
               <Box>
-                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Syne", sans-serif' }}>
+                <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: '"Outfit", sans-serif' }}>
                   VALKNUT CUSTOMER PORTAL
                 </Typography>
                 <Typography sx={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>
@@ -107,7 +107,7 @@ export const CustomerAccountModal: React.FC = () => {
                 <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'primary.main', mb: 0.5, fontFamily: '"Inter", sans-serif' }}>
                   ACCESS YOUR ACCOUNT
                 </Typography>
-                <Typography variant="h4" sx={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>
+                <Typography variant="h4" sx={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif' }}>
                   SIGN IN / REGISTER
                 </Typography>
               </Box>
@@ -203,7 +203,7 @@ export const CustomerAccountModal: React.FC = () => {
                                     <Box sx={{ width: 40, height: 48, bgcolor: '#141620', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.5625rem', fontFamily: '"Inter", sans-serif' }}>VK</Box>
                                   )}
                                   <Box sx={{ flex: 1 }}>
-                                    <Typography sx={{ fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Syne", sans-serif' }}>{name}</Typography>
+                                    <Typography sx={{ fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif' }}>{name}</Typography>
                                     <Typography sx={{ fontSize: '0.625rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>Size: {size} | Qty: {ci.quantity}</Typography>
                                   </Box>
                                 </Box>

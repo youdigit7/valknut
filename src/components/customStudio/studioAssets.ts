@@ -65,9 +65,9 @@ export const VALKNUT_SIGIL_PRESETS: SigilPreset[] = [
 
 export const STUDIO_FONTS: TypographyFont[] = [
   {
-    id: 'syne',
-    name: 'Syne Brutalist',
-    fontFamily: '"Syne", sans-serif',
+    id: 'outfit',
+    name: 'Outfit Geometric',
+    fontFamily: '"Outfit", sans-serif',
     sample: 'VALKNUT ARCHIVE',
     category: 'Brutalist Streetwear'
   },

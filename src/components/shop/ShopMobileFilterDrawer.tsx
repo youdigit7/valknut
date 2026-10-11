@@ -49,7 +49,7 @@ export const ShopMobileFilterDrawer: React.FC<ShopMobileFilterDrawerProps> = ({
     >
       <Box sx={{ p: 3, borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: 'var(--bg-surface)' }}>
         <Box>
-          <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Syne", sans-serif', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography sx={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Outfit", sans-serif', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 1 }}>
             <Filter size={16} color="#D4AF37" /> FILTER & REFINE
           </Typography>
           <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif', mt: 0.5 }}>
