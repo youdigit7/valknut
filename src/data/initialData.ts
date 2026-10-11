@@ -1,6 +1,17 @@
 import type { Product, Coupon, Order } from '../types/ecommerce';
+import menAcidWashTee from '../assets/products/men-acid-wash-tee.jpg';
+import menTacticalJoggers from '../assets/products/men-tactical-joggers.jpg';
+import menSovereignHoodie from '../assets/products/men-sovereign-hoodie.jpg';
+import menMindControlTee from '../assets/products/men-mind-control-tee.jpg';
+import womenCropHoodie from '../assets/products/women-crop-hoodie.jpg';
+import womenOversizedTee from '../assets/products/women-oversized-tee.jpg';
+import essentialsCrossbodyBag from '../assets/products/essentials-crossbody-bag.jpg';
+import essentialsTumbler from '../assets/products/essentials-tumbler.jpg';
+import essentialsSnapbackCap from '../assets/products/essentials-snapback-cap.jpg';
+import essentialsLeatherWallet from '../assets/products/essentials-leather-wallet.jpg';
 
 export const INITIAL_PRODUCTS: Product[] = [
+  // --- MEN'S COLLECTION (4 Distinct Items) ---
   {
     id: 'prod-1',
     name: 'VALKNUT Celestial Mountain 480GSM Sovereign Hoodie',
@@ -14,9 +25,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Hoodies',
     collection: 'DARK SOVEREIGN 2026',
     images: [
-      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1200&q=85'
+      menSovereignHoodie
     ],
     tags: ['Oversized', 'Heavyweight', '480GSM', 'Celestial Mountain', 'Best Seller', 'Dark Luxury'],
     isCustomizable: true,
@@ -28,8 +37,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       { id: 'v1-2', size: 'M', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-M', stock: 28 },
       { id: 'v1-3', size: 'L', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-L', stock: 22 },
       { id: 'v1-4', size: 'XL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-XL', stock: 14 },
-      { id: 'v1-5', size: 'M', color: 'Oyster Beige', colorHex: '#e3dcce', sku: 'VK-HD-BGE-M', stock: 18 },
-      { id: 'v1-6', size: 'L', color: 'Oyster Beige', colorHex: '#e3dcce', sku: 'VK-HD-BGE-L', stock: 12 }
+      { id: 'v1-5', size: 'XXL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-XXL', stock: 8 }
     ]
   },
   {
@@ -44,9 +52,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Oversized T-Shirts',
     collection: 'ESSENTIAL SIGNATURE',
     images: [
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=1200&q=85'
+      menMindControlTee
     ],
     tags: ['Oversized Tee', 'Puff Rubber', 'Mind Control', 'Graphic Tee', 'Signature'],
     isCustomizable: true,
@@ -58,8 +64,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       { id: 'v2-2', size: 'M', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-M', stock: 50 },
       { id: 'v2-3', size: 'L', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-L', stock: 40 },
       { id: 'v2-4', size: 'XL', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-XL', stock: 25 },
-      { id: 'v2-5', size: 'M', color: 'Bone White', colorHex: '#ede8dd', sku: 'VK-TS-WHT-M', stock: 20 },
-      { id: 'v2-6', size: 'L', color: 'Bone White', colorHex: '#ede8dd', sku: 'VK-TS-WHT-L', stock: 15 }
+      { id: 'v2-5', size: 'XXL', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-XXL', stock: 12 }
     ]
   },
   {
@@ -75,8 +80,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Oversized T-Shirts',
     collection: 'DARK SOVEREIGN 2026',
     images: [
-      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=85'
+      menAcidWashTee
     ],
     tags: ['Acid Wash', 'Vintage Wash', 'Celestial Mountain', 'Streetwear'],
     isCustomizable: true,
@@ -88,9 +92,91 @@ export const INITIAL_PRODUCTS: Product[] = [
       { id: 'v3-2', size: 'M', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-M', stock: 35 },
       { id: 'v3-3', size: 'L', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-L', stock: 30 },
       { id: 'v3-4', size: 'XL', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-XL', stock: 15 },
-      { id: 'v3-5', size: 'M', color: 'Oatmeal Stone', colorHex: '#dcd6c8', sku: 'VK-CLST-OAT-M', stock: 16 }
+      { id: 'v3-5', size: 'XXL', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-XXL', stock: 10 }
     ]
   },
+  {
+    id: 'prod-7',
+    name: 'Valknut Stealth Tech Tactical Joggers',
+    slug: 'valknut-stealth-tech-tactical-joggers',
+    description: 'Precision engineered cargo joggers with multi-pocket utility zip closures, ergonomic knee darting, adjustable cinch cuffs, and water-repellent matte stretch woven body.',
+    material: '88% Nylon, 12% Elastane Matte Technical Weave',
+    careInstructions: 'Machine wash 30°C. Do not use fabric softeners. Tumble dry low.',
+    price: 11200,
+    salePrice: 9800,
+    category: 'MEN',
+    subCategory: 'Joggers',
+    collection: 'STEALTH LABS',
+    images: [
+      menTacticalJoggers
+    ],
+    tags: ['Techwear', 'Cargo', 'Joggers', 'Utility'],
+    isCustomizable: false,
+    isBestSeller: true,
+    isNewArrival: true,
+    createdAt: '2026-09-10T00:00:00Z',
+    variants: [
+      { id: 'v7-1', size: 'S', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-S', stock: 12 },
+      { id: 'v7-2', size: 'M', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-M', stock: 22 },
+      { id: 'v7-3', size: 'L', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-L', stock: 18 },
+      { id: 'v7-4', size: 'XL', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-XL', stock: 8 },
+      { id: 'v7-5', size: 'XXL', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-XXL', stock: 6 }
+    ]
+  },
+
+  // --- WOMEN'S COLLECTION (2 Distinct Items) ---
+  {
+    id: 'prod-8',
+    name: 'VALKNUT Femme Sculpted Crop Hoodie',
+    slug: 'valknut-femme-sculpted-crop-hoodie',
+    description: 'High-lux women’s cropped silhouette featuring raw-edge hemline, extended ribbed wrist cuffs, and tonal high-density metallic chest embroidery.',
+    material: '85% Organic Cotton, 15% Polyester Fleece (360 GSM)',
+    careInstructions: 'Hand wash or delicate cycle cold. Dry flat.',
+    price: 9500,
+    category: 'WOMEN',
+    subCategory: 'Hoodies',
+    collection: 'VALKNUT FEMME',
+    images: [
+      womenCropHoodie
+    ],
+    tags: ['Women', 'Crop Hoodie', 'Minimal', 'Streetwear'],
+    isCustomizable: true,
+    isBestSeller: true,
+    isNewArrival: true,
+    createdAt: '2026-09-18T00:00:00Z',
+    variants: [
+      { id: 'v8-1', size: 'S', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-S', stock: 18 },
+      { id: 'v8-2', size: 'M', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-M', stock: 25 },
+      { id: 'v8-3', size: 'L', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-L', stock: 14 }
+    ]
+  },
+  {
+    id: 'prod-9',
+    name: 'VALKNUT Femme Minimalist Oversized Tee',
+    slug: 'valknut-femme-minimalist-oversized-tee',
+    description: 'Relaxed drop-shoulder oversized streetwear tee engineered from heavyweight 280GSM combed cotton jersey. Featuring the signature Valknut chest insignia with clean architectural drape.',
+    material: '100% Combed Heavy Cotton Jersey (280 GSM) - Made in Sri Lanka',
+    careInstructions: 'Machine wash cold inside out (30°C). Do not bleach. Hang dry in shade.',
+    price: 6800,
+    category: 'WOMEN',
+    subCategory: 'Oversized T-Shirts',
+    collection: 'VALKNUT FEMME',
+    images: [
+      womenOversizedTee
+    ],
+    tags: ['Women', 'Oversized Tee', 'Minimalist', 'Streetwear'],
+    isCustomizable: true,
+    isBestSeller: true,
+    isNewArrival: true,
+    createdAt: '2026-09-20T00:00:00Z',
+    variants: [
+      { id: 'v9-1', size: 'S', color: 'Washed Black', colorHex: '#121214', sku: 'VK-W-TS-BLK-S', stock: 24 },
+      { id: 'v9-2', size: 'M', color: 'Washed Black', colorHex: '#121214', sku: 'VK-W-TS-BLK-M', stock: 32 },
+      { id: 'v9-3', size: 'L', color: 'Washed Black', colorHex: '#121214', sku: 'VK-W-TS-BLK-L', stock: 18 }
+    ]
+  },
+
+  // --- ESSENTIALS & ACCESSORIES (4 Distinct Items) ---
   {
     id: 'prod-4',
     name: 'Valknut Stealth Tactical Utility Crossbody Bag',
@@ -103,8 +189,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Accessories',
     collection: 'STEALTH LABS',
     images: [
-      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1200&q=85'
+      essentialsCrossbodyBag
     ],
     tags: ['Crossbody', 'Utility Bag', 'Cordura', 'Accessories', 'Stealth'],
     isCustomizable: false,
@@ -127,8 +212,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Accessories',
     collection: 'EVERYDAY ESSENTIALS',
     images: [
-      'https://images.unsplash.com/photo-1577705998148-6da4f3963bc8?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=1200&q=85'
+      essentialsTumbler
     ],
     tags: ['Tumbler', 'Drinkware', 'Stainless Steel', 'Insulated'],
     isCustomizable: false,
@@ -151,7 +235,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Accessories',
     collection: 'ACCESSORY SERIES',
     images: [
-      'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1200&q=85'
+      essentialsLeatherWallet
     ],
     tags: ['Leather Wallet', 'RFID Blocking', 'Accessories', 'Saffiano'],
     isCustomizable: false,
@@ -160,88 +244,6 @@ export const INITIAL_PRODUCTS: Product[] = [
     createdAt: '2026-08-30T00:00:00Z',
     variants: [
       { id: 'v6-1', size: 'M', color: 'Midnight Black', colorHex: '#08080a', sku: 'VK-WLT-BLK-ONE', stock: 35 }
-    ]
-  },
-  {
-    id: 'prod-7',
-    name: 'Valknut Stealth Tech Tactical Joggers',
-    slug: 'valknut-stealth-tech-tactical-joggers',
-    description: 'Precision engineered cargo joggers with multi-pocket utility zip closures, ergonomic knee darting, adjustable cinch cuffs, and water-repellent matte stretch woven body.',
-    material: '88% Nylon, 12% Elastane Matte Technical Weave',
-    careInstructions: 'Machine wash 30°C. Do not use fabric softeners. Tumble dry low.',
-    price: 11200,
-    salePrice: 9800,
-    category: 'MEN',
-    subCategory: 'Joggers',
-    collection: 'STEALTH LABS',
-    images: [
-      'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=1200&q=85'
-    ],
-    tags: ['Techwear', 'Cargo', 'Joggers', 'Utility'],
-    isCustomizable: false,
-    isBestSeller: true,
-    isNewArrival: true,
-    createdAt: '2026-09-10T00:00:00Z',
-    variants: [
-      { id: 'v7-1', size: 'S', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-S', stock: 12 },
-      { id: 'v7-2', size: 'M', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-M', stock: 22 },
-      { id: 'v7-3', size: 'L', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-L', stock: 18 },
-      { id: 'v7-4', size: 'XL', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-XL', stock: 8 }
-    ]
-  },
-  {
-    id: 'prod-8',
-    name: 'VALKNUT Femme Sculpted Crop Hoodie',
-    slug: 'valknut-femme-sculpted-crop-hoodie',
-    description: 'High-lux women’s cropped silhouette featuring raw-edge hemline, extended ribbed wrist cuffs, and tonal high-density metallic chest embroidery.',
-    material: '85% Organic Cotton, 15% Polyester Fleece (360 GSM)',
-    careInstructions: 'Hand wash or delicate cycle cold. Dry flat.',
-    price: 9500,
-    category: 'WOMEN',
-    subCategory: 'Hoodies',
-    collection: 'VALKNUT FEMME',
-    images: [
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=1200&q=85'
-    ],
-    tags: ['Women', 'Crop Hoodie', 'Minimal', 'Streetwear'],
-    isCustomizable: true,
-    isBestSeller: false,
-    isNewArrival: true,
-    createdAt: '2026-09-18T00:00:00Z',
-    variants: [
-      { id: 'v8-1', size: 'S', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-S', stock: 18 },
-      { id: 'v8-2', size: 'M', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-M', stock: 25 },
-      { id: 'v8-3', size: 'L', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-L', stock: 14 },
-      { id: 'v8-4', size: 'M', color: 'Sage Olive', colorHex: '#464f3e', sku: 'VK-W-HD-OLV-M', stock: 10 }
-    ]
-  },
-  {
-    id: 'prod-9',
-    name: 'Essential Oversized Boxy Gym Pump Cover',
-    slug: 'essential-oversized-boxy-pump-cover',
-    description: 'Engineered for iron warriors and streetwear purists. Ultra-durable double-stitched 310GSM heavyweight jersey with relaxed dropped armholes and anti-fade reactive dye.',
-    material: '100% Ring-Spun Combed Cotton Heavy Jersey - Made in Sri Lanka',
-    careInstructions: 'Cold wash. Line dry in shade.',
-    price: 5900,
-    category: 'ESSENTIALS',
-    subCategory: 'Core products',
-    collection: 'EVERYDAY ESSENTIALS',
-    images: [
-      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=1200&q=85'
-    ],
-    tags: ['Activewear', 'Pump Cover', 'Essentials', 'Gym', 'Oversized'],
-    isCustomizable: true,
-    isBestSeller: true,
-    isNewArrival: false,
-    createdAt: '2026-07-20T00:00:00Z',
-    variants: [
-      { id: 'v9-1', size: 'S', color: 'Obsidian Black', colorHex: '#111113', sku: 'VK-ESS-BLK-S', stock: 30 },
-      { id: 'v9-2', size: 'M', color: 'Obsidian Black', colorHex: '#111113', sku: 'VK-ESS-BLK-M', stock: 45 },
-      { id: 'v9-3', size: 'L', color: 'Obsidian Black', colorHex: '#111113', sku: 'VK-ESS-BLK-L', stock: 38 },
-      { id: 'v9-4', size: 'XL', color: 'Obsidian Black', colorHex: '#111113', sku: 'VK-ESS-BLK-XL', stock: 22 }
     ]
   },
   {
@@ -256,7 +258,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Accessories',
     collection: 'ACCESSORY SERIES',
     images: [
-      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1200&q=85'
+      essentialsSnapbackCap
     ],
     tags: ['Accessories', 'Cap', 'Snapback', 'Headwear'],
     isCustomizable: true,

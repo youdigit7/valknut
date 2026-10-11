@@ -97,7 +97,7 @@ export const DEFAULT_COLLECTIONS: CollectionItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85',
     seoTitle: 'VALKNUT Femme Collection | Women’s Luxury Streetwear',
     seoDescription: 'Curated apparel for women with uncompromising craftsmanship.',
-    productIds: ['prod-4', 'prod-8'],
+    productIds: ['prod-8', 'prod-9'],
     active: true,
     releaseDate: '2026-08-15'
   },
@@ -109,7 +109,7 @@ export const DEFAULT_COLLECTIONS: CollectionItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=1200&q=85',
     seoTitle: 'Stealth Labs Utility Collection | VALKNUT Official',
     seoDescription: 'Engineered cargo joggers, technical outerwear, and minimalist pieces.',
-    productIds: ['prod-7'],
+    productIds: ['prod-4', 'prod-7'],
     active: true,
     releaseDate: '2026-09-10'
   },
@@ -120,8 +120,8 @@ export const DEFAULT_COLLECTIONS: CollectionItem[] = [
     description: 'Pure 100% ring-spun combed cotton foundation pieces built to endure heavy daily rotations.',
     imageUrl: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=85',
     seoTitle: 'Everyday Essentials Collection | VALKNUT Official',
-    seoDescription: 'Core oversized t-shirts, gym pump covers, and daily apparel.',
-    productIds: ['prod-5', 'prod-9'],
+    seoDescription: 'Core oversized t-shirts, drinkware, and daily apparel.',
+    productIds: ['prod-5', 'prod-6', 'prod-10'],
     active: true,
     releaseDate: '2026-07-20'
   }
@@ -145,7 +145,7 @@ export const DEFAULT_HOMEPAGE_CONFIG: HomepageConfig = {
     active: true
   },
   featuredCollectionSlugs: ['shadow-ops-2026', 'valknut-femme', 'stealth-labs', 'everyday-essentials'],
-  featuredProductIds: ['prod-1', 'prod-2', 'prod-3', 'prod-4'],
+  featuredProductIds: ['prod-1', 'prod-2', 'prod-3', 'prod-7'],
   sectionsVisibility: {
     hero: true,
     brandIntro: true,

@@ -105,10 +105,13 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   // Load initial state from LocalStorage or Defaults
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      const saved = localStorage.getItem('valknut_products');
+      const saved = localStorage.getItem('valknut_products_v2');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length === INITIAL_PRODUCTS.length) {
+          const hasUnsplash = parsed.some((p: Product) => p.images?.some((img: string) => typeof img === 'string' && img.includes('images.unsplash.com')));
+          if (!hasUnsplash) return parsed;
+        }
       }
     } catch (e) {
       console.warn('Failed to parse cached products:', e);
@@ -167,7 +170,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   // Sync to local storage
   useEffect(() => {
-    localStorage.setItem('valknut_products', JSON.stringify(products));
+    localStorage.setItem('valknut_products_v2', JSON.stringify(products));
+    localStorage.removeItem('valknut_products');
   }, [products]);
 
   useEffect(() => {
