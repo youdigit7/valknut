@@ -7,6 +7,12 @@ import {
   Box, Typography, Button, 
   Container, Card, CardContent, Breadcrumbs, Link, Zoom, Fade, Chip
 } from '@mui/material';
+import menSovereignHoodie from '../../assets/products/men-sovereign-hoodie.jpg';
+import menMindControlTee from '../../assets/products/men-mind-control-tee.jpg';
+import menAcidWashTee from '../../assets/products/men-acid-wash-tee.jpg';
+import menTacticalJoggers from '../../assets/products/men-tactical-joggers.jpg';
+import womenCropHoodie from '../../assets/products/women-crop-hoodie.jpg';
+import womenOversizedTee from '../../assets/products/women-oversized-tee.jpg';
 
 interface LookbookItem {
   id: string;
@@ -23,7 +29,7 @@ const LOOKBOOK_ITEMS: LookbookItem[] = [
     id: 'look-1',
     title: 'Look 01: The Sovereign Monolith',
     collection: 'DARK SOVEREIGN 2026',
-    image: 'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1200&q=85',
+    image: menSovereignHoodie,
     productId: 'prod-1',
     productName: 'VALKNUT Celestial Mountain 480GSM Sovereign Hoodie',
     price: 12500
@@ -32,7 +38,7 @@ const LOOKBOOK_ITEMS: LookbookItem[] = [
     id: 'look-2',
     title: 'Look 02: Mind Control Signature',
     collection: 'ESSENTIAL SIGNATURE',
-    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=85',
+    image: menMindControlTee,
     productId: 'prod-2',
     productName: 'Mind Control Heavyweight Oversized Tee',
     price: 6800
@@ -41,7 +47,7 @@ const LOOKBOOK_ITEMS: LookbookItem[] = [
     id: 'look-3',
     title: 'Look 03: Celestial Occult Series',
     collection: 'DARK SOVEREIGN 2026',
-    image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=85',
+    image: menAcidWashTee,
     productId: 'prod-3',
     productName: 'Celestial Mountain Acid Wash Oversized Tee',
     price: 6500
@@ -50,7 +56,7 @@ const LOOKBOOK_ITEMS: LookbookItem[] = [
     id: 'look-4',
     title: 'Look 04: Urban Stealth Utility',
     collection: 'STEALTH LABS',
-    image: 'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=1200&q=85',
+    image: menTacticalJoggers,
     productId: 'prod-7',
     productName: 'Valknut Stealth Tech Tactical Joggers',
     price: 9800
@@ -59,19 +65,19 @@ const LOOKBOOK_ITEMS: LookbookItem[] = [
     id: 'look-5',
     title: 'Look 05: Femme Raw Sculpted',
     collection: 'VALKNUT FEMME',
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85',
+    image: womenCropHoodie,
     productId: 'prod-8',
     productName: 'VALKNUT Femme Sculpted Crop Hoodie',
     price: 9500
   },
   {
     id: 'look-6',
-    title: 'Look 06: Heavyweight Iron Cover',
-    collection: 'EVERYDAY ESSENTIALS',
-    image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=85',
+    title: 'Look 06: Femme Minimalist Drape',
+    collection: 'VALKNUT FEMME',
+    image: womenOversizedTee,
     productId: 'prod-9',
-    productName: 'Essential Oversized Boxy Gym Pump Cover',
-    price: 5900
+    productName: 'VALKNUT Femme Minimalist Oversized Tee',
+    price: 6800
   }
 ];
 

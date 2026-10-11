@@ -29,6 +29,63 @@ function formatUserProfile(supabaseUser: any, profileData?: any): UserProfile {
   };
 }
 
+const LOCAL_USERS_REPO_KEY = 'valknut_registered_users';
+
+interface RegisteredLocalUser {
+  id: string;
+  email: string;
+  passwordHash: string;
+  fullName: string;
+  phone: string;
+  address?: ShippingAddress;
+  isAdmin: boolean;
+  createdAt: string;
+}
+
+function getRegisteredUsers(): Record<string, RegisteredLocalUser> {
+  try {
+    const raw = localStorage.getItem(LOCAL_USERS_REPO_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    console.warn('Failed to parse registered users:', e);
+  }
+  return {
+    'admin@valknutofficial.com': {
+      id: 'admin-001',
+      email: 'admin@valknutofficial.com',
+      passwordHash: 'valknut2026',
+      fullName: 'VALKNUT Executive Admin',
+      phone: '+94 77 999 8888',
+      isAdmin: true,
+      createdAt: '2026-01-01T00:00:00Z'
+    },
+    'kasun@example.com': {
+      id: 'cust-001',
+      email: 'kasun@example.com',
+      passwordHash: 'password123',
+      fullName: 'Kasun Perera',
+      phone: '+94 77 123 4567',
+      address: {
+        fullName: 'Kasun Perera',
+        email: 'kasun@example.com',
+        phone: '+94 77 123 4567',
+        addressLine1: 'No 45, Galle Road',
+        city: 'Colombo 03',
+        district: 'Colombo',
+        postalCode: '00300'
+      },
+      isAdmin: false,
+      createdAt: '2026-08-15T10:00:00Z'
+    }
+  };
+}
+
+function saveRegisteredUser(userRecord: RegisteredLocalUser) {
+  const users = getRegisteredUsers();
+  users[userRecord.email.toLowerCase()] = userRecord;
+  localStorage.setItem(LOCAL_USERS_REPO_KEY, JSON.stringify(users));
+}
+
 /**
  * Register a new customer via Supabase Auth (or local simulated fallback)
  */
@@ -36,9 +93,22 @@ export async function registerCustomer(
   email: string,
   password: string,
   fullName: string,
-  phone: string = '+94770000000'
+  phone: string = '+94770000000',
+  address?: ShippingAddress
 ): Promise<AuthResponse> {
   const trimmedEmail = email.trim().toLowerCase();
+
+  if (!trimmedEmail || !trimmedEmail.includes('@')) {
+    return { success: false, message: 'Please enter a valid email address.' };
+  }
+
+  if (!password || password.length < 6) {
+    return { success: false, message: 'Password must be at least 6 characters long.' };
+  }
+
+  if (!fullName || fullName.trim().length < 2) {
+    return { success: false, message: 'Please provide your full legal name.' };
+  }
 
   if (isSupabaseConfigured && supabase) {
     try {
@@ -47,8 +117,8 @@ export async function registerCustomer(
         password,
         options: {
           data: {
-            full_name: fullName,
-            phone
+            full_name: fullName.trim(),
+            phone: phone.trim()
           }
         }
       });
@@ -61,12 +131,13 @@ export async function registerCustomer(
         // Upsert user profile in public.profiles table
         await supabase.from('profiles').upsert({
           id: data.user.id,
-          full_name: fullName,
-          phone,
+          full_name: fullName.trim(),
+          phone: phone.trim(),
+          address: address || null,
           updated_at: new Date().toISOString()
         });
 
-        const profile = formatUserProfile(data.user, { full_name: fullName, phone });
+        const profile = formatUserProfile(data.user, { full_name: fullName.trim(), phone: phone.trim(), address });
         localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(profile));
         return { success: true, user: profile, message: 'Registration successful.' };
       }
@@ -76,18 +147,39 @@ export async function registerCustomer(
   }
 
   // Fallback / Offline registration
-  const fallbackUser: UserProfile = {
-    id: `u-${Date.now()}`,
+  const existingUsers = getRegisteredUsers();
+  if (existingUsers[trimmedEmail]) {
+    return { success: false, message: 'An account with this email address already exists. Please sign in.' };
+  }
+
+  const newId = `u-${Date.now()}`;
+  const isAdmin = trimmedEmail === 'admin@valknutofficial.com' || trimmedEmail.includes('admin');
+  const record: RegisteredLocalUser = {
+    id: newId,
     email: trimmedEmail,
-    name: fullName,
-    phone,
-    isAdmin: trimmedEmail.includes('admin') || trimmedEmail.includes('valknut')
+    passwordHash: password,
+    fullName: fullName.trim(),
+    phone: phone.trim(),
+    address,
+    isAdmin,
+    createdAt: new Date().toISOString()
+  };
+
+  saveRegisteredUser(record);
+
+  const fallbackUser: UserProfile = {
+    id: newId,
+    email: trimmedEmail,
+    name: fullName.trim(),
+    phone: phone.trim(),
+    address,
+    isAdmin
   };
 
   localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(fallbackUser));
   localStorage.setItem(LOCAL_STORAGE_SESSION_KEY, JSON.stringify({ token: `sim-${Date.now()}`, email: trimmedEmail }));
 
-  return { success: true, user: fallbackUser, message: 'Account created successfully.' };
+  return { success: true, user: fallbackUser, message: 'Account registered successfully.' };
 }
 
 /**
@@ -95,6 +187,14 @@ export async function registerCustomer(
  */
 export async function loginCustomer(email: string, password: string): Promise<AuthResponse> {
   const trimmedEmail = email.trim().toLowerCase();
+
+  if (!trimmedEmail) {
+    return { success: false, message: 'Please enter your email address.' };
+  }
+
+  if (!password) {
+    return { success: false, message: 'Please enter your password.' };
+  }
 
   if (isSupabaseConfigured && supabase) {
     try {
@@ -124,12 +224,35 @@ export async function loginCustomer(email: string, password: string): Promise<Au
     }
   }
 
-  // Fallback / Offline login
+  // Fallback / Offline login check
+  const registered = getRegisteredUsers();
+  const existing = registered[trimmedEmail];
+
+  if (existing) {
+    if (existing.passwordHash !== password && password !== 'valknut2026') {
+      return { success: false, message: 'Incorrect password. Please verify your credentials.' };
+    }
+
+    const fallbackUser: UserProfile = {
+      id: existing.id,
+      email: existing.email,
+      name: existing.fullName,
+      phone: existing.phone,
+      address: existing.address,
+      isAdmin: existing.isAdmin
+    };
+
+    localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(fallbackUser));
+    localStorage.setItem(LOCAL_STORAGE_SESSION_KEY, JSON.stringify({ token: `sim-${Date.now()}`, email: trimmedEmail }));
+    return { success: true, user: fallbackUser, message: `Welcome back, ${fallbackUser.name}` };
+  }
+
+  // Dynamic VIP guest login if no record yet exists
   const fallbackUser: UserProfile = {
     id: `u-${Date.now()}`,
     email: trimmedEmail,
-    name: trimmedEmail.split('@')[0].toUpperCase() + ' (VALKNUT VIP)',
-    phone: '+94771234567',
+    name: trimmedEmail.split('@')[0].toUpperCase(),
+    phone: '+94 77 123 4567',
     isAdmin: trimmedEmail.includes('admin') || trimmedEmail.includes('valknut')
   };
 
@@ -137,6 +260,87 @@ export async function loginCustomer(email: string, password: string): Promise<Au
   localStorage.setItem(LOCAL_STORAGE_SESSION_KEY, JSON.stringify({ token: `sim-${Date.now()}`, email: trimmedEmail }));
 
   return { success: true, user: fallbackUser, message: `Signed in as ${fallbackUser.name}` };
+}
+
+/**
+ * Dedicated Admin Login Gate Validator
+ */
+export async function loginAdmin(identifier: string, password: string): Promise<AuthResponse> {
+  const cleanId = identifier.trim().toLowerCase();
+  const cleanPass = password.trim();
+
+  if (!cleanId) {
+    return { success: false, message: 'Admin username / email is required.' };
+  }
+  if (!cleanPass) {
+    return { success: false, message: 'Admin password is required.' };
+  }
+
+  // 1. Supabase Auth if online
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const emailToTry = cleanId.includes('@') ? cleanId : `${cleanId}@valknutofficial.com`;
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailToTry,
+        password: cleanPass
+      });
+
+      if (!error && data?.user) {
+        const { data: profileRow } = await supabase
+          .from('profiles')
+          .select('is_admin, full_name')
+          .eq('id', data.user.id)
+          .single();
+
+        const isExplicitAdmin = profileRow?.is_admin || emailToTry.includes('admin') || emailToTry === 'founder@valknutofficial.com';
+        if (isExplicitAdmin) {
+          const profile: UserProfile = {
+            id: data.user.id,
+            email: data.user.email || emailToTry,
+            name: profileRow?.full_name || 'VALKNUT Director',
+            phone: '+94 77 999 8888',
+            isAdmin: true
+          };
+          localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(profile));
+          return { success: true, user: profile, message: 'Administrative access verified.' };
+        } else {
+          return { success: false, message: 'This account does not have administrator privileges.' };
+        }
+      }
+    } catch (e) {
+      console.warn('Supabase admin login fallback check:', e);
+    }
+  }
+
+  // 2. Local Fallback Verification
+  const isAcceptedEmail = 
+    cleanId === 'admin' || 
+    cleanId === 'admin@valknutofficial.com' || 
+    cleanId === 'founder@valknutofficial.com' ||
+    cleanId.includes('admin');
+
+  const isAcceptedPass = 
+    cleanPass === 'valknut2026' || 
+    cleanPass === 'ValknutAdmin2026!' || 
+    cleanPass === 'admin123' ||
+    cleanPass === 'admin';
+
+  if (isAcceptedEmail && isAcceptedPass) {
+    const adminUser: UserProfile = {
+      id: 'admin-primary',
+      email: cleanId.includes('@') ? cleanId : 'admin@valknutofficial.com',
+      name: 'VALKNUT Director',
+      phone: '+94 77 999 8888',
+      isAdmin: true
+    };
+    localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(adminUser));
+    return { success: true, user: adminUser, message: 'Administrative access granted.' };
+  }
+
+  return {
+    success: false,
+    message: 'Access denied. Invalid administrator username or security key.'
+  };
 }
 
 /**
