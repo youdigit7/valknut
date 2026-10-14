@@ -6,7 +6,6 @@ import type {
   OrderStatus,
   Coupon,
   CategoryItem,
-
   CollectionItem,
   HomepageConfig,
   CustomerAccountRecord,

@@ -31,7 +31,6 @@ export const Navbar: React.FC = () => {
     setIsCartOpen,
     setIsAccountOpen,
     setIsAdminOpen,
-    activeCategory,
     setActiveCategory,
     user,
     logoutUser
@@ -80,10 +79,8 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { label: 'HOME', hash: '#/', cat: 'ALL' },
     { label: 'SHOP', hash: '#/shop', cat: 'ALL' },
-    { label: 'COLLECTIONS', hash: '#/shop?collection=DARK+SOVEREIGN+2026', cat: 'ALL' },
-    { label: 'MEN', hash: '#/shop/men', cat: 'MEN' },
-    { label: 'WOMEN', hash: '#/shop/women', cat: 'WOMEN' },
-    { label: 'ESSENTIALS', hash: '#/shop/essentials', cat: 'ESSENTIALS' },
+    { label: 'TRACK YOUR ORDER', hash: '#/track-order', cat: 'ALL' },
+    { label: 'SIZE GUIDE', hash: '#/size-guide', cat: 'ALL' },
   ];
 
   return (
@@ -164,11 +161,9 @@ export const Navbar: React.FC = () => {
                 if (item.label === 'HOME') {
                   isActive = window.location.hash === '#/' || window.location.hash === '';
                 } else if (item.label === 'SHOP') {
-                  isActive = activeCategory === 'ALL' && window.location.hash.startsWith('#/shop') && !window.location.hash.includes('collection=') && !window.location.hash.includes('/men') && !window.location.hash.includes('/women') && !window.location.hash.includes('/essentials');
-                } else if (item.label === 'COLLECTIONS') {
-                  isActive = window.location.hash.includes('collection=');
+                  isActive = window.location.hash.startsWith('#/shop') || window.location.hash.startsWith('#/category');
                 } else {
-                  isActive = activeCategory === item.cat || window.location.hash.includes('/' + item.cat.toLowerCase());
+                  isActive = window.location.hash.startsWith(item.hash);
                 }
 
                 return (
@@ -445,15 +440,9 @@ export const Navbar: React.FC = () => {
           </Box>
 
           <Box>
-            <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 'bold', letterSpacing: '0.25em', display: 'block', mb: 2 }}>COLLECTIONS</Typography>
+            <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 'bold', letterSpacing: '0.25em', display: 'block', mb: 2 }}>MENU</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {[
-                { label: 'HOME', hash: '#/', cat: 'ALL' },
-                { label: 'SHOP ALL', hash: '#/shop', cat: 'ALL' },
-                { label: 'MEN', hash: '#/shop/men', cat: 'MEN' },
-                { label: 'WOMEN', hash: '#/shop/women', cat: 'WOMEN' },
-                { label: 'ESSENTIALS', hash: '#/shop/essentials', cat: 'ESSENTIALS' },
-              ].map(item => (
+              {navLinks.map(item => (
                 <Button
                   key={item.label}
                   onClick={() => handleNavigate(item.hash, item.cat as CategoryType | 'ALL')}
@@ -476,7 +465,7 @@ export const Navbar: React.FC = () => {
           <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.05)', pt: 3 }}>
             <Typography variant="caption" sx={{ color: 'var(--text-secondary)', fontWeight: 'bold', letterSpacing: '0.25em', display: 'block', mb: 2 }}>DISCOVER</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {['OUR STORY', 'LOOKBOOK', 'SIZE GUIDE', 'TRACK ORDER'].map((label, idx) => (
+              {['OUR STORY', 'LOOKBOOK'].map((label, idx) => (
                 <Button key={idx} onClick={() => { setIsMobileMenuOpen(false); window.location.hash = `#/${label.toLowerCase().replace(' ', '-')}` }} sx={{ justifyContent: 'flex-start', color: 'var(--text-secondary)', py: 1.5, px: 2, '&:hover': { color: 'var(--text-primary)' } }}>
                   {label}
                 </Button>
