@@ -521,7 +521,22 @@ export const ProductCatalog: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flex: 1 }}>
             <Button
               onClick={() => setIsMobileFilterOpen(true)}
-              sx={{ display: { lg: 'none' }, px: 2, py: 1.25, bgcolor: 'primary.main', color: 'black', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', borderRadius: 0.5, flexShrink: 0, boxShadow: '0 2px 10px rgba(212,175,55,0.2)', '&:hover': { bgcolor: 'primary.dark' } }}
+              sx={{
+                display: { lg: 'none' },
+                height: '42px',
+                px: 2,
+                bgcolor: 'primary.main',
+                color: 'black',
+                fontSize: '0.75rem',
+                fontWeight: 900,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                borderRadius: '6px',
+                flexShrink: 0,
+                boxShadow: '0 2px 10px rgba(212,175,55,0.2)',
+                alignItems: 'center',
+                '&:hover': { bgcolor: 'primary.dark' }
+              }}
             >
               <Filter size={14} style={{ marginRight: 6 }} /> Filters
               {activeChips.length > 0 && (
@@ -537,7 +552,20 @@ export const ProductCatalog: React.FC = () => {
               onChange={(e) => handleFilterChange({ search: e.target.value })}
               variant="outlined"
               size="small"
-              sx={{ maxWidth: 400, '& .MuiOutlinedInput-root': { bgcolor: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', '& fieldset': { borderColor: 'var(--border-subtle)' }, '&:hover fieldset': { borderColor: 'var(--border-strong)' }, '&.Mui-focused fieldset': { borderColor: 'primary.main' } } }}
+              sx={{
+                maxWidth: 400,
+                '& .MuiOutlinedInput-root': {
+                  height: '42px',
+                  borderRadius: '6px',
+                  bgcolor: 'var(--bg-main)',
+                  color: 'var(--text-primary)',
+                  fontSize: '0.75rem',
+                  fontFamily: '"Inter", sans-serif',
+                  '& fieldset': { borderColor: 'var(--border-subtle)' },
+                  '&:hover fieldset': { borderColor: 'var(--border-strong)' },
+                  '&.Mui-focused fieldset': { borderColor: 'primary.main' }
+                }
+              }}
               slotProps={{
                 input: {
                   startAdornment: <InputAdornment position="start"><Search size={16} color="#64748b" /></InputAdornment>,

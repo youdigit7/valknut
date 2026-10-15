@@ -717,31 +717,48 @@ export const AdminDashboard: React.FC = () => {
             }}
           />
 
-          <Box sx={{ textAlign: 'center', mb: 4, display: 'flex', flexDirection: 'col', alignItems: 'center' }}>
+          <Box sx={{ textAlign: 'center', mb: 3.5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* Sovereign Valknut Emblem Container */}
             <Box
-              component="img"
-              src={valknutLogo}
-              alt="VALKNUT Sovereign Symbol"
               sx={{
-                width: 68,
-                height: 68,
-                objectFit: 'contain',
-                mx: 'auto',
+                width: 76,
+                height: 76,
+                borderRadius: '16px',
+                bgcolor: 'rgba(212, 175, 55, 0.08)',
+                border: '1px solid rgba(212, 175, 55, 0.35)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 mb: 2.5,
-                filter: 'drop-shadow(0 6px 20px rgba(212, 175, 55, 0.45))',
+                boxShadow: '0 8px 30px rgba(212, 175, 55, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.15)',
+                p: 1.5,
               }}
-            />
+            >
+              <Box
+                component="img"
+                src={valknutLogo}
+                alt="VALKNUT Sovereign Symbol"
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 2px 8px rgba(212, 175, 55, 0.5))',
+                }}
+              />
+            </Box>
 
             <Typography
               variant="overline"
               sx={{
-                fontSize: '0.7rem',
+                fontSize: '0.6875rem',
                 fontFamily: 'monospace',
                 fontWeight: 800,
                 letterSpacing: '0.25em',
                 color: goldColor,
                 textTransform: 'uppercase',
                 display: 'block',
+                lineHeight: 1.2,
+                mb: 0.5,
               }}
             >
               RESTRICTED VALKNUT ARCHIVE
@@ -753,16 +770,27 @@ export const AdminDashboard: React.FC = () => {
                 fontWeight: 900,
                 textTransform: 'uppercase',
                 fontFamily: '"Outfit", sans-serif',
-                letterSpacing: '0.02em',
+                letterSpacing: '0.04em',
+                fontSize: { xs: '1.25rem', sm: '1.45rem' },
                 color: '#F8FAFC',
                 mt: 0.5,
                 mb: 1,
+                lineHeight: 1.2,
               }}
             >
               ADMINISTRATIVE ACCESS
             </Typography>
 
-            <Typography variant="body2" sx={{ color: '#94A3B8', fontSize: '0.8rem', lineHeight: 1.5 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#94A3B8',
+                fontSize: '0.785rem',
+                lineHeight: 1.6,
+                maxWidth: 360,
+                mx: 'auto',
+              }}
+            >
               Database Row-Level Security Enforced. Customers must authenticate with verified admin credentials.
             </Typography>
           </Box>

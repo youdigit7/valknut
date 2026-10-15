@@ -41,21 +41,75 @@ export const Footer: React.FC = () => {
 
               {/* Newsletter Form */}
               <Box sx={{ width: '100%', maxWidth: { xs: '400px', lg: '500px' } }}>
-                <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <Box
+                  component="form"
+                  onSubmit={handleSubscribe}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    width: '100%',
+                    flexDirection: { xs: 'column', sm: 'row' }
+                  }}
+                >
                   <TextField
                     variant="outlined"
-                    size="small"
                     placeholder="ENTER YOUR EMAIL FOR EARLY ACCESS"
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    sx={{ flexGrow: 1, minWidth: '250px', '& .MuiInputBase-input': { fontSize: '0.75rem', color: 'var(--text-primary)' } }}
+                    sx={{
+                      flexGrow: 1,
+                      width: { xs: '100%', sm: 'auto' },
+                      minWidth: { sm: '260px' },
+                      '& .MuiOutlinedInput-root': {
+                        height: '48px',
+                        borderRadius: '6px',
+                        bgcolor: 'var(--bg-main)',
+                        fontSize: '0.75rem',
+                        color: 'var(--text-primary)',
+                        fontFamily: '"Inter", sans-serif',
+                        letterSpacing: '0.05em',
+                        border: '1px solid var(--border-subtle)',
+                        '& fieldset': { border: 'none' },
+                        '&:hover': { borderColor: 'var(--border-strong)' },
+                        '&.Mui-focused': { borderColor: 'primary.main' }
+                      },
+                      '& .MuiInputBase-input': {
+                        fontSize: '0.75rem',
+                        color: 'var(--text-primary)',
+                        height: '100%',
+                        boxSizing: 'border-box',
+                        py: 0
+                      }
+                    }}
                   />
                   <Button
                     type="submit"
                     variant="contained"
-                    sx={{ py: 1.5, px: 3, flexShrink: 0, minWidth: { xs: '100%', sm: 'auto' } }}
+                    sx={{
+                      height: '48px',
+                      borderRadius: '6px',
+                      px: 3,
+                      flexShrink: 0,
+                      width: { xs: '100%', sm: 'auto' },
+                      bgcolor: 'primary.main',
+                      color: '#000000',
+                      fontWeight: 900,
+                      fontSize: '0.75rem',
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      fontFamily: '"Outfit", sans-serif',
+                      boxShadow: '0 4px 14px rgba(212,175,55,0.35)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      '&:hover': {
+                        bgcolor: 'primary.dark',
+                        boxShadow: '0 6px 18px rgba(212,175,55,0.5)'
+                      }
+                    }}
                   >
                     {subscribed ? (
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -67,7 +121,7 @@ export const Footer: React.FC = () => {
                       </Box>
                     )}
                   </Button>
-                </form>
+                </Box>
                 {subscribed && (
                   <Typography variant="caption" sx={{ color: 'primary.main', mt: 1, display: 'block' }}>
                     ✓ You have been added to the VIP drop list.

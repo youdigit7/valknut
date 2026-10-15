@@ -115,10 +115,11 @@ export const NewsletterSection: React.FC = () => {
                   sx={{ 
                     display: 'flex', 
                     flexDirection: { xs: 'column', sm: 'row' }, 
-                    gap: { xs: 2, sm: 2 }, 
+                    gap: 1.5, 
                     maxWidth: '600px', 
                     mx: 'auto',
-                    width: '100%' 
+                    width: '100%',
+                    alignItems: 'center'
                   }}
                 >
                   <TextField 
@@ -129,21 +130,47 @@ export const NewsletterSection: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="ENTER YOUR EMAIL FOR EARLY ACCESS"
                     required
-                    sx={{ flexGrow: 1 }}
+                    sx={{
+                      flexGrow: 1,
+                      width: { xs: '100%', sm: 'auto' },
+                      '& .MuiOutlinedInput-root': {
+                        height: '54px',
+                        borderRadius: '8px',
+                        bgcolor: 'var(--bg-card)',
+                        fontSize: '0.8rem',
+                        color: 'var(--text-primary)',
+                        fontFamily: '"Inter", sans-serif',
+                        letterSpacing: '0.04em',
+                        border: '1px solid var(--border-subtle)',
+                        '& fieldset': { border: 'none' },
+                        '&:hover': { borderColor: 'var(--border-strong)' },
+                        '&.Mui-focused': { borderColor: 'primary.main' }
+                      },
+                      '& .MuiInputBase-input': {
+                        fontSize: '0.8rem',
+                        color: 'var(--text-primary)',
+                        height: '100%',
+                        boxSizing: 'border-box',
+                        py: 0
+                      }
+                    }}
                   />
                   <Button
                     type="submit"
                     disabled={isLoading}
                     sx={{
                       minWidth: { xs: '100%', sm: '180px' },
-                      height: '56px',
+                      height: '54px',
                       background: 'linear-gradient(90deg, #e6c042, #D4AF37, #aa8010)',
                       color: 'black',
                       fontWeight: 900,
                       fontSize: { xs: '0.75rem', sm: '0.875rem' },
                       letterSpacing: '0.18em',
-                      borderRadius: 2,
+                      borderRadius: '8px',
                       boxShadow: '0 12px 30px rgba(212,175,55,0.4), inset 0 1px 1px rgba(255,255,255,0.7)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                       transition: 'all 0.3s',
                       '&:hover': {
                         transform: 'translateY(-2px)',

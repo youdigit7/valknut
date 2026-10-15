@@ -215,7 +215,7 @@ export const CartDrawer: React.FC = () => {
                 </Button>
               </Box>
             ) : (
-              <Box component="form" onSubmit={handleApplyCoupon} sx={{ display: 'flex', gap: 1 }}>
+              <Box component="form" onSubmit={handleApplyCoupon} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                 <TextField
                   fullWidth
                   value={couponInput}
@@ -225,6 +225,8 @@ export const CartDrawer: React.FC = () => {
                   size="small"
                   sx={{
                     '& .MuiOutlinedInput-root': {
+                      height: '40px',
+                      borderRadius: '6px',
                       bgcolor: 'var(--bg-main)',
                       color: 'var(--text-primary)',
                       fontSize: '0.75rem',
@@ -233,13 +235,34 @@ export const CartDrawer: React.FC = () => {
                       '&:hover fieldset': { borderColor: 'var(--border-strong)' },
                       '&.Mui-focused fieldset': { borderColor: '#d4af37' }
                     },
+                    '& .MuiInputBase-input': {
+                      fontSize: '0.75rem',
+                      height: '100%',
+                      boxSizing: 'border-box',
+                      py: 0
+                      
+                    },
                     '& .MuiInputBase-input::placeholder': {
                       color: 'var(--text-secondary)',
                       opacity: 1
                     }
                   }}
                 />
-                <Button type="submit" variant="outlined" sx={{ borderColor: 'var(--border-subtle)', color: 'var(--text-primary)', fontSize: '0.75rem', fontWeight: 'bold', '&:hover': { borderColor: '#d4af37', color: '#d4af37' } }}>
+                <Button
+                  type="submit"
+                  variant="outlined"
+                  sx={{
+                    height: '40px',
+                    borderRadius: '6px',
+                    px: 2,
+                    flexShrink: 0,
+                    borderColor: 'var(--border-subtle)',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.75rem',
+                    fontWeight: 'bold',
+                    '&:hover': { borderColor: '#d4af37', color: '#d4af37' }
+                  }}
+                >
                   Apply
                 </Button>
               </Box>

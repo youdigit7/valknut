@@ -312,16 +312,40 @@ export const CartPage: React.FC = () => {
                       </Button>
                     </Box>
                   ) : (
-                    <Box component="form" onSubmit={handleApplyCoupon} sx={{ display: 'flex', gap: 1 }}>
+                    <Box component="form" onSubmit={handleApplyCoupon} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                       <InputBase
                         value={couponCodeInput}
                         onChange={(e) => setCouponCodeInput(e.target.value)}
                         placeholder="e.g. VALKNUT10"
-                        sx={{ flex: 1, bgcolor: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 1, px: 2, py: 1, color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', textTransform: 'uppercase', '& input::placeholder': { color: 'var(--text-secondary)', textTransform: 'none' }, '&.Mui-focused': { borderColor: 'primary.main' } }}
+                        sx={{
+                          flex: 1,
+                          height: '42px',
+                          bgcolor: 'var(--bg-card)',
+                          border: '1px solid var(--border-subtle)',
+                          borderRadius: '6px',
+                          px: 2,
+                          color: 'var(--text-primary)',
+                          fontSize: '0.75rem',
+                          fontFamily: '"Inter", sans-serif',
+                          textTransform: 'uppercase',
+                          '& input::placeholder': { color: 'var(--text-secondary)', textTransform: 'none' },
+                          '&.Mui-focused': { borderColor: 'primary.main' }
+                        }}
                       />
                       <Button
                         type="submit"
-                        sx={{ px: 2, py: 1, bgcolor: 'var(--border-subtle)', color: 'var(--text-primary)', fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 'bold', borderRadius: 1, '&:hover': { bgcolor: 'var(--border-strong)' } }}
+                        sx={{
+                          height: '42px',
+                          px: 2.5,
+                          bgcolor: 'var(--border-subtle)',
+                          color: 'var(--text-primary)',
+                          fontSize: '0.75rem',
+                          fontFamily: '"Inter", sans-serif',
+                          fontWeight: 'bold',
+                          borderRadius: '6px',
+                          flexShrink: 0,
+                          '&:hover': { bgcolor: 'var(--border-strong)' }
+                        }}
                       >
                         Apply
                       </Button>
