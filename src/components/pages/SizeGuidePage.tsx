@@ -7,8 +7,10 @@ import {
   Breadcrumbs, Link, Zoom, Fade, Paper, ToggleButton, ToggleButtonGroup, 
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from '@mui/material';
+import { useAppTheme } from '../../context/ThemeContext';
 
 export const SizeGuidePage: React.FC = () => {
+  const { mode } = useAppTheme();
   const [activeTab, setActiveTab] = useState<'OVERSIZED_TEE' | 'HOODIES' | 'JOGGERS'>('OVERSIZED_TEE');
   const [unit, setUnit] = useState<'cm' | 'inches'>('inches');
 
@@ -76,14 +78,33 @@ export const SizeGuidePage: React.FC = () => {
 
           {/* Controls */}
           <Fade in={true} timeout={1200}>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 4, mb: 6, pb: 4, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 4, mb: 6, pb: 4, borderBottom: '1px solid var(--border-subtle)' }}>
               <ToggleButtonGroup
                 value={activeTab}
                 exclusive
                 onChange={handleTabChange}
                 aria-label="garment category"
                 size="small"
-                sx={{ bgcolor: 'rgba(0,0,0,0.5)', '& .MuiToggleButton-root': { px: { xs: 2, md: 4 }, py: 1.5, fontSize: { xs: '0.7rem', md: '0.8rem' } } }}
+                sx={{
+                  bgcolor: mode === 'dark' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.04)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '8px',
+                  p: 0.5,
+                  '& .MuiToggleButton-root': {
+                    px: { xs: 2, md: 3 },
+                    py: 1.2,
+                    fontSize: { xs: '0.7rem', md: '0.78rem' },
+                    color: 'var(--text-secondary)',
+                    fontWeight: 700,
+                    border: 'none',
+                    borderRadius: '6px !important',
+                    '&.Mui-selected': {
+                      bgcolor: mode === 'dark' ? 'rgba(212,175,55,0.18)' : 'rgba(212,175,55,0.22)',
+                      color: mode === 'dark' ? '#D4AF37' : '#997300',
+                      fontWeight: 900,
+                    }
+                  }
+                }}
               >
                 <ToggleButton value="OVERSIZED_TEE" aria-label="oversized tees">
                   Oversized Tees (280-310 GSM)
@@ -102,7 +123,26 @@ export const SizeGuidePage: React.FC = () => {
                 onChange={handleUnitChange}
                 aria-label="measurement unit"
                 size="small"
-                sx={{ bgcolor: 'rgba(0,0,0,0.5)', '& .MuiToggleButton-root': { px: 3, py: 1, fontFamily: 'monospace' } }}
+                sx={{
+                  bgcolor: mode === 'dark' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.04)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '8px',
+                  p: 0.5,
+                  '& .MuiToggleButton-root': {
+                    px: 3,
+                    py: 1,
+                    fontFamily: 'monospace',
+                    color: 'var(--text-secondary)',
+                    fontWeight: 700,
+                    border: 'none',
+                    borderRadius: '6px !important',
+                    '&.Mui-selected': {
+                      bgcolor: mode === 'dark' ? 'rgba(212,175,55,0.18)' : 'rgba(212,175,55,0.22)',
+                      color: mode === 'dark' ? '#D4AF37' : '#997300',
+                      fontWeight: 900,
+                    }
+                  }
+                }}
               >
                 <ToggleButton value="inches" aria-label="inches">
                   Inches (in)
@@ -116,43 +156,52 @@ export const SizeGuidePage: React.FC = () => {
 
           {/* Measurement Table */}
           <Zoom in={true} timeout={600} key={activeTab + unit}>
-            <Paper elevation={12} sx={{ mb: 12, overflow: 'hidden' }}>
-              <TableContainer sx={{ bgcolor: 'rgba(255,255,255,0.01)' }}>
+            <Paper
+              elevation={12}
+              sx={{
+                mb: 12,
+                overflow: 'hidden',
+                bgcolor: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
+                boxShadow: 'var(--shadow-card)',
+              }}
+            >
+              <TableContainer sx={{ bgcolor: 'transparent' }}>
                 <Table aria-label="size guide table">
                   <TableHead>
-                    <TableRow>
-                      <TableCell>Size</TableCell>
-                      <TableCell>{activeTab === 'JOGGERS' ? 'Waist' : 'Chest Width'}</TableCell>
-                      <TableCell>{activeTab === 'JOGGERS' ? 'Outseam Length' : 'Body Length'}</TableCell>
-                      <TableCell>{activeTab === 'JOGGERS' ? 'Thigh' : 'Shoulder Width'}</TableCell>
-                      <TableCell>Recommended Height</TableCell>
+                    <TableRow sx={{ bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)' }}>
+                      <TableCell sx={{ color: 'var(--text-primary)', fontWeight: 800 }}>Size</TableCell>
+                      <TableCell sx={{ color: 'var(--text-primary)', fontWeight: 800 }}>{activeTab === 'JOGGERS' ? 'Waist' : 'Chest Width'}</TableCell>
+                      <TableCell sx={{ color: 'var(--text-primary)', fontWeight: 800 }}>{activeTab === 'JOGGERS' ? 'Outseam Length' : 'Body Length'}</TableCell>
+                      <TableCell sx={{ color: 'var(--text-primary)', fontWeight: 800 }}>{activeTab === 'JOGGERS' ? 'Thigh' : 'Shoulder Width'}</TableCell>
+                      <TableCell sx={{ color: 'var(--text-primary)', fontWeight: 800 }}>Recommended Height</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {activeTab === 'OVERSIZED_TEE' && (
                       <React.Fragment>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>S (Small)</TableCell>
                           <TableCell>{unit === 'inches' ? '44"' : '112 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '28.5"' : '72 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '21"' : '53 cm'}</TableCell>
                           <TableCell sx={{ color: 'var(--text-secondary)', fontFamily: 'sans-serif' }}>5'4" - 5'7" (162-170cm)</TableCell>
                         </TableRow>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>M (Medium)</TableCell>
                           <TableCell>{unit === 'inches' ? '46"' : '117 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '29.5"' : '75 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '22"' : '56 cm'}</TableCell>
                           <TableCell sx={{ color: 'var(--text-secondary)', fontFamily: 'sans-serif' }}>5'8" - 5'11" (172-180cm)</TableCell>
                         </TableRow>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>L (Large)</TableCell>
                           <TableCell>{unit === 'inches' ? '48"' : '122 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '30.5"' : '77 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '23"' : '58 cm'}</TableCell>
                           <TableCell sx={{ color: 'var(--text-secondary)', fontFamily: 'sans-serif' }}>6'0" - 6'2" (182-188cm)</TableCell>
                         </TableRow>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>XL (Extra Large)</TableCell>
                           <TableCell>{unit === 'inches' ? '50"' : '127 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '31.5"' : '80 cm'}</TableCell>
@@ -164,28 +213,28 @@ export const SizeGuidePage: React.FC = () => {
 
                     {activeTab === 'HOODIES' && (
                       <React.Fragment>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>S (Small)</TableCell>
                           <TableCell>{unit === 'inches' ? '46"' : '117 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '27"' : '69 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '22"' : '56 cm'}</TableCell>
                           <TableCell sx={{ color: 'var(--text-secondary)', fontFamily: 'sans-serif' }}>5'4" - 5'7"</TableCell>
                         </TableRow>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>M (Medium)</TableCell>
                           <TableCell>{unit === 'inches' ? '48"' : '122 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '28"' : '71 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '23"' : '58 cm'}</TableCell>
                           <TableCell sx={{ color: 'var(--text-secondary)', fontFamily: 'sans-serif' }}>5'8" - 5'11"</TableCell>
                         </TableRow>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>L (Large)</TableCell>
                           <TableCell>{unit === 'inches' ? '50"' : '127 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '29"' : '74 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '24"' : '61 cm'}</TableCell>
                           <TableCell sx={{ color: 'var(--text-secondary)', fontFamily: 'sans-serif' }}>6'0" - 6'2"</TableCell>
                         </TableRow>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>XL (Extra Large)</TableCell>
                           <TableCell>{unit === 'inches' ? '52"' : '132 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '30"' : '76 cm'}</TableCell>
@@ -197,21 +246,21 @@ export const SizeGuidePage: React.FC = () => {
 
                     {activeTab === 'JOGGERS' && (
                       <React.Fragment>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>S (28-30)</TableCell>
                           <TableCell>{unit === 'inches' ? '28-30"' : '71-76 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '39"' : '99 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '24"' : '61 cm'}</TableCell>
                           <TableCell sx={{ color: 'var(--text-secondary)', fontFamily: 'sans-serif' }}>Standard Fit</TableCell>
                         </TableRow>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>M (31-33)</TableCell>
                           <TableCell>{unit === 'inches' ? '31-33"' : '78-84 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '40"' : '101 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '25"' : '63 cm'}</TableCell>
                           <TableCell sx={{ color: 'var(--text-secondary)', fontFamily: 'sans-serif' }}>Standard Fit</TableCell>
                         </TableRow>
-                        <TableRow hover sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' } }}>
                           <TableCell sx={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>L (34-36)</TableCell>
                           <TableCell>{unit === 'inches' ? '34-36"' : '86-91 cm'}</TableCell>
                           <TableCell>{unit === 'inches' ? '41"' : '104 cm'}</TableCell>
@@ -229,30 +278,127 @@ export const SizeGuidePage: React.FC = () => {
           {/* Official Care Label */}
           <Fade in={true} timeout={1500}>
             <Box sx={{ maxWidth: '600px', mx: 'auto', mb: 8 }}>
-              <Paper elevation={24} sx={{ p: 4, bgcolor: 'black', border: '2px solid rgba(255,255,255,0.15)', position: 'relative' }}>
-                <Box sx={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', bgcolor: 'primary.main', color: 'black', px: 2, py: 0.5, typography: 'caption', fontWeight: 'bold', letterSpacing: '0.2em' }}>
+              <Paper
+                elevation={24}
+                sx={{
+                  p: { xs: 3, sm: 5 },
+                  bgcolor: 'var(--bg-surface)',
+                  border: mode === 'dark' ? '2px solid rgba(212,175,55,0.35)' : '2px solid rgba(212,175,55,0.45)',
+                  borderRadius: 2,
+                  boxShadow: mode === 'dark'
+                    ? '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(212, 175, 55, 0.08)'
+                    : '0 16px 45px rgba(0, 0, 0, 0.08), 0 0 30px rgba(212, 175, 55, 0.12)',
+                  position: 'relative',
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: -12,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    bgcolor: '#D4AF37',
+                    color: '#000000',
+                    px: 2.5,
+                    py: 0.6,
+                    typography: 'caption',
+                    fontWeight: 900,
+                    letterSpacing: '0.22em',
+                    borderRadius: '4px',
+                    boxShadow: '0 4px 14px rgba(212, 175, 55, 0.35)',
+                  }}
+                >
                   CERTIFIED CARE
                 </Box>
-                <Box sx={{ textAlign: 'center', mb: 4, mt: 2 }}>
-                  <Typography variant="h4" sx={{ letterSpacing: '0.15em', mb: 1 }}>VALKNUT</Typography>
-                  <Typography variant="caption" sx={{ letterSpacing: '0.2em', color: 'var(--text-secondary)' }}>— ESSENTIAL —</Typography>
+                <Box sx={{ textAlign: 'center', mb: 3.5, mt: 1.5 }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      letterSpacing: '0.18em',
+                      fontWeight: 900,
+                      mb: 0.5,
+                      color: 'var(--text-primary)',
+                      fontFamily: '"Outfit", sans-serif',
+                    }}
+                  >
+                    VALKNUT
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      letterSpacing: '0.25em',
+                      color: 'var(--text-secondary)',
+                      fontWeight: 700,
+                      display: 'block',
+                    }}
+                  >
+                    — ESSENTIAL —
+                  </Typography>
                 </Box>
 
-                <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', color: 'primary.main', letterSpacing: '0.1em', fontWeight: 'bold', mb: 4 }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: 'block',
+                    textAlign: 'center',
+                    color: mode === 'dark' ? '#D4AF37' : '#997300',
+                    letterSpacing: '0.12em',
+                    fontWeight: 800,
+                    mb: 3.5,
+                    fontSize: '0.85rem',
+                  }}
+                >
                   “OWN YOUR MIND. CONTROL YOUR WORLD.”
                 </Typography>
 
-                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', borderBottom: '1px solid rgba(255,255,255,0.1)', py: 2, mb: 4, textAlign: 'center' }}>
-                  <Typography variant="body2" sx={{ fontWeight: 'bold', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}>
+                <Box
+                  sx={{
+                    borderTop: '1px solid var(--border-subtle)',
+                    borderBottom: '1px solid var(--border-subtle)',
+                    py: 2,
+                    mb: 3.5,
+                    textAlign: 'center',
+                    bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)',
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 800,
+                      letterSpacing: '0.15em',
+                      fontFamily: '"Outfit", sans-serif',
+                      color: 'var(--text-primary)',
+                      fontSize: '0.825rem',
+                    }}
+                  >
                     100% COTTON • MADE IN SRI LANKA
                   </Typography>
                 </Box>
 
-                <Typography variant="caption" sx={{ display: 'block', fontWeight: 'bold', letterSpacing: '0.1em', color: 'var(--text-secondary)', mb: 3, fontFamily: 'sans-serif' }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: 'block',
+                    fontWeight: 800,
+                    letterSpacing: '0.15em',
+                    color: mode === 'dark' ? '#D4AF37' : '#997300',
+                    mb: 2.5,
+                    textTransform: 'uppercase',
+                    fontSize: '0.75rem',
+                  }}
+                >
                   CARE INSTRUCTIONS
                 </Typography>
 
-                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, fontFamily: 'sans-serif' }}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                    gap: 2.5,
+                    fontFamily: 'sans-serif',
+                  }}
+                >
                   {[
                     'Machine Wash Cold (30°C)',
                     'Wash With Similar Colours',
@@ -261,9 +407,27 @@ export const SizeGuidePage: React.FC = () => {
                     'Iron Low Heat (Reverse)',
                     'Do Not Dry Clean'
                   ].map((instruction, idx) => (
-                    <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'primary.main' }} />
-                      <Typography variant="caption" sx={{ color: 'var(--text-secondary)' }}>{instruction}</Typography>
+                    <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <Box
+                        sx={{
+                          width: 7,
+                          height: 7,
+                          borderRadius: '50%',
+                          bgcolor: '#D4AF37',
+                          boxShadow: '0 0 8px rgba(212, 175, 55, 0.5)',
+                          flexShrink: 0,
+                        }}
+                      />
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: 'var(--text-secondary)',
+                          fontSize: '0.8rem',
+                          fontWeight: 600,
+                        }}
+                      >
+                        {instruction}
+                      </Typography>
                     </Box>
                   ))}
                 </Box>

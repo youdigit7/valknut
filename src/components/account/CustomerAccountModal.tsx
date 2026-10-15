@@ -29,6 +29,7 @@ import {
   InputAdornment,
   Alert
 } from '@mui/material';
+import valknutLogo from '../../assets/logos/symbol-dark.png';
 
 export const CustomerAccountModal: React.FC = () => {
   const {
@@ -222,9 +223,18 @@ export const CustomerAccountModal: React.FC = () => {
           {/* Header */}
           <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: '#08090d', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{ width: 36, height: 36, borderRadius: '50%', bgcolor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <User color="#d4af37" size={18} />
-              </Box>
+              <Box
+                component="img"
+                src={valknutLogo}
+                alt="VALKNUT Official"
+                sx={{
+                  width: 36,
+                  height: 36,
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 2px 8px rgba(212,175,55,0.4))',
+                  flexShrink: 0
+                }}
+              />
               <Box>
                 <Typography sx={{ fontSize: '1rem', fontWeight: 900, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: '"Outfit", sans-serif' }}>
                   VALKNUT CUSTOMER PORTAL
@@ -282,13 +292,257 @@ export const CustomerAccountModal: React.FC = () => {
                 </Button>
               </Box>
 
-              <Box component="form" onSubmit={handleLoginSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <TextField fullWidth required label="Full Name" value={nameInput} onChange={(e) => setNameInput(e.target.value)} placeholder="e.g. Kasun Perera" variant="outlined" sx={textFieldStyles} />
-                <TextField fullWidth required type="email" label="Email Address" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} placeholder="kasun@example.com" variant="outlined" sx={textFieldStyles} />
-                <Button type="submit" sx={{ mt: 1, py: 1.5, bgcolor: 'primary.main', color: 'black', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, boxShadow: '0 4px 15px rgba(212,175,55,0.2)', transition: 'all 0.3s ease', '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' } }}>
-                  SIGN IN TO ACCOUNT
-                </Button>
-              </Box>
+              {authError && (
+                <Alert
+                  severity="error"
+                  sx={{
+                    bgcolor: 'rgba(239, 68, 68, 0.1)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    color: '#F87171',
+                    fontSize: '0.75rem',
+                    '& .MuiAlert-icon': { color: '#F87171' }
+                  }}
+                >
+                  {authError}
+                </Alert>
+              )}
+
+              {authMode === 'LOGIN' ? (
+                /* LOGIN FORM */
+                <Box component="form" onSubmit={handleLoginSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <TextField
+                    fullWidth
+                    required
+                    type="email"
+                    label="Email Address"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    placeholder="kasun@example.com"
+                    variant="outlined"
+                    sx={textFieldStyles}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Mail size={16} color="var(--text-secondary)" />
+                          </InputAdornment>
+                        )
+                      }
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    required
+                    type={showLoginPassword ? 'text' : 'password'}
+                    label="Password"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    variant="outlined"
+                    sx={textFieldStyles}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Lock size={16} color="var(--text-secondary)" />
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setShowLoginPassword(!showLoginPassword)}
+                              edge="end"
+                              size="small"
+                              sx={{ color: 'var(--text-secondary)' }}
+                            >
+                              {showLoginPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }
+                    }}
+                  />
+
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      href="#/forgot-password"
+                      onClick={() => setIsAccountOpen(false)}
+                      sx={{
+                        fontSize: '0.7rem',
+                        color: '#D4AF37',
+                        textTransform: 'none',
+                        p: 0,
+                        minWidth: 0,
+                        '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' }
+                      }}
+                    >
+                      Forgot password?
+                    </Button>
+                  </Box>
+
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : <ArrowRight size={16} />}
+                    sx={{
+                      mt: 1,
+                      py: 1.5,
+                      bgcolor: 'primary.main',
+                      color: 'black',
+                      fontWeight: 900,
+                      fontSize: '0.75rem',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em',
+                      borderRadius: 1,
+                      boxShadow: '0 4px 15px rgba(212,175,55,0.2)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' }
+                    }}
+                  >
+                    {isLoading ? 'SIGNING IN...' : 'SIGN IN TO ACCOUNT'}
+                  </Button>
+                </Box>
+              ) : (
+                /* REGISTER FORM */
+                <Box component="form" onSubmit={handleRegisterSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <TextField
+                    fullWidth
+                    required
+                    label="Full Name"
+                    value={regName}
+                    onChange={(e) => setRegName(e.target.value)}
+                    placeholder="e.g. Kasun Perera"
+                    variant="outlined"
+                    sx={textFieldStyles}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <User size={16} color="var(--text-secondary)" />
+                          </InputAdornment>
+                        )
+                      }
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    required
+                    type="email"
+                    label="Email Address"
+                    value={regEmail}
+                    onChange={(e) => setRegEmail(e.target.value)}
+                    placeholder="kasun@example.com"
+                    variant="outlined"
+                    sx={textFieldStyles}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Mail size={16} color="var(--text-secondary)" />
+                          </InputAdornment>
+                        )
+                      }
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    label="Mobile Phone"
+                    value={regPhone}
+                    onChange={(e) => setRegPhone(e.target.value)}
+                    placeholder="+94 77 123 4567"
+                    variant="outlined"
+                    sx={textFieldStyles}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Phone size={16} color="var(--text-secondary)" />
+                          </InputAdornment>
+                        )
+                      }
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    required
+                    type={showRegPassword ? 'text' : 'password'}
+                    label="Password (min. 6 characters)"
+                    value={regPassword}
+                    onChange={(e) => setRegPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    variant="outlined"
+                    sx={textFieldStyles}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Lock size={16} color="var(--text-secondary)" />
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setShowRegPassword(!showRegPassword)}
+                              edge="end"
+                              size="small"
+                              sx={{ color: 'var(--text-secondary)' }}
+                            >
+                              {showRegPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    required
+                    type={showRegPassword ? 'text' : 'password'}
+                    label="Confirm Password"
+                    value={regConfirmPassword}
+                    onChange={(e) => setRegConfirmPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    variant="outlined"
+                    sx={textFieldStyles}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Lock size={16} color="var(--text-secondary)" />
+                          </InputAdornment>
+                        )
+                      }
+                    }}
+                  />
+
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : <ArrowRight size={16} />}
+                    sx={{
+                      mt: 1,
+                      py: 1.5,
+                      bgcolor: 'primary.main',
+                      color: 'black',
+                      fontWeight: 900,
+                      fontSize: '0.75rem',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em',
+                      borderRadius: 1,
+                      boxShadow: '0 4px 15px rgba(212,175,55,0.2)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-2px)' }
+                    }}
+                  >
+                    {isLoading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT'}
+                  </Button>
+                </Box>
+              )}
 
             </Box>
           ) : (
