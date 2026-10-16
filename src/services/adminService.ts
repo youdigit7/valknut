@@ -7,6 +7,7 @@ import type {
   CustomerAccountRecord,
   UserProfile 
 } from '../types/ecommerce';
+import { DEMO_CUSTOMER_EMAILS } from '../data/initialData';
 
 // Local storage keys for persistent admin data
 const LOCAL_CATEGORIES_KEY = 'valknut_categories';
@@ -347,7 +348,7 @@ export function getAdminCustomersList(orders: Order[], defaultUser: UserProfile 
     }
   ];
 
-  sampleCustomers.forEach((c) => {
+  sampleCustomers.filter((c) => !DEMO_CUSTOMER_EMAILS.includes(c.email.toLowerCase())).forEach((c) => {
     customerMap[c.email.toLowerCase()] = c;
   });
 
@@ -368,6 +369,7 @@ export function getAdminCustomersList(orders: Order[], defaultUser: UserProfile 
   // Aggregate orders
   for (const ord of orders) {
     const emailKey = ord.customerInfo.email.toLowerCase();
+    if (DEMO_CUSTOMER_EMAILS.includes(emailKey)) continue;
     if (!customerMap[emailKey]) {
       customerMap[emailKey] = {
         id: `cust-${Math.random().toString(36).substring(2, 7)}`,

@@ -281,6 +281,13 @@ export const INITIAL_PRODUCTS: Product[] = [
   }
 ];
 
+export const DEMO_CUSTOMER_EMAILS = [
+  'kasun.perera@example.lk',
+  'dilini.s@example.com'
+];
+
+export const DEMO_ORDER_IDS = ['ord-1001', 'ord-1002'];
+
 export const INITIAL_COUPONS: Coupon[] = [
   {
     code: 'VALKNUT10',

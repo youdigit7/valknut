@@ -14,7 +14,7 @@ import type {
   NotificationLog,
   CustomStudioOptions
 } from '../types/ecommerce';
-import { INITIAL_PRODUCTS, INITIAL_COUPONS, SAMPLE_ORDERS } from '../data/initialData';
+import { INITIAL_PRODUCTS, INITIAL_COUPONS, SAMPLE_ORDERS, DEMO_CUSTOMER_EMAILS, DEMO_ORDER_IDS } from '../data/initialData';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { calculateShippingFee, getAvailableShippingMethods } from '../services/shippingService';
 import type { ShippingMethod } from '../services/shippingService';
@@ -122,7 +122,16 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const [orders, setOrders] = useState<Order[]>(() => {
     const saved = localStorage.getItem('valknut_orders');
-    return saved ? JSON.parse(saved) : SAMPLE_ORDERS;
+    const source = saved ? JSON.parse(saved) : SAMPLE_ORDERS;
+    if (!Array.isArray(source)) return [];
+    const cleaned = source.filter((order: Order) =>
+      !DEMO_ORDER_IDS.includes(order.id) &&
+      !DEMO_CUSTOMER_EMAILS.includes(order.customerInfo?.email?.toLowerCase())
+    );
+    if (saved && cleaned.length !== source.length) {
+      localStorage.setItem('valknut_orders', JSON.stringify(cleaned));
+    }
+    return cleaned;
   });
 
   const [coupons, setCoupons] = useState<Coupon[]>(() => {
