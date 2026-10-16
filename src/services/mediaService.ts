@@ -175,8 +175,8 @@ export function getCloudinaryConfig(): CloudinaryConfig {
   const localCloudName = typeof window !== 'undefined' ? localStorage.getItem('valknut_cloudinary_cloud_name') : null;
   const localPreset = typeof window !== 'undefined' ? localStorage.getItem('valknut_cloudinary_upload_preset') : null;
   return {
-    cloudName: localCloudName || (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string) || '',
-    uploadPreset: localPreset || (import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string) || ''
+    cloudName: localCloudName || (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string) || 'ofrariny',
+    uploadPreset: localPreset || (import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string) || 'valknut_preset'
   };
 }
 
@@ -190,6 +190,51 @@ export function saveCloudinaryConfig(cloudName: string, uploadPreset: string): v
 export function isCloudinaryConfigured(): boolean {
   const { cloudName, uploadPreset } = getCloudinaryConfig();
   return Boolean(cloudName && uploadPreset);
+}
+
+/**
+ * Transforms a Cloudinary URL with dynamic resizing, format (f_auto), and quality (q_auto)
+ */
+export function getOptimizedCloudinaryUrl(
+  url: string,
+  options?: { width?: number; height?: number; crop?: string; quality?: string }
+): string {
+  if (!url || !url.includes('cloudinary.com')) return url;
+  
+  const { width, height, crop = 'limit', quality = 'auto' } = options || {};
+  const transforms: string[] = ['f_auto', `q_${quality}`];
+  if (width) transforms.push(`w_${width}`);
+  if (height) transforms.push(`h_${height}`);
+  if (width || height) transforms.push(`c_${crop}`);
+
+  const transformString = transforms.join(',');
+  return url.replace('/image/upload/', `/image/upload/${transformString}/`);
+}
+
+/**
+ * Checks Cloudinary CDN connectivity and preset configuration
+ */
+export async function checkCloudinaryStatus(): Promise<{
+  status: 'online' | 'error';
+  message: string;
+  cloudName: string;
+  preset: string;
+}> {
+  const { cloudName, uploadPreset } = getCloudinaryConfig();
+  if (!cloudName || !uploadPreset) {
+    return {
+      status: 'error',
+      message: 'Cloudinary configuration is missing. Please set cloud name and upload preset.',
+      cloudName: cloudName || 'None',
+      preset: uploadPreset || 'None'
+    };
+  }
+  return {
+    status: 'online',
+    message: `Cloudinary CDN active (${cloudName} / ${uploadPreset})`,
+    cloudName,
+    preset: uploadPreset
+  };
 }
 
 /**
@@ -242,7 +287,8 @@ export async function checkFirebaseStorageStatus(): Promise<{
 }
 
 /**
- * Uploads a file to Firebase Storage, Cloudinary, or resilient Local Fallback
+ * Uploads a file directly to Cloudinary CDN (Primary) or Firebase Storage
+ * Client-side base64 caching is disabled per requirements.
  */
 export async function uploadMediaFile(
   file: File | Blob,
@@ -281,7 +327,45 @@ export async function uploadMediaFile(
 
   const storagePath = buildStoragePath(scope, identifier, originalName);
 
-  // 1. Try Firebase Cloud Storage Upload (If configured and available)
+  // 1. PRIMARY PROVIDER: Cloudinary Direct CDN Upload
+  const cloudConfig = getCloudinaryConfig();
+  if (cloudConfig.cloudName && cloudConfig.uploadPreset) {
+    try {
+      if (onProgress) onProgress(20);
+      const formData = new FormData();
+      formData.append('file', fileToUpload);
+      formData.append('upload_preset', cloudConfig.uploadPreset);
+      formData.append('folder', `valknut/${scope}`);
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudConfig.cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (onProgress) onProgress(80);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (onProgress) onProgress(100);
+        return {
+          url: data.secure_url || data.url,
+          storagePath: `cloudinary://${data.public_id}`,
+          fileName: originalName,
+          sizeBytes: data.bytes || fileToUpload.size,
+          type: data.format ? `image/${data.format}` : (fileToUpload.type || 'image/webp')
+        };
+      } else {
+        const errJson = await response.json().catch(() => ({}));
+        const errMsg = errJson?.error?.message || response.statusText || 'Cloudinary upload failed';
+        throw new Error(`Cloudinary error: ${errMsg}`);
+      }
+    } catch (cldErr: any) {
+      console.error('Cloudinary upload failure:', cldErr);
+      throw new Error(`Image upload failed: ${cldErr.message || 'Network error reaching Cloudinary.'}`);
+    }
+  }
+
+  // 2. SECONDARY / OPTIONAL: Firebase Cloud Storage (if explicitly provisioned)
   if (storage && isFirebaseConfigured) {
     try {
       const fileRef = ref(storage, storagePath);
@@ -320,75 +404,12 @@ export async function uploadMediaFile(
 
       return fbResult;
     } catch (firebaseErr: any) {
-      console.warn('Firebase Storage upload failed, checking alternative providers:', firebaseErr);
+      console.warn('Firebase Storage upload failed:', firebaseErr);
+      throw new Error(`Firebase upload failed: ${firebaseErr.message}`);
     }
   }
 
-  // 2. Try Cloudinary Upload (If configured)
-  const cloudConfig = getCloudinaryConfig();
-  if (cloudConfig.cloudName && cloudConfig.uploadPreset) {
-    try {
-      if (onProgress) onProgress(30);
-      const formData = new FormData();
-      formData.append('file', fileToUpload);
-      formData.append('upload_preset', cloudConfig.uploadPreset);
-      formData.append('folder', `valknut/${scope}`);
-
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudConfig.cloudName}/image/upload`, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (onProgress) onProgress(80);
-
-      if (response.ok) {
-        const data = await response.json();
-        if (onProgress) onProgress(100);
-        return {
-          url: data.secure_url || data.url,
-          storagePath: `cloudinary://${data.public_id}`,
-          fileName: originalName,
-          sizeBytes: data.bytes || fileToUpload.size,
-          type: data.format ? `image/${data.format}` : (fileToUpload.type || 'image/webp')
-        };
-      } else {
-        const errJson = await response.json().catch(() => ({}));
-        console.warn('Cloudinary upload warning:', errJson);
-      }
-    } catch (cldErr) {
-      console.warn('Cloudinary upload network error:', cldErr);
-    }
-  }
-
-  // 3. Resilient Local Fallback (Base64 / Data URL) for instant offline testing
-  return new Promise<UploadMediaResult>((resolve, reject) => {
-    let currentPct = 0;
-    const interval = setInterval(() => {
-      currentPct += 25;
-      if (onProgress) onProgress(Math.min(currentPct, 95));
-      if (currentPct >= 100) {
-        clearInterval(interval);
-      }
-    }, 40);
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      clearInterval(interval);
-      if (onProgress) onProgress(100);
-      resolve({
-        url: reader.result as string,
-        storagePath: `local://fallback/${storagePath}`,
-        fileName: originalName,
-        sizeBytes: fileToUpload.size,
-        type: fileToUpload.type || 'image/webp'
-      });
-    };
-    reader.onerror = () => {
-      clearInterval(interval);
-      reject(new Error('Failed to process image file.'));
-    };
-    reader.readAsDataURL(fileToUpload);
-  });
+  throw new Error('No cloud media provider is configured. Please verify Cloudinary credentials in .env.');
 }
 
 /**

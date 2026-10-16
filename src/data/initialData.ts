@@ -25,6 +25,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Hoodies',
     collection: 'DARK SOVEREIGN 2026',
     images: [
+      'https://res.cloudinary.com/ofrariny/image/upload/v1792137661/valknut/men-sovereign-hoodie.jpg',
       menSovereignHoodie
     ],
     tags: ['Oversized', 'Heavyweight', '480GSM', 'Celestial Mountain', 'Best Seller', 'Dark Luxury'],
@@ -52,6 +53,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Oversized T-Shirts',
     collection: 'ESSENTIAL SIGNATURE',
     images: [
+      'https://res.cloudinary.com/ofrariny/image/upload/v1792137660/valknut/men-mind-control-tee.jpg',
       menMindControlTee
     ],
     tags: ['Oversized Tee', 'Puff Rubber', 'Mind Control', 'Graphic Tee', 'Signature'],
@@ -80,6 +82,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Oversized T-Shirts',
     collection: 'DARK SOVEREIGN 2026',
     images: [
+      'https://res.cloudinary.com/ofrariny/image/upload/v1792137659/valknut/men-acid-wash-tee.jpg',
       menAcidWashTee
     ],
     tags: ['Acid Wash', 'Vintage Wash', 'Celestial Mountain', 'Streetwear'],
@@ -108,6 +111,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Joggers',
     collection: 'STEALTH LABS',
     images: [
+      'https://res.cloudinary.com/ofrariny/image/upload/v1792137662/valknut/men-tactical-joggers.jpg',
       menTacticalJoggers
     ],
     tags: ['Techwear', 'Cargo', 'Joggers', 'Utility'],
@@ -137,6 +141,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Hoodies',
     collection: 'VALKNUT FEMME',
     images: [
+      'https://res.cloudinary.com/ofrariny/image/upload/v1792137664/valknut/women-crop-hoodie.jpg',
       womenCropHoodie
     ],
     tags: ['Women', 'Crop Hoodie', 'Minimal', 'Streetwear'],
@@ -162,6 +167,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Oversized T-Shirts',
     collection: 'VALKNUT FEMME',
     images: [
+      'https://res.cloudinary.com/ofrariny/image/upload/v1792137665/valknut/women-oversized-tee.jpg',
       womenOversizedTee
     ],
     tags: ['Women', 'Oversized Tee', 'Minimalist', 'Streetwear'],
@@ -189,6 +195,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Accessories',
     collection: 'STEALTH LABS',
     images: [
+      'https://res.cloudinary.com/ofrariny/image/upload/v1792137653/valknut/essentials-crossbody-bag.jpg',
       essentialsCrossbodyBag
     ],
     tags: ['Crossbody', 'Utility Bag', 'Cordura', 'Accessories', 'Stealth'],
@@ -212,6 +219,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Accessories',
     collection: 'EVERYDAY ESSENTIALS',
     images: [
+      'https://res.cloudinary.com/ofrariny/image/upload/v1792137657/valknut/essentials-tumbler.jpg',
       essentialsTumbler
     ],
     tags: ['Tumbler', 'Drinkware', 'Stainless Steel', 'Insulated'],
@@ -235,6 +243,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Accessories',
     collection: 'ACCESSORY SERIES',
     images: [
+      'https://res.cloudinary.com/ofrariny/image/upload/v1792137655/valknut/essentials-leather-wallet.jpg',
       essentialsLeatherWallet
     ],
     tags: ['Leather Wallet', 'RFID Blocking', 'Accessories', 'Saffiano'],
@@ -258,6 +267,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     subCategory: 'Accessories',
     collection: 'ACCESSORY SERIES',
     images: [
+      'https://res.cloudinary.com/ofrariny/image/upload/v1792137656/valknut/essentials-snapback-cap.jpg',
       essentialsSnapbackCap
     ],
     tags: ['Accessories', 'Cap', 'Snapback', 'Headwear'],
