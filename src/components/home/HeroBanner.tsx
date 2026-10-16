@@ -35,12 +35,12 @@ export const HeroBanner: React.FC = () => {
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'flex-end',
+          justifyContent: 'flex-start',
           alignItems: 'center',
           overflow: 'hidden',
           bgcolor: 'var(--bg-main)',
           pb: { xs: 5, sm: 8, lg: 10 },
-          pt: { xs: 14, sm: 16 }
+          pt: '20px'
         }}
       >
         {/* Background Image & Overlays */}
