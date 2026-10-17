@@ -6,7 +6,6 @@ import type {
   OrderStatus,
   Coupon,
   CategoryItem,
-  CollectionItem,
   HomepageConfig,
   CustomerAccountRecord,
   CategoryType,
@@ -28,9 +27,6 @@ import {
   getAdminCategories,
   saveAdminCategory,
   deleteAdminCategory,
-  getAdminCollections,
-  saveAdminCollection,
-  deleteAdminCollection,
   getAdminHomepageConfig,
   saveAdminHomepageConfig,
   getAdminCustomersList
@@ -41,7 +37,6 @@ import {
   Package,
   ShoppingBag,
   Tag,
-  Sparkles,
   Plus,
   Trash2,
   Database,
@@ -114,7 +109,6 @@ type AdminTab =
   | 'STUDIOS'
   | 'ORDERS'
   | 'CATEGORIES'
-  | 'COLLECTIONS'
   | 'CUSTOMERS'
   | 'COUPONS'
   | 'HOMEPAGE'
@@ -200,9 +194,8 @@ export const AdminDashboard: React.FC = () => {
   // Studio Submissions / Custom Orders State
   const [studioStatusFilter, setStudioStatusFilter] = useState<string>('ALL');
 
-  // Categories & Collections state
+  // Categories state
   const [categories, setCategories] = useState<CategoryItem[]>(() => getAdminCategories());
-  const [collections, setCollections] = useState<CollectionItem[]>(() => getAdminCollections());
   const [homepageConfig, setHomepageConfig] = useState<HomepageConfig>(() => getAdminHomepageConfig());
 
   // Customer List
@@ -247,18 +240,7 @@ export const AdminDashboard: React.FC = () => {
   const [catSeoTitle, setCatSeoTitle] = useState('');
   const [catSeoDesc, setCatSeoDesc] = useState('');
 
-  // Collection Modal State
-  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
-  const [editingCollection, setEditingCollection] = useState<CollectionItem | null>(null);
-  const [colName, setColName] = useState('');
-  const [colSlug, setColSlug] = useState('');
-  const [colDescription, setColDescription] = useState('');
-  const [colImage, setColImage] = useState('');
-  const [colSelectedProducts, setColSelectedProducts] = useState<string[]>([]);
-  const [colSeoTitle, setColSeoTitle] = useState('');
-  const [colSeoDesc, setColSeoDesc] = useState('');
-
-  // Coupon Modal State
+// Coupon Modal State
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   const [newCouponCode, setNewCouponCode] = useState('');
   const [newCouponType, setNewCouponType] = useState<'PERCENTAGE' | 'FIXED'>('PERCENTAGE');
@@ -543,52 +525,6 @@ export const AdminDashboard: React.FC = () => {
     showToast(`Category "${payload.name}" saved.`, 'success');
   };
 
-  // Collection Open Form
-  const openCollectionForm = (col?: CollectionItem) => {
-    if (col) {
-      setEditingCollection(col);
-      setColName(col.name);
-      setColSlug(col.slug);
-      setColDescription(col.description);
-      setColImage(col.imageUrl);
-      setColSelectedProducts(col.productIds);
-      setColSeoTitle(col.seoTitle || '');
-      setColSeoDesc(col.seoDescription || '');
-    } else {
-      setEditingCollection(null);
-      setColName('');
-      setColSlug('');
-      setColDescription('');
-      setColImage('https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85');
-      setColSelectedProducts([]);
-      setColSeoTitle('');
-      setColSeoDesc('');
-    }
-    setIsCollectionModalOpen(true);
-  };
-
-  const handleSaveCollection = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!colName.trim()) return;
-
-    const payload: CollectionItem = {
-      id: editingCollection ? editingCollection.id : `col-${Date.now()}`,
-      name: colName.trim(),
-      slug: colSlug.trim() || colName.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-      description: colDescription.trim(),
-      imageUrl: colImage.trim(),
-      productIds: colSelectedProducts,
-      seoTitle: colSeoTitle.trim(),
-      seoDescription: colSeoDesc.trim(),
-      active: true,
-      releaseDate: editingCollection?.releaseDate || new Date().toISOString().split('T')[0]
-    };
-
-    const updated = saveAdminCollection(payload);
-    setCollections(updated);
-    setIsCollectionModalOpen(false);
-    showToast(`Collection "${payload.name}" saved.`, 'success');
-  };
 
   // Coupon Creation
   const handleSaveCoupon = (e: React.FormEvent) => {
@@ -640,9 +576,6 @@ export const AdminDashboard: React.FC = () => {
     } else if (deleteConfirmTarget.type === 'category') {
       setCategories(deleteAdminCategory(deleteConfirmTarget.id));
       showToast('Category deleted.', 'info');
-    } else if (deleteConfirmTarget.type === 'collection') {
-      setCollections(deleteAdminCollection(deleteConfirmTarget.id));
-      showToast('Collection deleted.', 'info');
     } else if (deleteConfirmTarget.type === 'coupon') {
       deleteCoupon(deleteConfirmTarget.id);
     }
@@ -1052,126 +985,128 @@ export const AdminDashboard: React.FC = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Main Container */}
-      <Box sx={{ maxWidth: 1720, mx: 'auto', px: { xs: 2, sm: 3, md: 4, lg: 6 }, pt: 3.5 }}>
-
-        {/* Responsive MUI Navigation Bar */}
-        <Paper
-          elevation={0}
+      {/* Sticky Navigation Tab Bar */}
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1050,
+          backgroundColor: 'rgba(8, 9, 14, 0.96)',
+          backdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          px: { xs: 2, sm: 3, md: 4, lg: 6 },
+          py: 0.5,
+        }}
+      >
+        <Tabs
+          value={activeTab}
+          onChange={(_, val) => setActiveTab(val)}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
           sx={{
-            ...modernCardSx,
-            p: 0.75,
-            mb: 4,
-            border: '1px solid rgba(255, 255, 255, 0.09)',
+            minHeight: 46,
+            '& .MuiTabs-indicator': {
+              display: 'none',
+            },
+            '& .MuiTab-root': {
+              minHeight: 42,
+              borderRadius: '10px',
+              px: { xs: 1.5, sm: 2 },
+              py: 0.8,
+              color: '#94A3B8',
+              fontWeight: 700,
+              fontSize: { xs: '0.75rem', sm: '0.8rem' },
+              textTransform: 'none',
+              transition: 'all 0.2s ease',
+              mr: 0.5,
+              '&:hover': {
+                color: '#FFFFFF',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              },
+              '&.Mui-selected': {
+                color: '#000000',
+                backgroundColor: goldColor,
+                boxShadow: '0 4px 14px rgba(212, 175, 55, 0.35)',
+              },
+            },
           }}
         >
-          <Tabs
-            value={activeTab}
-            onChange={(_, val) => setActiveTab(val)}
-            variant="scrollable"
-            scrollButtons="auto"
-            allowScrollButtonsMobile
-            sx={{
-              minHeight: 46,
-              '& .MuiTabs-indicator': {
-                display: 'none',
-              },
-              '& .MuiTab-root': {
-                minHeight: 42,
-                borderRadius: '10px',
-                px: { xs: 1.5, sm: 2 },
-                py: 0.8,
-                color: '#94A3B8',
-                fontWeight: 700,
-                fontSize: { xs: '0.75rem', sm: '0.8rem' },
-                textTransform: 'none',
-                transition: 'all 0.2s ease',
-                mr: 0.5,
-                '&:hover': {
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                },
-                '&.Mui-selected': {
-                  color: '#000000',
-                  backgroundColor: goldColor,
-                  boxShadow: '0 4px 14px rgba(212, 175, 55, 0.35)',
-                },
-              },
-            }}
-          >
-            <Tab icon={<TrendingUp size={16} />} iconPosition="start" value="METRICS" label="Overview" />
-            <Tab
-              icon={<Package size={16} />}
-              iconPosition="start"
-              value="PRODUCTS"
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <span>Products</span>
-                  <Chip
-                    size="small"
-                    label={products.length}
-                    sx={{
-                      height: 18,
-                      fontSize: '0.65rem',
-                      fontWeight: 800,
-                      bgcolor: activeTab === 'PRODUCTS' ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.1)',
-                      color: 'inherit',
-                    }}
-                  />
-                </Box>
-              }
-            />
-            <Tab
-              icon={<Palette size={16} />}
-              iconPosition="start"
-              value="STUDIOS"
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <span>3D Studios</span>
-                  <Chip
-                    size="small"
-                    label={studioOrders.length}
-                    sx={{
-                      height: 18,
-                      fontSize: '0.65rem',
-                      fontWeight: 800,
-                      bgcolor: activeTab === 'STUDIOS' ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.1)',
-                      color: 'inherit',
-                    }}
-                  />
-                </Box>
-              }
-            />
-            <Tab
-              icon={<ShoppingBag size={16} />}
-              iconPosition="start"
-              value="ORDERS"
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <span>Orders</span>
-                  <Chip
-                    size="small"
-                    label={orders.length}
-                    sx={{
-                      height: 18,
-                      fontSize: '0.65rem',
-                      fontWeight: 800,
-                      bgcolor: activeTab === 'ORDERS' ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.1)',
-                      color: 'inherit',
-                    }}
-                  />
-                </Box>
-              }
-            />
-            <Tab icon={<Layers size={16} />} iconPosition="start" value="CATEGORIES" label="Categories" />
-            <Tab icon={<Sparkles size={16} />} iconPosition="start" value="COLLECTIONS" label="Collections" />
-            <Tab icon={<Users size={16} />} iconPosition="start" value="CUSTOMERS" label="Customers" />
-            <Tab icon={<Tag size={16} />} iconPosition="start" value="COUPONS" label="Coupons" />
-            <Tab icon={<Home size={16} />} iconPosition="start" value="HOMEPAGE" label="Homepage CMS" />
-            <Tab icon={<Cloud size={16} />} iconPosition="start" value="STORAGE" label="Media Storage" />
-            <Tab icon={<Database size={16} />} iconPosition="start" value="DATABASE" label="Database & SQL" />
-          </Tabs>
-        </Paper>
+          <Tab icon={<TrendingUp size={16} />} iconPosition="start" value="METRICS" label="Overview" />
+          <Tab
+            icon={<Package size={16} />}
+            iconPosition="start"
+            value="PRODUCTS"
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <span>Products</span>
+                <Chip
+                  size="small"
+                  label={products.length}
+                  sx={{
+                    height: 18,
+                    fontSize: '0.65rem',
+                    fontWeight: 800,
+                    bgcolor: activeTab === 'PRODUCTS' ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.1)',
+                    color: 'inherit',
+                  }}
+                />
+              </Box>
+            }
+          />
+          <Tab
+            icon={<Palette size={16} />}
+            iconPosition="start"
+            value="STUDIOS"
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <span>3D Studios</span>
+                <Chip
+                  size="small"
+                  label={studioOrders.length}
+                  sx={{
+                    height: 18,
+                    fontSize: '0.65rem',
+                    fontWeight: 800,
+                    bgcolor: activeTab === 'STUDIOS' ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.1)',
+                    color: 'inherit',
+                  }}
+                />
+              </Box>
+            }
+          />
+          <Tab
+            icon={<ShoppingBag size={16} />}
+            iconPosition="start"
+            value="ORDERS"
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <span>Orders</span>
+                <Chip
+                  size="small"
+                  label={orders.length}
+                  sx={{
+                    height: 18,
+                    fontSize: '0.65rem',
+                    fontWeight: 800,
+                    bgcolor: activeTab === 'ORDERS' ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.1)',
+                    color: 'inherit',
+                  }}
+                />
+              </Box>
+            }
+          />
+          <Tab icon={<Layers size={16} />} iconPosition="start" value="CATEGORIES" label="Categories" />
+          <Tab icon={<Users size={16} />} iconPosition="start" value="CUSTOMERS" label="Customers" />
+          <Tab icon={<Tag size={16} />} iconPosition="start" value="COUPONS" label="Coupons" />
+          <Tab icon={<Home size={16} />} iconPosition="start" value="HOMEPAGE" label="Homepage CMS" />
+          <Tab icon={<Cloud size={16} />} iconPosition="start" value="STORAGE" label="Media Storage" />
+          <Tab icon={<Database size={16} />} iconPosition="start" value="DATABASE" label="Database & SQL" />
+        </Tabs>
+      </Box>
+
+      {/* Main Container */}
+      <Box sx={{ maxWidth: 1720, mx: 'auto', px: { xs: 2, sm: 3, md: 4, lg: 6 }, pt: 3.5 }}>
 
         {/* ========================================== */}
         {/* 1. METRICS & KPI OVERVIEW TAB */}
@@ -2218,116 +2153,6 @@ export const AdminDashboard: React.FC = () => {
           </Box>
         )}
 
-        {/* ========================================== */}
-        {/* 6. COLLECTION MANAGEMENT TAB */}
-        {/* ========================================== */}
-        {activeTab === 'COLLECTIONS' && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            <Paper
-              elevation={0}
-              sx={{
-                ...modernCardSx,
-                p: { xs: 2.5, sm: 3 },
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: 2,
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Box sx={{ p: 1.5, borderRadius: '12px', bgcolor: 'rgba(212, 175, 55, 0.15)', color: goldColor }}>
-                  <Sparkles size={24} />
-                </Box>
-                <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif' }}>
-                    EDITORIAL COLLECTIONS & DROPS
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: '#94A3B8', fontSize: '0.8rem' }}>
-                    Group pieces into themed drops like Shadow Ops 2026 and Stealth Labs.
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Button
-                variant="contained"
-                startIcon={<Plus size={16} />}
-                onClick={() => openCollectionForm()}
-                sx={{
-                  bgcolor: goldColor,
-                  color: '#000000',
-                  fontWeight: 900,
-                  fontSize: '0.8rem',
-                  borderRadius: '8px',
-                  px: 2.5,
-                  py: 1,
-                  boxShadow: '0 4px 14px rgba(212, 175, 55, 0.35)',
-                  '&:hover': { bgcolor: goldHover },
-                }}
-              >
-                CREATE COLLECTION
-              </Button>
-            </Paper>
-
-            <Grid container spacing={{ xs: 2.5, md: 3 }}>
-              {collections.map((col) => (
-                <Grid size={{ xs: 12, md: 6 }} key={col.id}>
-                  <Card sx={{ ...modernCardSx, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ height: 180, position: 'relative', bgcolor: '#121420', overflow: 'hidden' }}>
-                      <Box component="img" src={col.imageUrl} alt={col.name} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0E1017 0%, transparent 70%)' }} />
-                      <Chip
-                        size="small"
-                        label={`RELEASE: ${col.releaseDate || '2026'}`}
-                        sx={{
-                          position: 'absolute',
-                          top: 12,
-                          left: 12,
-                          bgcolor: 'rgba(0,0,0,0.85)',
-                          color: goldColor,
-                          border: '1px solid rgba(212, 175, 55, 0.4)',
-                          fontWeight: 800,
-                          fontSize: '0.65rem',
-                          fontFamily: 'monospace',
-                        }}
-                      />
-                    </Box>
-
-                    <CardContent sx={{ p: 3, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <Box sx={{ mb: 2 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 800, textTransform: 'uppercase', color: '#F8FAFC' }}>
-                          {col.name}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#94A3B8', fontSize: '0.8rem', mt: 1 }}>
-                          {col.description}
-                        </Typography>
-                        <Chip
-                          size="small"
-                          label={`${col.productIds.length} Assigned Garments`}
-                          sx={{ mt: 2, bgcolor: 'rgba(255, 255, 255, 0.06)', color: '#E2E8F0', fontSize: '0.7rem', fontWeight: 700 }}
-                        />
-                      </Box>
-
-                      <Box sx={{ pt: 2, borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Typography sx={{ fontSize: '0.75rem', color: '#64748B', fontFamily: 'monospace' }}>
-                          /{col.slug}
-                        </Typography>
-                        <Box sx={{ display: 'flex', gap: 1 }}>
-                          <IconButton size="small" onClick={() => openCollectionForm(col)} sx={{ color: '#94A3B8', '&:hover': { color: '#FFFFFF' } }}>
-                            <Edit2 size={15} />
-                          </IconButton>
-                          <IconButton size="small" onClick={() => setDeleteConfirmTarget({ type: 'collection', id: col.id, name: col.name })} sx={{ color: '#EF4444', '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.15)' } }}>
-                            <Trash2 size={15} />
-                          </IconButton>
-                        </Box>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        )}
 
         {/* ========================================== */}
         {/* 7. CUSTOMERS MANAGEMENT TAB */}
@@ -3662,143 +3487,6 @@ export const AdminDashboard: React.FC = () => {
               sx={{ bgcolor: goldColor, color: '#000000', fontWeight: 900, px: 3, '&:hover': { bgcolor: goldHover } }}
             >
               {editingCategory ? 'SAVE CATEGORY' : 'CREATE CATEGORY'}
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
-
-      {/* ========================================== */}
-      {/* COLLECTION CREATE/EDIT DIALOG */}
-      {/* ========================================== */}
-      <Dialog
-        open={isCollectionModalOpen}
-        onClose={() => setIsCollectionModalOpen(false)}
-        maxWidth="sm"
-        fullWidth
-        slotProps={{
-          paper: {
-            sx: {
-              bgcolor: '#0E1017',
-              backgroundImage: 'linear-gradient(145deg, #121420 0%, #0E1017 100%)',
-              border: '1px solid rgba(212, 175, 55, 0.4)',
-              borderRadius: '16px',
-              color: '#F8FAFC',
-            },
-          }
-        }}
-      >
-        <DialogTitle sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', p: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Box>
-            <Typography sx={{ fontSize: '0.7rem', color: goldColor, fontWeight: 800, fontFamily: 'monospace' }}>
-              EDITORIAL DROP & COLLECTION
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 800 }}>
-              {editingCollection ? `Edit "${editingCollection.name}"` : 'Create New Collection'}
-            </Typography>
-          </Box>
-          <IconButton onClick={() => setIsCollectionModalOpen(false)} sx={{ color: '#94A3B8' }}>
-            <XCircle size={20} />
-          </IconButton>
-        </DialogTitle>
-
-        <form onSubmit={handleSaveCollection}>
-          <DialogContent dividers sx={{ borderColor: 'rgba(255, 255, 255, 0.08)', p: 3, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  required
-                  label="Collection Title"
-                  value={colName}
-                  onChange={(e) => {
-                    setColName(e.target.value);
-                    if (!editingCollection) {
-                      setColSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
-                    }
-                  }}
-                  sx={darkInputSx}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="URL Slug"
-                  value={colSlug}
-                  onChange={(e) => setColSlug(e.target.value)}
-                  sx={darkInputSx}
-                />
-              </Grid>
-            </Grid>
-
-            <SingleImageUploader
-              label="Collection Campaign Banner"
-              imageUrl={colImage}
-              onChange={(url) => setColImage(url)}
-              scope="collections"
-              identifier={colSlug || 'collection'}
-            />
-
-            <TextField
-              fullWidth
-              multiline
-              rows={2}
-              size="small"
-              label="Editorial Concept"
-              value={colDescription}
-              onChange={(e) => setColDescription(e.target.value)}
-              sx={darkInputSx}
-            />
-
-            <Box sx={{ p: 2, bgcolor: '#121420', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)', maxHeight: 180, overflowY: 'auto' }}>
-              <Typography sx={{ fontSize: '0.75rem', fontWeight: 800, color: goldColor, mb: 1.5 }}>
-                Assign Products ({colSelectedProducts.length})
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                {products.map((p) => {
-                  const isSelected = colSelectedProducts.includes(p.id);
-                  return (
-                    <FormControlLabel
-                      key={p.id}
-                      control={
-                        <Checkbox
-                          size="small"
-                          checked={isSelected}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setColSelectedProducts([...colSelectedProducts, p.id]);
-                            } else {
-                              setColSelectedProducts(colSelectedProducts.filter(id => id !== p.id));
-                            }
-                          }}
-                          sx={{ color: goldColor, '&.Mui-checked': { color: goldColor } }}
-                        />
-                      }
-                      label={
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: 2 }}>
-                          <Typography sx={{ fontSize: '0.8rem', color: '#F8FAFC' }}>{p.name}</Typography>
-                          <Typography sx={{ fontSize: '0.75rem', color: '#94A3B8' }}>LKR {p.price.toLocaleString()}</Typography>
-                        </Box>
-                      }
-                      sx={{ mx: 0 }}
-                    />
-                  );
-                })}
-              </Box>
-            </Box>
-          </DialogContent>
-
-          <DialogActions sx={{ p: 2.5, borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-            <Button onClick={() => setIsCollectionModalOpen(false)} sx={{ color: '#94A3B8' }}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ bgcolor: goldColor, color: '#000000', fontWeight: 900, px: 3, '&:hover': { bgcolor: goldHover } }}
-            >
-              {editingCollection ? 'SAVE COLLECTION' : 'CREATE COLLECTION'}
             </Button>
           </DialogActions>
         </form>

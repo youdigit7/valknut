@@ -49,7 +49,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         display: 'flex',
         flexDirection: 'column',
         cursor: 'pointer',
-        height: '100%',
         '&:hover': {
           borderColor: 'rgba(212,175,55,0.6)',
           boxShadow: '0 10px 30px rgba(212,175,55,0.15)',
@@ -192,7 +191,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </Box>
 
       {/* Details Box */}
-      <Box sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 1.5 }}>
+      <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
         <Box>
           <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', letterSpacing: '0.2em', color: 'primary.main', textTransform: 'uppercase', mb: 0.5 }}>
             {product.subCategory}
