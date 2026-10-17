@@ -36,8 +36,8 @@ export const CustomStudio: React.FC = () => {
 
   const [activeControlTab, setActiveControlTab] = useState<StudioControlTab>('ARTWORK');
 
-  const [selectedColor, setSelectedColor] = useState(activeProduct.variants[0]?.color || 'Onyx Black');
-  const [selectedColorHex, setSelectedColorHex] = useState(activeProduct.variants[0]?.colorHex || '#0A0B0E');
+  const [selectedColor, setSelectedColor] = useState(activeProduct?.variants?.[0]?.color || 'Onyx Black');
+  const [selectedColorHex, setSelectedColorHex] = useState(activeProduct?.variants?.[0]?.colorHex || '#0A0B0E');
   const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | 'XL' | 'XXL'>('M');
   const [placement, setPlacement] = useState<'FRONT' | 'BACK' | 'LEFT_SLEEVE' | 'RIGHT_SLEEVE'>('FRONT');
 
@@ -66,7 +66,7 @@ export const CustomStudio: React.FC = () => {
   const placementFee = placement === 'LEFT_SLEEVE' || placement === 'RIGHT_SLEEVE' ? 450 : 0;
   const selectedTechniqueObj = PRINT_TECHNIQUES.find(t => t.id === printTechnique) || PRINT_TECHNIQUES[0];
   const techniqueFee = selectedTechniqueObj.fee;
-  const basePrice = activeProduct.salePrice ?? activeProduct.price;
+  const basePrice = activeProduct ? (activeProduct.salePrice ?? activeProduct.price) : 8500;
   const totalCustomPrice = basePrice + techniqueFee + placementFee;
 
   const handleArtworkUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,6 +183,24 @@ export const CustomStudio: React.FC = () => {
     setIsCartOpen(true);
     showToast(`Custom ${activeProduct.name} added to your bag.`, 'success');
   };
+
+  if (!activeProduct) {
+    return (
+      <Box sx={{ width: '100%', minHeight: '60vh', py: 12, bgcolor: 'var(--bg-main)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Container maxWidth="sm" sx={{ textAlign: 'center' }}>
+          <Typography variant="h4" sx={{ color: 'var(--text-primary)', mb: 2, fontWeight: 700 }}>
+            BESPOKE STUDIO
+          </Typography>
+          <Typography variant="body1" sx={{ color: 'var(--text-secondary)', mb: 4 }}>
+            No customizable garments are currently available in the active catalog.
+          </Typography>
+          <Button variant="outlined" color="primary" href="#/shop">
+            EXPLORE APPAREL CATALOG
+          </Button>
+        </Container>
+      </Box>
+    );
+  }
 
   return (
     <>

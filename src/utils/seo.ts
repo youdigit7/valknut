@@ -107,8 +107,10 @@ export function getBreadcrumbSchema(items: { name: string; url: string }[]) {
  */
 export function getProductJsonLd(product: Product) {
   const effectivePrice = product.salePrice ?? product.price;
-  const totalStock = product.variants.reduce((sum, v) => sum + (v.stock ?? v.stockCount ?? 0), 0);
-  const primaryImage = product.images[0] || DEFAULT_OG_IMAGE;
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
+  const images = Array.isArray(product?.images) ? product.images : [];
+  const totalStock = variants.reduce((sum, v) => sum + (v.stock ?? v.stockCount ?? 0), 0);
+  const primaryImage = images[0] || DEFAULT_OG_IMAGE;
   const canonicalUrl = `${BASE_URL}/#/product/${product.slug}`;
 
   return {
@@ -116,9 +118,9 @@ export function getProductJsonLd(product: Product) {
     '@type': 'Product',
     '@id': `${canonicalUrl}#product`,
     name: product.name,
-    image: product.images.length > 0 ? product.images : [primaryImage],
+    image: images.length > 0 ? images : [primaryImage],
     description: product.description,
-    sku: product.variants[0]?.sku || `VK-${product.slug.toUpperCase().slice(0, 8)}`,
+    sku: variants[0]?.sku || `VK-${(product.slug || 'ITEM').toUpperCase().slice(0, 8)}`,
     mpn: product.id,
     brand: {
       '@type': 'Brand',
@@ -126,8 +128,8 @@ export function getProductJsonLd(product: Product) {
     },
     category: product.category,
     material: product.material,
-    color: product.variants.map((v) => v.color).join(', '),
-    size: product.variants.map((v) => v.size).join(', '),
+    color: variants.map((v) => v.color).join(', '),
+    size: variants.map((v) => v.size).join(', '),
     offers: {
       '@type': 'Offer',
       url: canonicalUrl,
@@ -370,8 +372,10 @@ export function getShopSEOMetadata(
  */
 export function getProductSEOMetadata(product: Product): SEOMetadata {
   const effectivePrice = product.salePrice ?? product.price;
-  const primaryImage = product.images[0] || DEFAULT_OG_IMAGE;
-  const totalStock = product.variants.reduce((sum, v) => sum + (v.stock ?? v.stockCount ?? 0), 0);
+  const images = Array.isArray(product?.images) ? product.images : [];
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
+  const primaryImage = images[0] || DEFAULT_OG_IMAGE;
+  const totalStock = variants.reduce((sum, v) => sum + (v.stock ?? v.stockCount ?? 0), 0);
   const isAvailable = totalStock > 0;
   const canonicalUrl = `${BASE_URL}/#/product/${product.slug}`;
 

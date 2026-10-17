@@ -12,12 +12,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { setSelectedProduct, setCustomStudioProduct, addToCart } = useStore();
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
-  const hasSale = Boolean(product.salePrice && product.salePrice < product.price);
-  const displayPrice = product.salePrice ?? product.price;
+  const hasSale = Boolean(product?.salePrice && product.salePrice < product.price);
+  const displayPrice = product?.salePrice ?? product?.price ?? 0;
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
+  const images = Array.isArray(product?.images) ? product.images : [];
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const firstVariant = product.variants[0] || { size: 'M', color: 'Onyx Black', colorHex: '#000000' };
+    const firstVariant = variants[0] || { size: 'M', color: 'Onyx Black', colorHex: '#000000' };
     addToCart(
       product, 
       firstVariant.size as any, 
@@ -63,13 +65,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       {/* Product Image Area */}
       <Box 
         sx={{ position: 'relative', width: '100%', aspectRatio: '4/5', bgcolor: 'var(--bg-card-inner)', overflow: 'hidden' }}
-        onMouseEnter={() => product.images.length > 1 && setCurrentImgIndex(1)}
+        onMouseEnter={() => images.length > 1 && setCurrentImgIndex(1)}
         onMouseLeave={() => setCurrentImgIndex(0)}
       >
         <Box
           component="img"
-          src={product.images[currentImgIndex] || product.images[0]} 
-          alt={product.name}
+          src={images[currentImgIndex] || images[0] || ''} 
+          alt={product?.name || 'VALKNUT Apparel'}
           className="product-img"
           sx={{
             width: '100%',
@@ -217,7 +219,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* Color Swatch Dots */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            {Array.from(new Set(product.variants.map(v => v.colorHex))).slice(0, 3).map((hex, i) => (
+            {Array.from(new Set(variants.map(v => v.colorHex || '#000000'))).slice(0, 3).map((hex, i) => (
               <Box 
                 key={i} 
                 sx={{

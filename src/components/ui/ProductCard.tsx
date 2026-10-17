@@ -27,25 +27,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const isDark = mode === 'dark';
   const [isHovered, setIsHovered] = useState(false);
 
-  const primaryImage = product.images[0] || '';
-  const secondaryImage = product.images[1] || product.images[0] || '';
+  const images = Array.isArray(product?.images) ? product.images : [];
+  const primaryImage = images[0] || '';
+  const secondaryImage = images[1] || images[0] || '';
 
   // Determine badge
-  const isSale = Boolean(product.salePrice && product.salePrice < product.price);
-  const badge = product.isNewArrival
+  const isSale = Boolean(product?.salePrice && product.salePrice < product.price);
+  const badge = product?.isNewArrival
     ? { text: 'NEW ARRIVAL', variant: 'gold' as const }
-    : product.isBestSeller
+    : product?.isBestSeller
     ? { text: 'BEST SELLER', variant: 'gold' as const }
-    : product.isLimitedEdition
+    : product?.isLimitedEdition
     ? { text: 'LIMITED DROP', variant: 'purple' as const }
     : isSale
     ? { text: 'SALE', variant: 'red' as const }
     : null;
 
-  // Stock status
-  const totalStock = product.variants.reduce((acc, v) => acc + (v.stock ?? v.stockCount ?? 0), 0);
-  const isSoldOut = totalStock === 0;
-  const isLowStock = !isSoldOut && totalStock < 10;
+  // Stock status - safe against missing or undefined variants
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
+  const totalStock = variants.reduce((acc, v) => acc + (v.stock ?? v.stockCount ?? 0), 0);
+  const isSoldOut = variants.length > 0 ? totalStock === 0 : false;
+  const isLowStock = !isSoldOut && totalStock > 0 && totalStock < 10;
 
   return (
     <MuiCard

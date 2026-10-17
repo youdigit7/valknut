@@ -23,22 +23,23 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
 
   const { addToCart, setIsCartOpen, setIsCheckoutOpen, setCustomStudioProduct, showToast } = useStore();
 
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | 'XL' | 'XXL'>('M');
-  const [selectedColor, setSelectedColor] = useState(product?.variants[0]?.color || 'Onyx Black');
+  const [selectedColor, setSelectedColor] = useState(variants[0]?.color || 'Onyx Black');
   const [quantity, setQuantity] = useState(1);
   const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
 
-  const selectedVariant = product?.variants.find(
+  const selectedVariant = variants.find(
     v => v.size === selectedSize && v.color === selectedColor
-  ) || product?.variants[0];
+  ) || variants[0];
 
   const selectedColorHex = selectedVariant?.colorHex || '#000000';
   const stockCount = selectedVariant?.stock ?? 10;
   const isOutOfStock = stockCount <= 0;
 
-  const availableColors = Array.from(new Set(product?.variants.map(v => v.color) || []));
-  const availableSizes = Array.from(new Set(product?.variants.map(v => v.size) || []));
+  const availableColors = Array.from(new Set(variants.map(v => v.color)));
+  const availableSizes = Array.from(new Set(variants.map(v => v.size)));
 
   if (!product) return null;
   const handleAddToCart = () => {
@@ -205,7 +206,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                   </Typography>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.25 }}>
                     {availableColors.map((colorName) => {
-                      const variantMatch = product.variants.find(v => v.color === colorName);
+                      const variantMatch = variants.find(v => v.color === colorName);
                       const hex = variantMatch?.colorHex || '#000000';
                       const isSelected = selectedColor === colorName;
 

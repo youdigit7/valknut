@@ -10,14 +10,14 @@ import type {
   HomepageConfig,
   CustomerAccountRecord,
   CategoryType,
-  SubCategoryType
+  SubCategoryType,
+  Order
 } from '../../types/ecommerce';
-import { SUPABASE_SETUP_SQL } from '../../lib/supabase';
+import { SUPABASE_SETUP_SQL, supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { ProductImageManager } from './ProductImageManager';
 import { SingleImageUploader } from './SingleImageUploader';
 import {
   FIREBASE_STORAGE_RULES,
-  syncProductMediaToSupabase,
   checkFirebaseStorageStatus,
   getCloudinaryConfig,
   saveCloudinaryConfig,
@@ -33,8 +33,10 @@ import {
   deleteAdminCollection,
   getAdminHomepageConfig,
   saveAdminHomepageConfig,
-  getAdminCustomersList
+  getAdminCustomersList,
+  fetchAdminCustomerProfiles
 } from '../../services/adminService';
+import { getAllOrders } from '../../services/orderService';
 import { loginAdmin } from '../../services/authService';
 import {
   ShieldCheck,
@@ -173,7 +175,7 @@ export const AdminDashboard: React.FC = () => {
     addProduct,
     updateProduct,
     deleteProduct,
-    orders,
+    orders: storeOrders,
     updateOrderStatus,
     coupons,
     addCoupon,
@@ -185,6 +187,59 @@ export const AdminDashboard: React.FC = () => {
 
   // Active Admin View Tab
   const [activeTab, setActiveTab] = useState<AdminTab>('METRICS');
+
+  // Live remote orders and customer profiles from Supabase
+  const [remoteOrders, setRemoteOrders] = useState<Order[]>([]);
+  const [remoteCustomers, setRemoteCustomers] = useState<CustomerAccountRecord[]>([]);
+
+  // Track verified Supabase admin session to ensure RLS queries succeed
+  const [supabaseSessionAdmin, setSupabaseSessionAdmin] = useState<boolean>(() => {
+    if (!isSupabaseConfigured || !supabase) return true;
+    try {
+      const savedToken = localStorage.getItem('sb-urwhkkrozmlpadjmiqpc-auth-token');
+      if (savedToken) {
+        const parsed = JSON.parse(savedToken);
+        const email = parsed?.user?.email?.toLowerCase();
+        return email === 'valknutofficial4@gmail.com' || Boolean(email?.includes('admin'));
+      }
+    } catch (_) {}
+    return false;
+  });
+
+  useEffect(() => {
+    if (isSupabaseConfigured && supabase) {
+      supabase.auth.getSession().then(({ data }) => {
+        const email = data.session?.user?.email?.toLowerCase();
+        const isAdmin = email === 'valknutofficial4@gmail.com' || Boolean(email?.includes('admin'));
+        setSupabaseSessionAdmin(Boolean(isAdmin));
+      });
+    }
+  }, [user]);
+
+  const orders = useMemo(() => {
+    if (remoteOrders.length > 0) return remoteOrders;
+    return storeOrders;
+  }, [remoteOrders, storeOrders]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadLiveAdminData = async () => {
+      try {
+        const [profiles, cloudOrders] = await Promise.all([
+          fetchAdminCustomerProfiles(),
+          getAllOrders()
+        ]);
+        if (isMounted) {
+          if (profiles && profiles.length > 0) setRemoteCustomers(profiles);
+          if (cloudOrders && cloudOrders.length > 0) setRemoteOrders(cloudOrders);
+        }
+      } catch (err) {
+        console.warn('Live admin sync notice:', err);
+      }
+    };
+    loadLiveAdminData();
+    return () => { isMounted = false; };
+  }, [storeOrders, supabaseSessionAdmin]);
 
   // Admin Auth Gate State
   const [adminEmail, setAdminEmail] = useState('');
@@ -206,7 +261,7 @@ export const AdminDashboard: React.FC = () => {
   const [homepageConfig, setHomepageConfig] = useState<HomepageConfig>(() => getAdminHomepageConfig());
 
   // Customer List
-  const customers = useMemo(() => getAdminCustomersList(orders, user), [orders, user]);
+  const customers = useMemo(() => getAdminCustomersList(orders, user, remoteCustomers), [orders, user, remoteCustomers]);
 
   // Product Modal State
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -221,7 +276,7 @@ export const AdminDashboard: React.FC = () => {
   const [prodDescription, setProdDescription] = useState('');
   const [prodMaterial, setProdMaterial] = useState('100% Combed Organic Cotton (320 GSM)');
   const [prodCare, setProdCare] = useState('Machine wash cold. Line dry in shade.');
-  const [prodImages, setProdImages] = useState<string[]>(['https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=85']);
+  const [prodImages, setProdImages] = useState<string[]>([]);
   const [prodTags, setProdTags] = useState('Streetwear, Heavy Cotton, Boxy Fit');
   const [prodIsCustomizable, setProdIsCustomizable] = useState(true);
   const [prodIsBestSeller, setProdIsBestSeller] = useState(false);
@@ -353,6 +408,7 @@ export const AdminDashboard: React.FC = () => {
       const res = await loginAdmin(adminEmail, adminPassword);
       if (res.success && res.user) {
         setUserProfile(res.user);
+        setSupabaseSessionAdmin(true);
         showToast('Administrative privileges verified. Access granted.', 'success');
       } else {
         setAuthError(res.message || 'Invalid administrator username or security key.');
@@ -364,17 +420,12 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
-  const handleFillDemoAdmin = () => {
-    setAdminEmail('admin@valknutofficial.com');
-    setAdminPassword('valknut2026');
-    showToast('Loaded verified Executive Admin credentials (admin@valknutofficial.com)', 'info');
-  };
 
   // Metrics Calculations
   const totalRevenue = useMemo(() => orders.reduce((sum, o) => sum + o.totalAmount, 0), [orders]);
   const totalOrdersCount = orders.length;
   const pendingOrdersCount = useMemo(() => orders.filter(o => o.orderStatus === 'Pending' || o.orderStatus === 'Payment Pending' || o.orderStatus === 'Processing').length, [orders]);
-  const lowStockProducts = useMemo(() => products.filter(p => p.variants.some(v => (v.stock ?? 0) <= 5)), [products]);
+  const lowStockProducts = useMemo(() => products.filter(p => (p.variants || []).some(v => (v.stock ?? 0) <= 5)), [products]);
 
   // Studio Orders Calculation
   const studioOrders = useMemo(() => {
@@ -394,9 +445,9 @@ export const AdminDashboard: React.FC = () => {
       const matchSearch = !q ||
         prod.name.toLowerCase().includes(q) ||
         prod.slug.toLowerCase().includes(q) ||
-        prod.subCategory.toLowerCase().includes(q) ||
-        prod.tags.some(t => t.toLowerCase().includes(q)) ||
-        prod.variants.some(v => v.sku?.toLowerCase().includes(q));
+        (prod.subCategory && prod.subCategory.toLowerCase().includes(q)) ||
+        (prod.tags && prod.tags.some(t => t.toLowerCase().includes(q))) ||
+        (prod.variants && prod.variants.some(v => v.sku?.toLowerCase().includes(q)));
       return matchCategory && matchSearch;
     });
   }, [products, productCategoryFilter, productSearchQuery]);
@@ -435,7 +486,7 @@ export const AdminDashboard: React.FC = () => {
       setProdDescription('Engineered luxury garment constructed from heavyweight combed cotton.');
       setProdMaterial('100% Combed Organic Cotton (320 GSM)');
       setProdCare('Machine wash cold. Line dry in shade.');
-      setProdImages(['https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=85']);
+      setProdImages([]);
       setProdTags('Streetwear, Heavy Cotton, Boxy Fit');
       setProdIsCustomizable(true);
       setProdIsBestSeller(false);
@@ -451,10 +502,15 @@ export const AdminDashboard: React.FC = () => {
     setIsProductModalOpen(true);
   };
 
-  const handleSaveProduct = (e: React.FormEvent) => {
+  const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prodName.trim()) {
       showToast('Product name is required.', 'error');
+      return;
+    }
+
+    if (prodImages.filter(Boolean).length === 0) {
+      showToast('Please upload at least one product image before saving.', 'error');
       return;
     }
 
@@ -462,7 +518,7 @@ export const AdminDashboard: React.FC = () => {
     const splitTags = prodTags.split(',').map(t => t.trim()).filter(Boolean);
 
     const productPayload: Product = {
-      id: editingProduct ? editingProduct.id : `prod-${Date.now()}`,
+      id: editingProduct ? editingProduct.id : crypto.randomUUID(),
       name: prodName.trim(),
       slug: calculatedSlug,
       description: prodDescription.trim(),
@@ -484,13 +540,19 @@ export const AdminDashboard: React.FC = () => {
     };
 
     if (editingProduct) {
-      updateProduct(productPayload);
-      syncProductMediaToSupabase(productPayload.id, productPayload.images);
-      showToast(`Updated "${productPayload.name}".`, 'success');
+      try {
+        await updateProduct(productPayload);
+      } catch (error) {
+        showToast(error instanceof Error ? error.message : 'Unable to save product to Supabase.', 'error');
+        return;
+      }
     } else {
-      addProduct(productPayload);
-      syncProductMediaToSupabase(productPayload.id, productPayload.images);
-      showToast(`Created "${productPayload.name}".`, 'success');
+      try {
+        await addProduct(productPayload);
+      } catch (error) {
+        showToast(error instanceof Error ? error.message : 'Unable to save product to Supabase.', 'error');
+        return;
+      }
     }
 
     setIsProductModalOpen(false);
@@ -671,8 +733,17 @@ export const AdminDashboard: React.FC = () => {
     setTimeout(() => setCopiedSql(false), 2000);
   };
 
-  // Check if non-admin is viewing
-  const isAuthorizedAdmin = Boolean(user?.isAdmin || (user?.email && (user.email.toLowerCase().includes('admin') || user.email.toLowerCase() === 'founder@valknutofficial.com')));
+  // Check if authorized admin has verified Supabase session
+  const isAuthorizedAdmin = isSupabaseConfigured && supabase
+    ? supabaseSessionAdmin
+    : Boolean(
+        user?.isAdmin || 
+        (user?.email && (
+          user.email.toLowerCase() === 'valknutofficial4@gmail.com' ||
+          user.email.toLowerCase().includes('admin') || 
+          user.email.toLowerCase() === 'founder@valknutofficial.com'
+        ))
+      );
 
   // ==========================================
   // AUTHENTICATION GUARD SCREEN
@@ -818,9 +889,10 @@ export const AdminDashboard: React.FC = () => {
                 label="Admin Email Identifier"
                 type="email"
                 required
+                autoComplete="username"
                 value={adminEmail}
                 onChange={(e) => setAdminEmail(e.target.value)}
-                placeholder="admin@valknutofficial.com"
+                placeholder="Enter administrative email"
                 sx={darkInputSx}
               />
 
@@ -829,6 +901,7 @@ export const AdminDashboard: React.FC = () => {
                 label="Security Password / Token"
                 type={showAdminPass ? 'text' : 'password'}
                 required
+                autoComplete="current-password"
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
                 placeholder="••••••••••••"
@@ -877,30 +950,7 @@ export const AdminDashboard: React.FC = () => {
             </Box>
           </form>
 
-          <Divider sx={{ my: 3, borderColor: 'rgba(255, 255, 255, 0.08)' }} />
-
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, textAlign: 'center' }}>
-            <Button
-              variant="outlined"
-              fullWidth
-              size="small"
-              onClick={handleFillDemoAdmin}
-              sx={{
-                color: goldColor,
-                borderColor: 'rgba(212, 175, 55, 0.4)',
-                borderRadius: '8px',
-                fontSize: '0.75rem',
-                textTransform: 'none',
-                py: 1,
-                '&:hover': {
-                  borderColor: goldColor,
-                  bgcolor: 'rgba(212, 175, 55, 0.1)',
-                },
-              }}
-            >
-              Use Verified Admin Credentials (admin@valknutofficial.com)
-            </Button>
-
+          <Box sx={{ mt: 3, textAlign: 'center' }}>
             <Button
               href="#/"
               sx={{
@@ -1614,7 +1664,7 @@ export const AdminDashboard: React.FC = () => {
                 </TableHead>
                 <TableBody>
                   {filteredProducts.map((prod) => {
-                    const totalStock = prod.variants.reduce((sum, v) => sum + (v.stock ?? 0), 0);
+                    const totalStock = (prod.variants || []).reduce((sum, v) => sum + (v.stock ?? 0), 0);
                     const isLowStock = totalStock <= 10;
 
                     return (
@@ -1623,7 +1673,7 @@ export const AdminDashboard: React.FC = () => {
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <Box
                               component="img"
-                              src={prod.images[0] || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=300&q=80'}
+                              src={prod.images?.[0] || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=300&q=80'}
                               alt=""
                               sx={{ width: 48, height: 58, objectFit: 'cover', borderRadius: '8px', bgcolor: '#141620', border: '1px solid rgba(255, 255, 255, 0.1)', flexShrink: 0 }}
                             />
@@ -1632,7 +1682,7 @@ export const AdminDashboard: React.FC = () => {
                                 {prod.name}
                               </Typography>
                               <Typography sx={{ fontSize: '0.7rem', color: '#94A3B8', fontFamily: 'monospace' }}>
-                                SKU: {prod.variants[0]?.sku || prod.slug}
+                                SKU: {prod.variants?.[0]?.sku || prod.slug}
                               </Typography>
                             </Box>
                           </Box>
@@ -1678,7 +1728,7 @@ export const AdminDashboard: React.FC = () => {
                             }}
                           />
                           <Typography sx={{ fontSize: '0.65rem', color: '#94A3B8', mt: 0.5 }}>
-                            {prod.variants.length} Variants
+                            {(prod.variants || []).length} Variants
                           </Typography>
                         </TableCell>
 
@@ -2026,7 +2076,7 @@ export const AdminDashboard: React.FC = () => {
 
                         <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
                           <Typography sx={{ fontWeight: 800, fontSize: '0.8rem' }}>
-                            {ord.items.reduce((s, i) => s + i.quantity, 0)} Pcs
+                            {(ord.items || []).reduce((s: number, i: any) => s + (i.quantity || 1), 0)} Pcs
                           </Typography>
                           <Typography sx={{ color: '#94A3B8', fontSize: '0.7rem', maxWidth: 140, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {ord.items[0]?.productName || 'Garment'}

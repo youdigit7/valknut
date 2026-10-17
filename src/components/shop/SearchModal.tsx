@@ -23,14 +23,13 @@ interface SearchModalProps {
 }
 
 const TRENDING_SEARCHES = [
-  '480GSM Sovereign Hoodie',
-  'Celestial Mountain',
-  'Mind Control Oversized',
-  'Acid Wash',
-  'Tactical Crossbody',
-  'Cordura 1000D',
-  'Femme Crop Hoodie',
-  'Pump Cover'
+  'Oversized T-Shirts',
+  'Heavy Cotton',
+  'Streetwear',
+  'Hoodies',
+  'Cargo Joggers',
+  'Boxy Fit',
+  'Accessories'
 ];
 
 export const SearchModal: React.FC<SearchModalProps> = ({
@@ -232,9 +231,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 ) : (
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
                     {results.map((product) => {
-                      const totalStock = product.variants.reduce((s, v) => s + (v.stock ?? v.stockCount ?? 0), 0);
-                      const isSoldOut = totalStock === 0;
-                      const hasSale = Boolean(product.salePrice && product.salePrice < product.price);
+                      const variants = Array.isArray(product?.variants) ? product.variants : [];
+                      const totalStock = variants.reduce((s, v) => s + (v.stock ?? v.stockCount ?? 0), 0);
+                      const isSoldOut = variants.length > 0 ? totalStock === 0 : false;
+                      const hasSale = Boolean(product?.salePrice && product.salePrice < product.price);
 
                       return (
                         <Box

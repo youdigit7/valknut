@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ShoppingBag, Sparkles } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { SEOHead } from '../common/SEOHead';
@@ -7,13 +7,6 @@ import {
   Box, Typography, Button, 
   Container, Card, CardContent, Breadcrumbs, Link, Zoom, Fade, Chip
 } from '@mui/material';
-import menSovereignHoodie from '../../assets/products/men-sovereign-hoodie.jpg';
-import menMindControlTee from '../../assets/products/men-mind-control-tee.jpg';
-import menAcidWashTee from '../../assets/products/men-acid-wash-tee.jpg';
-import menTacticalJoggers from '../../assets/products/men-tactical-joggers.jpg';
-import womenCropHoodie from '../../assets/products/women-crop-hoodie.jpg';
-import womenOversizedTee from '../../assets/products/women-oversized-tee.jpg';
-
 interface LookbookItem {
   id: string;
   title: string;
@@ -23,63 +16,6 @@ interface LookbookItem {
   productName: string;
   price: number;
 }
-
-const LOOKBOOK_ITEMS: LookbookItem[] = [
-  {
-    id: 'look-1',
-    title: 'Look 01: The Sovereign Monolith',
-    collection: 'DARK SOVEREIGN 2026',
-    image: menSovereignHoodie,
-    productId: 'prod-1',
-    productName: 'VALKNUT Celestial Mountain 480GSM Sovereign Hoodie',
-    price: 12500
-  },
-  {
-    id: 'look-2',
-    title: 'Look 02: Mind Control Signature',
-    collection: 'ESSENTIAL SIGNATURE',
-    image: menMindControlTee,
-    productId: 'prod-2',
-    productName: 'Mind Control Heavyweight Oversized Tee',
-    price: 6800
-  },
-  {
-    id: 'look-3',
-    title: 'Look 03: Celestial Occult Series',
-    collection: 'DARK SOVEREIGN 2026',
-    image: menAcidWashTee,
-    productId: 'prod-3',
-    productName: 'Celestial Mountain Acid Wash Oversized Tee',
-    price: 6500
-  },
-  {
-    id: 'look-4',
-    title: 'Look 04: Urban Stealth Utility',
-    collection: 'STEALTH LABS',
-    image: menTacticalJoggers,
-    productId: 'prod-7',
-    productName: 'Valknut Stealth Tech Tactical Joggers',
-    price: 9800
-  },
-  {
-    id: 'look-5',
-    title: 'Look 05: Femme Raw Sculpted',
-    collection: 'VALKNUT FEMME',
-    image: womenCropHoodie,
-    productId: 'prod-8',
-    productName: 'VALKNUT Femme Sculpted Crop Hoodie',
-    price: 9500
-  },
-  {
-    id: 'look-6',
-    title: 'Look 06: Femme Minimalist Drape',
-    collection: 'VALKNUT FEMME',
-    image: womenOversizedTee,
-    productId: 'prod-9',
-    productName: 'VALKNUT Femme Minimalist Oversized Tee',
-    price: 6800
-  }
-];
 
 export const LookbookPage: React.FC = () => {
   const { products, setSelectedProduct } = useStore();
@@ -99,6 +35,20 @@ export const LookbookPage: React.FC = () => {
       ])
     ]
   };
+
+  const lookbookItems: LookbookItem[] = useMemo(() => {
+    return products
+      .filter(p => Array.isArray(p.images) && p.images.length > 0)
+      .map((p, index) => ({
+        id: `look-${p.id}`,
+        title: `Look 0${index + 1}: ${p.name}`,
+        collection: p.collection || 'VALKNUT ARCHIVE',
+        image: p.images[0],
+        productId: p.id,
+        productName: p.name,
+        price: p.salePrice || p.price
+      }));
+  }, [products]);
 
   const handleOpenProduct = (productId: string) => {
     const prod = products.find(p => p.id === productId);
@@ -142,8 +92,18 @@ export const LookbookPage: React.FC = () => {
           </Fade>
 
           {/* Grid */}
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 6 }}>
-            {LOOKBOOK_ITEMS.map((item, index) => (
+          {lookbookItems.length === 0 ? (
+            <Box sx={{ textAlign: 'center', py: 12, border: '1px dashed rgba(255,255,255,0.1)', borderRadius: 2 }}>
+              <Typography variant="h6" sx={{ color: 'var(--text-secondary)', mb: 2 }}>
+                No Lookbook Garments Published Yet
+              </Typography>
+              <Button variant="outlined" color="primary" href="#/shop">
+                Explore Main Catalog
+              </Button>
+            </Box>
+          ) : (
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 6 }}>
+              {lookbookItems.map((item, index) => (
               <Zoom in={true} style={{ transitionDelay: `${index * 150}ms` }} key={item.id}>
                 <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative', '&:hover .lookbook-image': { transform: 'scale(1.08)' }, '&:hover .overlay-action': { opacity: 1, transform: 'translateY(0)' } }}>
                   <Box sx={{ position: 'relative', pt: '133%', overflow: 'hidden', bgcolor: '#000' }}>
@@ -191,6 +151,7 @@ export const LookbookPage: React.FC = () => {
               </Zoom>
             ))}
           </Box>
+        )}
           
         </Container>
       </Box>

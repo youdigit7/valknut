@@ -12,6 +12,8 @@ RETURNS BOOLEAN AS $$
 BEGIN
   RETURN (
     (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin' OR
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin' OR
+    (auth.jwt() ->> 'email') = 'valknutofficial4@gmail.com' OR
     (auth.jwt() ->> 'email') LIKE '%@valknutofficial.com' OR
     (auth.jwt() ->> 'email') = 'admin@valknut.lk'
   );
