@@ -15,15 +15,19 @@ const LOCAL_STORAGE_SESSION_KEY = 'valknut_auth_session';
  */
 function formatUserProfile(supabaseUser: any, profileData?: any): UserProfile {
   const meta = supabaseUser.user_metadata || {};
+  const email = supabaseUser.email?.toLowerCase() || '';
   return {
     id: supabaseUser.id,
     email: supabaseUser.email || '',
     name: profileData?.full_name || meta.full_name || meta.name || supabaseUser.email?.split('@')[0] || 'VALKNUT Member',
     phone: profileData?.phone || meta.phone || '+94770000000',
-    address: profileData?.address || meta.address || undefined,
+    address: profileData?.delivery_address || profileData?.address || meta.address || undefined,
     isAdmin: Boolean(
-      supabaseUser.email?.toLowerCase().includes('admin') || 
-      supabaseUser.email?.toLowerCase().includes('valknut') ||
+      email === 'valknutofficial4@gmail.com' ||
+      email.includes('admin') || 
+      email.includes('valknut') ||
+      meta.role === 'admin' ||
+      supabaseUser.app_metadata?.role === 'admin' ||
       profileData?.is_admin
     )
   };
@@ -49,35 +53,7 @@ function getRegisteredUsers(): Record<string, RegisteredLocalUser> {
   } catch (e) {
     console.warn('Failed to parse registered users:', e);
   }
-  return {
-    'admin@valknutofficial.com': {
-      id: 'admin-001',
-      email: 'admin@valknutofficial.com',
-      passwordHash: 'valknut2026',
-      fullName: 'VALKNUT Executive Admin',
-      phone: '+94 77 999 8888',
-      isAdmin: true,
-      createdAt: '2026-01-01T00:00:00Z'
-    },
-    'kasun@example.com': {
-      id: 'cust-001',
-      email: 'kasun@example.com',
-      passwordHash: 'password123',
-      fullName: 'Kasun Perera',
-      phone: '+94 77 123 4567',
-      address: {
-        fullName: 'Kasun Perera',
-        email: 'kasun@example.com',
-        phone: '+94 77 123 4567',
-        addressLine1: 'No 45, Galle Road',
-        city: 'Colombo 03',
-        district: 'Colombo',
-        postalCode: '00300'
-      },
-      isAdmin: false,
-      createdAt: '2026-08-15T10:00:00Z'
-    }
-  };
+  return {};
 }
 
 function saveRegisteredUser(userRecord: RegisteredLocalUser) {
@@ -128,16 +104,38 @@ export async function registerCustomer(
       }
 
       if (data.user) {
-        // Upsert user profile in public.profiles table
-        await supabase.from('profiles').upsert({
+        // Upsert user profile in public.customer_profiles table
+        await supabase.from('customer_profiles').upsert({
           id: data.user.id,
           full_name: fullName.trim(),
           phone: phone.trim(),
-          address: address || null,
+          delivery_address: {
+            fullName: fullName.trim(),
+            email: trimmedEmail,
+            phone: phone.trim(),
+            ...(address || {})
+          },
           updated_at: new Date().toISOString()
         });
 
-        const profile = formatUserProfile(data.user, { full_name: fullName.trim(), phone: phone.trim(), address });
+        // Save local backup record for offline/seamless session continuity
+        const record: RegisteredLocalUser = {
+          id: data.user.id,
+          email: trimmedEmail,
+          passwordHash: password,
+          fullName: fullName.trim(),
+          phone: phone.trim(),
+          address,
+          isAdmin: trimmedEmail === 'valknutofficial4@gmail.com' || trimmedEmail.includes('admin'),
+          createdAt: new Date().toISOString()
+        };
+        saveRegisteredUser(record);
+
+        const profile = formatUserProfile(data.user, { 
+          full_name: fullName.trim(), 
+          phone: phone.trim(), 
+          delivery_address: { fullName: fullName.trim(), email: trimmedEmail, phone: phone.trim(), ...(address || {}) } 
+        });
         localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(profile));
         return { success: true, user: profile, message: 'Registration successful.' };
       }
@@ -153,7 +151,7 @@ export async function registerCustomer(
   }
 
   const newId = `u-${Date.now()}`;
-  const isAdmin = trimmedEmail === 'admin@valknutofficial.com' || trimmedEmail.includes('admin');
+  const isAdmin = trimmedEmail === 'valknutofficial4@gmail.com' || trimmedEmail.includes('admin');
   const record: RegisteredLocalUser = {
     id: newId,
     email: trimmedEmail,
@@ -203,21 +201,21 @@ export async function loginCustomer(email: string, password: string): Promise<Au
         password
       });
 
-      if (error) {
-        return { success: false, message: error.message };
-      }
-
-      if (data.user) {
+      if (!error && data.user) {
         // Fetch profile details
         const { data: profileRow } = await supabase
-          .from('profiles')
+          .from('customer_profiles')
           .select('*')
           .eq('id', data.user.id)
-          .single();
+          .maybeSingle();
 
         const profile = formatUserProfile(data.user, profileRow);
         localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(profile));
         return { success: true, user: profile, message: `Welcome back, ${profile.name}` };
+      }
+
+      if (error) {
+        console.warn('Supabase signin notice, checking registered accounts:', error.message);
       }
     } catch (err: any) {
       console.warn('Supabase signin error, using fallback:', err);
@@ -229,7 +227,7 @@ export async function loginCustomer(email: string, password: string): Promise<Au
   const existing = registered[trimmedEmail];
 
   if (existing) {
-    if (existing.passwordHash !== password && password !== 'valknut2026') {
+    if (existing.passwordHash !== password) {
       return { success: false, message: 'Incorrect password. Please verify your credentials.' };
     }
 
@@ -253,7 +251,7 @@ export async function loginCustomer(email: string, password: string): Promise<Au
     email: trimmedEmail,
     name: trimmedEmail.split('@')[0].toUpperCase(),
     phone: '+94 77 123 4567',
-    isAdmin: trimmedEmail.includes('admin') || trimmedEmail.includes('valknut')
+    isAdmin: trimmedEmail === 'valknutofficial4@gmail.com' || trimmedEmail.includes('admin') || trimmedEmail.includes('valknut')
   };
 
   localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(fallbackUser));
@@ -270,7 +268,7 @@ export async function loginAdmin(identifier: string, password: string): Promise<
   const cleanPass = password.trim();
 
   if (!cleanId) {
-    return { success: false, message: 'Admin username / email is required.' };
+    return { success: false, message: 'Admin email is required.' };
   }
   if (!cleanPass) {
     return { success: false, message: 'Admin password is required.' };
@@ -279,67 +277,72 @@ export async function loginAdmin(identifier: string, password: string): Promise<
   // 1. Supabase Auth if online
   if (isSupabaseConfigured && supabase) {
     try {
-      const emailToTry = cleanId.includes('@') ? cleanId : `${cleanId}@valknutofficial.com`;
+      const emailToTry = cleanId.includes('@') ? cleanId : `${cleanId}@gmail.com`;
       const { data, error } = await supabase.auth.signInWithPassword({
         email: emailToTry,
         password: cleanPass
       });
 
-      if (!error && data?.user) {
-        const { data: profileRow } = await supabase
-          .from('profiles')
-          .select('is_admin, full_name')
-          .eq('id', data.user.id)
-          .single();
+      if (error) {
+        if (error.message.toLowerCase().includes('email not confirmed')) {
+          return {
+            success: false,
+            message: 'Email confirmation required by Supabase. Please confirm valknutofficial4@gmail.com in your Supabase Dashboard (Authentication > Users > Confirm Email) or click the confirmation link sent to your inbox.'
+          };
+        }
+        return { success: false, message: `Supabase admin sign-in failed: ${error.message}` };
+      }
 
-        const isExplicitAdmin = profileRow?.is_admin || emailToTry.includes('admin') || emailToTry === 'founder@valknutofficial.com';
+      if (data?.user) {
+        const userEmail = data.user.email?.toLowerCase() || '';
+        const isExplicitAdmin = 
+          userEmail === 'valknutofficial4@gmail.com' ||
+          userEmail.includes('admin') || 
+          userEmail === 'founder@valknutofficial.com' ||
+          data.user.user_metadata?.role === 'admin' ||
+          data.user.app_metadata?.role === 'admin';
+
         if (isExplicitAdmin) {
+          let adminName = 'VALKNUT Director';
+          try {
+            const { data: profileRow } = await supabase
+              .from('customer_profiles')
+              .select('full_name')
+              .eq('id', data.user.id)
+              .maybeSingle();
+
+            if (profileRow?.full_name) {
+              adminName = profileRow.full_name;
+            }
+          } catch (_) {}
+
           const profile: UserProfile = {
             id: data.user.id,
             email: data.user.email || emailToTry,
-            name: profileRow?.full_name || 'VALKNUT Director',
+            name: adminName,
             phone: '+94 77 999 8888',
             isAdmin: true
           };
           localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(profile));
-          return { success: true, user: profile, message: 'Administrative access verified.' };
+          return { success: true, user: profile, message: 'Administrative access verified via Supabase.' };
         } else {
           return { success: false, message: 'This account does not have administrator privileges.' };
         }
       }
-    } catch (e) {
-      console.warn('Supabase admin login fallback check:', e);
+    } catch (e: any) {
+      console.error('Supabase admin login error:', e);
+      return {
+        success: false,
+        message: e?.message || 'Supabase admin sign-in failed. Please check your connection.'
+      };
     }
-  }
 
-  // 2. Local Fallback Verification
-  const isAcceptedEmail = 
-    cleanId === 'admin' || 
-    cleanId === 'admin@valknutofficial.com' || 
-    cleanId === 'founder@valknutofficial.com' ||
-    cleanId.includes('admin');
-
-  const isAcceptedPass = 
-    cleanPass === 'valknut2026' || 
-    cleanPass === 'ValknutAdmin2026!' || 
-    cleanPass === 'admin123' ||
-    cleanPass === 'admin';
-
-  if (isAcceptedEmail && isAcceptedPass) {
-    const adminUser: UserProfile = {
-      id: 'admin-primary',
-      email: cleanId.includes('@') ? cleanId : 'admin@valknutofficial.com',
-      name: 'VALKNUT Director',
-      phone: '+94 77 999 8888',
-      isAdmin: true
-    };
-    localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(adminUser));
-    return { success: true, user: adminUser, message: 'Administrative access granted.' };
+    return { success: false, message: 'Invalid administrator credentials or access denied.' };
   }
 
   return {
     success: false,
-    message: 'Access denied. Invalid administrator username or security key.'
+    message: 'Access denied. Cloud database authentication is required.'
   };
 }
 
@@ -415,11 +418,11 @@ export async function updateCustomerProfile(
 
     // Push to Supabase if active
     if (isSupabaseConfigured && supabase && userId) {
-      await supabase.from('profiles').upsert({
+      await supabase.from('customer_profiles').upsert({
         id: userId,
         full_name: updatedUser.name,
         phone: updatedUser.phone,
-        address: updatedUser.address,
+        delivery_address: updatedUser.address,
         updated_at: new Date().toISOString()
       });
     }
@@ -439,10 +442,10 @@ export function subscribeToAuthChanges(callback: (user: UserProfile | null) => v
     const { data: authListener } = client.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         const { data: profileRow } = await client
-          .from('profiles')
+          .from('customer_profiles')
           .select('*')
           .eq('id', session.user.id)
-          .single();
+          .maybeSingle();
 
         const profile = formatUserProfile(session.user, profileRow);
         localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(profile));

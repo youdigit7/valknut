@@ -14,8 +14,9 @@ import type {
   NotificationLog,
   CustomStudioOptions
 } from '../types/ecommerce';
-import { INITIAL_PRODUCTS, INITIAL_COUPONS, SAMPLE_ORDERS } from '../data/initialData';
+import { INITIAL_COUPONS, SAMPLE_ORDERS, DEMO_CUSTOMER_EMAILS, DEMO_ORDER_IDS } from '../data/initialData';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { saveProductToSupabase, deleteProductFromSupabase, mapSupabaseRowToProduct } from '../services/productService';
 import { calculateShippingFee, getAvailableShippingMethods } from '../services/shippingService';
 import type { ShippingMethod } from '../services/shippingService';
 import { createOrderSecurely, updateOrderStatusWithAudit, getAllOrders } from '../services/orderService';
@@ -79,8 +80,8 @@ interface StoreContextType {
   updateOrderStatus: (orderId: string, status: OrderStatus, courierName?: string, awbNumber?: string, trackingLink?: string) => Promise<void>;
 
   // Products Admin
-  addProduct: (product: Product) => void;
-  updateProduct: (product: Product) => void;
+  addProduct: (product: Product) => Promise<void>;
+  updateProduct: (product: Product) => Promise<void>;
   deleteProduct: (productId: string) => void;
 
   // Coupons Admin
@@ -103,26 +104,35 @@ interface StoreContextType {
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Load initial state from LocalStorage or Defaults
+  // Load initial state from LocalStorage (real products only) or empty
   const [products, setProducts] = useState<Product[]>(() => {
     try {
       const saved = localStorage.getItem('valknut_products_v2');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length === INITIAL_PRODUCTS.length) {
-          const hasUnsplash = parsed.some((p: Product) => p.images?.some((img: string) => typeof img === 'string' && img.includes('images.unsplash.com')));
-          if (!hasUnsplash) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const realOnly = parsed.filter(p => !p.id.startsWith('prod-'));
+          return realOnly;
         }
       }
     } catch (e) {
       console.warn('Failed to parse cached products:', e);
     }
-    return INITIAL_PRODUCTS;
+    return [];
   });
 
   const [orders, setOrders] = useState<Order[]>(() => {
     const saved = localStorage.getItem('valknut_orders');
-    return saved ? JSON.parse(saved) : SAMPLE_ORDERS;
+    const source = saved ? JSON.parse(saved) : SAMPLE_ORDERS;
+    if (!Array.isArray(source)) return [];
+    const cleaned = source.filter((order: Order) =>
+      !DEMO_ORDER_IDS.includes(order.id) &&
+      !DEMO_CUSTOMER_EMAILS.includes(order.customerInfo?.email?.toLowerCase())
+    );
+    if (saved && cleaned.length !== source.length) {
+      localStorage.setItem('valknut_orders', JSON.stringify(cleaned));
+    }
+    return cleaned;
   });
 
   const [coupons, setCoupons] = useState<Coupon[]>(() => {
@@ -204,14 +214,31 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     localStorage.setItem('valknut_logs', JSON.stringify(notificationLogs));
   }, [notificationLogs]);
 
-  // Optional Supabase cloud fetch if configured
+  // Supabase cloud fetch: ONLY real products and variants from Supabase, plus orders
   useEffect(() => {
     if (isSupabaseConfigured && supabase) {
-      supabase.from('products').select('*').then(({ data, error }) => {
-        if (!error && data && data.length > 0) {
-          setProducts(data);
+      const client = supabase;
+      const loadCloudData = async () => {
+        try {
+          const { data, error } = await client.from('products').select('*, product_variants(*)');
+          if (!error && data) {
+            const mapped = data.map(mapSupabaseRowToProduct);
+            setProducts(mapped);
+          }
+        } catch (error: unknown) {
+          console.warn('Supabase product fetch unavailable:', error);
         }
-      });
+
+        try {
+          const latestOrders = await getAllOrders();
+          if (latestOrders && latestOrders.length > 0) {
+            setOrders(latestOrders);
+          }
+        } catch (ordErr) {
+          console.warn('Supabase orders fetch unavailable:', ordErr);
+        }
+      };
+      void loadCloudData();
     }
   }, []);
 
@@ -392,19 +419,22 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   // Products CRUD
-  const addProduct = (p: Product) => {
-    setProducts(prev => [p, ...prev]);
-    showToast(`Product "${p.name}" created.`, 'success');
+  const addProduct = async (p: Product) => {
+    const savedProduct = await saveProductToSupabase(p);
+    setProducts(prev => [savedProduct, ...prev.filter(item => item.id !== savedProduct.id)]);
+    showToast(`Product "${savedProduct.name}" created.`, 'success');
   };
 
-  const updateProduct = (p: Product) => {
-    setProducts(prev => prev.map(item => item.id === p.id ? p : item));
-    showToast(`Product "${p.name}" updated.`, 'success');
+  const updateProduct = async (p: Product) => {
+    const savedProduct = await saveProductToSupabase(p);
+    setProducts(prev => prev.map(item => item.id === savedProduct.id ? savedProduct : item));
+    showToast(`Product "${savedProduct.name}" updated.`, 'success');
   };
 
-  const deleteProduct = (id: string) => {
+  const deleteProduct = async (id: string) => {
+    await deleteProductFromSupabase(id);
     setProducts(prev => prev.filter(p => p.id !== id));
-    showToast('Product deleted.', 'info');
+    showToast('Product deleted from database.', 'info');
   };
 
   // Coupons CRUD

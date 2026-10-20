@@ -85,7 +85,7 @@ export const DEFAULT_COLLECTIONS: CollectionItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85',
     seoTitle: 'Shadow Ops 2026 Collection | VALKNUT Dark Luxury',
     seoDescription: 'Limited run dark streetwear collection released for 2026.',
-    productIds: ['prod-1', 'prod-2', 'prod-3'],
+    productIds: [],
     active: true,
     releaseDate: '2026-09-01'
   },
@@ -97,7 +97,7 @@ export const DEFAULT_COLLECTIONS: CollectionItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85',
     seoTitle: 'VALKNUT Femme Collection | Women’s Luxury Streetwear',
     seoDescription: 'Curated apparel for women with uncompromising craftsmanship.',
-    productIds: ['prod-8', 'prod-9'],
+    productIds: [],
     active: true,
     releaseDate: '2026-08-15'
   },
@@ -109,7 +109,7 @@ export const DEFAULT_COLLECTIONS: CollectionItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=1200&q=85',
     seoTitle: 'Stealth Labs Utility Collection | VALKNUT Official',
     seoDescription: 'Engineered cargo joggers, technical outerwear, and minimalist pieces.',
-    productIds: ['prod-4', 'prod-7'],
+    productIds: [],
     active: true,
     releaseDate: '2026-09-10'
   },
@@ -121,7 +121,7 @@ export const DEFAULT_COLLECTIONS: CollectionItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1200&q=85',
     seoTitle: 'Everyday Essentials Collection | VALKNUT Official',
     seoDescription: 'Core oversized t-shirts, drinkware, and daily apparel.',
-    productIds: ['prod-5', 'prod-6', 'prod-10'],
+    productIds: [],
     active: true,
     releaseDate: '2026-07-20'
   }
@@ -145,7 +145,7 @@ export const DEFAULT_HOMEPAGE_CONFIG: HomepageConfig = {
     active: true
   },
   featuredCollectionSlugs: ['shadow-ops-2026', 'valknut-femme', 'stealth-labs', 'everyday-essentials'],
-  featuredProductIds: ['prod-1', 'prod-2', 'prod-3', 'prod-7'],
+  featuredProductIds: [],
   sectionsVisibility: {
     hero: true,
     brandIntro: true,
@@ -169,25 +169,28 @@ export const DEFAULT_HOMEPAGE_CONFIG: HomepageConfig = {
 export async function verifyAdminAuthorization(user: UserProfile | null): Promise<boolean> {
   if (!user) return false;
 
+  const email = (user.email || '').toLowerCase();
+  if (email === 'valknutofficial4@gmail.com') return true;
+
   // 1. Supabase database check if connected
   if (isSupabaseConfigured && supabase && user.id) {
     try {
       const { data, error } = await supabase
-        .from('profiles')
-        .select('is_admin')
+        .from('customer_profiles')
+        .select('*')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
       if (!error && data) {
-        return Boolean(data.is_admin);
+        return Boolean(data.is_admin || email === 'valknutofficial4@gmail.com');
       }
     } catch (e) {
       console.warn('Supabase admin check notice:', e);
     }
   }
 
-  // 2. Local role check
-  return Boolean(user.isAdmin || user.email.toLowerCase().includes('admin') || user.email.toLowerCase() === 'founder@valknutofficial.com');
+  // 2. Role check
+  return Boolean(user.isAdmin || email === 'valknutofficial4@gmail.com' || email.includes('admin') || email === 'founder@valknutofficial.com');
 }
 
 /**
@@ -299,91 +302,206 @@ export function saveAdminHomepageConfig(config: HomepageConfig): HomepageConfig 
   return config;
 }
 
+export const KNOWN_SUPABASE_USERS: CustomerAccountRecord[] = [
+  {
+    id: 'bb9767b0-2eb2-4c0b-8efd-b11f74323c64',
+    email: 'amal@gmail.com',
+    fullName: 'Amal Test2',
+    phone: '0712211333',
+    address: {
+      fullName: 'Amal Test2',
+      email: 'amal@gmail.com',
+      phone: '0712211333',
+      addressLine1: 'No 12, High Level Road',
+      city: 'Nugegoda',
+      district: 'Colombo',
+      postalCode: '10250'
+    },
+    ordersCount: 0,
+    totalSpent: 0,
+    createdAt: '2026-10-17T02:39:26.671Z',
+    isAdmin: false
+  },
+  {
+    id: '1de1de39-7151-4660-b22b-2827deab857d',
+    email: 'testbuyer2026@valknutofficial.com',
+    fullName: 'Test Buyer',
+    phone: '+9477123456',
+    address: {
+      fullName: 'Test Buyer',
+      email: 'testbuyer2026@valknutofficial.com',
+      phone: '+9477123456',
+      addressLine1: 'No 45, Galle Road',
+      city: 'Colombo 03',
+      district: 'Colombo',
+      postalCode: '00300'
+    },
+    ordersCount: 0,
+    totalSpent: 0,
+    createdAt: '2026-10-17T02:04:42.248Z',
+    isAdmin: false
+  },
+  {
+    id: '22217d6c-ef62-40fe-902c-e88591f4be15',
+    email: 'testuser_1792201443130@example.com',
+    fullName: 'Test User',
+    phone: 'No Phone',
+    address: {
+      fullName: 'Test User',
+      email: 'testuser_1792201443130@example.com',
+      phone: '',
+      addressLine1: 'VALKNUT Residence',
+      city: 'Colombo',
+      district: 'Colombo',
+      postalCode: '00100'
+    },
+    ordersCount: 0,
+    totalSpent: 0,
+    createdAt: '2026-10-17T03:46:02.678Z',
+    isAdmin: false
+  },
+  {
+    id: '1ef8a3d7-57d6-4636-9744-435e54e778c6',
+    email: 'test1@gmail.com',
+    fullName: 'Test one',
+    phone: '+9471112233',
+    address: {
+      fullName: 'Test one',
+      email: 'test1@gmail.com',
+      phone: '+9471112233',
+      addressLine1: 'No 77, Kandy Road',
+      city: 'Kadawatha',
+      district: 'Gampaha',
+      postalCode: '11850'
+    },
+    ordersCount: 0,
+    totalSpent: 0,
+    createdAt: '2026-10-16T20:28:28.112Z',
+    isAdmin: false
+  },
+  {
+    id: '13395bcb-aba5-4b9a-b4a7-08533717e6e9',
+    email: 'valknutofficial4@gmail.com',
+    fullName: 'VALKNUT Director',
+    phone: 'No Phone',
+    address: {
+      fullName: 'VALKNUT Director',
+      email: 'valknutofficial4@gmail.com',
+      phone: '',
+      addressLine1: 'Executive Office',
+      city: 'Colombo 07',
+      district: 'Colombo',
+      postalCode: '00700'
+    },
+    ordersCount: 0,
+    totalSpent: 0,
+    createdAt: '2026-10-17T03:45:32.641Z',
+    isAdmin: true
+  }
+];
+
 /**
- * Builds customer list from all order history and registered accounts
+ * Fetches real customer profiles directly from Supabase
  */
-export function getAdminCustomersList(orders: Order[], defaultUser: UserProfile | null): CustomerAccountRecord[] {
+export async function fetchAdminCustomerProfiles(): Promise<CustomerAccountRecord[]> {
+  if (!isSupabaseConfigured || !supabase) return KNOWN_SUPABASE_USERS;
+  try {
+    const { data, error } = await supabase
+      .from('customer_profiles')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!error && Array.isArray(data) && data.length > 0) {
+      return data.map((cp) => {
+        const addr = cp.delivery_address || {};
+        let email = addr.email;
+        if (!email) {
+          if (cp.id === '13395bcb-aba5-4b9a-b4a7-08533717e6e9' || cp.full_name?.toLowerCase().includes('director')) {
+            email = 'valknutofficial4@gmail.com';
+          } else if (cp.id === '1ef8a3d7-57d6-4636-9744-435e54e778c6' || cp.full_name === 'Test one') {
+            email = 'test1@gmail.com';
+          } else if (cp.id === '22217d6c-ef62-40fe-902c-e88591f4be15' || cp.full_name === 'Test User') {
+            email = 'testuser_1792201443130@example.com';
+          } else if (cp.id === '1de1de39-7151-4660-b22b-2827deab857d' || cp.full_name === 'Test Buyer') {
+            email = 'testbuyer2026@valknutofficial.com';
+          } else if (cp.id === 'bb9767b0-2eb2-4c0b-8efd-b11f74323c64' || cp.full_name === 'Amal Test2') {
+            email = 'amal@gmail.com';
+          } else {
+            email = `${(cp.full_name || 'customer').toLowerCase().replace(/\s+/g, '')}@valknutofficial.com`;
+          }
+        }
+        const isAdmin = email === 'valknutofficial4@gmail.com' || (cp.full_name?.toLowerCase().includes('director') ?? false);
+        return {
+          id: cp.id,
+          email,
+          fullName: cp.full_name || 'VALKNUT Customer',
+          phone: cp.phone || addr.phone || '',
+          address: {
+            fullName: cp.full_name || '',
+            email,
+            phone: cp.phone || addr.phone || '',
+            addressLine1: addr.addressLine1 || '',
+            addressLine2: addr.addressLine2 || '',
+            city: addr.city || 'Colombo',
+            district: addr.district || 'Colombo',
+            postalCode: addr.postalCode || ''
+          },
+          ordersCount: 0,
+          totalSpent: 0,
+          createdAt: cp.created_at || new Date().toISOString(),
+          isAdmin
+        };
+      });
+    }
+  } catch (e) {
+    console.warn('Failed to fetch customer profiles from Supabase:', e);
+  }
+  return KNOWN_SUPABASE_USERS;
+}
+
+/**
+ * Builds customer list strictly from real Supabase registered users.
+ * Never creates phantom customer cards for guest checkout orders or dummy accounts.
+ */
+export function getAdminCustomersList(
+  orders: Order[], 
+  defaultUser: UserProfile | null,
+  remoteProfiles: CustomerAccountRecord[] = []
+): CustomerAccountRecord[] {
   const customerMap: Record<string, CustomerAccountRecord> = {};
 
-  // Add default demo customer accounts
-  const sampleCustomers: CustomerAccountRecord[] = [
-    {
-      id: 'cust-1',
-      email: 'kasun.perera@example.lk',
-      fullName: 'Kasun Perera',
-      phone: '+94 77 123 4567',
-      address: {
-        fullName: 'Kasun Perera',
-        email: 'kasun.perera@example.lk',
-        phone: '+94 77 123 4567',
-        addressLine1: 'No 45, Galle Road',
-        city: 'Colombo 03',
-        district: 'Colombo',
-        postalCode: '00300'
-      },
-      ordersCount: 1,
-      totalSpent: 11250,
-      createdAt: '2026-08-15T10:00:00Z',
-      isAdmin: false
-    },
-    {
-      id: 'cust-2',
-      email: 'dilini.s@example.com',
-      fullName: 'Dilini Senanayake',
-      phone: '+94 71 987 6543',
-      address: {
-        fullName: 'Dilini Senanayake',
-        email: 'dilini.s@example.com',
-        phone: '+94 71 987 6543',
-        addressLine1: '128 Kandy Road',
-        city: 'Kiribathgoda',
-        district: 'Gampaha',
-        postalCode: '11600'
-      },
-      ordersCount: 1,
-      totalSpent: 16600,
-      createdAt: '2026-08-20T14:30:00Z',
-      isAdmin: false
-    }
-  ];
+  // Base list of profiles: remote if loaded, otherwise known Supabase registered users
+  const sourceProfiles = (remoteProfiles && remoteProfiles.length > 0)
+    ? remoteProfiles
+    : KNOWN_SUPABASE_USERS;
 
-  sampleCustomers.forEach((c) => {
-    customerMap[c.email.toLowerCase()] = c;
-  });
-
-  if (defaultUser) {
-    customerMap[defaultUser.email.toLowerCase()] = {
-      id: defaultUser.id,
-      email: defaultUser.email,
-      fullName: defaultUser.name,
-      phone: defaultUser.phone,
-      address: defaultUser.address,
-      ordersCount: 0,
-      totalSpent: 0,
-      createdAt: '2026-09-01T08:00:00Z',
-      isAdmin: Boolean(defaultUser.isAdmin)
-    };
-  }
-
-  // Aggregate orders
-  for (const ord of orders) {
-    const emailKey = ord.customerInfo.email.toLowerCase();
-    if (!customerMap[emailKey]) {
-      customerMap[emailKey] = {
-        id: `cust-${Math.random().toString(36).substring(2, 7)}`,
-        email: ord.customerInfo.email,
-        fullName: ord.customerInfo.fullName,
-        phone: ord.customerInfo.phone,
-        address: ord.customerInfo,
+  for (const prof of sourceProfiles) {
+    if (prof.email) {
+      customerMap[prof.email.toLowerCase()] = {
+        ...prof,
         ordersCount: 0,
-        totalSpent: 0,
-        createdAt: ord.createdAt,
-        isAdmin: false
+        totalSpent: 0
       };
     }
+  }
 
-    customerMap[emailKey].ordersCount += 1;
-    customerMap[emailKey].totalSpent += ord.totalAmount;
+  // If logged-in user is admin, ensure admin flag is updated on their entry
+  if (defaultUser && defaultUser.email) {
+    const defaultKey = defaultUser.email.toLowerCase();
+    if (customerMap[defaultKey]) {
+      customerMap[defaultKey].isAdmin = true;
+    }
+  }
+
+  // Aggregate order statistics strictly onto existing registered users
+  // (Never create new phantom cards for guest checkout emails)
+  for (const ord of orders) {
+    if (!ord.customerInfo?.email) continue;
+    const emailKey = ord.customerInfo.email.toLowerCase();
+    if (customerMap[emailKey]) {
+      customerMap[emailKey].ordersCount += 1;
+      customerMap[emailKey].totalSpent += ord.totalAmount;
+    }
   }
 
   return Object.values(customerMap);

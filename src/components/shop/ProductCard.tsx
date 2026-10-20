@@ -14,10 +14,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   if (!product) return null;
 
-  const hasSale = Boolean(product.salePrice && product.salePrice < product.price);
-  const displayPrice = product.salePrice ?? product.price ?? 0;
-  const variants = Array.isArray(product.variants) ? product.variants : [];
-  const images = Array.isArray(product.images) ? product.images : [];
+  const hasSale = Boolean(product?.salePrice && product.salePrice < product.price);
+  const displayPrice = product?.salePrice ?? product?.price ?? 0;
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
+  const images = Array.isArray(product?.images) ? product.images : [];
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -66,13 +66,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       {/* Product Image Area */}
       <Box 
         sx={{ position: 'relative', width: '100%', aspectRatio: '4/5', bgcolor: 'var(--bg-card-inner)', overflow: 'hidden' }}
-        onMouseEnter={() => product.images.length > 1 && setCurrentImgIndex(1)}
+        onMouseEnter={() => images.length > 1 && setCurrentImgIndex(1)}
         onMouseLeave={() => setCurrentImgIndex(0)}
       >
         <Box
           component="img"
-          src={product.images[currentImgIndex] || product.images[0]} 
-          alt={product.name}
+          src={images[currentImgIndex] || images[0] || ''} 
+          alt={product?.name || 'VALKNUT Apparel'}
           className="product-img"
           sx={{
             width: '100%',

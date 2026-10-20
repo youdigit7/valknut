@@ -22,6 +22,140 @@ const LOCAL_ORDERS_KEY = 'valknut_orders';
 const LOCAL_LOGS_KEY = 'valknut_logs';
 
 /**
+ * Maps frontend OrderStatus to Supabase Postgres check constraint values:
+ * ('Order Placed', 'Confirmed', 'In Production', 'Customizing Artwork', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled')
+ */
+export function mapOrderStatusToDb(status: OrderStatus): string {
+  switch (status) {
+    case 'Pending':
+    case 'Payment Pending':
+      return 'Order Placed';
+    case 'Payment Confirmed':
+      return 'Confirmed';
+    case 'Processing':
+    case 'Packed':
+      return 'In Production';
+    case 'Shipped':
+      return 'Shipped';
+    case 'Delivered':
+      return 'Delivered';
+    case 'Cancelled':
+      return 'Cancelled';
+    default:
+      return 'Order Placed';
+  }
+}
+
+/**
+ * Maps Supabase order_status back to canonical frontend OrderStatus
+ */
+export function mapOrderStatusFromDb(dbStatus?: string): OrderStatus {
+  switch (dbStatus) {
+    case 'Order Placed':
+      return 'Pending';
+    case 'Confirmed':
+      return 'Payment Confirmed';
+    case 'In Production':
+    case 'Customizing Artwork':
+      return 'Processing';
+    case 'Shipped':
+    case 'Out for Delivery':
+      return 'Shipped';
+    case 'Delivered':
+      return 'Delivered';
+    case 'Cancelled':
+      return 'Cancelled';
+    default:
+      return 'Pending';
+  }
+}
+
+/**
+ * Maps frontend PaymentStatus to Supabase Postgres check constraint values:
+ * ('PENDING', 'PAID', 'FAILED', 'REFUNDED')
+ */
+export function mapPaymentStatusToDb(status: PaymentStatus): string {
+  switch (status) {
+    case 'UNPAID':
+      return 'PENDING';
+    case 'PAID':
+      return 'PAID';
+    case 'FAILED':
+      return 'FAILED';
+    case 'REFUNDED':
+      return 'REFUNDED';
+    default:
+      return 'PENDING';
+  }
+}
+
+/**
+ * Maps Supabase payment_status back to canonical frontend PaymentStatus
+ */
+export function mapPaymentStatusFromDb(dbStatus?: string): PaymentStatus {
+  switch (dbStatus?.toUpperCase()) {
+    case 'PAID':
+      return 'PAID';
+    case 'FAILED':
+      return 'FAILED';
+    case 'REFUNDED':
+      return 'REFUNDED';
+    case 'PENDING':
+    default:
+      return 'UNPAID';
+  }
+}
+
+/**
+ * Normalizes Supabase orders database row to canonical TypeScript Order type
+ */
+export function mapSupabaseOrderRowToOrder(row: any): Order {
+  const items: OrderItemSnapshot[] = Array.isArray(row.order_items)
+    ? row.order_items.map((it: any) => ({
+        id: it.id,
+        productId: it.product_id,
+        productName: it.product_name,
+        productSlug: it.product_slug,
+        sku: it.sku,
+        size: it.size,
+        color: it.color,
+        colorHex: it.color_hex,
+        unitPrice: Number(it.unit_price),
+        originalPrice: it.original_price ? Number(it.original_price) : undefined,
+        quantity: it.quantity,
+        subtotal: Number(it.subtotal),
+        imageUrl: it.image_url,
+        customization: it.customization_details,
+        createdAt: it.created_at
+      }))
+    : [];
+
+  return {
+    id: row.id,
+    userId: row.user_id || undefined,
+    orderNumber: row.order_number,
+    createdAt: row.created_at,
+    customerInfo: row.customer_info || {},
+    items,
+    subtotal: Number(row.subtotal),
+    discountAmount: Number(row.discount_amount || 0),
+    shippingCharge: Number(row.shipping_charge || 0),
+    totalAmount: Number(row.total_amount),
+    couponCode: row.coupon_code || undefined,
+    paymentGateway: row.payment_gateway,
+    paymentStatus: mapPaymentStatusFromDb(row.payment_status),
+    orderStatus: mapOrderStatusFromDb(row.order_status),
+    shippingInfo: row.shipping_info || {},
+    paymentRecord: row.payment_record || undefined,
+    statusHistory: [],
+    courierName: row.shipping_info?.courierName,
+    awbNumber: row.shipping_info?.awbNumber,
+    trackingLink: row.shipping_info?.trackingUrl,
+    notes: row.shipping_info?.notes
+  };
+}
+
+/**
  * Validates order details server-side against canonical database/catalog.
  * Crucial security rule: Client-side prices, stock levels, and discount amounts are NEVER trusted directly.
  */
@@ -59,7 +193,8 @@ export async function validateOrderSecurity(
     }
 
     // Match exact variant (size & color)
-    const variant = authoritativeProduct.variants.find(
+    const variants = Array.isArray(authoritativeProduct.variants) ? authoritativeProduct.variants : [];
+    const variant = variants.find(
       (v) => v.size === item.selectedSize && v.color.toLowerCase() === item.selectedColor.toLowerCase()
     );
 
@@ -89,7 +224,7 @@ export async function validateOrderSecurity(
 
     // Build immutable historical snapshot
     const snapshot: OrderItemSnapshot = {
-      id: `oi-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      id: crypto.randomUUID(),
       productId: authoritativeProduct.id,
       productName: authoritativeProduct.name,
       productSlug: authoritativeProduct.slug,
@@ -206,7 +341,7 @@ export async function createOrderSecurely(payload: CreateOrderPayload): Promise<
   const currentYear = new Date().getFullYear();
   const randomSuffix = Math.floor(100000 + Math.random() * 900000);
   const orderNumber = `VK-${currentYear}-${randomSuffix}`;
-  const orderId = `ord-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+  const orderId = crypto.randomUUID();
   const nowIso = new Date().toISOString();
 
   // 3. Determine Payment and Order Status
@@ -291,6 +426,7 @@ export async function createOrderSecurely(payload: CreateOrderPayload): Promise<
   if (isSupabaseConfigured && supabase) {
     try {
       // Insert to orders table
+      // Insert to orders table (matching Supabase public.orders schema)
       const { error: orderError } = await supabase
         .from('orders')
         .insert([{
@@ -304,65 +440,43 @@ export async function createOrderSecurely(payload: CreateOrderPayload): Promise<
           total_amount: finalOrder.totalAmount,
           coupon_code: finalOrder.couponCode,
           payment_gateway: finalOrder.paymentGateway,
-          payment_status: finalOrder.paymentStatus,
-          order_status: finalOrder.orderStatus,
-          shipping_method_id: shippingInfo.shippingMethodId,
-          shipping_method_name: shippingInfo.shippingMethodName,
-          courier_name: shippingInfo.courierName,
-          awb_number: shippingInfo.awbNumber,
-          tracking_number: shippingInfo.trackingNumber,
-          tracking_url: shippingInfo.trackingUrl,
-          shipping_status: shippingInfo.shippingStatus,
-          notes: finalOrder.notes
+          payment_status: mapPaymentStatusToDb(finalOrder.paymentStatus),
+          order_status: mapOrderStatusToDb(finalOrder.orderStatus),
+          shipping_info: {
+            ...shippingInfo,
+            notes: finalOrder.notes || null
+          },
+          payment_record: paymentRecord
         }]);
 
       if (orderError) {
         console.warn('Supabase order insert notice:', orderError.message);
+      } else {
+        // Insert immutable order_items
+        const orderItemRows = finalOrder.items.map((item) => ({
+          id: item.id,
+          order_id: finalOrder.id,
+          product_id: item.productId,
+          product_name: item.productName,
+          product_slug: item.productSlug,
+          sku: item.sku,
+          size: item.size,
+          color: item.color,
+          color_hex: item.colorHex,
+          unit_price: item.unitPrice,
+          original_price: item.originalPrice,
+          quantity: item.quantity,
+          subtotal: item.subtotal,
+          image_url: item.imageUrl,
+          customization_details: item.customization || null,
+          created_at: item.createdAt
+        }));
+
+        const { error: itemError } = await supabase.from('order_items').insert(orderItemRows);
+        if (itemError) {
+          console.warn('Supabase order_items insert notice:', itemError.message);
+        }
       }
-
-      // Insert immutable order_items
-      const orderItemRows = finalOrder.items.map((item) => ({
-        id: item.id,
-        order_id: finalOrder.id,
-        product_id: item.productId,
-        product_name: item.productName,
-        product_slug: item.productSlug,
-        sku: item.sku,
-        variant_id: item.variantId,
-        size: item.size,
-        color: item.color,
-        color_hex: item.colorHex,
-        unit_price: item.unitPrice,
-        original_price: item.originalPrice,
-        quantity: item.quantity,
-        subtotal: item.subtotal,
-        image_url: item.imageUrl,
-        customization: item.customization,
-        created_at: item.createdAt
-      }));
-
-      await supabase.from('order_items').insert(orderItemRows);
-
-      // Insert payment record
-      await supabase.from('payments').insert([{
-        id: paymentRecord.id,
-        order_id: finalOrder.id,
-        payment_method: paymentRecord.paymentMethod,
-        transaction_id: paymentRecord.transactionId,
-        amount: paymentRecord.amount,
-        currency: paymentRecord.currency,
-        status: paymentRecord.status,
-        gateway_response: paymentRecord.gatewayResponse
-      }]);
-
-      // Insert status history
-      await supabase.from('order_status_history').insert([{
-        id: initialHistory.id,
-        order_id: finalOrder.id,
-        status: initialHistory.status,
-        comment: initialHistory.comment,
-        updated_by: initialHistory.updatedBy
-      }]);
     } catch (dbErr) {
       console.warn('Could not sync order to Supabase (offline fallback active):', dbErr);
     }
@@ -382,14 +496,15 @@ export async function createOrderSecurely(payload: CreateOrderPayload): Promise<
  */
 async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
   try {
-    const saved = localStorage.getItem('valknut_products');
+    const saved = localStorage.getItem('valknut_products_v2') || localStorage.getItem('valknut_products');
     if (saved) {
       const products: Product[] = JSON.parse(saved);
       const updatedProducts = products.map((prod) => {
         const orderItemsForProd = items.filter((i) => i.productId === prod.id);
         if (orderItemsForProd.length === 0) return prod;
 
-        const updatedVariants = prod.variants.map((v) => {
+        const prodVariants = Array.isArray(prod.variants) ? prod.variants : [];
+        const updatedVariants = prodVariants.map((v) => {
           const match = orderItemsForProd.find((oi) => oi.size === v.size && oi.color.toLowerCase() === v.color.toLowerCase());
           if (match) {
             const newStock = Math.max(0, (v.stock ?? 0) - match.quantity);
@@ -401,10 +516,39 @@ async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
         return { ...prod, variants: updatedVariants };
       });
 
-      localStorage.setItem('valknut_products', JSON.stringify(updatedProducts));
+      localStorage.setItem('valknut_products_v2', JSON.stringify(updatedProducts));
+    }
+
+    // Deduct stock in Supabase cloud database if available
+    if (isSupabaseConfigured && supabase) {
+      for (const item of items) {
+        try {
+          let query = supabase.from('product_variants').select('stock, id');
+          const isUuid = item.variantId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.variantId);
+          if (isUuid) {
+            query = query.eq('id', item.variantId);
+          } else if (item.sku) {
+            query = query.eq('sku', item.sku);
+          } else {
+            continue;
+          }
+
+          const { data: vRow } = await query.maybeSingle();
+
+          if (vRow && typeof vRow.stock === 'number') {
+            const newStock = Math.max(0, vRow.stock - item.quantity);
+            await supabase
+              .from('product_variants')
+              .update({ stock: newStock })
+              .eq('id', vRow.id);
+          }
+        } catch (cloudErr) {
+          console.warn('Could not update remote stock for item:', item.sku, cloudErr);
+        }
+      }
     }
   } catch (e) {
-    console.warn('Failed to deduct local product stock:', e);
+    console.warn('Failed to deduct product stock:', e);
   }
 }
 
@@ -459,16 +603,45 @@ function dispatchOrderNotifications(order: Order): void {
  * Fetches all orders (local + remote)
  */
 export async function getAllOrders(): Promise<Order[]> {
+  let remoteOrders: Order[] = [];
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*, order_items(*)')
+        .order('created_at', { ascending: false });
+
+      if (!error && Array.isArray(data)) {
+        remoteOrders = data.map(mapSupabaseOrderRowToOrder);
+      }
+    } catch (e) {
+      console.warn('Failed to fetch remote orders from Supabase:', e);
+    }
+  }
+
   try {
     const saved = localStorage.getItem(LOCAL_ORDERS_KEY);
-    if (saved) {
-      const orders = JSON.parse(saved);
-      if (Array.isArray(orders) && orders.length > 0) return orders;
+    const localOrders: Order[] = saved ? JSON.parse(saved) : [];
+    
+    // Merge remote and local by orderNumber, remote taking precedence
+    const orderMap = new Map<string, Order>();
+    for (const ord of remoteOrders) {
+      orderMap.set(ord.orderNumber, ord);
+    }
+    for (const ord of localOrders) {
+      if (!orderMap.has(ord.orderNumber)) {
+        orderMap.set(ord.orderNumber, ord);
+      }
+    }
+    const merged = Array.from(orderMap.values());
+    if (merged.length > 0) {
+      localStorage.setItem(LOCAL_ORDERS_KEY, JSON.stringify(merged));
+      return merged;
     }
   } catch (e) {
     console.warn('Failed to load local orders:', e);
   }
-  return [];
+  return remoteOrders;
 }
 
 /**
@@ -559,21 +732,16 @@ export async function updateOrderStatusWithAudit(
       await supabase
         .from('orders')
         .update({
-          order_status: newStatus,
-          courier_name: updatedShippingInfo.courierName,
-          awb_number: updatedShippingInfo.awbNumber,
-          tracking_url: updatedShippingInfo.trackingUrl,
-          shipping_status: updatedShippingInfo.shippingStatus
+          order_status: mapOrderStatusToDb(newStatus),
+          shipping_info: {
+            ...(targetOrder.shippingInfo || {}),
+            courierName: updatedShippingInfo.courierName,
+            awbNumber: updatedShippingInfo.awbNumber,
+            trackingUrl: updatedShippingInfo.trackingUrl,
+            shippingStatus: updatedShippingInfo.shippingStatus
+          }
         })
         .eq('id', targetOrder.id);
-
-      await supabase.from('order_status_history').insert([{
-        id: historyEntry.id,
-        order_id: targetOrder.id,
-        status: newStatus,
-        comment: historyEntry.comment,
-        updated_by: updatedBy
-      }]);
     } catch (e) {
       console.warn('Failed to sync order update to Supabase:', e);
     }

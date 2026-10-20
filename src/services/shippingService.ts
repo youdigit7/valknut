@@ -36,11 +36,13 @@ const LOCAL_STORAGE_SHIPPING_KEY = 'valknut_shipping_methods';
  */
 export function getAvailableShippingMethods(): ShippingMethod[] {
   try {
-    const saved = localStorage.getItem(LOCAL_STORAGE_SHIPPING_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed.filter((m: ShippingMethod) => m.active);
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem(LOCAL_STORAGE_SHIPPING_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.filter((m: ShippingMethod) => m.active);
+        }
       }
     }
   } catch (e) {

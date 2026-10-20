@@ -104,10 +104,13 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
     );
   }
 
+  // Safe variants array
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
+
   // Get available colors with unique hexes
   const availableColors = Array.from(
     new Map(
-      product.variants.map((v) => [v.color, { color: v.color, colorHex: v.colorHex || '#000000', image: v.image }])
+      variants.map((v) => [v.color, { color: v.color, colorHex: v.colorHex || '#000000', image: v.image }])
     ).values()
   );
 
@@ -115,7 +118,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
   const allPossibleSizes: ('S' | 'M' | 'L' | 'XL' | 'XXL')[] = ['S', 'M', 'L', 'XL', 'XXL'];
 
   // Current active variant matching current color + size
-  const activeVariant: ProductVariant | undefined = product.variants.find(
+  const activeVariant: ProductVariant | undefined = variants.find(
     (v) => v.color.toLowerCase() === selectedColor.toLowerCase() && v.size === selectedSize
   );
 
@@ -362,7 +365,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                   </Box>
                   <Grid container spacing={1.5}>
                     {allPossibleSizes.map((sz) => {
-                      const isAvailableForSize = product.variants.some((v) => v.color === selectedColor && v.size === sz && (v.stock > 0 || v.stockCount! > 0));
+                      const isAvailableForSize = variants.some((v) => v.color === selectedColor && v.size === sz && (v.stock > 0 || v.stockCount! > 0));
                       const isSelected = selectedSize === sz;
                       return (
                         <Grid size={{ xs: 2.4 }} key={sz}>
