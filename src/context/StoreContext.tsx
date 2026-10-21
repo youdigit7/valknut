@@ -220,7 +220,13 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       const client = supabase;
       const loadCloudData = async () => {
         try {
-          const { data, error } = await client.from('products').select('*, product_variants(*)');
+          let { data, error } = await client.from('products').select('*, product_variants(*)');
+          if (error && (error.code === 'PGRST301' || (error as any).status === 401)) {
+            await client.auth.signOut().catch(() => {});
+            const retry = await client.from('products').select('*, product_variants(*)');
+            data = retry.data;
+            error = retry.error;
+          }
           if (!error && data) {
             const mapped = data.map(mapSupabaseRowToProduct);
             setProducts(mapped);

@@ -512,7 +512,15 @@ export async function queryShopProducts(
     const to = from + limit - 1;
     query = query.range(from, to);
 
-    const { data, count, error } = await query;
+    let { data, count, error } = await query;
+
+    if (error && (error.code === 'PGRST301' || (error as any).status === 401)) {
+      await supabase.auth.signOut().catch(() => {});
+      const retry = await query;
+      data = retry.data;
+      count = retry.count;
+      error = retry.error;
+    }
 
     if (error) {
       console.warn('Supabase query error, falling back to local real products:', error);
