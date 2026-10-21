@@ -5,6 +5,7 @@ import { Badge } from './Badge';
 import { Price } from './Price';
 import { Box, Typography, IconButton as MuiIconButton, Button as MuiButton, Card as MuiCard } from '@mui/material';
 import { useAppTheme } from '../../context/ThemeContext';
+import { useStore } from '../../context/StoreContext';
 
 export interface ProductCardProps {
   product: Product;
@@ -17,12 +18,14 @@ export interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
+  onQuickView,
   onAddToCart,
   onToggleWishlist,
   isWishlisted = false,
   className = '',
 }) => {
   const { mode } = useAppTheme();
+  const { setSelectedProduct } = useStore();
   const isDark = mode === 'dark';
   const [isHovered, setIsHovered] = useState(false);
 
@@ -50,6 +53,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const isSoldOut = variants.length > 0 ? totalStock === 0 : false;
   const isLowStock = !isSoldOut && totalStock > 0 && totalStock < 10;
 
+  const handleOpenProduct = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onQuickView) {
+      onQuickView(product);
+    } else {
+      setSelectedProduct(product);
+    }
+  };
+
   return (
     <MuiCard
       className={`group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 ${
@@ -57,6 +70,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           ? 'bg-gradient-to-b from-[#141624] via-[#0f111a] to-[#0a0b12] border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.9),0_0_25px_rgba(212,175,55,0.25)]'
           : 'bg-white border border-slate-200/90 shadow-[0_8px_25px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.12),0_0_25px_rgba(212,175,55,0.2)]'
       } hover:-translate-y-1.5 ${className}`}
+      onClick={handleOpenProduct}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       sx={{
@@ -67,6 +81,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
+        cursor: 'pointer'
       }}
     >
       {/* Image section — flex:1 so it fills all card space above the info panel */}
@@ -105,10 +120,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <Heart size={14} fill={isWishlisted ? 'currentColor' : 'none'} />
         </MuiIconButton>
 
-        {/* Photo — clicks navigate to product */}
+        {/* Photo — clicks trigger Lookbook-style product modal */}
         <Box
           className="absolute inset-0 w-full h-full cursor-pointer overflow-hidden"
-          onClick={() => { window.location.hash = `#/product/${product.slug}`; }}
+          onClick={handleOpenProduct}
         >
           {primaryImage && !primaryImage.includes('placeholder') ? (
             <>
@@ -148,7 +163,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <Box className="flex flex-col px-4 pt-3 pb-4" sx={{ flexShrink: 0 }}>
         <Typography
           component="span"
-          className="text-[10px] sm:text-[11px] font-bold text-[#D4AF37] uppercase tracking-[0.2em] mb-1.5 block"
+          onClick={handleOpenProduct}
+          className="text-[10px] sm:text-[11px] font-bold text-[#D4AF37] uppercase tracking-[0.2em] mb-1.5 block cursor-pointer hover:underline"
           sx={{ fontFamily: '"Outfit", sans-serif' }}
         >
           {product.subCategory || product.category}
@@ -156,7 +172,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         <Typography
           component="h3"
-          onClick={() => { window.location.hash = `#/product/${product.slug}`; }}
+          onClick={handleOpenProduct}
           className="text-sm sm:text-base font-bold text-[var(--text-primary)] tracking-normal leading-snug cursor-pointer hover:text-[#D4AF37] transition-colors line-clamp-2 mb-2.5"
           sx={{ fontFamily: '"Outfit", sans-serif' }}
         >
@@ -204,4 +220,3 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     </MuiCard>
   );
 };
-

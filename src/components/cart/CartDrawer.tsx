@@ -33,7 +33,8 @@ export const CartDrawer: React.FC = () => {
     cartSubtotal,
     cartDiscount,
     cartShipping,
-    cartTotal
+    cartTotal,
+    setSelectedProduct
   } = useStore();
 
   const [couponInput, setCouponInput] = useState('');
@@ -146,15 +147,31 @@ export const CartDrawer: React.FC = () => {
             {cart.map((item, index) => (
               <Box key={item.id} sx={{ display: 'flex', gap: 2, pt: index > 0 ? 2 : 0, mt: index > 0 ? 2 : 0, borderTop: index > 0 ? '1px solid var(--border-subtle)' : 'none' }}>
                 <Box
-                  component="img"
-                  src={item.customization?.finalPreviewDataUrl || item.product.images[0]}
-                  alt={item.product.name}
-                  sx={{ width: 80, height: 96, objectFit: 'cover', borderRadius: 1, bgcolor: 'var(--bg-card-inner)', border: '1px solid var(--border-subtle)', flexShrink: 0 }}
-                />
+                  component="button"
+                  onClick={() => {
+                    setIsCartOpen(false);
+                    setSelectedProduct(item.product);
+                  }}
+                  sx={{ width: 80, height: 96, borderRadius: 1, bgcolor: 'var(--bg-card-inner)', border: '1px solid var(--border-subtle)', flexShrink: 0, overflow: 'hidden', p: 0, cursor: 'pointer' }}
+                >
+                  <Box
+                    component="img"
+                    src={item.customization?.finalPreviewDataUrl || item.product.images[0]}
+                    alt={item.product.name}
+                    sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </Box>
                 <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      <Typography 
+                        component="button"
+                        onClick={() => {
+                          setIsCartOpen(false);
+                          setSelectedProduct(item.product);
+                        }}
+                        sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', bgcolor: 'transparent', border: 'none', p: 0, textAlign: 'left', cursor: 'pointer', '&:hover': { color: '#d4af37' } }}
+                      >
                         {item.product.name}
                       </Typography>
                       <IconButton onClick={() => removeFromCart(item.id)} sx={{ p: 0.5, color: 'var(--text-secondary)', '&:hover': { color: '#f87171' } }}>

@@ -170,9 +170,9 @@ export const CartPage: React.FC = () => {
                       {/* Item Thumbnail & Basic Info */}
                       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flex: 1, minWidth: 0 }}>
                         <Box
-                          component="a"
-                          href={`#/product/${item.product.slug}`}
-                          sx={{ width: { xs: 80, sm: 96 }, height: { xs: 96, sm: 112 }, borderRadius: 1, overflow: 'hidden', bgcolor: 'var(--bg-main)', border: '1px solid var(--border-subtle)', flexShrink: 0, position: 'relative', display: 'block', '&:hover img': { transform: 'scale(1.05)' } }}
+                          component="button"
+                          onClick={() => setSelectedProduct(item.product)}
+                          sx={{ width: { xs: 80, sm: 96 }, height: { xs: 96, sm: 112 }, borderRadius: 1, overflow: 'hidden', bgcolor: 'var(--bg-main)', border: '1px solid var(--border-subtle)', flexShrink: 0, position: 'relative', display: 'block', p: 0, cursor: 'pointer', '&:hover img': { transform: 'scale(1.05)' } }}
                         >
                           <Box
                             component="img"
@@ -188,9 +188,9 @@ export const CartPage: React.FC = () => {
                           </Typography>
 
                           <Typography
-                            component="a"
-                            href={`#/product/${item.product.slug}`}
-                            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif', textDecoration: 'none', transition: 'color 0.3s', '&:hover': { color: 'primary.main' }, display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                            component="button"
+                            onClick={() => setSelectedProduct(item.product)}
+                            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif', textDecoration: 'none', transition: 'color 0.3s', bgcolor: 'transparent', border: 'none', p: 0, textAlign: 'left', cursor: 'pointer', '&:hover': { color: 'primary.main' }, display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                           >
                             {item.product.name}
                           </Typography>
