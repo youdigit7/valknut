@@ -4,6 +4,11 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 const rawUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const rawKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
+function cleanEnvString(val: string): string {
+  if (!val) return '';
+  return val.trim().replace(/^["']|["']$/g, '').trim();
+}
+
 /**
  * Normalizes Supabase API URL.
  * If user accidentally pastes dashboard URL like:
@@ -11,20 +16,20 @@ const rawKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
  * it converts it to the proper API endpoint: "https://urwhkkrozmlpadjmiqpc.supabase.co"
  */
 function normalizeSupabaseUrl(url: string): string {
-  if (!url) return '';
-  const trimmed = url.trim();
-  if (trimmed.includes('supabase.com/dashboard/project/')) {
-    const parts = trimmed.split('supabase.com/dashboard/project/');
+  const cleaned = cleanEnvString(url);
+  if (!cleaned) return '';
+  if (cleaned.includes('supabase.com/dashboard/project/')) {
+    const parts = cleaned.split('supabase.com/dashboard/project/');
     const projectRef = parts[1]?.split('/')[0]?.split('?')[0];
     if (projectRef) {
       return `https://${projectRef}.supabase.co`;
     }
   }
-  return trimmed;
+  return cleaned;
 }
 
 const supabaseUrl = normalizeSupabaseUrl(rawUrl);
-const supabaseAnonKey = rawKey.trim();
+const supabaseAnonKey = cleanEnvString(rawKey);
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
