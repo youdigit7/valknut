@@ -50,7 +50,7 @@ export function getOrganizationSchema() {
     },
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+94770000000',
+      telephone: '+94761125786',
       contactType: 'customer service',
       areaServed: 'LK',
       availableLanguage: ['English', 'Sinhala']
@@ -59,7 +59,7 @@ export function getOrganizationSchema() {
       'https://instagram.com/valknutofficial1',
       'https://tiktok.com/@valknutofficial5',
       'https://youtube.com/@valknutofficial',
-      'https://facebook.com/valknutofficial'
+      'https://www.facebook.com/profile.php?id=61590816716304'
     ]
   };
 }

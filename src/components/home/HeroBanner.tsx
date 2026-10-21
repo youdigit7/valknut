@@ -223,7 +223,7 @@ export const HeroBanner: React.FC = () => {
         </Box>
 
         <IconButton
-          href="https://wa.me/94770000000?text=Hello%20VALKNUT%20Official"
+          href="https://wa.me/94761125786?text=Hello%20VALKNUT%20Official"
           target="_blank"
           sx={{
             position: 'fixed',
