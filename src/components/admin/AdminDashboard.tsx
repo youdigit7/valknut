@@ -16,8 +16,7 @@ import { SUPABASE_SETUP_SQL, supabase, isSupabaseConfigured } from '../../lib/su
 import { ProductImageManager } from './ProductImageManager';
 import { SingleImageUploader } from './SingleImageUploader';
 import {
-  FIREBASE_STORAGE_RULES,
-  checkFirebaseStorageStatus,
+  checkCloudinaryStatus,
   getCloudinaryConfig,
   saveCloudinaryConfig,
   isCloudinaryConfigured,
@@ -57,7 +56,6 @@ import {
   Eye,
   EyeOff,
   Palette,
-  HardDrive,
   Upload,
   RefreshCw,
   Server,
@@ -319,10 +317,9 @@ export const AdminDashboard: React.FC = () => {
   // Delete Confirmation State
   const [deleteConfirmTarget, setDeleteConfirmTarget] = useState<{ type: 'product' | 'category' | 'collection' | 'coupon'; id: string; name: string } | null>(null);
   const [copiedSql, setCopiedSql] = useState(false);
-  const [copiedStorageRules, setCopiedStorageRules] = useState(false);
 
   // Cloud Media Storage Management State
-  const [firebaseStatus, setFirebaseStatus] = useState<{ status: string; message: string; bucket: string } | null>(null);
+  const [cloudinaryStatus, setCloudinaryStatus] = useState<{ status: string; message: string; cloudName: string; preset: string } | null>(null);
   const [isCheckingStorage, setIsCheckingStorage] = useState(false);
   const [cldCloudName, setCldCloudName] = useState(() => getCloudinaryConfig().cloudName);
   const [cldPreset, setCldPreset] = useState(() => getCloudinaryConfig().uploadPreset);
@@ -332,13 +329,13 @@ export const AdminDashboard: React.FC = () => {
   const [testUploadResult, setTestUploadResult] = useState<any>(null);
   const [testUploadError, setTestUploadError] = useState('');
 
-  const handleCheckFirebaseStatus = async () => {
+  const handleCheckCloudinary = async () => {
     setIsCheckingStorage(true);
     try {
-      const res = await checkFirebaseStorageStatus();
-      setFirebaseStatus(res);
+      const res = await checkCloudinaryStatus();
+      setCloudinaryStatus(res);
     } catch (e: any) {
-      setFirebaseStatus({ status: 'error', message: e.message || 'Error checking status', bucket: '' });
+      setCloudinaryStatus({ status: 'error', message: e.message || 'Error checking status', cloudName: '', preset: '' });
     } finally {
       setIsCheckingStorage(false);
     }
@@ -348,6 +345,7 @@ export const AdminDashboard: React.FC = () => {
     e.preventDefault();
     saveCloudinaryConfig(cldCloudName, cldPreset);
     showToast('Cloudinary credentials saved successfully.', 'success');
+    handleCheckCloudinary();
   };
 
   const handleRunTestUpload = async () => {
@@ -376,7 +374,7 @@ export const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     if (activeTab === 'STORAGE') {
-      handleCheckFirebaseStatus();
+      handleCheckCloudinary();
     }
   }, [activeTab]);
 
@@ -2602,10 +2600,10 @@ export const AdminDashboard: React.FC = () => {
                 </Box>
                 <Box>
                   <Typography variant="h6" sx={{ fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif' }}>
-                    MEDIA & CLOUD STORAGE INFRASTRUCTURE
+                    MEDIA & CLOUD CDN INFRASTRUCTURE
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#94A3B8', fontSize: '0.8rem' }}>
-                    Configure Firebase Storage, Cloudinary CDN, and inspect bucket readiness to eliminate Supabase egress constraints.
+                    Cloudinary CDN delivers high-speed WebP/AVIF image transformations with 25GB free monthly bandwidth.
                   </Typography>
                 </Box>
               </Box>
@@ -2613,7 +2611,7 @@ export const AdminDashboard: React.FC = () => {
               <Button
                 variant="outlined"
                 size="small"
-                onClick={handleCheckFirebaseStatus}
+                onClick={handleCheckCloudinary}
                 disabled={isCheckingStorage}
                 startIcon={<RefreshCw size={14} className={isCheckingStorage ? 'animate-spin' : ''} />}
                 sx={{
@@ -2624,144 +2622,93 @@ export const AdminDashboard: React.FC = () => {
                   '&:hover': { borderColor: goldColor, color: goldColor },
                 }}
               >
-                {isCheckingStorage ? 'Testing Connection...' : 'Check Bucket Status'}
+                {isCheckingStorage ? 'Testing CDN...' : 'Check CDN Status'}
               </Button>
             </Paper>
 
             <Grid container spacing={{ xs: 2.5, md: 3 }}>
-              {/* Firebase Cloud Storage */}
-              <Grid size={{ xs: 12, lg: 6 }}>
-                <Card sx={{ ...modernCardSx, p: 3.5, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', pb: 2 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                        <HardDrive size={22} style={{ color: goldColor }} />
-                        <Typography variant="h6" sx={{ fontWeight: 800, textTransform: 'uppercase' }}>
-                          Firebase Cloud Storage
-                        </Typography>
-                      </Box>
-                      {firebaseStatus?.status === 'online' ? (
-                        <Chip label="BUCKET ONLINE" size="small" sx={{ bgcolor: 'rgba(16, 185, 129, 0.15)', color: '#34D399', fontWeight: 800, fontSize: '0.7rem' }} />
-                      ) : firebaseStatus?.status === 'unprovisioned' ? (
-                        <Chip label="NEEDS PROVISIONING (404)" size="small" sx={{ bgcolor: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B', fontWeight: 800, fontSize: '0.7rem' }} />
-                      ) : (
-                        <Chip label="INITIALIZED IN .ENV" size="small" sx={{ bgcolor: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', fontWeight: 800, fontSize: '0.7rem' }} />
-                      )}
-                    </Box>
-
-                    <Box sx={{ p: 2.5, bgcolor: '#121420', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem' }}>Project ID:</Typography>
-                        <Typography sx={{ fontWeight: 800, fontSize: '0.8rem', fontFamily: 'monospace' }}>valknut-c8268</Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem' }}>Target Bucket:</Typography>
-                        <Typography sx={{ fontWeight: 800, fontSize: '0.8rem', fontFamily: 'monospace', color: goldColor }}>valknut-c8268.firebasestorage.app</Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem' }}>Status:</Typography>
-                        <Typography sx={{ fontWeight: 700, fontSize: '0.75rem', color: firebaseStatus?.status === 'online' ? '#34D399' : '#F59E0B' }}>
-                          {firebaseStatus?.message || 'Ready for test check.'}
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    {firebaseStatus?.status === 'unprovisioned' && (
-                      <Alert severity="warning" sx={{ bgcolor: 'rgba(245, 158, 11, 0.1)', color: '#FDE68A', border: '1px solid rgba(245, 158, 11, 0.3)', fontSize: '0.75rem' }}>
-                        <strong>Firebase Storage Bucket Not Created Yet:</strong> In Firebase Console, go to Storage &rarr; Get Started &rarr; Done.
-                      </Alert>
-                    )}
-                  </Box>
-
-                  <Box sx={{ pt: 3, borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1.5 }}>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      endIcon={<ExternalLink size={14} />}
-                      onClick={() => window.open('https://console.firebase.google.com/project/valknut-c8268/storage', '_blank')}
-                      sx={{ color: goldColor, borderColor: 'rgba(212, 175, 55, 0.4)', fontSize: '0.75rem', borderRadius: '8px' }}
-                    >
-                      Open Firebase Console
-                    </Button>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      onClick={() => {
-                        navigator.clipboard.writeText(FIREBASE_STORAGE_RULES);
-                        showToast('Firebase Security Rules copied.', 'success');
-                      }}
-                      sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)', color: '#FFFFFF', fontSize: '0.75rem', borderRadius: '8px', '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.18)' } }}
-                    >
-                      Copy Storage Rules
-                    </Button>
-                  </Box>
-                </Card>
-              </Grid>
-
               {/* Cloudinary Global CDN */}
-              <Grid size={{ xs: 12, lg: 6 }}>
-                <Card sx={{ ...modernCardSx, p: 3.5, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <Grid size={{ xs: 12 }}>
+                <Card sx={{ ...modernCardSx, p: 3.5 }}>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', pb: 2 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                         <Server size={22} style={{ color: '#38BDF8' }} />
                         <Typography variant="h6" sx={{ fontWeight: 800, textTransform: 'uppercase' }}>
-                          Cloudinary Global CDN
+                          Cloudinary Global Media CDN (Active Storage Provider)
                         </Typography>
                       </Box>
                       {isCloudinaryConfigured() ? (
                         <Chip label="CLOUDINARY ACTIVE" size="small" sx={{ bgcolor: 'rgba(16, 185, 129, 0.15)', color: '#34D399', fontWeight: 800, fontSize: '0.7rem' }} />
                       ) : (
-                        <Chip label="OPTIONAL CDN" size="small" sx={{ bgcolor: 'rgba(255, 255, 255, 0.06)', color: '#94A3B8', fontWeight: 800, fontSize: '0.7rem' }} />
+                        <Chip label="CREDENTIALS REQUIRED" size="small" sx={{ bgcolor: 'rgba(239, 68, 68, 0.15)', color: '#F87171', fontWeight: 800, fontSize: '0.7rem' }} />
                       )}
                     </Box>
 
+                    {cloudinaryStatus && (
+                      <Alert 
+                        severity={cloudinaryStatus.status === 'online' ? 'success' : 'error'}
+                        sx={{ 
+                          bgcolor: cloudinaryStatus.status === 'online' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', 
+                          color: cloudinaryStatus.status === 'online' ? '#34D399' : '#F87171',
+                          border: `1px solid ${cloudinaryStatus.status === 'online' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+                          fontSize: '0.75rem' 
+                        }}
+                      >
+                        {cloudinaryStatus.message}
+                      </Alert>
+                    )}
+
                     <Typography variant="body2" sx={{ color: '#94A3B8', fontSize: '0.8rem', lineHeight: 1.5 }}>
-                      Cloudinary provides 25GB free monthly bandwidth with automatic WebP/AVIF compression.
+                      All catalog products, category covers, and custom studio customer artwork are stored directly on Cloudinary CDN and indexed in Supabase.
                     </Typography>
 
                     <form onSubmit={handleSaveCloudinary}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <TextField
-                          fullWidth
-                          size="small"
-                          label="Cloud Name"
-                          value={cldCloudName}
-                          onChange={(e) => setCldCloudName(e.target.value)}
-                          placeholder="e.g. valknut-media"
-                          sx={darkInputSx}
-                        />
-
-                        <TextField
-                          fullWidth
-                          size="small"
-                          label="Unsigned Upload Preset"
-                          value={cldPreset}
-                          onChange={(e) => setCldPreset(e.target.value)}
-                          placeholder="e.g. valknut_uploads"
-                          sx={darkInputSx}
-                        />
-
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          sx={{ bgcolor: goldColor, color: '#000000', fontWeight: 800, fontSize: '0.8rem', borderRadius: '8px', py: 1, '&:hover': { bgcolor: goldHover } }}
-                        >
-                          Save & Activate Cloudinary
-                        </Button>
-                      </Box>
+                      <Grid container spacing={2}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            label="Cloud Name"
+                            value={cldCloudName}
+                            onChange={(e) => setCldCloudName(e.target.value)}
+                            placeholder="e.g. ofrariny"
+                            sx={darkInputSx}
+                          />
+                        </Grid>
+                        <Grid size={{ xs: 12, sm: 6 }}>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            label="Unsigned Upload Preset"
+                            value={cldPreset}
+                            onChange={(e) => setCldPreset(e.target.value)}
+                            placeholder="e.g. valknut_preset"
+                            sx={darkInputSx}
+                          />
+                        </Grid>
+                        <Grid size={{ xs: 12 }}>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{ bgcolor: goldColor, color: '#000000', fontWeight: 800, fontSize: '0.8rem', borderRadius: '8px', py: 1, '&:hover': { bgcolor: goldHover } }}
+                          >
+                            Save & Activate Cloudinary
+                          </Button>
+                        </Grid>
+                      </Grid>
                     </form>
                   </Box>
 
-                  <Box sx={{ pt: 3, borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Typography sx={{ fontSize: '0.75rem', color: '#64748B' }}>Need an account?</Typography>
+                  <Box sx={{ pt: 3, mt: 3, borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: '0.75rem', color: '#64748B' }}>Need to create or update upload presets?</Typography>
                     <Button
                       size="small"
                       endIcon={<ExternalLink size={14} />}
-                      onClick={() => window.open('https://cloudinary.com/users/register_free', '_blank')}
+                      onClick={() => window.open('https://cloudinary.com/console', '_blank')}
                       sx={{ color: '#38BDF8', fontSize: '0.75rem', fontWeight: 700 }}
                     >
-                      Create Free Cloudinary Account
+                      Open Cloudinary Console
                     </Button>
                   </Box>
                 </Card>
@@ -2912,40 +2859,6 @@ export const AdminDashboard: React.FC = () => {
 
               <Box sx={{ p: 2.5, bgcolor: '#07080C', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)', maxHeight: 320, overflowY: 'auto', fontFamily: 'monospace', fontSize: '0.75rem', color: '#94A3B8', whiteSpace: 'pre' }}>
                 {SUPABASE_SETUP_SQL}
-              </Box>
-            </Card>
-
-            {/* Storage Rules */}
-            <Card sx={{ ...modernCardSx, p: 3.5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2, mb: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <Cloud size={24} style={{ color: goldColor }} />
-                  <Box>
-                    <Typography variant="h6" sx={{ fontWeight: 800, textTransform: 'uppercase' }}>
-                      FIREBASE CLOUD STORAGE RULES
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#94A3B8', fontSize: '0.8rem' }}>
-                      Production security rules for products, categories, collections, and custom customer artwork.
-                    </Typography>
-                  </Box>
-                </Box>
-
-                <Button
-                  variant="contained"
-                  startIcon={copiedStorageRules ? <Check size={16} /> : <Copy size={16} />}
-                  onClick={() => {
-                    navigator.clipboard.writeText(FIREBASE_STORAGE_RULES);
-                    setCopiedStorageRules(true);
-                    setTimeout(() => setCopiedStorageRules(false), 2000);
-                  }}
-                  sx={{ bgcolor: goldColor, color: '#000000', fontWeight: 800, fontSize: '0.8rem', borderRadius: '8px', '&:hover': { bgcolor: goldHover } }}
-                >
-                  {copiedStorageRules ? 'COPIED RULES' : 'COPY STORAGE RULES'}
-                </Button>
-              </Box>
-
-              <Box sx={{ p: 2.5, bgcolor: '#07080C', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)', maxHeight: 260, overflowY: 'auto', fontFamily: 'monospace', fontSize: '0.75rem', color: '#94A3B8', whiteSpace: 'pre' }}>
-                {FIREBASE_STORAGE_RULES}
               </Box>
             </Card>
           </Box>

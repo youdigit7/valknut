@@ -5,8 +5,7 @@ import {
 import { 
   Upload, Trash2, ArrowLeft, ArrowRight, Star, RefreshCw, Plus, AlertCircle, Image as ImageIcon, Eye, X
 } from 'lucide-react';
-import { uploadMediaFile, validateImageFile, deleteMediaFile, ALLOWED_IMAGE_TYPES } from '../../services/mediaService';
-import { isFirebaseConfigured } from '../../lib/firebase';
+import { uploadMediaFile, validateImageFile, deleteMediaFile, ALLOWED_IMAGE_TYPES, isCloudinaryConfigured } from '../../services/mediaService';
 
 interface ProductImageManagerProps {
   productId?: string;
@@ -189,14 +188,14 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
             PRODUCT MEDIA GALLERY ({images.length}/{maxImages})
           </Typography>
         </Box>
-        {isFirebaseConfigured ? (
+        {isCloudinaryConfigured() ? (
           <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.75, borderRadius: 10, bgcolor: 'rgba(6,78,59,0.5)', border: '1px solid rgba(52,211,153,0.3)' }}>
             <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#34d399', animation: 'pulse 2s infinite' }} />
-            <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 600, color: '#34d399' }}>Firebase / Cloud Storage</Typography>
+            <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 600, color: '#34d399' }}>Cloudinary CDN</Typography>
           </Box>
         ) : (
           <Box sx={{ px: 2, py: 0.75, borderRadius: 10, bgcolor: 'rgba(120,53,15,0.5)', border: '1px solid rgba(251,191,36,0.3)' }}>
-            <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 600, color: '#fbbf24' }}>High-Res Storage</Typography>
+            <Typography sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif', fontWeight: 600, color: '#fbbf24' }}>Cloud CDN</Typography>
           </Box>
         )}
       </Box>

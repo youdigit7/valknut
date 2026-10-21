@@ -1,5 +1,3 @@
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
-import { storage, isFirebaseConfigured } from '../lib/firebase';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 export type MediaScope = 'products' | 'categories' | 'collections' | 'homepage' | 'custom-studio';
@@ -238,57 +236,7 @@ export async function checkCloudinaryStatus(): Promise<{
 }
 
 /**
- * Checks Firebase Storage bucket availability
- */
-export async function checkFirebaseStorageStatus(): Promise<{
-  status: 'online' | 'unprovisioned' | 'unconfigured' | 'error';
-  message: string;
-  bucket: string;
-}> {
-  const bucket = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'valknut-c8268.firebasestorage.app';
-  const apiKey = import.meta.env.VITE_FIREBASE_API_KEY;
-
-  if (!apiKey || !bucket) {
-    return {
-      status: 'unconfigured',
-      message: 'Firebase Storage credentials are not set in .env',
-      bucket: bucket || 'None'
-    };
-  }
-
-  try {
-    const res = await fetch(`https://firebasestorage.googleapis.com/v0/b/${bucket}/o?key=${apiKey}`);
-    if (res.status === 200) {
-      return {
-        status: 'online',
-        message: 'Firebase Cloud Storage bucket is online and ready.',
-        bucket
-      };
-    } else if (res.status === 404) {
-      return {
-        status: 'unprovisioned',
-        message: 'Bucket not provisioned yet. In Firebase Console, go to Build → Storage and click "Get started".',
-        bucket
-      };
-    } else {
-      return {
-        status: 'error',
-        message: `HTTP ${res.status}: ${res.statusText}`,
-        bucket
-      };
-    }
-  } catch (err: any) {
-    return {
-      status: 'error',
-      message: err.message || 'Network error reaching Firebase Storage.',
-      bucket
-    };
-  }
-}
-
-/**
- * Uploads a file directly to Cloudinary CDN (Primary) or Firebase Storage
- * Client-side base64 caching is disabled per requirements.
+ * Uploads a file directly to Cloudinary CDN
  */
 export async function uploadMediaFile(
   file: File | Blob,
@@ -296,7 +244,7 @@ export async function uploadMediaFile(
 ): Promise<UploadMediaResult> {
   const {
     scope,
-    identifier,
+    identifier: _identifier,
     fileName: customName,
     onProgress,
     optimize = true,
@@ -325,117 +273,52 @@ export async function uploadMediaFile(
     }
   }
 
-  const storagePath = buildStoragePath(scope, identifier, originalName);
-
-  // 1. PRIMARY PROVIDER: Cloudinary Direct CDN Upload
+  // PRIMARY & SOLE MEDIA PROVIDER: Cloudinary Direct CDN Upload
   const cloudConfig = getCloudinaryConfig();
-  if (cloudConfig.cloudName && cloudConfig.uploadPreset) {
-    try {
-      if (onProgress) onProgress(20);
-      const formData = new FormData();
-      formData.append('file', fileToUpload);
-      formData.append('upload_preset', cloudConfig.uploadPreset);
-      formData.append('folder', `valknut/${scope}`);
-
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudConfig.cloudName}/image/upload`, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (onProgress) onProgress(80);
-
-      if (response.ok) {
-        const data = await response.json();
-        if (onProgress) onProgress(100);
-        return {
-          url: data.secure_url || data.url,
-          storagePath: `cloudinary://${data.public_id}`,
-          fileName: originalName,
-          sizeBytes: data.bytes || fileToUpload.size,
-          type: data.format ? `image/${data.format}` : (fileToUpload.type || 'image/webp')
-        };
-      } else {
-        const errJson = await response.json().catch(() => ({}));
-        const errMsg = errJson?.error?.message || response.statusText || 'Cloudinary upload failed';
-        throw new Error(`Cloudinary error: ${errMsg}`);
-      }
-    } catch (cldErr: any) {
-      console.error('Cloudinary upload failure:', cldErr);
-      throw new Error(`Image upload failed: ${cldErr.message || 'Network error reaching Cloudinary.'}`);
-    }
+  if (!cloudConfig.cloudName || !cloudConfig.uploadPreset) {
+    throw new Error('Cloudinary configuration is missing. Please configure Cloudinary cloud name and upload preset in .env or Admin settings.');
   }
 
-  // 2. SECONDARY / OPTIONAL: Firebase Cloud Storage (if explicitly provisioned)
-  if (storage && isFirebaseConfigured) {
-    try {
-      const fileRef = ref(storage, storagePath);
-      const uploadTask = uploadBytesResumable(fileRef, fileToUpload, {
-        contentType: fileToUpload.type || 'image/webp',
-        customMetadata: {
-          scope,
-          identifier: identifier || 'general',
-          uploadedAt: new Date().toISOString()
-        }
-      });
+  try {
+    if (onProgress) onProgress(20);
+    const formData = new FormData();
+    formData.append('file', fileToUpload);
+    formData.append('upload_preset', cloudConfig.uploadPreset);
+    formData.append('folder', `valknut/${scope}`);
 
-      const fbResult = await new Promise<UploadMediaResult>((resolve, reject) => {
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            if (onProgress) onProgress(Math.round(progress));
-          },
-          (error) => {
-            reject(error);
-          },
-          async () => {
-            const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-            if (onProgress) onProgress(100);
-            resolve({
-              url: downloadUrl,
-              storagePath,
-              fileName: originalName,
-              sizeBytes: fileToUpload.size,
-              type: fileToUpload.type || 'image/webp'
-            });
-          }
-        );
-      });
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudConfig.cloudName}/image/upload`, {
+      method: 'POST',
+      body: formData
+    });
 
-      return fbResult;
-    } catch (firebaseErr: any) {
-      console.warn('Firebase Storage upload failed:', firebaseErr);
-      throw new Error(`Firebase upload failed: ${firebaseErr.message}`);
+    if (onProgress) onProgress(80);
+
+    if (response.ok) {
+      const data = await response.json();
+      if (onProgress) onProgress(100);
+      return {
+        url: data.secure_url || data.url,
+        storagePath: `cloudinary://${data.public_id}`,
+        fileName: originalName,
+        sizeBytes: data.bytes || fileToUpload.size,
+        type: data.format ? `image/${data.format}` : (fileToUpload.type || 'image/webp')
+      };
+    } else {
+      const errJson = await response.json().catch(() => ({}));
+      const errMsg = errJson?.error?.message || response.statusText || 'Cloudinary upload failed';
+      throw new Error(`Cloudinary error: ${errMsg}`);
     }
+  } catch (cldErr: any) {
+    console.error('Cloudinary upload failure:', cldErr);
+    throw new Error(`Image upload failed: ${cldErr.message || 'Network error reaching Cloudinary.'}`);
   }
-
-  throw new Error('No cloud media provider is configured. Please verify Cloudinary credentials in .env.');
 }
 
 /**
- * Deletes an image from Firebase Storage
+ * Deletes or deregisters an image file
  */
-export async function deleteMediaFile(storagePathOrUrl: string): Promise<boolean> {
-  if (!storagePathOrUrl || storagePathOrUrl.startsWith('data:') || storagePathOrUrl.startsWith('local://')) {
-    return true; // Local base64 data doesn't require cloud bucket deletion
-  }
-
-  if (storage && isFirebaseConfigured) {
-    try {
-      let fileRef;
-      if (storagePathOrUrl.startsWith('http://') || storagePathOrUrl.startsWith('https://')) {
-        fileRef = ref(storage, storagePathOrUrl);
-      } else {
-        fileRef = ref(storage, storagePathOrUrl);
-      }
-      await deleteObject(fileRef);
-      return true;
-    } catch (err) {
-      console.warn('Firebase file deletion notice:', err);
-      return false;
-    }
-  }
-
+export async function deleteMediaFile(_storagePathOrUrl: string): Promise<boolean> {
+  // Cloudinary client-side uploads are served directly via Cloudinary CDN
   return true;
 }
 
@@ -470,54 +353,3 @@ export async function syncProductMediaToSupabase(
   }
 }
 
-/**
- * Production Firebase Storage Security Rules
- */
-export const FIREBASE_STORAGE_RULES = `
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    
-    // 1. PUBLIC PRODUCT CATALOG & STOREFRONT ASSETS
-    // Anyone can view products, categories, collections, and homepage banners.
-    // Only authenticated admins can write/delete.
-    match /products/{allPaths=**} {
-      allow read: if true;
-      allow write, delete: if request.auth != null && (
-        request.auth.token.admin == true || 
-        request.auth.token.email.matches('.*admin.*|founder@valknutofficial.com')
-      );
-    }
-
-    match /categories/{allPaths=**} {
-      allow read: if true;
-      allow write, delete: if request.auth != null;
-    }
-
-    match /collections/{allPaths=**} {
-      allow read: if true;
-      allow write, delete: if request.auth != null;
-    }
-
-    match /homepage/{allPaths=**} {
-      allow read: if true;
-      allow write, delete: if request.auth != null;
-    }
-
-    // 2. CUSTOM STUDIO USER ARTWORK
-    // Customers can only write to their own scoped folder with size constraints (<10MB)
-    match /custom-studio/{userId}/{fileName} {
-      allow read: if true;
-      allow write: if request.resource.size < 10 * 1024 * 1024
-                   && request.resource.contentType.matches('image/.*');
-      allow delete: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // 3. DEFAULT SAFE RESTRICTION
-    match /{allPaths=**} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-  }
-}
-`.trim();
