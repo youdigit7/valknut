@@ -1,8 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-const rawUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const rawKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const DEFAULT_SUPABASE_URL = 'https://urwhkkrozmlpadjmiqpc.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyd2hra3Jvem1scGFkam1pcXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5NTk2MzYsImV4cCI6MjEwNjUzNTYzNn0.xtHrfPum9Fwnaok_NMVN_PJ9txywuTiqUa__KziXZTc';
+
+const rawUrl = import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+const rawKey = import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
 
 function cleanEnvString(val: string): string {
   if (!val) return '';
