@@ -37,8 +37,8 @@ graph TD
 
 ```
 valknut/
+├── netlify.toml            # Netlify SPA redirects configuration
 ├── public/
-│   ├── _redirects              # Netlify/Cloudflare Pages SPA rewrite
 │   ├── robots.txt              # Search engine crawling rules
 │   ├── sitemap.xml             # XML sitemap with image extensions
 │   ├── favicon.svg             # Golden Valknut vector favicon
@@ -158,7 +158,8 @@ npm run preview
 
 ### Deploy to Hosting Platforms:
 - **Vercel**: Run `vercel --prod` (automatically picks up `vercel.json`).
-- **Netlify**: Run `netlify deploy --prod --dir=dist` (uses `public/_redirects`).
+- **Cloudflare (Workers / Pages)**: Connected to GitHub / Wrangler (SPA routing handled natively).
+- **Netlify**: Run `netlify deploy --prod --dir=dist` (uses `netlify.toml`).
 - **Firebase Hosting**: Run `firebase deploy --only hosting` (uses `firebase.json`).
 
 ---
