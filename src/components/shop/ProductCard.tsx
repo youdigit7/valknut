@@ -34,10 +34,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const handleCustomStudio = (e: React.MouseEvent) => {
     e.stopPropagation();
     setCustomStudioProduct(product);
-    const studioEl = document.getElementById('custom-studio-section');
-    if (studioEl) {
-      studioEl.scrollIntoView({ behavior: 'smooth' });
-    }
+    window.location.hash = '#/custom-studio';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
