@@ -28,6 +28,7 @@ export const ShopMobileFilterDrawer: React.FC<ShopMobileFilterDrawerProps> = ({
       anchor="left"
       open={isOpen}
       onClose={onClose}
+      disableRestoreFocus
       slotProps={{
         backdrop: {
           sx: { bgcolor: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }

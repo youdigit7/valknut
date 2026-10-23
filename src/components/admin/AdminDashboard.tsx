@@ -10,7 +10,8 @@ import type {
   CustomerAccountRecord,
   CategoryType,
   SubCategoryType,
-  Order
+  Order,
+  ClubSubscriber
 } from '../../types/ecommerce';
 import { SUPABASE_SETUP_SQL, supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { ProductImageManager } from './ProductImageManager';
@@ -31,6 +32,10 @@ import {
   getAdminCustomersList,
   fetchAdminCustomerProfiles
 } from '../../services/adminService';
+import {
+  getNewsletterSubscribers,
+  deleteNewsletterSubscriber
+} from '../../services/newsletterService';
 import { getAllOrders } from '../../services/orderService';
 import { loginAdmin } from '../../services/authService';
 import {
@@ -59,7 +64,9 @@ import {
   Upload,
   RefreshCw,
   Server,
-  ChevronRight
+  ChevronRight,
+  Mail,
+  Download
 } from 'lucide-react';
 import {
   Box,
@@ -110,6 +117,7 @@ type AdminTab =
   | 'ORDERS'
   | 'CATEGORIES'
   | 'CUSTOMERS'
+  | 'SUBSCRIBERS'
   | 'COUPONS'
   | 'HOMEPAGE'
   | 'STORAGE'
@@ -180,9 +188,12 @@ export const AdminDashboard: React.FC = () => {
   // Active Admin View Tab
   const [activeTab, setActiveTab] = useState<AdminTab>('METRICS');
 
-  // Live remote orders and customer profiles from Supabase
+  // Live remote orders, customer profiles, and VIP club subscribers
   const [remoteOrders, setRemoteOrders] = useState<Order[]>([]);
   const [remoteCustomers, setRemoteCustomers] = useState<CustomerAccountRecord[]>([]);
+  const [subscribers, setSubscribers] = useState<ClubSubscriber[]>([]);
+  const [subscriberSearch, setSubscriberSearch] = useState('');
+  const [loadingSubscribers, setLoadingSubscribers] = useState(false);
 
   // Track verified Supabase admin session to ensure RLS queries succeed
   const [supabaseSessionAdmin, setSupabaseSessionAdmin] = useState<boolean>(() => {
@@ -213,17 +224,31 @@ export const AdminDashboard: React.FC = () => {
     return storeOrders;
   }, [remoteOrders, storeOrders]);
 
+  const loadSubscribersList = async () => {
+    setLoadingSubscribers(true);
+    try {
+      const list = await getNewsletterSubscribers();
+      setSubscribers(list);
+    } catch (err) {
+      console.warn('Live subscriber sync notice:', err);
+    } finally {
+      setLoadingSubscribers(false);
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
     const loadLiveAdminData = async () => {
       try {
-        const [profiles, cloudOrders] = await Promise.all([
+        const [profiles, cloudOrders, subsList] = await Promise.all([
           fetchAdminCustomerProfiles(),
-          getAllOrders()
+          getAllOrders(),
+          getNewsletterSubscribers()
         ]);
         if (isMounted) {
           if (profiles && profiles.length > 0) setRemoteCustomers(profiles);
           if (cloudOrders && cloudOrders.length > 0) setRemoteOrders(cloudOrders);
+          if (subsList) setSubscribers(subsList);
         }
       } catch (err) {
         console.warn('Live admin sync notice:', err);
@@ -232,6 +257,55 @@ export const AdminDashboard: React.FC = () => {
     loadLiveAdminData();
     return () => { isMounted = false; };
   }, [storeOrders, supabaseSessionAdmin]);
+
+  const handleCopyAllEmails = () => {
+    if (subscribers.length === 0) {
+      showToast('No VIP Club emails to copy.', 'info');
+      return;
+    }
+    const text = subscribers.map((s) => s.email).join(', ');
+    navigator.clipboard.writeText(text);
+    showToast(`Copied ${subscribers.length} email addresses to clipboard!`, 'success');
+  };
+
+  const handleExportCSV = () => {
+    if (subscribers.length === 0) {
+      showToast('No VIP Club subscribers to export.', 'info');
+      return;
+    }
+    const headers = ['Email', 'Source', 'Date Joined'];
+    const rows = subscribers.map((s) => [
+      `"${s.email}"`,
+      `"${s.source || 'footer'}"`,
+      `"${new Date(s.createdAt).toLocaleString()}"`
+    ]);
+    const csvContent =
+      'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `valknut_vip_subscribers_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('VIP Club subscriber CSV downloaded!', 'success');
+  };
+
+  const handleDeleteSubscriber = async (id: string, email: string) => {
+    if (window.confirm(`Are you sure you want to remove ${email} from the VIP Club list?`)) {
+      await deleteNewsletterSubscriber(id, email);
+      setSubscribers((prev) => prev.filter((s) => s.id !== id && s.email !== email));
+      showToast(`Removed ${email} from subscribers.`, 'success');
+    }
+  };
+
+  const filteredSubscribers = useMemo(() => {
+    if (!subscriberSearch.trim()) return subscribers;
+    const q = subscriberSearch.toLowerCase();
+    return subscribers.filter(
+      (s) => s.email.toLowerCase().includes(q) || (s.source && s.source.toLowerCase().includes(q))
+    );
+  }, [subscribers, subscriberSearch]);
 
   // Admin Auth Gate State
   const [adminEmail, setAdminEmail] = useState('');
@@ -1146,6 +1220,27 @@ export const AdminDashboard: React.FC = () => {
           />
           <Tab icon={<Layers size={16} />} iconPosition="start" value="CATEGORIES" label="Categories" />
           <Tab icon={<Users size={16} />} iconPosition="start" value="CUSTOMERS" label="Customers" />
+          <Tab
+            icon={<Mail size={16} />}
+            iconPosition="start"
+            value="SUBSCRIBERS"
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <span>VIP Club</span>
+                <Chip
+                  size="small"
+                  label={subscribers.length}
+                  sx={{
+                    height: 18,
+                    fontSize: '0.65rem',
+                    fontWeight: 800,
+                    bgcolor: activeTab === 'SUBSCRIBERS' ? 'rgba(0,0,0,0.25)' : 'rgba(212,175,55,0.25)',
+                    color: activeTab === 'SUBSCRIBERS' ? 'inherit' : goldColor,
+                  }}
+                />
+              </Box>
+            }
+          />
           <Tab icon={<Tag size={16} />} iconPosition="start" value="COUPONS" label="Coupons" />
           <Tab icon={<Home size={16} />} iconPosition="start" value="HOMEPAGE" label="Homepage CMS" />
           <Tab icon={<Cloud size={16} />} iconPosition="start" value="STORAGE" label="Media Storage" />
@@ -2230,6 +2325,54 @@ export const AdminDashboard: React.FC = () => {
               </Box>
             </Paper>
 
+            {/* VIP Club Quick Banner */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: 2,
+                p: 2,
+                px: 2.5,
+                bgcolor: 'rgba(212, 175, 55, 0.08)',
+                borderRadius: '12px',
+                border: '1px solid rgba(212, 175, 55, 0.25)',
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Mail size={18} color={goldColor} />
+                <Typography sx={{ fontSize: '0.82rem', color: '#F8FAFC', fontWeight: 600 }}>
+                  Collecting early access drop emails from visitors?
+                </Typography>
+                <Chip
+                  size="small"
+                  label={`${subscribers.length} Emails`}
+                  sx={{
+                    bgcolor: 'rgba(212, 175, 55, 0.2)',
+                    color: goldColor,
+                    fontWeight: 800,
+                    fontSize: '0.7rem',
+                  }}
+                />
+              </Box>
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => setActiveTab('SUBSCRIBERS')}
+                sx={{
+                  color: goldColor,
+                  borderColor: 'rgba(212, 175, 55, 0.4)',
+                  textTransform: 'none',
+                  fontWeight: 800,
+                  fontSize: '0.75rem',
+                  '&:hover': { borderColor: goldColor, bgcolor: 'rgba(212, 175, 55, 0.15)' },
+                }}
+              >
+                View VIP Club Subscribers →
+              </Button>
+            </Box>
+
             <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
               {customers.map((c) => (
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={c.id}>
@@ -2304,7 +2447,281 @@ export const AdminDashboard: React.FC = () => {
         )}
 
         {/* ========================================== */}
-        {/* 8. COUPONS & DISCOUNTS TAB */}
+        {/* 8. VIP CLUB SUBSCRIBERS TAB */}
+        {/* ========================================== */}
+        {activeTab === 'SUBSCRIBERS' && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                ...modernCardSx,
+                p: { xs: 2.5, sm: 3 },
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: 2,
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box sx={{ p: 1.5, borderRadius: '12px', bgcolor: 'rgba(212, 175, 55, 0.15)', color: goldColor }}>
+                  <Mail size={24} />
+                </Box>
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 900, textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif' }}>
+                    VIP CLUB & EARLY ACCESS DROP LIST
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#94A3B8', fontSize: '0.8rem' }}>
+                    Direct leads collected from the &ldquo;JOIN CLUB&rdquo; input field in the footer and homepage.
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
+                <Button
+                  variant="outlined"
+                  startIcon={<RefreshCw size={15} />}
+                  onClick={loadSubscribersList}
+                  disabled={loadingSubscribers}
+                  sx={{
+                    color: '#E2E8F0',
+                    borderColor: 'rgba(255, 255, 255, 0.15)',
+                    fontSize: '0.75rem',
+                    borderRadius: '8px',
+                    px: 2,
+                    py: 0.8,
+                    '&:hover': { borderColor: goldColor, color: goldColor },
+                  }}
+                >
+                  Refresh
+                </Button>
+
+                <Button
+                  variant="outlined"
+                  startIcon={<Copy size={15} />}
+                  onClick={handleCopyAllEmails}
+                  sx={{
+                    color: goldColor,
+                    borderColor: 'rgba(212, 175, 55, 0.4)',
+                    fontSize: '0.75rem',
+                    borderRadius: '8px',
+                    px: 2,
+                    py: 0.8,
+                    bgcolor: 'rgba(212, 175, 55, 0.05)',
+                    '&:hover': { bgcolor: 'rgba(212, 175, 55, 0.15)', borderColor: goldColor },
+                  }}
+                >
+                  Copy All Emails
+                </Button>
+
+                <Button
+                  variant="contained"
+                  startIcon={<Download size={15} />}
+                  onClick={handleExportCSV}
+                  sx={{
+                    bgcolor: goldColor,
+                    color: '#000000',
+                    fontWeight: 900,
+                    fontSize: '0.75rem',
+                    borderRadius: '8px',
+                    px: 2.5,
+                    py: 0.8,
+                    boxShadow: '0 4px 14px rgba(212, 175, 55, 0.35)',
+                    '&:hover': { bgcolor: goldHover },
+                  }}
+                >
+                  Export CSV
+                </Button>
+              </Box>
+            </Paper>
+
+            {/* Filter & Metric bar */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, flexWrap: 'wrap' }}>
+              <TextField
+                size="small"
+                placeholder="Search subscriber email or source..."
+                value={subscriberSearch}
+                onChange={(e) => setSubscriberSearch(e.target.value)}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search size={16} color="#94A3B8" />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                sx={{
+                  ...darkInputSx,
+                  width: { xs: '100%', sm: 340 }
+                }}
+              />
+
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Chip
+                  label={`Total Members: ${subscribers.length}`}
+                  sx={{
+                    bgcolor: 'rgba(212, 175, 55, 0.12)',
+                    color: goldColor,
+                    fontWeight: 800,
+                    fontSize: '0.75rem',
+                    border: '1px solid rgba(212, 175, 55, 0.3)'
+                  }}
+                />
+                {subscriberSearch && (
+                  <Chip
+                    label={`Filtered: ${filteredSubscribers.length}`}
+                    size="small"
+                    sx={{ bgcolor: 'rgba(255,255,255,0.08)', color: '#94A3B8', fontSize: '0.7rem' }}
+                  />
+                )}
+              </Box>
+            </Box>
+
+            {/* Subscriber Table */}
+            {filteredSubscribers.length === 0 ? (
+              <Paper
+                elevation={0}
+                sx={{
+                  ...modernCardSx,
+                  p: 6,
+                  textAlign: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 2
+                }}
+              >
+                <Box sx={{ p: 2, borderRadius: '50%', bgcolor: 'rgba(212, 175, 55, 0.1)', color: goldColor }}>
+                  <Mail size={36} />
+                </Box>
+                <Typography variant="h6" sx={{ fontWeight: 800, color: '#F8FAFC' }}>
+                  {subscriberSearch ? 'No subscribers match your search' : 'No VIP Club Subscribers Yet'}
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#94A3B8', maxWidth: 450, fontSize: '0.85rem' }}>
+                  {subscriberSearch
+                    ? 'Try clearing the search input to see all club members.'
+                    : 'When visitors enter their email into the "ENTER YOUR EMAIL FOR EARLY ACCESS" box in the footer or homepage, their emails will appear here automatically.'}
+                </Typography>
+              </Paper>
+            ) : (
+              <TableContainer component={Paper} elevation={0} sx={{ ...modernCardSx, border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <Table sx={{ minWidth: 650 }}>
+                  <TableHead sx={{ bgcolor: 'rgba(255, 255, 255, 0.02)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                    <TableRow>
+                      <TableCell sx={{ color: '#94A3B8', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', py: 2 }}>#</TableCell>
+                      <TableCell sx={{ color: '#94A3B8', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', py: 2 }}>VIP Member Email</TableCell>
+                      <TableCell sx={{ color: '#94A3B8', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', py: 2 }}>Source</TableCell>
+                      <TableCell sx={{ color: '#94A3B8', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', py: 2 }}>Date Joined</TableCell>
+                      <TableCell align="right" sx={{ color: '#94A3B8', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', py: 2 }}>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {filteredSubscribers.map((sub, idx) => {
+                      const initial = sub.email ? sub.email.charAt(0).toUpperCase() : 'V';
+                      const formattedDate = new Date(sub.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      });
+
+                      return (
+                        <TableRow
+                          key={sub.id || sub.email}
+                          sx={{
+                            borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+                            transition: 'background-color 0.15s ease',
+                            '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.03)' }
+                          }}
+                        >
+                          <TableCell sx={{ color: '#64748B', fontSize: '0.75rem', fontFamily: 'monospace' }}>
+                            {idx + 1}
+                          </TableCell>
+
+                          <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                              <Box
+                                sx={{
+                                  width: 34,
+                                  height: 34,
+                                  borderRadius: '50%',
+                                  bgcolor: 'rgba(212, 175, 55, 0.15)',
+                                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                                  color: goldColor,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontWeight: 800,
+                                  fontSize: '0.85rem'
+                                }}
+                              >
+                                {initial}
+                              </Box>
+                              <Typography sx={{ color: '#F8FAFC', fontWeight: 700, fontSize: '0.85rem', fontFamily: '"Inter", sans-serif' }}>
+                                {sub.email}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+
+                          <TableCell>
+                            <Chip
+                              size="small"
+                              label={(sub.source || 'footer').toUpperCase()}
+                              sx={{
+                                height: 22,
+                                fontSize: '0.65rem',
+                                fontWeight: 800,
+                                bgcolor: sub.source === 'homepage' ? 'rgba(56, 189, 248, 0.12)' : 'rgba(212, 175, 55, 0.12)',
+                                color: sub.source === 'homepage' ? '#38BDF8' : goldColor,
+                                border: '1px solid',
+                                borderColor: sub.source === 'homepage' ? 'rgba(56, 189, 248, 0.3)' : 'rgba(212, 175, 55, 0.3)',
+                              }}
+                            />
+                          </TableCell>
+
+                          <TableCell sx={{ color: '#94A3B8', fontSize: '0.8rem' }}>
+                            {formattedDate}
+                          </TableCell>
+
+                          <TableCell align="right">
+                            <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+                              <Tooltip title="Copy Email">
+                                <IconButton
+                                  size="small"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(sub.email);
+                                    showToast(`Copied ${sub.email} to clipboard!`, 'success');
+                                  }}
+                                  sx={{ color: '#94A3B8', '&:hover': { color: goldColor } }}
+                                >
+                                  <Copy size={16} />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Remove Subscriber">
+                                <IconButton
+                                  size="small"
+                                  onClick={() => handleDeleteSubscriber(sub.id, sub.email)}
+                                  sx={{ color: '#94A3B8', '&:hover': { color: '#EF4444' } }}
+                                >
+                                  <Trash2 size={16} />
+                                </IconButton>
+                              </Tooltip>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          </Box>
+        )}
+
+        {/* ========================================== */}
+        {/* 9. COUPONS & DISCOUNTS TAB */}
         {/* ========================================== */}
         {activeTab === 'COUPONS' && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -2872,6 +3289,7 @@ export const AdminDashboard: React.FC = () => {
       <Dialog
         open={isProductModalOpen}
         onClose={() => setIsProductModalOpen(false)}
+        disableRestoreFocus
         maxWidth="md"
         fullWidth
         slotProps={{
@@ -3225,6 +3643,7 @@ export const AdminDashboard: React.FC = () => {
       <Dialog
         open={Boolean(selectedOrderForAwb)}
         onClose={() => setSelectedOrderForAwb(null)}
+        disableRestoreFocus
         maxWidth="sm"
         fullWidth
         slotProps={{
@@ -3327,6 +3746,7 @@ export const AdminDashboard: React.FC = () => {
       <Dialog
         open={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
+        disableRestoreFocus
         maxWidth="sm"
         fullWidth
         slotProps={{
@@ -3461,6 +3881,7 @@ export const AdminDashboard: React.FC = () => {
       <Dialog
         open={isCouponModalOpen}
         onClose={() => setIsCouponModalOpen(false)}
+        disableRestoreFocus
         maxWidth="sm"
         fullWidth
         slotProps={{
@@ -3589,6 +4010,7 @@ export const AdminDashboard: React.FC = () => {
       <Dialog
         open={Boolean(viewingCustomer)}
         onClose={() => setViewingCustomer(null)}
+        disableRestoreFocus
         maxWidth="sm"
         fullWidth
         slotProps={{
@@ -3688,6 +4110,7 @@ export const AdminDashboard: React.FC = () => {
       <Dialog
         open={Boolean(deleteConfirmTarget)}
         onClose={() => setDeleteConfirmTarget(null)}
+        disableRestoreFocus
         maxWidth="xs"
         fullWidth
         slotProps={{

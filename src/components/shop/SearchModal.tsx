@@ -100,6 +100,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       open={isOpen}
       onClose={onClose}
       closeAfterTransition
+      disableRestoreFocus
       slots={{ backdrop: Backdrop }}
       slotProps={{
         backdrop: {

@@ -19,7 +19,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { saveProductToSupabase, deleteProductFromSupabase, mapSupabaseRowToProduct } from '../services/productService';
 import { calculateShippingFee, getAvailableShippingMethods } from '../services/shippingService';
 import type { ShippingMethod } from '../services/shippingService';
-import { createOrderSecurely, updateOrderStatusWithAudit, getAllOrders } from '../services/orderService';
+import { createOrderSecurely, updateOrderStatusWithAudit, getAllOrders, deductStockFromProducts } from '../services/orderService';
 
 interface StoreContextType {
   // Products
@@ -380,12 +380,24 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const allLatestOrders = await getAllOrders();
     setOrders(allLatestOrders);
 
+    // Deduct stock in real-time across the app state
+    setProducts((prev) => {
+      const updated = deductStockFromProducts(
+        prev,
+        cart.map((c) => ({
+          productId: c.productId,
+          size: c.selectedSize,
+          color: c.selectedColor,
+          quantity: c.quantity
+        }))
+      );
+      localStorage.setItem('valknut_products_v2', JSON.stringify(updated));
+      return updated;
+    });
+
     try {
       const logsSaved = localStorage.getItem('valknut_logs');
       if (logsSaved) setNotificationLogs(JSON.parse(logsSaved));
-      
-      const prodsSaved = localStorage.getItem('valknut_products');
-      if (prodsSaved) setProducts(JSON.parse(prodsSaved));
     } catch (e) {
       // ignore
     }

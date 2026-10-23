@@ -85,6 +85,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
         open={!!product}
         onClose={onClose}
         closeAfterTransition
+        disableRestoreFocus
         slots={{ backdrop: Backdrop }}
         slotProps={{
           backdrop: {

@@ -32,6 +32,7 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose 
       open={isOpen}
       onClose={onClose}
       closeAfterTransition
+      disableRestoreFocus
       slots={{ backdrop: Backdrop }}
       slotProps={{
         backdrop: {

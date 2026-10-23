@@ -3,21 +3,34 @@ import { ArrowRight, Check } from 'lucide-react';
 import { 
   Box, Typography, Container, Button, TextField, CircularProgress
 } from '@mui/material';
+import { subscribeToClub } from '../../services/newsletterService';
 
 export const NewsletterSection: React.FC = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [feedbackText, setFeedbackText] = useState('YOUR EMAIL IS RESERVED ON THE VIP DROP LIST');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email.trim() && email.includes('@')) {
       setIsLoading(true);
-      setTimeout(() => {
+      try {
+        const res = await subscribeToClub(email, 'homepage');
+        if (res.success) {
+          setSubscribed(true);
+          setFeedbackText(
+            res.alreadySubscribed
+              ? 'YOU ARE ALREADY ON THE VIP DROP LIST'
+              : 'YOUR EMAIL IS RESERVED ON THE VIP DROP LIST'
+          );
+          setEmail('');
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
         setIsLoading(false);
-        setSubscribed(true);
-        setEmail('');
-      }, 500);
+      }
     }
   };
 
@@ -105,7 +118,7 @@ export const NewsletterSection: React.FC = () => {
                       fontSize: { xs: '0.65rem', sm: '0.75rem' }
                     }}
                   >
-                    YOUR EMAIL IS RESERVED ON THE VIP DROP LIST
+                    {feedbackText}
                   </Typography>
                 </Box>
               ) : (

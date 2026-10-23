@@ -454,7 +454,7 @@ export async function queryShopProducts(
       limit = 12
     } = params;
 
-    let query = supabase.from('products').select('*', { count: 'exact' });
+    let query = supabase.from('products').select('*, product_variants(*)', { count: 'exact' });
 
     // Category filter
     if (category !== 'ALL') {
@@ -593,7 +593,7 @@ export async function searchCatalog(
 export async function getAllProducts(): Promise<Product[]> {
   if (isSupabaseConfigured && supabase) {
     try {
-      const { data, error } = await supabase.from('products').select('*');
+      const { data, error } = await supabase.from('products').select('*, product_variants(*)');
       if (!error && data) {
         return data.map(mapSupabaseRowToProduct);
       }

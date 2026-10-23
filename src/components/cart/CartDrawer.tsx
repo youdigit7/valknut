@@ -63,6 +63,7 @@ export const CartDrawer: React.FC = () => {
       anchor="right"
       open={isCartOpen}
       onClose={() => setIsCartOpen(false)}
+      disableRestoreFocus
       sx={{
         '& .MuiDrawer-paper': {
           width: { xs: '100vw', sm: '400px', md: '450px' },

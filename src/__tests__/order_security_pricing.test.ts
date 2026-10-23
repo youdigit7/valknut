@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { validateOrderSecurity } from '../services/orderService';
+import { validateOrderSecurity, deductStockFromProducts } from '../services/orderService';
 import { calculateShippingFee } from '../services/shippingService';
 import * as productService from '../services/productService';
 import type { CartItem, Product, Coupon } from '../types/ecommerce';
@@ -148,5 +148,18 @@ describe('Order Security, Calculations & Checkout QA Suite', () => {
     const result = await validateOrderSecurity([outOfStockItem], undefined, 'standard', testCoupons);
     expect(result.valid).toBe(false);
     expect(result.errors.some(e => e.includes('out of stock'))).toBe(true);
+  });
+
+  it('deducts stock correctly after customer purchase', () => {
+    // Initial stock for Size M is 10, Size L is 0
+    const productsBefore = [testProduct];
+    const cartItems = [{ productId: testProduct.id, size: 'M', color: 'Onyx Black', quantity: 4 }];
+
+    const updated = deductStockFromProducts(productsBefore, cartItems);
+    const sizeM = updated[0].variants.find(v => v.size === 'M');
+    const sizeL = updated[0].variants.find(v => v.size === 'L');
+
+    expect(sizeM?.stock).toBe(6); // 10 - 4 = 6
+    expect(sizeL?.stock).toBe(0); // Unchanged
   });
 });

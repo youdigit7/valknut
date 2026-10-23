@@ -492,6 +492,36 @@ export async function createOrderSecurely(payload: CreateOrderPayload): Promise<
 }
 
 /**
+ * Pure function to deduct stock counts for ordered items across an array of products
+ */
+export function deductStockFromProducts(
+  products: Product[],
+  items: { productId: string; size: string; color?: string; quantity: number }[]
+): Product[] {
+  return products.map((prod) => {
+    const orderItemsForProd = items.filter((i) => i.productId === prod.id);
+    if (orderItemsForProd.length === 0) return prod;
+
+    const prodVariants = Array.isArray(prod.variants) ? prod.variants : [];
+    const updatedVariants = prodVariants.map((v) => {
+      const match = orderItemsForProd.find(
+        (oi) =>
+          oi.size.toUpperCase() === v.size.toUpperCase() &&
+          (!oi.color || oi.color.toLowerCase() === v.color.toLowerCase())
+      );
+      if (match) {
+        const currentStock = v.stock ?? v.stockCount ?? 0;
+        const newStock = Math.max(0, currentStock - match.quantity);
+        return { ...v, stock: newStock, stockCount: newStock };
+      }
+      return v;
+    });
+
+    return { ...prod, variants: updatedVariants };
+  });
+}
+
+/**
  * Deducts stock for each item from products store
  */
 async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
@@ -499,32 +529,34 @@ async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
     const saved = localStorage.getItem('valknut_products_v2') || localStorage.getItem('valknut_products');
     if (saved) {
       const products: Product[] = JSON.parse(saved);
-      const updatedProducts = products.map((prod) => {
-        const orderItemsForProd = items.filter((i) => i.productId === prod.id);
-        if (orderItemsForProd.length === 0) return prod;
-
-        const prodVariants = Array.isArray(prod.variants) ? prod.variants : [];
-        const updatedVariants = prodVariants.map((v) => {
-          const match = orderItemsForProd.find((oi) => oi.size === v.size && oi.color.toLowerCase() === v.color.toLowerCase());
-          if (match) {
-            const newStock = Math.max(0, (v.stock ?? 0) - match.quantity);
-            return { ...v, stock: newStock, stockCount: newStock };
-          }
-          return v;
-        });
-
-        return { ...prod, variants: updatedVariants };
-      });
-
+      const updatedProducts = deductStockFromProducts(products, items);
       localStorage.setItem('valknut_products_v2', JSON.stringify(updatedProducts));
+      localStorage.setItem('valknut_products', JSON.stringify(updatedProducts));
     }
 
     // Deduct stock in Supabase cloud database if available
     if (isSupabaseConfigured && supabase) {
       for (const item of items) {
         try {
-          let query = supabase.from('product_variants').select('stock, id');
           const isUuid = item.variantId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.variantId);
+
+          // 1. Try atomic database RPC function first
+          if (isUuid) {
+            const { error: rpcErr } = await supabase.rpc('deduct_variant_stock', {
+              p_variant_id: item.variantId,
+              p_quantity: item.quantity
+            });
+            if (!rpcErr) continue;
+          } else if (item.sku) {
+            const { error: rpcSkuErr } = await supabase.rpc('deduct_variant_stock_by_sku', {
+              p_sku: item.sku,
+              p_quantity: item.quantity
+            });
+            if (!rpcSkuErr) continue;
+          }
+
+          // 2. Direct update fallback
+          let query = supabase.from('product_variants').select('stock, id');
           if (isUuid) {
             query = query.eq('id', item.variantId);
           } else if (item.sku) {

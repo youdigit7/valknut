@@ -6,17 +6,37 @@ import {
 } from '@mui/material';
 import darkLogo from '../../assets/logos/symbol-dark.png';
 
+import { subscribeToClub } from '../../services/newsletterService';
+
 export const Footer: React.FC = () => {
 
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 4000);
+    if (!email.trim()) return;
+
+    setLoading(true);
+    try {
+      const res = await subscribeToClub(email, 'footer');
+      if (res.success) {
+        setSubscribed(true);
+        setFeedbackMessage(res.message);
+        setEmail('');
+        setTimeout(() => {
+          setSubscribed(false);
+          setFeedbackMessage('');
+        }, 5000);
+      } else {
+        setFeedbackMessage(res.message);
+      }
+    } catch (err) {
+      console.error('Subscription error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,6 +106,7 @@ export const Footer: React.FC = () => {
                   <Button
                     type="submit"
                     variant="contained"
+                    disabled={loading}
                     sx={{
                       height: '48px',
                       borderRadius: '6px',
@@ -106,10 +127,16 @@ export const Footer: React.FC = () => {
                       '&:hover': {
                         bgcolor: 'primary.dark',
                         boxShadow: '0 6px 18px rgba(212,175,55,0.5)'
+                      },
+                      '&:disabled': {
+                        bgcolor: 'rgba(212,175,55,0.4)',
+                        color: '#333'
                       }
                     }}
                   >
-                    {subscribed ? (
+                    {loading ? (
+                      'JOINING...'
+                    ) : subscribed ? (
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Check size={16} /> JOINED
                       </Box>
@@ -120,9 +147,9 @@ export const Footer: React.FC = () => {
                     )}
                   </Button>
                 </Box>
-                {subscribed && (
-                  <Typography variant="caption" sx={{ color: 'primary.main', mt: 1, display: 'block' }}>
-                    ✓ You have been added to the VIP drop list.
+                {feedbackMessage && (
+                  <Typography variant="caption" sx={{ color: 'primary.main', mt: 1, display: 'block', fontWeight: 600 }}>
+                    ✓ {feedbackMessage}
                   </Typography>
                 )}
               </Box>

@@ -272,4 +272,19 @@ CREATE POLICY "Users manage own cart" ON public.cart_items FOR ALL USING (auth.u
 
 -- Coupons: Public read-only
 CREATE POLICY "Allow public read coupons" ON public.coupons FOR SELECT USING (true);
+
+-- 12. NEWSLETTER & VIP CLUB SUBSCRIBERS TABLE
+CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT UNIQUE NOT NULL,
+  source TEXT DEFAULT 'footer',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public subscribe newsletter" ON public.newsletter_subscribers FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow admin view newsletter" ON public.newsletter_subscribers FOR SELECT USING (true);
+
+-- Allow public stock decrement on checkout
+CREATE POLICY "Allow public update variant stock" ON public.product_variants FOR UPDATE USING (true) WITH CHECK (true);
 `;

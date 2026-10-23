@@ -115,6 +115,7 @@ export const CheckoutModal: React.FC = () => {
       open={isCheckoutOpen}
       onClose={handleClose}
       closeAfterTransition
+      disableRestoreFocus
       slots={{ backdrop: Backdrop }}
       slotProps={{
         backdrop: {

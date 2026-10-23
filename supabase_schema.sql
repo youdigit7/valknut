@@ -104,9 +104,44 @@ CREATE POLICY "Public product variants are viewable by everyone"
 ON public.product_variants FOR SELECT 
 USING (true);
 
+-- Allow stock decrement on checkout (both authenticated customers and guests)
+CREATE POLICY "Permit stock updates on checkout" 
+ON public.product_variants FOR UPDATE 
+USING (true)
+WITH CHECK (true);
+
 CREATE POLICY "Admins have full access to product variants" 
 ON public.product_variants FOR ALL 
 USING (is_admin());
+
+-- RPC Functions to safely deduct stock without concurrency race conditions
+CREATE OR REPLACE FUNCTION deduct_variant_stock(p_variant_id UUID, p_quantity INT)
+RETURNS INT AS $$
+DECLARE
+  v_new_stock INT;
+BEGIN
+  UPDATE public.product_variants
+  SET stock = GREATEST(0, stock - p_quantity)
+  WHERE id = p_variant_id
+  RETURNING stock INTO v_new_stock;
+  
+  RETURN v_new_stock;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION deduct_variant_stock_by_sku(p_sku TEXT, p_quantity INT)
+RETURNS INT AS $$
+DECLARE
+  v_new_stock INT;
+BEGIN
+  UPDATE public.product_variants
+  SET stock = GREATEST(0, stock - p_quantity)
+  WHERE sku = p_sku
+  RETURNING stock INTO v_new_stock;
+  
+  RETURN v_new_stock;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ------------------------------------------------------------------------------
 -- 5. COUPONS & DISCOUNTS TABLE
@@ -246,3 +281,33 @@ CREATE INDEX IF NOT EXISTS idx_product_variants_sku ON public.product_variants(s
 CREATE INDEX IF NOT EXISTS idx_orders_order_number ON public.orders(order_number);
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON public.orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_orders_created_at ON public.orders(created_at DESC);
+
+-- ------------------------------------------------------------------------------
+-- 9. NEWSLETTER & VIP CLUB SUBSCRIBERS
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email TEXT NOT NULL UNIQUE,
+    source TEXT DEFAULT 'footer',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
+
+-- Anyone can subscribe to the early access / VIP club drop list
+CREATE POLICY "Public newsletter subscription permitted" 
+ON public.newsletter_subscribers FOR INSERT 
+WITH CHECK (true);
+
+-- Only admins can view subscriber emails
+CREATE POLICY "Admins can view newsletter subscribers" 
+ON public.newsletter_subscribers FOR SELECT 
+USING (is_admin());
+
+-- Only admins can delete newsletter subscribers
+CREATE POLICY "Admins can delete newsletter subscribers" 
+ON public.newsletter_subscribers FOR DELETE 
+USING (is_admin());
+
+CREATE INDEX IF NOT EXISTS idx_subscribers_email ON public.newsletter_subscribers(email);
+CREATE INDEX IF NOT EXISTS idx_subscribers_created_at ON public.newsletter_subscribers(created_at DESC);

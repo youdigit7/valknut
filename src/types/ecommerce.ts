@@ -335,3 +335,10 @@ export interface Order {
   trackingLink?: string;
   notes?: string;
 }
+
+export interface ClubSubscriber {
+  id: string;
+  email: string;
+  source: string;
+  createdAt: string;
+}

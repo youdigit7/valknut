@@ -209,6 +209,7 @@ export const CustomerAccountModal: React.FC = () => {
       open={isAccountOpen}
       onClose={() => setIsAccountOpen(false)}
       closeAfterTransition
+      disableRestoreFocus
       slots={{ backdrop: Backdrop }}
       slotProps={{
         backdrop: {

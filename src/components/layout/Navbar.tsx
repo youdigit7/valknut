@@ -371,7 +371,13 @@ export const Navbar: React.FC = () => {
               <IconButton onClick={() => handleNavigate('#/lookbook')} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }}>
                 <Heart size={18} />
               </IconButton>
-              <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }}>
+              <IconButton
+                onClick={(e) => {
+                  (e.currentTarget as HTMLElement)?.blur?.();
+                  setIsCartOpen(true);
+                }}
+                sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }}
+              >
                 <Badge badgeContent={cartItemsCount} color="primary" sx={{ '& .MuiBadge-badge': { color: 'black', fontWeight: 'bold' } }}>
                   <ShoppingBag size={18} />
                 </Badge>
@@ -381,18 +387,36 @@ export const Navbar: React.FC = () => {
             {/* MOBILE / TABLET RIGHT ACTIONS */}
             <Box sx={{ display: { xs: 'flex', lg: 'none' }, alignItems: 'center', gap: 1 }}>
 
-              <IconButton onClick={() => setIsSearchOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
+              <IconButton
+                onClick={(e) => {
+                  (e.currentTarget as HTMLElement)?.blur?.();
+                  setIsSearchOpen(true);
+                }}
+                sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}
+              >
                 <Search size={16} />
               </IconButton>
               <IconButton onClick={(e) => setUserAnchorEl(e.currentTarget)} sx={{ color: user ? '#D4AF37' : 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
                 <User size={16} />
               </IconButton>
-              <IconButton onClick={() => setIsCartOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
+              <IconButton
+                onClick={(e) => {
+                  (e.currentTarget as HTMLElement)?.blur?.();
+                  setIsCartOpen(true);
+                }}
+                sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}
+              >
                 <Badge badgeContent={cartItemsCount} color="primary" sx={{ '& .MuiBadge-badge': { color: 'black', fontWeight: 'bold' } }}>
                   <ShoppingBag size={16} />
                 </Badge>
               </IconButton>
-              <IconButton onClick={() => setIsMobileMenuOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
+              <IconButton
+                onClick={(e) => {
+                  (e.currentTarget as HTMLElement)?.blur?.();
+                  setIsMobileMenuOpen(true);
+                }}
+                sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}
+              >
                 <Menu size={16} />
               </IconButton>
             </Box>
@@ -406,6 +430,7 @@ export const Navbar: React.FC = () => {
         anchor="left"
         open={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
+        disableRestoreFocus
         slotProps={{ paper: { sx: { width: '85%', maxWidth: 320, bgcolor: 'var(--bg-main)', borderRight: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' } } }}
       >
         <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: mode === 'dark' ? 'linear-gradient(to bottom, rgba(255,255,255,0.02), transparent)' : 'linear-gradient(to bottom, rgba(0,0,0,0.02), transparent)' }}>
