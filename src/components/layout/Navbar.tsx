@@ -12,8 +12,6 @@ import {
   ChevronDown,
   ChevronRight,
   Sparkles,
-  Sun,
-  Moon,
   ShieldCheck,
   LogOut
 } from 'lucide-react';
@@ -23,7 +21,6 @@ import {
   Button, IconButton, Badge, Drawer, Menu as MuiMenu, MenuItem, AppBar, Toolbar, Divider
 } from '@mui/material';
 import darkLogo from '../../assets/logos/symbol-dark.png';
-import lightLogo from '../../assets/logos/symbol-light.png';
 
 export const Navbar: React.FC = () => {
   const {
@@ -42,7 +39,7 @@ export const Navbar: React.FC = () => {
   const [selectedCurrency, setSelectedCurrency] = useState('LKR');
   const [currencyAnchorEl, setCurrencyAnchorEl] = useState<null | HTMLElement>(null);
   const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
-  const { mode, toggleTheme } = useAppTheme();
+  const { mode } = useAppTheme();
 
   const cartItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const currencies = ['LKR', 'USD', 'EUR', 'GBP', 'AUD'];
@@ -127,7 +124,7 @@ export const Navbar: React.FC = () => {
             >
               <Box 
                 component="img"
-                src={mode === 'dark' ? darkLogo : lightLogo}
+                src={darkLogo}
                 alt="Valknut Logo"
                 sx={{ 
                   width: { xs: 34, lg: 40 }, 
@@ -256,9 +253,7 @@ export const Navbar: React.FC = () => {
                 <Box component="span" sx={{ ml: 1, fontSize: '0.6rem', bgcolor: mode === 'dark' ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.06)', px: 1, borderRadius: 1, border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.08)' }}>⌘K</Box>
               </Button>
 
-              <IconButton onClick={toggleTheme} sx={{ color: 'var(--text-secondary)', '&:hover': { color: mode === 'dark' ? 'white' : 'black', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' } }}>
-                {mode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-              </IconButton>
+
               <IconButton 
                 onClick={(e) => setUserAnchorEl(e.currentTarget)} 
                 sx={{ 
@@ -385,9 +380,7 @@ export const Navbar: React.FC = () => {
 
             {/* MOBILE / TABLET RIGHT ACTIONS */}
             <Box sx={{ display: { xs: 'flex', lg: 'none' }, alignItems: 'center', gap: 1 }}>
-              <IconButton onClick={toggleTheme} sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
-                {mode === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-              </IconButton>
+
               <IconButton onClick={() => setIsSearchOpen(true)} sx={{ color: 'var(--text-secondary)', border: '1px solid', borderColor: mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}>
                 <Search size={16} />
               </IconButton>
@@ -419,7 +412,7 @@ export const Navbar: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Box 
               component="img"
-              src={mode === 'dark' ? darkLogo : lightLogo}
+              src={darkLogo}
               alt="Valknut Logo"
               sx={{ width: 32, height: 32, objectFit: 'contain' }} 
             />

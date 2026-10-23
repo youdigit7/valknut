@@ -5,11 +5,9 @@ import {
   Grid, Link, IconButton, Paper, TextField, Button
 } from '@mui/material';
 import darkLogo from '../../assets/logos/symbol-dark.png';
-import lightLogo from '../../assets/logos/symbol-light.png';
-import { useAppTheme } from '../../context/ThemeContext';
 
 export const Footer: React.FC = () => {
-  const { mode } = useAppTheme();
+
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -141,9 +139,9 @@ export const Footer: React.FC = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                 <Box
                   component="img"
-                  src={mode === 'dark' ? darkLogo : lightLogo}
+                  src={darkLogo}
                   alt="Valknut Logo"
-                  sx={{ width: 40, height: 40, objectFit: 'contain', filter: mode === 'dark' ? 'drop-shadow(0 2px 8px rgba(212,175,55,0.4))' : 'none' }}
+                  sx={{ width: 40, height: 40, objectFit: 'contain', filter: 'drop-shadow(0 2px 8px rgba(212,175,55,0.4))' }}
                 />
                 <Typography sx={{ fontSize: '1.5rem', fontWeight: 900, letterSpacing: '0.2em', fontFamily: '"Outfit", sans-serif', color: 'var(--text-primary)' }}>VALKNUT</Typography>
               </Box>
