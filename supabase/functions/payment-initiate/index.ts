@@ -38,15 +38,65 @@ serve(async (req) => {
       );
     }
 
-    // 2. OnePay IPG
+    // 2. OnePay IPG (v3)
     if (gateway === "OnePay") {
-      const onePayAppId = Deno.env.get("ONEPAY_APP_ID") || "VK_ONEPAY_PROD";
+      const onePayAppId = Deno.env.get("ONEPAY_APP_ID") || "M2AZ1192C785F712D7E21";
+      const onePayAppToken = Deno.env.get("ONEPAY_APP_TOKEN") || "";
+      const onePayHashSalt = Deno.env.get("ONEPAY_HASH_SALT") || "";
+      const formattedAmount = Number(amount).toFixed(2);
+      const curr = currency || "LKR";
+
+      // Compute SHA-256 hash: appId + currency + amount + hashSalt
+      const rawString = `${onePayAppId}${curr}${formattedAmount}${onePayHashSalt}`;
+      const encoder = new TextEncoder();
+      const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(rawString));
+      const hash = Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
+
+      try {
+        const onePayRes = await fetch("https://api.onepay.lk/v3/checkout/link/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": onePayAppToken
+          },
+          body: JSON.stringify({
+            app_id: onePayAppId,
+            amount: parseFloat(formattedAmount),
+            currency: curr,
+            hash: hash,
+            reference: orderNumber,
+            customer_first_name: customer?.name?.split(" ")[0] || "Valued",
+            customer_last_name: customer?.name?.split(" ").slice(1).join(" ") || "Customer",
+            customer_email: customer?.email || "customer@valknut.lk",
+            customer_phone: customer?.phone || "+94770000000",
+            transaction_redirect_url: returnUrl || "https://valknutofficial.com/#/order-confirmation",
+            additional_details: orderNumber
+          })
+        });
+
+        if (onePayRes.ok) {
+          const resData = await onePayRes.json();
+          if (resData.data?.redirect_url || resData.redirect_url) {
+            return new Response(
+              JSON.stringify({
+                success: true,
+                transactionId: resData.data?.transaction_id || txnId,
+                paymentUrl: resData.data?.redirect_url || resData.redirect_url
+              }),
+              { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+          }
+        }
+      } catch (fetchErr) {
+        console.error("OnePay API call failed, falling back to direct redirect:", fetchErr);
+      }
+
       return new Response(
         JSON.stringify({
           success: true,
           transactionId: txnId,
           sessionId: `ONEPAY_${orderNumber}`,
-          paymentUrl: `https://merchant.onepay.lk/ipg/pay?app_id=${onePayAppId}&reference=${orderNumber}&amount=${amount}`
+          paymentUrl: `https://api.onepay.lk/v3/checkout/link/`
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );

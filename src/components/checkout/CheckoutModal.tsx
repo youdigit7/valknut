@@ -14,6 +14,8 @@ import {
   Package
 } from 'lucide-react';
 import { Modal, Backdrop, Fade, Box, Typography, IconButton, Grid, TextField, MenuItem, Button } from '@mui/material';
+import { initiateOnePayPayment } from '../../services/onepayService';
+import { OnePaySandboxModal } from './OnePaySandboxModal';
 
 const SRI_LANKAN_DISTRICTS = [
   'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya',
@@ -37,6 +39,7 @@ export const CheckoutModal: React.FC = () => {
     setShippingMethodId,
     availableShippingMethods,
     createOrder,
+    updateOrderPayment,
     user
   } = useStore();
 
@@ -44,6 +47,10 @@ export const CheckoutModal: React.FC = () => {
   const [placedOrder, setPlacedOrder] = useState<Order | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // OnePay Modal State
+  const [onePayModalOpen, setOnePayModalOpen] = useState(false);
+  const [pendingOnePayOrder, setPendingOnePayOrder] = useState<Order | null>(null);
 
   // Form State
   const [fullName, setFullName] = useState(user?.name || '');
@@ -69,6 +76,36 @@ export const CheckoutModal: React.FC = () => {
 
     try {
       const order = await createOrder(shippingInfo, paymentGateway, notes, shippingMethodId);
+      // OnePay Payment Gateway Flow
+      if (paymentGateway === 'OnePay') {
+        const onePayRes = await initiateOnePayPayment({
+          orderNumber: order.orderNumber,
+          amount: order.totalAmount,
+          customerName: shippingInfo.fullName,
+          customerEmail: shippingInfo.email,
+          customerPhone: shippingInfo.phone,
+          redirectUrl: `${window.location.origin}/#/order-confirmation?orderNumber=${order.orderNumber}&gateway=OnePay`
+        });
+
+        // 1. Simulated / Sandbox Test Modal
+        if (onePayRes.isSimulated) {
+          setPendingOnePayOrder(order);
+          setOnePayModalOpen(true);
+          return;
+        }
+
+        // 2. Live Redirection
+        if (onePayRes.success && onePayRes.paymentUrl) {
+          window.location.href = onePayRes.paymentUrl;
+          return;
+        }
+
+        if (!onePayRes.success) {
+          setErrorMsg(onePayRes.error || 'Failed to initialize OnePay payment.');
+          return;
+        }
+      }
+
       setPlacedOrder(order);
       setStep('CONFIRMATION');
 
@@ -88,6 +125,34 @@ export const CheckoutModal: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleOnePaySuccess = async (txnId: string) => {
+    if (!pendingOnePayOrder) return;
+    setIsSubmitting(true);
+    try {
+      const paidOrder = await updateOrderPayment(pendingOnePayOrder.orderNumber, 'PAID', txnId);
+      setPlacedOrder(paidOrder || { ...pendingOnePayOrder, paymentStatus: 'PAID' });
+      setOnePayModalOpen(false);
+      setStep('CONFIRMATION');
+      try {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#D4AF37', '#FFFFFF', '#A38025']
+        });
+      } catch (err) {}
+    } catch (err: any) {
+      setErrorMsg(err?.message || 'Payment confirmation error.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleOnePayCancel = () => {
+    setOnePayModalOpen(false);
+    setErrorMsg('OnePay payment was cancelled. Your items are reserved; you can retry payment anytime.');
   };
 
   const handleClose = () => {
@@ -111,6 +176,7 @@ export const CheckoutModal: React.FC = () => {
   };
 
   return (
+    <>
     <Modal
       open={isCheckoutOpen}
       onClose={handleClose}
@@ -451,5 +517,14 @@ export const CheckoutModal: React.FC = () => {
         </Box>
       </Fade>
     </Modal>
+
+    {/* OnePay Testing Simulator Modal */}
+    <OnePaySandboxModal
+      open={onePayModalOpen}
+      order={pendingOnePayOrder}
+      onSuccess={handleOnePaySuccess}
+      onCancel={handleOnePayCancel}
+    />
+    </>
   );
 };

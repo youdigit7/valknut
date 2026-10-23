@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import { Box, Typography, Button, Grid, TextField, MenuItem, CircularProgress, InputBase, FormControlLabel, Checkbox } from '@mui/material';
 import { registerCustomer } from '../../services/authService';
+import { initiateOnePayPayment } from '../../services/onepayService';
+import { OnePaySandboxModal } from './OnePaySandboxModal';
 
 const SRI_LANKAN_DISTRICTS = [
   'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya',
@@ -47,6 +49,7 @@ export const CheckoutPage: React.FC = () => {
     setShippingMethodId,
     availableShippingMethods,
     createOrder,
+    updateOrderPayment,
     user,
     setIsAccountOpen,
     setUserProfile
@@ -61,6 +64,10 @@ export const CheckoutPage: React.FC = () => {
   // Guest Account Creation Option
   const [createAccountWithOrder, setCreateAccountWithOrder] = useState(false);
   const [accountPassword, setAccountPassword] = useState('');
+
+  // OnePay Modal State
+  const [onePayModalOpen, setOnePayModalOpen] = useState(false);
+  const [pendingOnePayOrder, setPendingOnePayOrder] = useState<Order | null>(null);
 
   // Form State
   const [fullName, setFullName] = useState(user?.name || '');
@@ -92,6 +99,35 @@ export const CheckoutPage: React.FC = () => {
       }
     }
   }, [user]);
+
+  // Handle return redirect from live OnePay IPG
+  useEffect(() => {
+    const hash = window.location.hash || '';
+    const queryStr = hash.includes('?') ? hash.split('?')[1] : window.location.search.replace(/^\?/, '');
+    if (queryStr) {
+      const params = new URLSearchParams(queryStr);
+      const orderNum = params.get('orderNumber') || params.get('reference');
+      const status = params.get('status');
+      const txnId = params.get('transaction_id') || params.get('txnId');
+
+      if (orderNum && (status === 'SUCCESS' || status === 'success' || status === 'PAID')) {
+        updateOrderPayment(orderNum, 'PAID', txnId || undefined).then((confirmedOrder) => {
+          if (confirmedOrder) {
+            setPlacedOrder(confirmedOrder);
+            setStep('CONFIRMATION');
+            try {
+              confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.55 },
+                colors: ['#D4AF37', '#FFFFFF', '#A38025', '#FFDF00']
+              });
+            } catch (err) {}
+          }
+        });
+      }
+    }
+  }, [updateOrderPayment]);
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,6 +189,38 @@ export const CheckoutPage: React.FC = () => {
         }
       }
 
+      // OnePay Payment Gateway Flow
+      if (paymentGateway === 'OnePay') {
+        const onePayRes = await initiateOnePayPayment({
+          orderNumber: order.orderNumber,
+          amount: order.totalAmount,
+          customerName: shippingInfo.fullName,
+          customerEmail: shippingInfo.email,
+          customerPhone: shippingInfo.phone,
+          redirectUrl: `${window.location.origin}/#/order-confirmation?orderNumber=${order.orderNumber}&gateway=OnePay`
+        });
+
+        // 1. Simulated / Sandbox Test Modal
+        if (onePayRes.isSimulated) {
+          setPendingOnePayOrder(order);
+          setOnePayModalOpen(true);
+          return;
+        }
+
+        // 2. Live Redirection to OnePay Hosted Gateway
+        if (onePayRes.success && onePayRes.paymentUrl) {
+          window.location.href = onePayRes.paymentUrl;
+          return;
+        }
+
+        // 3. Error handling
+        if (!onePayRes.success) {
+          setFormError(onePayRes.error || 'Failed to initialize OnePay payment session.');
+          return;
+        }
+      }
+
+      setPlacedOrder(order);
       setStep('CONFIRMATION');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -169,6 +237,35 @@ export const CheckoutPage: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleOnePaySuccess = async (txnId: string) => {
+    if (!pendingOnePayOrder) return;
+    setIsSubmitting(true);
+    try {
+      const paidOrder = await updateOrderPayment(pendingOnePayOrder.orderNumber, 'PAID', txnId);
+      setPlacedOrder(paidOrder || { ...pendingOnePayOrder, paymentStatus: 'PAID' });
+      setOnePayModalOpen(false);
+      setStep('CONFIRMATION');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      try {
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.55 },
+          colors: ['#D4AF37', '#FFFFFF', '#A38025', '#FFDF00']
+        });
+      } catch (err) {}
+    } catch (err: any) {
+      setFormError(err?.message || 'Payment confirmation error.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleOnePayCancel = () => {
+    setOnePayModalOpen(false);
+    setFormError('OnePay payment was cancelled or declined. Your items remain reserved; you can retry payment or choose another payment method.');
   };
 
   const handleCopyOrderNumber = () => {
@@ -759,6 +856,14 @@ export const CheckoutPage: React.FC = () => {
         )}
 
       </Box>
+
+      {/* OnePay Testing Simulator Modal */}
+      <OnePaySandboxModal
+        open={onePayModalOpen}
+        order={pendingOnePayOrder}
+        onSuccess={handleOnePaySuccess}
+        onCancel={handleOnePayCancel}
+      />
     </Box>
   );
 };

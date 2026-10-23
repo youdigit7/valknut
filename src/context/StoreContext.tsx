@@ -7,6 +7,7 @@ import type {
   Order, 
   OrderStatus, 
   PaymentGateway, 
+  PaymentStatus,
   ShippingAddress, 
   CategoryType, 
   SubCategoryType,
@@ -19,7 +20,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { saveProductToSupabase, deleteProductFromSupabase, mapSupabaseRowToProduct } from '../services/productService';
 import { calculateShippingFee, getAvailableShippingMethods } from '../services/shippingService';
 import type { ShippingMethod } from '../services/shippingService';
-import { createOrderSecurely, updateOrderStatusWithAudit, getAllOrders, deductStockFromProducts } from '../services/orderService';
+import { createOrderSecurely, updateOrderStatusWithAudit, updateOrderPaymentStatus, getAllOrders, deductStockFromProducts } from '../services/orderService';
 
 interface StoreContextType {
   // Products
@@ -78,6 +79,7 @@ interface StoreContextType {
   orders: Order[];
   createOrder: (customerInfo: ShippingAddress, paymentGateway: PaymentGateway, notes?: string, customShippingMethod?: 'standard' | 'express') => Promise<Order>;
   updateOrderStatus: (orderId: string, status: OrderStatus, courierName?: string, awbNumber?: string, trackingLink?: string) => Promise<void>;
+  updateOrderPayment: (orderNumber: string, status: PaymentStatus, transactionId?: string) => Promise<Order | null>;
 
   // Products Admin
   addProduct: (product: Product) => Promise<void>;
@@ -499,6 +501,20 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   };
 
+  const updateOrderPayment = async (
+    orderNumber: string,
+    status: PaymentStatus,
+    transactionId?: string
+  ): Promise<Order | null> => {
+    const updated = await updateOrderPaymentStatus(orderNumber, status, transactionId);
+    if (updated) {
+      const allLatestOrders = await getAllOrders();
+      setOrders(allLatestOrders);
+      showToast(`Payment confirmed for order #${updated.orderNumber}.`, 'success');
+    }
+    return updated;
+  };
+
   // Products CRUD
   const addProduct = async (p: Product) => {
     const savedProduct = await saveProductToSupabase(p);
@@ -622,6 +638,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       orders,
       createOrder,
       updateOrderStatus,
+      updateOrderPayment,
       addProduct,
       updateProduct,
       deleteProduct,

@@ -852,3 +852,79 @@ export async function updateOrderStatusWithAudit(
 
   return updatedOrder;
 }
+
+/**
+ * Updates order payment status following payment gateway callback/verification (e.g. UNPAID -> PAID)
+ */
+export async function updateOrderPaymentStatus(
+  orderNumberOrId: string,
+  newPaymentStatus: PaymentStatus,
+  transactionId?: string,
+  gatewayDetails?: Record<string, any>
+): Promise<Order | null> {
+  const orders = await getAllOrders();
+  const orderIndex = orders.findIndex(
+    (o) => o.orderNumber === orderNumberOrId || o.id === orderNumberOrId
+  );
+  if (orderIndex === -1) return null;
+
+  const targetOrder = orders[orderIndex];
+  const nowIso = new Date().toISOString();
+  const newOrderStatus: OrderStatus = newPaymentStatus === 'PAID' ? 'Payment Confirmed' : targetOrder.orderStatus;
+
+  const existingPayment = targetOrder.paymentRecord;
+  const updatedPaymentRecord: PaymentRecord = {
+    id: existingPayment?.id || `pay-${Date.now()}`,
+    orderId: targetOrder.id,
+    paymentMethod: targetOrder.paymentGateway,
+    amount: targetOrder.totalAmount,
+    currency: 'LKR',
+    status: newPaymentStatus,
+    transactionId: transactionId || existingPayment?.transactionId || `TXN-${targetOrder.paymentGateway.toUpperCase()}-${Date.now()}`,
+    gatewayResponse: {
+      ...(existingPayment?.gatewayResponse || {}),
+      ...(gatewayDetails || {}),
+      verifiedAt: nowIso
+    },
+    createdAt: existingPayment?.createdAt || nowIso
+  };
+
+  const updatedOrder: Order = {
+    ...targetOrder,
+    paymentStatus: newPaymentStatus,
+    orderStatus: newOrderStatus,
+    paymentRecord: updatedPaymentRecord,
+    statusHistory: [
+      ...(targetOrder.statusHistory || []),
+      {
+        id: `osh-${Date.now()}`,
+        orderId: targetOrder.id,
+        status: newOrderStatus,
+        comment: `Payment status updated to ${newPaymentStatus} via ${targetOrder.paymentGateway}${transactionId ? ` (Txn: ${transactionId})` : ''}`,
+        updatedBy: 'OnePay IPG Verification',
+        createdAt: nowIso
+      }
+    ]
+  };
+
+  orders[orderIndex] = updatedOrder;
+  localStorage.setItem(LOCAL_ORDERS_KEY, JSON.stringify(orders));
+
+  // Sync to Supabase if available
+  if (isSupabaseConfigured && supabase) {
+    try {
+      await supabase
+        .from('orders')
+        .update({
+          payment_status: mapPaymentStatusToDb(newPaymentStatus),
+          order_status: mapOrderStatusToDb(newOrderStatus),
+          payment_record: updatedOrder.paymentRecord
+        })
+        .eq('id', targetOrder.id);
+    } catch (e) {
+      console.warn('Failed to sync payment status to Supabase:', e);
+    }
+  }
+
+  return updatedOrder;
+}

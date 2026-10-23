@@ -161,7 +161,7 @@ const MainApp: React.FC = () => {
         </Suspense>
       );
     }
-    if (currentRoute.startsWith('#/checkout')) {
+    if (currentRoute.startsWith('#/checkout') || currentRoute.startsWith('#/order-confirmation')) {
       return (
         <Suspense fallback={<PageLoadingFallback />}>
           <CheckoutPage />
