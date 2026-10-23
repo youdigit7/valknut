@@ -720,13 +720,13 @@ export const AdminDashboard: React.FC = () => {
   // Filtered Orders
   const filteredOrders = useMemo(() => {
     return orders.filter((o) => {
-      const matchStatus = orderStatusFilter === 'ALL' || o.orderStatus.toLowerCase() === orderStatusFilter.toLowerCase();
+      const matchStatus = orderStatusFilter === 'ALL' || (o.orderStatus || '').toLowerCase() === orderStatusFilter.toLowerCase();
       const q = orderSearchQuery.trim().toLowerCase();
       const matchSearch = !q ||
-        o.orderNumber.toLowerCase().includes(q) ||
-        o.customerInfo.fullName.toLowerCase().includes(q) ||
-        o.customerInfo.phone.includes(q) ||
-        o.customerInfo.email.toLowerCase().includes(q);
+        (o.orderNumber || '').toLowerCase().includes(q) ||
+        (o.customerInfo?.fullName || '').toLowerCase().includes(q) ||
+        (o.customerInfo?.phone || '').includes(q) ||
+        (o.customerInfo?.email || '').toLowerCase().includes(q);
       return matchStatus && matchSearch;
     });
   }, [orders, orderStatusFilter, orderSearchQuery]);
@@ -1431,7 +1431,7 @@ export const AdminDashboard: React.FC = () => {
                                   />
                                 </Box>
                                 <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem', mt: 0.5 }}>
-                                  {ord.customerInfo.fullName} • {ord.customerInfo.phone}
+                                  {ord.customerInfo?.fullName || 'Customer'} • {ord.customerInfo?.phone || 'N/A'}
                                 </Typography>
                               </TableCell>
                               <TableCell align="right">
@@ -1882,7 +1882,7 @@ export const AdminDashboard: React.FC = () => {
                                 <Chip size="small" label={order.orderStatus} sx={{ height: 20, fontSize: '0.65rem', fontWeight: 800, bgcolor: 'rgba(212, 175, 55, 0.15)', color: goldColor }} />
                               </Box>
                               <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem', mt: 0.3 }}>
-                                Client: <strong style={{ color: '#F8FAFC' }}>{order.customerInfo.fullName}</strong> • Mobile: {order.customerInfo.phone} • Email: {order.customerInfo.email}
+                                Client: <strong style={{ color: '#F8FAFC' }}>{order.customerInfo?.fullName || 'Client'}</strong> • Mobile: {order.customerInfo?.phone || 'N/A'} • Email: {order.customerInfo?.email || 'N/A'}
                               </Typography>
                             </Box>
                           </Box>
@@ -2092,13 +2092,13 @@ export const AdminDashboard: React.FC = () => {
 
                         <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
                           <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#F8FAFC' }}>
-                            {ord.customerInfo.fullName}
+                            {ord.customerInfo?.fullName || 'Customer'}
                           </Typography>
                           <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem' }}>
-                            {ord.customerInfo.city}, {ord.customerInfo.district}
+                            {ord.customerInfo?.city || 'Sri Lanka'}{ord.customerInfo?.district ? `, ${ord.customerInfo.district}` : ''}
                           </Typography>
                           <Typography sx={{ color: '#64748B', fontSize: '0.7rem' }}>
-                            {ord.customerInfo.phone}
+                            {ord.customerInfo?.phone || 'N/A'}
                           </Typography>
                         </TableCell>
 
@@ -3523,7 +3523,7 @@ export const AdminDashboard: React.FC = () => {
                 {prodVariants.map((v, idx) => (
                   <Paper key={v.id || idx} sx={{ p: 2, bgcolor: '#121420', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                     <Grid container spacing={1.5} sx={{ alignItems: 'center' }}>
-                      <Grid size={{ xs: 6, sm: 2 }}>
+                      <Grid size={{ xs: 6, sm: 1.5 }}>
                         <FormControl fullWidth size="small" sx={darkInputSx}>
                           <InputLabel>Size</InputLabel>
                           <Select
@@ -3544,7 +3544,7 @@ export const AdminDashboard: React.FC = () => {
                         </FormControl>
                       </Grid>
 
-                      <Grid size={{ xs: 6, sm: 3 }}>
+                      <Grid size={{ xs: 6, sm: 2.5 }}>
                         <TextField
                           fullWidth
                           size="small"
@@ -3559,7 +3559,48 @@ export const AdminDashboard: React.FC = () => {
                         />
                       </Grid>
 
-                      <Grid size={{ xs: 6, sm: 3 }}>
+                      <Grid size={{ xs: 6, sm: 2.5 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box
+                            component="input"
+                            type="color"
+                            value={v.colorHex || '#0a0a0c'}
+                            onChange={(e) => {
+                              const copy = [...prodVariants];
+                              copy[idx].colorHex = e.target.value;
+                              setProdVariants(copy);
+                            }}
+                            title="Click to pick swatch color"
+                            sx={{
+                              width: 38,
+                              height: 38,
+                              minWidth: 38,
+                              p: 0.5,
+                              border: '1px solid rgba(255, 255, 255, 0.2)',
+                              borderRadius: '8px',
+                              bgcolor: '#141620',
+                              cursor: 'pointer',
+                              '&::-webkit-color-swatch-wrapper': { p: 0 },
+                              '&::-webkit-color-swatch': { borderRadius: '6px', border: 'none' }
+                            }}
+                          />
+                          <TextField
+                            fullWidth
+                            size="small"
+                            label="Hex"
+                            placeholder="#000000"
+                            value={v.colorHex || '#0a0a0c'}
+                            onChange={(e) => {
+                              const copy = [...prodVariants];
+                              copy[idx].colorHex = e.target.value;
+                              setProdVariants(copy);
+                            }}
+                            sx={darkInputSx}
+                          />
+                        </Box>
+                      </Grid>
+
+                      <Grid size={{ xs: 6, sm: 2.5 }}>
                         <TextField
                           fullWidth
                           size="small"
@@ -3590,7 +3631,7 @@ export const AdminDashboard: React.FC = () => {
                         />
                       </Grid>
 
-                      <Grid size={{ xs: 2, sm: 2 }} sx={{ textAlign: 'right' }}>
+                      <Grid size={{ xs: 2, sm: 1 }} sx={{ textAlign: 'right' }}>
                         <IconButton
                           size="small"
                           onClick={() => setProdVariants(prodVariants.filter((_, i) => i !== idx))}
@@ -4076,10 +4117,10 @@ export const AdminDashboard: React.FC = () => {
                 ORDER HISTORY LOG
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, maxHeight: 220, overflowY: 'auto' }}>
-                {orders.filter((o) => o.customerInfo.email.toLowerCase() === viewingCustomer.email.toLowerCase()).length === 0 ? (
+                {orders.filter((o) => (o.customerInfo?.email || '').toLowerCase() === (viewingCustomer.email || '').toLowerCase()).length === 0 ? (
                   <Typography sx={{ fontSize: '0.8rem', color: '#64748B', py: 2 }}>No placed orders recorded for this account yet.</Typography>
                 ) : (
-                  orders.filter((o) => o.customerInfo.email.toLowerCase() === viewingCustomer.email.toLowerCase()).map((o) => (
+                  orders.filter((o) => (o.customerInfo?.email || '').toLowerCase() === (viewingCustomer.email || '').toLowerCase()).map((o) => (
                     <Paper key={o.id} sx={{ p: 1.5, bgcolor: '#121420', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <Box>
                         <Typography sx={{ fontWeight: 800, fontSize: '0.8rem', fontFamily: 'monospace' }}>{o.orderNumber}</Typography>
