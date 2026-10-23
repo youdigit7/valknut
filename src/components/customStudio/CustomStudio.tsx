@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { CustomStudioOptions, PrintTechniqueType } from '../../types/ecommerce';
 import { useStore } from '../../context/StoreContext';
 import { 
@@ -40,6 +40,15 @@ export const CustomStudio: React.FC = () => {
   const [selectedColorHex, setSelectedColorHex] = useState(activeProduct?.variants?.[0]?.colorHex || '#0A0B0E');
   const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | 'XL' | 'XXL'>('M');
   const [placement, setPlacement] = useState<'FRONT' | 'BACK' | 'LEFT_SLEEVE' | 'RIGHT_SLEEVE'>('FRONT');
+
+  useEffect(() => {
+    if (activeProduct) {
+      if (!selectedColor && activeProduct.variants?.[0]?.color) {
+        setSelectedColor(activeProduct.variants[0].color);
+        setSelectedColorHex(activeProduct.variants[0].colorHex || '#0A0B0E');
+      }
+    }
+  }, [activeProduct]);
 
   const [customText, setCustomText] = useState('VALKNUT SQUAD');
   const [textColor, setTextColor] = useState('#D4AF37');
@@ -101,10 +110,26 @@ export const CustomStudio: React.FC = () => {
       showToast(`Artwork "${file.name}" uploaded to studio canvas.`, 'success');
       setTimeout(() => setIsUploading(false), 400);
     } catch (err: any) {
-      console.error('Artwork upload failed:', err);
-      setUploadError(err.message || 'Failed to upload artwork.');
-      showToast(err.message || 'Upload failed.', 'error');
-      setIsUploading(false);
+      console.warn('Direct upload notice, falling back to local canvas:', err);
+      try {
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          if (re.target?.result) {
+            setUploadedArtworkUrl(re.target.result as string);
+            setArtworkName(file.name);
+            setSelectedSigil(null);
+            setArtworkEffect('original');
+            setUploadProgress(100);
+            showToast(`Artwork "${file.name}" loaded onto studio canvas.`, 'success');
+            setTimeout(() => setIsUploading(false), 400);
+          }
+        };
+        reader.readAsDataURL(file);
+      } catch (readErr: any) {
+        setUploadError(err.message || 'Failed to upload artwork.');
+        showToast(err.message || 'Upload failed.', 'error');
+        setIsUploading(false);
+      }
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
@@ -143,6 +168,21 @@ export const CustomStudio: React.FC = () => {
   };
 
   const handleAddToCart = () => {
+    // Generate inline SVG preview snapshot for instant visual feedback in Cart and Admin Dashboard
+    const svgPreview = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" width="400" height="480">
+      <defs>
+        <linearGradient id="gGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${selectedColorHex}" stop-opacity="1" />
+          <stop offset="100%" stop-color="#000000" stop-opacity="0.5" />
+        </linearGradient>
+      </defs>
+      <rect width="400" height="480" fill="#0A0B0E" rx="16" />
+      <path d="M 130 50 C 160 70, 240 70, 270 50 L 370 120 L 330 180 L 290 155 L 290 440 L 110 440 L 110 155 L 70 180 L 30 120 Z" fill="url(#gGrad)" stroke="#D4AF37" stroke-width="1.5" />
+      ${customText.trim() ? `<text x="${textPos.x}%" y="${textPos.y}%" fill="${textColor}" font-family="${textFont}, sans-serif" font-size="${textSize}px" font-weight="bold" text-anchor="middle" dominant-baseline="central">${customText.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;')}</text>` : ''}
+      <text x="20" y="460" fill="#D4AF37" font-family="sans-serif" font-size="10px" font-weight="bold">${printTechnique.toUpperCase()} • ${placement}</text>
+    </svg>`;
+    const finalPreviewDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(svgPreview)}`;
+
     const customizationData: CustomStudioOptions = {
       productBaseId: activeProduct.id,
       productName: activeProduct.name,
@@ -168,7 +208,8 @@ export const CustomStudio: React.FC = () => {
       techniqueFee,
       placementFee,
       additionalPrice: techniqueFee + placementFee,
-      totalCustomPrice
+      totalCustomPrice,
+      finalPreviewDataUrl
     };
 
     addToCart(
@@ -646,6 +687,14 @@ export const CustomStudio: React.FC = () => {
                           
                           <Box>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
+                              <Typography sx={{ color: 'var(--text-secondary)', fontSize: 'inherit' }}>Horizontal Position (X):</Typography>
+                              <Typography sx={{ color: 'var(--text-primary)', fontSize: 'inherit' }}>{artworkPos.x}%</Typography>
+                            </Box>
+                            <Slider value={artworkPos.x} min={15} max={85} onChange={(_, v) => setArtworkPos({ ...artworkPos, x: v as number })} size="small" />
+                          </Box>
+                          
+                          <Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
                               <Typography sx={{ color: 'var(--text-secondary)', fontSize: 'inherit' }}>Vertical Position (Y):</Typography>
                               <Typography sx={{ color: 'var(--text-primary)', fontSize: 'inherit' }}>{artworkPos.y}%</Typography>
                             </Box>
@@ -776,6 +825,14 @@ export const CustomStudio: React.FC = () => {
                           <Slider value={textSize} min={14} max={44} onChange={(_, v) => setTextSize(v as number)} size="small" />
                         </Box>
                         
+                        <Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
+                            <Typography sx={{ color: 'var(--text-secondary)', fontSize: 'inherit' }}>Horizontal Position (X):</Typography>
+                            <Typography sx={{ color: 'var(--text-primary)', fontSize: 'inherit' }}>{textPos.x}%</Typography>
+                          </Box>
+                          <Slider value={textPos.x} min={15} max={85} onChange={(_, v) => setTextPos({ ...textPos, x: v as number })} size="small" />
+                        </Box>
+
                         <Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', mb: 0.5 }}>
                             <Typography sx={{ color: 'var(--text-secondary)', fontSize: 'inherit' }}>Vertical Position (Y):</Typography>

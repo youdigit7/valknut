@@ -377,9 +377,25 @@ export async function uploadMediaFile(
     }
   }
 
-  // PRIMARY & SOLE MEDIA PROVIDER: Cloudinary Direct CDN Upload
+  // PRIMARY MEDIA PROVIDER: Cloudinary Direct CDN Upload
   const cloudConfig = getCloudinaryConfig();
   if (!cloudConfig.cloudName || !cloudConfig.uploadPreset) {
+    if (!isVideo) {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(fileToUpload);
+      });
+      if (onProgress) onProgress(100);
+      return {
+        url: dataUrl,
+        storagePath: `local://${originalName}`,
+        fileName: originalName,
+        sizeBytes: fileToUpload.size,
+        type: fileToUpload.type || 'image/png'
+      };
+    }
     throw new Error('Cloudinary configuration is missing. Please configure Cloudinary cloud name and upload preset in .env or Admin settings.');
   }
 
@@ -414,7 +430,27 @@ export async function uploadMediaFile(
       throw new Error(`Cloudinary error: ${errMsg}`);
     }
   } catch (cldErr: any) {
-    console.error('Cloudinary upload failure:', cldErr);
+    console.warn('Cloudinary upload notice, using client-side fallback:', cldErr);
+    if (!isVideo) {
+      try {
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(fileToUpload);
+        });
+        if (onProgress) onProgress(100);
+        return {
+          url: dataUrl,
+          storagePath: `local://${originalName}`,
+          fileName: originalName,
+          sizeBytes: fileToUpload.size,
+          type: fileToUpload.type || 'image/png'
+        };
+      } catch (rErr) {
+        // fallback failed, continue to throw
+      }
+    }
     throw new Error(`Media upload failed: ${cldErr.message || 'Network error reaching Cloudinary.'}`);
   }
 }

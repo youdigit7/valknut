@@ -14,7 +14,7 @@ import type {
   NotificationLog,
   CustomStudioOptions
 } from '../types/ecommerce';
-import { INITIAL_COUPONS, SAMPLE_ORDERS, DEMO_CUSTOMER_EMAILS, DEMO_ORDER_IDS } from '../data/initialData';
+import { INITIAL_PRODUCTS, INITIAL_COUPONS, SAMPLE_ORDERS, DEMO_CUSTOMER_EMAILS, DEMO_ORDER_IDS } from '../data/initialData';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { saveProductToSupabase, deleteProductFromSupabase, mapSupabaseRowToProduct } from '../services/productService';
 import { calculateShippingFee, getAvailableShippingMethods } from '../services/shippingService';
@@ -104,7 +104,7 @@ interface StoreContextType {
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Load initial state from LocalStorage (real products only) or empty
+  // Load initial state from LocalStorage (real products only) or reliable default catalog
   const [products, setProducts] = useState<Product[]>(() => {
     try {
       const saved = localStorage.getItem('valknut_products_v2');
@@ -112,13 +112,13 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
           const realOnly = parsed.filter(p => !p.id.startsWith('prod-'));
-          return realOnly;
+          if (realOnly.length > 0) return realOnly;
         }
       }
     } catch (e) {
       console.warn('Failed to parse cached products:', e);
     }
-    return [];
+    return INITIAL_PRODUCTS;
   });
 
   const [orders, setOrders] = useState<Order[]>(() => {
@@ -214,7 +214,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     localStorage.setItem('valknut_logs', JSON.stringify(notificationLogs));
   }, [notificationLogs]);
 
-  // Supabase cloud fetch: ONLY real products and variants from Supabase, plus orders
+  // Supabase cloud fetch: ONLY real products and variants from Supabase, plus orders & real-time sync
   useEffect(() => {
     if (isSupabaseConfigured && supabase) {
       const client = supabase;
@@ -227,7 +227,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             data = retry.data;
             error = retry.error;
           }
-          if (!error && data) {
+          if (!error && Array.isArray(data) && data.length > 0) {
             const mapped = data.map(mapSupabaseRowToProduct);
             setProducts(mapped);
           }
@@ -245,7 +245,59 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         }
       };
       void loadCloudData();
+
+      // Supabase Realtime channel for order updates
+      try {
+        const channel = client
+          .channel('public:orders_realtime_feed')
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'orders' },
+            async (payload) => {
+              const freshOrders = await getAllOrders();
+              setOrders(freshOrders);
+              if (payload.eventType === 'INSERT') {
+                const newOrderNum = (payload.new as any)?.order_number || 'New Order';
+                showToast(`New Customer Order: ${newOrderNum}`, 'info');
+              }
+            }
+          )
+          .subscribe();
+
+        return () => {
+          client.removeChannel(channel);
+        };
+      } catch (rtErr) {
+        console.warn('Realtime subscription skipped:', rtErr);
+      }
     }
+  }, []);
+
+  // Cross-tab real-time sync via BroadcastChannel & storage event
+  useEffect(() => {
+    const bc = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('valknut_orders_sync') : null;
+    if (bc) {
+      bc.onmessage = async (evt) => {
+        if (evt.data?.type === 'ORDER_PLACED') {
+          const freshOrders = await getAllOrders();
+          setOrders(freshOrders);
+          showToast(`Order Placed: ${evt.data.orderNumber}`, 'info');
+        }
+      };
+    }
+
+    const onStorageChange = async (e: StorageEvent) => {
+      if (e.key === 'valknut_orders') {
+        const freshOrders = await getAllOrders();
+        setOrders(freshOrders);
+      }
+    };
+    window.addEventListener('storage', onStorageChange);
+
+    return () => {
+      if (bc) bc.close();
+      window.removeEventListener('storage', onStorageChange);
+    };
   }, []);
 
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
@@ -399,6 +451,16 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       const logsSaved = localStorage.getItem('valknut_logs');
       if (logsSaved) setNotificationLogs(JSON.parse(logsSaved));
     } catch (e) {
+      // ignore
+    }
+
+    try {
+      if (typeof BroadcastChannel !== 'undefined') {
+        const bc = new BroadcastChannel('valknut_orders_sync');
+        bc.postMessage({ type: 'ORDER_PLACED', orderNumber: result.order.orderNumber });
+        bc.close();
+      }
+    } catch (bcErr) {
       // ignore
     }
 

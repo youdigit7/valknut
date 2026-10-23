@@ -594,7 +594,7 @@ export async function getAllProducts(): Promise<Product[]> {
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase.from('products').select('*, product_variants(*)');
-      if (!error && data) {
+      if (!error && Array.isArray(data) && data.length > 0) {
         return data.map(mapSupabaseRowToProduct);
       }
     } catch (e) {
@@ -606,15 +606,16 @@ export async function getAllProducts(): Promise<Product[]> {
     const cached = localStorage.getItem('valknut_products_v2');
     if (cached) {
       const parsed = JSON.parse(cached);
-      if (Array.isArray(parsed)) {
-        return parsed.filter((p: Product) => !p.id.startsWith('prod-'));
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        const filtered = parsed.filter((p: Product) => !p.id.startsWith('prod-'));
+        if (filtered.length > 0) return filtered;
       }
     }
   } catch (e) {
     console.warn('Failed to read cached products:', e);
   }
 
-  return [];
+  return INITIAL_PRODUCTS;
 }
 
 /**

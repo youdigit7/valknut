@@ -110,7 +110,7 @@ export function mapPaymentStatusFromDb(dbStatus?: string): PaymentStatus {
  * Normalizes Supabase orders database row to canonical TypeScript Order type
  */
 export function mapSupabaseOrderRowToOrder(row: any): Order {
-  const items: OrderItemSnapshot[] = Array.isArray(row.order_items)
+  let items: OrderItemSnapshot[] = Array.isArray(row.order_items)
     ? row.order_items.map((it: any) => ({
         id: it.id,
         productId: it.product_id,
@@ -125,10 +125,65 @@ export function mapSupabaseOrderRowToOrder(row: any): Order {
         quantity: it.quantity,
         subtotal: Number(it.subtotal),
         imageUrl: it.image_url,
-        customization: it.customization_details,
+        customization: it.customization_details || (row.shipping_info?.customization && {
+          productBaseId: it.product_id,
+          productName: it.product_name,
+          garmentColor: it.color,
+          garmentColorHex: it.color_hex,
+          selectedSize: it.size,
+          placement: row.shipping_info.customization.placement || 'FRONT',
+          customText: row.shipping_info.customization.frontText || row.shipping_info.customization.customText,
+          textColor: row.shipping_info.customization.frontColor || row.shipping_info.customization.textColor,
+          textFont: row.shipping_info.customization.frontFont || row.shipping_info.customization.textFont,
+          uploadedArtworkUrl: row.shipping_info.customization.artworkUrl || row.shipping_info.customization.uploadedArtworkUrl,
+          printTechnique: row.shipping_info.customization.printTechnique || 'High-Density 3D Puff Rubber',
+          basePrice: Number(it.unit_price),
+          techniqueFee: 0,
+          placementFee: 0,
+          additionalPrice: 0,
+          totalCustomPrice: Number(it.subtotal)
+        }),
         createdAt: it.created_at
       }))
     : [];
+
+  // Fallback if order_items relation wasn't loaded or order came directly with shipping_info.customization
+  if (items.length === 0 && row.shipping_info?.customization) {
+    const cust = row.shipping_info.customization;
+    items = [{
+      id: crypto.randomUUID(),
+      productId: 'custom-garment',
+      productName: cust.productName || 'VALKNUT Bespoke Garment',
+      productSlug: 'valknut-bespoke-garment',
+      sku: 'VK-CUSTOM-PIECE',
+      size: cust.selectedSize || 'L',
+      color: cust.garmentColor || cust.frontColor || 'Onyx Black',
+      colorHex: cust.garmentColorHex || '#0a0a0c',
+      unitPrice: Number(row.total_amount),
+      quantity: 1,
+      subtotal: Number(row.total_amount),
+      imageUrl: cust.artworkUrl || cust.uploadedArtworkUrl || '',
+      customization: {
+        productBaseId: 'custom-garment',
+        productName: cust.productName || 'VALKNUT Bespoke Garment',
+        garmentColor: cust.garmentColor || 'Onyx Black',
+        garmentColorHex: cust.garmentColorHex || '#0a0a0c',
+        selectedSize: cust.selectedSize || 'L',
+        placement: cust.placement || 'FRONT',
+        customText: cust.frontText || cust.customText,
+        textColor: cust.frontColor || cust.textColor,
+        textFont: cust.frontFont || cust.textFont,
+        uploadedArtworkUrl: cust.artworkUrl || cust.uploadedArtworkUrl,
+        printTechnique: cust.printTechnique || 'High-Density 3D Puff Rubber',
+        basePrice: Number(row.subtotal),
+        techniqueFee: 0,
+        placementFee: 0,
+        additionalPrice: 0,
+        totalCustomPrice: Number(row.total_amount)
+      },
+      createdAt: row.created_at
+    }];
+  }
 
   return {
     id: row.id,
@@ -194,9 +249,15 @@ export async function validateOrderSecurity(
 
     // Match exact variant (size & color)
     const variants = Array.isArray(authoritativeProduct.variants) ? authoritativeProduct.variants : [];
-    const variant = variants.find(
+    let variant = variants.find(
       (v) => v.size === item.selectedSize && v.color.toLowerCase() === item.selectedColor.toLowerCase()
     );
+
+    // If it's a bespoke customized garment, the customer selected a custom shade from STUDIO_COLORS
+    // Find the base garment size variant
+    if (!variant && item.customization) {
+      variant = variants.find((v) => v.size === item.selectedSize) || variants[0];
+    }
 
     if (!variant) {
       errors.push(`Variant ${item.selectedSize} / ${item.selectedColor} for "${authoritativeProduct.name}" is unavailable.`);
@@ -444,7 +505,15 @@ export async function createOrderSecurely(payload: CreateOrderPayload): Promise<
           order_status: mapOrderStatusToDb(finalOrder.orderStatus),
           shipping_info: {
             ...shippingInfo,
-            notes: finalOrder.notes || null
+            notes: finalOrder.notes || null,
+            // Attach custom artwork and specifications to shipping_info for QA and admin visibility
+            customization: finalOrder.items.find(i => i.customization)?.customization || null,
+            customItems: finalOrder.items.filter(i => i.customization).map(i => ({
+              productName: i.productName,
+              size: i.size,
+              color: i.color,
+              customization: i.customization
+            }))
           },
           payment_record: paymentRecord
         }]);

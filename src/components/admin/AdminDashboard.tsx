@@ -40,6 +40,7 @@ import {
 } from '../../services/newsletterService';
 import { getAllOrders } from '../../services/orderService';
 import { loginAdmin } from '../../services/authService';
+import { VALKNUT_SIGIL_PRESETS } from '../customStudio/studioAssets';
 import {
   ShieldCheck,
   Package,
@@ -495,15 +496,72 @@ export const AdminDashboard: React.FC = () => {
   const pendingOrdersCount = useMemo(() => orders.filter(o => o.orderStatus === 'Pending' || o.orderStatus === 'Payment Pending' || o.orderStatus === 'Processing').length, [orders]);
   const lowStockProducts = useMemo(() => products.filter(p => (p.variants || []).some(v => (v.stock ?? 0) <= 5)), [products]);
 
-  // Studio Orders Calculation
+  // Studio Orders Calculation (Includes both order_items customization and shipping_info fallback)
   const studioOrders = useMemo(() => {
     return orders.filter(o => {
-      const hasStudio = o.items.some((it: any) => Boolean(it.customization));
+      const hasStudio =
+        (o.items || []).some((it: any) => Boolean(it.customization)) ||
+        Boolean((o as any).customization) ||
+        Boolean((o.shippingInfo as any)?.customization);
       if (!hasStudio) return false;
       if (studioStatusFilter === 'ALL') return true;
       return o.orderStatus.toLowerCase() === studioStatusFilter.toLowerCase();
     });
   }, [orders, studioStatusFilter]);
+
+  // Copy Workshop Production Specification Sheet for Atelier / Tailoring Team
+  const handleCopySpecSheet = (order: Order, item: any, cust: any) => {
+    const sigilPreset = cust?.selectedSigilPreset
+      ? VALKNUT_SIGIL_PRESETS.find(s => s.id === cust.selectedSigilPreset)?.name || cust.selectedSigilPreset
+      : 'None';
+    const artworkInfo = cust?.uploadedArtworkUrl
+      ? `Client Uploaded Vector Artwork (${cust.artworkName || 'Custom File'}) [Asset URL: ${cust.uploadedArtworkUrl}]`
+      : sigilPreset !== 'None'
+      ? `VALKNUT Norse Sigil Preset: ${sigilPreset}`
+      : 'None';
+
+    const sheet = [
+      '================================================================',
+      '        VALKNUT HIGH-END BESPOKE WORKSHOP SPECIFICATION         ',
+      '================================================================',
+      `ORDER NUMBER   : ${order.orderNumber}`,
+      `DATE PLACED    : ${new Date(order.createdAt).toLocaleString()}`,
+      `STATUS         : ${order.orderStatus.toUpperCase()}`,
+      `CLIENT NAME    : ${order.customerInfo?.fullName || 'Client'}`,
+      `MOBILE / PHONE : ${order.customerInfo?.phone || 'N/A'}`,
+      `EMAIL          : ${order.customerInfo?.email || 'N/A'}`,
+      `DESTINATION    : ${(order.customerInfo as any)?.address || order.customerInfo?.addressLine1 || ''}, ${order.customerInfo?.city || ''}${order.customerInfo?.district ? `, ${order.customerInfo.district}` : ''}`,
+      '----------------------------------------------------------------',
+      'GARMENT BASE DETAILS:',
+      `PRODUCT        : ${item.productName || item.product?.name || 'VALKNUT Garment'}`,
+      `FABRIC SHADE   : ${cust?.garmentColor || item.selectedColor || 'Obsidian Black'} (${cust?.garmentColorHex || 'Custom Hex'})`,
+      `SIZE           : ${cust?.selectedSize || item.selectedSize || item.size || 'L'}`,
+      `QUANTITY       : ${item.quantity || 1} Unit(s)`,
+      '----------------------------------------------------------------',
+      'PRINT & FINISHING SPECIFICATIONS:',
+      `PRINT ZONE     : ${cust?.placement || 'FRONT CHEST'}`,
+      `TECHNIQUE      : ${cust?.printTechnique || '3D PUFF RUBBER'}`,
+      `TECHNIQUE FEE  : +LKR ${(cust?.techniqueFee || 0).toLocaleString()}`,
+      `ARTWORK ASSET  : ${artworkInfo}`,
+      `ARTWORK SCALE  : ${cust?.artworkScale ?? 100}%`,
+      `ARTWORK ROTATE : ${cust?.artworkRotation ?? 0}°`,
+      `ARTWORK POS    : X: ${cust?.artworkPosition?.x ?? 50}%, Y: ${cust?.artworkPosition?.y ?? 45}%`,
+      '----------------------------------------------------------------',
+      'TYPOGRAPHY SPECIFICATIONS:',
+      `CUSTOM TEXT    : ${cust?.customText ? `"${cust.customText}"` : 'NONE'}`,
+      `FONT FAMILY    : ${cust?.textFont || 'Outfit'}`,
+      `FONT SIZE      : ${cust?.textSize ? `${cust.textSize}px` : 'Standard'}`,
+      `TEXT COLOR     : ${cust?.textColor || '#D4AF37'}`,
+      `UPPERCASE      : ${cust?.textUppercase ? 'YES' : 'NO'}`,
+      `TEXT POS       : X: ${cust?.textPosition?.x ?? 50}%, Y: ${cust?.textPosition?.y ?? 65}%`,
+      '----------------------------------------------------------------',
+      `TOTAL ORDER VAL: LKR ${order.totalAmount.toLocaleString()} (${order.paymentGateway} - ${order.paymentStatus})`,
+      '================================================================'
+    ].join('\n');
+
+    navigator.clipboard.writeText(sheet);
+    showToast(`Bespoke workshop spec sheet for ${order.orderNumber} copied to clipboard!`, 'success');
+  };
 
   // Filtered Products Calculation
   const filteredProducts = useMemo(() => {
@@ -1878,7 +1936,16 @@ export const AdminDashboard: React.FC = () => {
             ) : (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
                 {studioOrders.map((order) => {
-                  const customItems = order.items.filter((it: any) => Boolean(it.customization));
+                  const rawItems = (order.items || []).filter((it: any) => Boolean(it.customization));
+                  const customItems = rawItems.length > 0 ? rawItems : (
+                    (order.shippingInfo as any)?.customization ? [{
+                      productName: (order.shippingInfo as any).customization.productName || 'VALKNUT Bespoke Garment',
+                      selectedSize: (order.shippingInfo as any).customization.selectedSize || 'L',
+                      selectedColor: (order.shippingInfo as any).customization.garmentColor || 'Obsidian Black',
+                      quantity: 1,
+                      customization: (order.shippingInfo as any).customization
+                    }] : []
+                  );
 
                   return (
                     <Card key={order.id} sx={modernCardSx}>
@@ -1889,11 +1956,12 @@ export const AdminDashboard: React.FC = () => {
                               3D
                             </Box>
                             <Box>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
                                 <Typography sx={{ fontWeight: 900, fontSize: '0.95rem', fontFamily: 'monospace' }}>
                                   {order.orderNumber}
                                 </Typography>
                                 <Chip size="small" label={order.orderStatus} sx={{ height: 20, fontSize: '0.65rem', fontWeight: 800, bgcolor: 'rgba(212, 175, 55, 0.15)', color: goldColor }} />
+                                <Chip size="small" label="BESPOKE COMMISSION" sx={{ height: 20, fontSize: '0.6rem', fontWeight: 900, bgcolor: 'rgba(255, 255, 255, 0.08)', color: '#CBD5E1' }} />
                               </Box>
                               <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem', mt: 0.3 }}>
                                 Client: <strong style={{ color: '#F8FAFC' }}>{order.customerInfo?.fullName || 'Client'}</strong> • Mobile: {order.customerInfo?.phone || 'N/A'} • Email: {order.customerInfo?.email || 'N/A'}
@@ -1902,10 +1970,28 @@ export const AdminDashboard: React.FC = () => {
                           </Box>
                         }
                         action={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, pt: 1 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, pt: 1, flexWrap: 'wrap' }}>
                             <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', fontFamily: 'monospace', color: goldColor }}>
                               Total: LKR {order.totalAmount.toLocaleString()}
                             </Typography>
+                            {customItems.length > 0 && (
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                startIcon={<Copy size={13} />}
+                                onClick={() => handleCopySpecSheet(order, customItems[0], customItems[0].customization)}
+                                sx={{
+                                  borderColor: 'rgba(212, 175, 55, 0.4)',
+                                  color: goldColor,
+                                  fontSize: '0.75rem',
+                                  fontWeight: 800,
+                                  borderRadius: '8px',
+                                  '&:hover': { bgcolor: 'rgba(212, 175, 55, 0.1)', borderColor: goldColor }
+                                }}
+                              >
+                                Copy Workshop Spec
+                              </Button>
+                            )}
                             <Button
                               size="small"
                               variant="outlined"
@@ -1924,67 +2010,153 @@ export const AdminDashboard: React.FC = () => {
                         sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', px: 3, py: 2 }}
                       />
                       <CardContent sx={{ p: 3 }}>
-                        <Grid container spacing={2}>
+                        <Grid container spacing={2.5}>
                           {customItems.map((item: any, idx: number) => {
                             const cust = item.customization;
+                            const matchedSigil = cust?.selectedSigilPreset ? VALKNUT_SIGIL_PRESETS.find(s => s.id === cust.selectedSigilPreset) : null;
+                            const fabricColorHex = cust?.garmentColorHex || '#1E293B';
+
                             return (
                               <Grid size={{ xs: 12, md: 6 }} key={idx}>
                                 <Paper sx={{ p: 2.5, bgcolor: '#121420', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                                  {/* Item Header */}
                                   <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
                                     <Box>
-                                      <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', color: '#F8FAFC' }}>
-                                        {item.productName || item.product?.name || 'VALKNUT Bespoke Garment'}
+                                      <Typography sx={{ fontWeight: 800, fontSize: '0.9rem', color: '#F8FAFC' }}>
+                                        {item.productName || item.product?.name || cust?.productName || 'VALKNUT Bespoke Garment'}
                                       </Typography>
-                                      <Typography sx={{ fontSize: '0.75rem', color: '#94A3B8' }}>
-                                        Size: <strong style={{ color: '#FFFFFF' }}>{item.selectedSize || item.size}</strong> • Color: <strong style={{ color: '#FFFFFF' }}>{item.selectedColor || item.color}</strong> • Qty: {item.quantity}
-                                      </Typography>
+                                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                                        <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: fabricColorHex, border: '1px solid rgba(255,255,255,0.3)' }} />
+                                        <Typography sx={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                                          <strong style={{ color: '#FFFFFF' }}>{cust?.garmentColor || item.selectedColor || item.color || 'Obsidian Black'}</strong> • Size: <strong style={{ color: '#FFFFFF' }}>{cust?.selectedSize || item.selectedSize || item.size || 'L'}</strong> • Qty: {item.quantity || 1}
+                                        </Typography>
+                                      </Box>
                                     </Box>
-                                    <Chip size="small" label={cust?.printTechnique || '3D Puff Rubber'} sx={{ bgcolor: goldColor, color: '#000000', fontWeight: 800, fontSize: '0.7rem' }} />
+                                    <Chip size="small" label={cust?.printTechnique || '3D Puff Rubber'} sx={{ bgcolor: goldColor, color: '#000000', fontWeight: 900, fontSize: '0.65rem' }} />
                                   </Box>
 
+                                  {/* CAD Preview & Placement Details */}
                                   <Box sx={{ p: 2, bgcolor: 'rgba(0,0,0,0.4)', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.05)', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    {cust?.finalPreviewDataUrl && (
+                                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 1, bgcolor: '#0B0D13', borderRadius: '8px', border: '1px solid rgba(212, 175, 55, 0.2)' }}>
+                                        <Box component="img" src={cust.finalPreviewDataUrl} alt="2D CAD Blueprint" sx={{ width: 60, height: 72, objectFit: 'contain', borderRadius: '6px', bgcolor: '#000000', border: '1px solid rgba(255, 255, 255, 0.1)' }} />
+                                        <Box>
+                                          <Typography sx={{ fontSize: '0.75rem', fontWeight: 800, color: goldColor }}>2D CAD BLUEPRINT</Typography>
+                                          <Typography sx={{ fontSize: '0.65rem', color: '#94A3B8' }}>Interactive visual snapshot captured at customization.</Typography>
+                                        </Box>
+                                      </Box>
+                                    )}
+
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                       <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem' }}>PRINT PLACEMENT:</Typography>
-                                      <Typography sx={{ fontWeight: 700, fontSize: '0.75rem', color: '#F8FAFC' }}>{cust?.placement || 'FRONT CHEST'}</Typography>
+                                      <Chip size="small" label={cust?.placement || 'FRONT CHEST'} sx={{ height: 20, fontWeight: 800, fontSize: '0.7rem', bgcolor: 'rgba(255, 255, 255, 0.1)', color: '#F8FAFC' }} />
                                     </Box>
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                       <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem' }}>TECHNIQUE FEE:</Typography>
-                                      <Typography sx={{ fontWeight: 700, fontSize: '0.75rem', color: goldColor }}>+LKR {(cust?.techniqueFee || 0).toLocaleString()}</Typography>
+                                      <Typography sx={{ fontWeight: 800, fontSize: '0.75rem', color: goldColor }}>+LKR {(cust?.techniqueFee || 0).toLocaleString()}</Typography>
                                     </Box>
 
-                                    {cust?.customText && (
+                                    {/* Artwork Details: Sigil Preset OR Client Upload */}
+                                    {matchedSigil && (
                                       <Box sx={{ pt: 1, borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                                        <Typography sx={{ color: '#94A3B8', fontSize: '0.7rem' }}>CUSTOM TYPOGRAPHY:</Typography>
-                                        <Typography sx={{ fontWeight: 800, color: '#FFFFFF', fontStyle: 'italic', fontSize: '0.85rem' }}>
-                                          "{cust.customText}"
+                                        <Typography sx={{ color: '#94A3B8', fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', mb: 1 }}>
+                                          NORSE HERALDRY SIGIL PRESET:
                                         </Typography>
-                                        <Typography sx={{ color: '#64748B', fontSize: '0.7rem' }}>
-                                          Font: {cust.textFont || 'Outfit'} • Color: {cust.textColor || goldColor} • Size: {cust.textSize || 24}px
-                                        </Typography>
+                                        <Box sx={{ p: 1.5, bgcolor: 'rgba(212, 175, 55, 0.08)', borderRadius: '8px', border: '1px solid rgba(212, 175, 55, 0.25)', display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                          <Box sx={{ width: 44, height: 44, bgcolor: '#0B0D13', borderRadius: '6px', border: '1px solid rgba(212, 175, 55, 0.3)', p: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <svg viewBox="0 0 100 100" width="100%" height="100%">
+                                              <path d={matchedSigil.svgPath} fill={cust.textColor || goldColor} stroke={cust.textColor || goldColor} strokeWidth="2.5" />
+                                            </svg>
+                                          </Box>
+                                          <Box sx={{ flex: 1 }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                              <Typography sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#F8FAFC' }}>
+                                                {matchedSigil.name}
+                                              </Typography>
+                                              <Chip size="small" label={matchedSigil.category} sx={{ height: 16, fontSize: '0.6rem', bgcolor: 'rgba(255,255,255,0.08)', color: '#CBD5E1' }} />
+                                            </Box>
+                                            <Typography sx={{ fontSize: '0.7rem', color: '#94A3B8', mt: 0.3 }}>
+                                              Scale: {cust.artworkScale ?? 100}% • Rot: {cust.artworkRotation ?? 0}° • Pos: X: {cust.artworkPosition?.x ?? 50}%, Y: {cust.artworkPosition?.y ?? 45}%
+                                            </Typography>
+                                          </Box>
+                                        </Box>
                                       </Box>
                                     )}
 
                                     {cust?.uploadedArtworkUrl && (
-                                      <Box sx={{ pt: 1, borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                          <Box component="img" src={cust.uploadedArtworkUrl} alt="" sx={{ width: 36, height: 36, objectFit: 'contain', borderRadius: '4px', bgcolor: 'rgba(255, 255, 255, 0.1)', p: 0.5 }} />
-                                          <Box>
-                                            <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: '#F8FAFC' }}>Client Artwork</Typography>
-                                            <Typography sx={{ fontSize: '0.65rem', color: '#94A3B8' }}>{cust.artworkName || 'Custom Vector'}</Typography>
+                                      <Box sx={{ pt: 1, borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                                        <Typography sx={{ color: '#94A3B8', fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', mb: 1 }}>
+                                          CLIENT VECTOR ARTWORK:
+                                        </Typography>
+                                        <Box sx={{ p: 1.5, bgcolor: 'rgba(255, 255, 255, 0.03)', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5 }}>
+                                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                            <Box component="img" src={cust.uploadedArtworkUrl} alt="Client vector" sx={{ width: 44, height: 44, objectFit: 'contain', borderRadius: '6px', bgcolor: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', p: 0.5 }} />
+                                            <Box>
+                                              <Typography sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#F8FAFC' }}>
+                                                {cust.artworkName || 'Custom Artwork Vector'}
+                                              </Typography>
+                                              <Typography sx={{ fontSize: '0.7rem', color: '#94A3B8' }}>
+                                                Scale: {cust.artworkScale ?? 100}% • Rot: {cust.artworkRotation ?? 0}° • Pos: X: {cust.artworkPosition?.x ?? 50}%, Y: {cust.artworkPosition?.y ?? 45}%
+                                              </Typography>
+                                            </Box>
                                           </Box>
+                                          <Button
+                                            size="small"
+                                            href={cust.uploadedArtworkUrl}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            endIcon={<ExternalLink size={12} />}
+                                            sx={{ color: goldColor, fontSize: '0.7rem', fontWeight: 800, border: '1px solid rgba(212, 175, 55, 0.3)', borderRadius: '6px', textTransform: 'none' }}
+                                          >
+                                            View Asset
+                                          </Button>
                                         </Box>
-                                        <Button
-                                          size="small"
-                                          href={cust.uploadedArtworkUrl}
-                                          target="_blank"
-                                          rel="noreferrer"
-                                          endIcon={<ExternalLink size={12} />}
-                                          sx={{ color: goldColor, fontSize: '0.7rem', fontWeight: 700 }}
-                                        >
-                                          View File
-                                        </Button>
                                       </Box>
                                     )}
+
+                                    {/* Typography Section */}
+                                    {cust?.customText && (
+                                      <Box sx={{ pt: 1, borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                                        <Typography sx={{ color: '#94A3B8', fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', mb: 0.5 }}>
+                                          CUSTOM TYPOGRAPHY:
+                                        </Typography>
+                                        <Box sx={{ p: 1.5, bgcolor: 'rgba(0,0,0,0.4)', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
+                                          <Typography
+                                            sx={{
+                                              color: cust.textColor || goldColor,
+                                              fontFamily: cust.textFont || 'Outfit',
+                                              fontSize: '0.95rem',
+                                              fontWeight: 800,
+                                              textTransform: cust.textUppercase ? 'uppercase' : 'none',
+                                              letterSpacing: '0.05em'
+                                            }}
+                                          >
+                                            "{cust.customText}"
+                                          </Typography>
+                                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mt: 1 }}>
+                                            <Chip size="small" label={`Font: ${cust.textFont || 'Outfit'}`} sx={{ height: 18, fontSize: '0.65rem', bgcolor: 'rgba(255,255,255,0.06)', color: '#CBD5E1' }} />
+                                            <Chip size="small" label={`Size: ${cust.textSize || 24}px`} sx={{ height: 18, fontSize: '0.65rem', bgcolor: 'rgba(255,255,255,0.06)', color: '#CBD5E1' }} />
+                                            <Chip size="small" label={`Color: ${cust.textColor || goldColor}`} sx={{ height: 18, fontSize: '0.65rem', bgcolor: 'rgba(255,255,255,0.06)', color: '#CBD5E1' }} />
+                                            {cust.textPosition && (
+                                              <Chip size="small" label={`Pos: X ${cust.textPosition.x}%, Y ${cust.textPosition.y}%`} sx={{ height: 18, fontSize: '0.65rem', bgcolor: 'rgba(255,255,255,0.06)', color: '#CBD5E1' }} />
+                                            )}
+                                          </Box>
+                                        </Box>
+                                      </Box>
+                                    )}
+
+                                    {/* Production Copy Action */}
+                                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', pt: 1 }}>
+                                      <Button
+                                        size="small"
+                                        variant="text"
+                                        startIcon={<Copy size={12} />}
+                                        onClick={() => handleCopySpecSheet(order, item, cust)}
+                                        sx={{ color: goldColor, fontSize: '0.7rem', fontWeight: 700, textTransform: 'none' }}
+                                      >
+                                        Copy Item Spec
+                                      </Button>
+                                    </Box>
                                   </Box>
                                 </Paper>
                               </Grid>
@@ -2093,12 +2265,38 @@ export const AdminDashboard: React.FC = () => {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredOrders.map((ord) => (
+                    filteredOrders.map((ord) => {
+                      const isCustom = (ord.items || []).some((i: any) => Boolean(i.customization)) ||
+                        Boolean((ord as any).customization) ||
+                        Boolean((ord.shippingInfo as any)?.customization);
+
+                      return (
                       <TableRow key={ord.id} hover sx={{ '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.03)' } }}>
                         <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                          <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', fontFamily: 'monospace' }}>
-                            {ord.orderNumber}
-                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                            <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', fontFamily: 'monospace' }}>
+                              {ord.orderNumber}
+                            </Typography>
+                            {isCustom && (
+                              <Tooltip title="Custom Studio Made-to-Order Piece • Click to view in 3D Studios">
+                                <Chip
+                                  size="small"
+                                  label="3D BESPOKE"
+                                  onClick={() => setActiveTab('STUDIOS')}
+                                  sx={{
+                                    height: 18,
+                                    fontSize: '0.6rem',
+                                    fontWeight: 900,
+                                    bgcolor: 'rgba(212, 175, 55, 0.2)',
+                                    color: goldColor,
+                                    border: '1px solid rgba(212, 175, 55, 0.4)',
+                                    cursor: 'pointer',
+                                    '&:hover': { bgcolor: 'rgba(212, 175, 55, 0.35)' }
+                                  }}
+                                />
+                              </Tooltip>
+                            )}
+                          </Box>
                           <Typography sx={{ color: '#94A3B8', fontSize: '0.7rem' }}>
                             {new Date(ord.createdAt).toLocaleDateString()}
                           </Typography>
@@ -2120,8 +2318,8 @@ export const AdminDashboard: React.FC = () => {
                           <Typography sx={{ fontWeight: 800, fontSize: '0.8rem' }}>
                             {(ord.items || []).reduce((s: number, i: any) => s + (i.quantity || 1), 0)} Pcs
                           </Typography>
-                          <Typography sx={{ color: '#94A3B8', fontSize: '0.7rem', maxWidth: 140, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {ord.items[0]?.productName || 'Garment'}
+                          <Typography sx={{ color: isCustom ? goldColor : '#94A3B8', fontWeight: isCustom ? 700 : 400, fontSize: '0.7rem', maxWidth: 140, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {isCustom ? '★ Bespoke Studio Piece' : (ord.items[0]?.productName || 'Garment')}
                           </Typography>
                         </TableCell>
 
@@ -2201,7 +2399,8 @@ export const AdminDashboard: React.FC = () => {
                           </Button>
                         </TableCell>
                       </TableRow>
-                    ))
+                      );
+                    })
                   )}
                 </TableBody>
               </Table>
