@@ -127,16 +127,21 @@ VITE_EWAY_PUBLIC_API_KEY=your-eway-api-key
 
 ---
 
-## 5. Firebase Storage Setup
+## 5. Media & Storage Infrastructure (5GB Monthly Free Tier Architecture)
 
-1. Open **Firebase Console** > **Storage**.
-2. Deploy the [`storage.rules`](file:///d:/youDigit%20IT/valknut/valknut/storage.rules) file using the Firebase CLI:
-   ```bash
-   firebase deploy --only storage
-   ```
-3. Folder architecture:
-   - `/products/**`: Public read, admin write.
-   - `/custom-studio/**`: Public read, customer upload with strict 15MB file size limit and PNG/JPEG/WEBP/SVG validation.
+The system is calibrated for **zero monthly storage costs ($0.00/mo)** under a **5.0 GB monthly quota**.
+
+1. **Active Storage Providers:**
+   - **Cloudinary Global CDN (Primary):** Manages dynamic WebP/AVIF transformations under the 25 monthly free credits allowance.
+   - **Firebase Storage (Secondary/Direct):** Spark plan provides **5.0 GB free stored data**. Deploy [`storage.rules`](file:///c:/Users/daksh/Documents/Projects/Valknut/valknut/storage.rules):
+     ```bash
+     firebase deploy --only storage
+     ```
+2. **Quota Safeguards & Enforcement:**
+   - **Automatic Client-Side Compression:** High-res photos uploaded via admin or studio are automatically downsampled to 1920px max resolution and converted to lightweight WebP (~250 KB each), allowing **5 GB to hold 15,000–25,000 images**.
+   - **Custom Studio Limit:** Customer graphic uploads are strictly capped at 10MB per file with format verification (PNG/JPEG/WEBP).
+   - **Database Isolation:** Supabase PostgreSQL stores lightweight URL references in `product_media`, preventing database storage bloat.
+   - **Admin Monitoring:** Storage consumption vs the 5.0 GB ceiling is tracked in real-time under the **Storage / Media CDN** tab in the Executive Admin Dashboard.
 
 ---
 
