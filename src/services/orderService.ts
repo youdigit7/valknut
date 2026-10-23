@@ -630,6 +630,8 @@ async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
             query = query.eq('id', item.variantId);
           } else if (item.sku) {
             query = query.eq('sku', item.sku);
+          } else if (item.productId && item.size) {
+            query = query.eq('product_id', item.productId).eq('size', item.size);
           } else {
             continue;
           }

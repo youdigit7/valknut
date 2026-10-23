@@ -76,9 +76,32 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
   });
   const [isSavingProfile, setIsSavingProfile] = useState(false);
 
-  const userOrders = user 
-    ? orders.filter((o) => o.customerInfo.email.toLowerCase() === user.email.toLowerCase() || user.isAdmin)
-    : [];
+  const [showAllOrders, setShowAllOrders] = useState(false);
+
+  // Customer placed orders sorted latest first (by identity or device guest orders)
+  const customerOrders = React.useMemo(() => {
+    let list = [];
+    if (user && !user.isAdmin) {
+      list = orders.filter(
+        (o) =>
+          (o.userId && o.userId === user.id) ||
+          (o.customerInfo?.email && user.email && o.customerInfo.email.toLowerCase() === user.email.toLowerCase()) ||
+          (o.customerInfo?.phone && user.phone && o.customerInfo.phone.replace(/\D/g, '') === user.phone.replace(/\D/g, ''))
+      );
+    } else if (user && user.isAdmin) {
+      list = orders;
+    } else {
+      list = orders; // Guest customer orders placed on this device
+    }
+    return [...list].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }, [orders, user]);
+
+  // Always show 5 previous placed orders by default in customer mode
+  const displayedOrders = React.useMemo(() => {
+    return showAllOrders ? customerOrders : customerOrders.slice(0, 5);
+  }, [customerOrders, showAllOrders]);
+
+  const userOrders = customerOrders;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -468,7 +491,13 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, borderBottom: '1px solid var(--border-subtle)', pb: 2, overflowX: 'auto', '&::-webkit-scrollbar': { display: 'none' }, msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
               {[
                 { id: 'dashboard', label: 'OVERVIEW', icon: Sparkles },
-                { id: 'orders', label: `ORDERS (${userOrders.length})`, icon: Package },
+                { 
+                  id: 'orders', 
+                  label: user?.isAdmin 
+                    ? `ORDERS (${customerOrders.length})` 
+                    : `PREVIOUS ORDERS (${Math.min(customerOrders.length, 5)})`, 
+                  icon: Package 
+                },
                 { id: 'profile', label: 'DELIVERY & PROFILE', icon: Edit3 }
               ].map((tab) => {
                 const Icon = tab.icon;
@@ -547,7 +576,26 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
             {/* TAB 2: ORDERS HISTORY */}
             {activeTab === 'orders' && (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                {userOrders.length === 0 ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1.5, pb: 1, borderBottom: '1px solid var(--border-subtle)' }}>
+                  <Box>
+                    <Typography sx={{ fontSize: '0.8125rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'primary.main', fontFamily: '"Outfit", sans-serif' }}>
+                      {showAllOrders ? `ALL PLACED ORDERS (${customerOrders.length})` : `5 PREVIOUS PLACED ORDERS (${displayedOrders.length} of ${customerOrders.length})`}
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.6875rem', color: 'var(--text-secondary)', fontFamily: '"Inter", sans-serif' }}>
+                      Real-time live fulfillment tracking and dispatch timeline.
+                    </Typography>
+                  </Box>
+                  {customerOrders.length > 5 && (
+                    <Button 
+                      onClick={() => setShowAllOrders(!showAllOrders)} 
+                      sx={{ fontSize: '0.6875rem', fontWeight: 'bold', color: 'primary.main', border: '1px solid rgba(212,175,55,0.4)', px: 2, py: 0.5, borderRadius: 0.5, '&:hover': { bgcolor: 'rgba(212,175,55,0.1)' } }}
+                    >
+                      {showAllOrders ? 'Show 5 Previous Orders' : `View All (${customerOrders.length}) Orders`}
+                    </Button>
+                  )}
+                </Box>
+
+                {customerOrders.length === 0 ? (
                   <Box sx={{ p: 6, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                     <Package size={40} color="var(--text-secondary)" />
                     <Typography sx={{ fontSize: '0.875rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: '"Inter", sans-serif', letterSpacing: '0.1em' }}>No Orders Placed Yet</Typography>
@@ -555,7 +603,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ initialSubTab = 'dashb
                     <Button href="#/shop" sx={{ mt: 2, px: 4, py: 1.5, bgcolor: 'primary.main', color: '#000000', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', borderRadius: 1, '&:hover': { bgcolor: 'primary.dark' } }}>Explore Shop</Button>
                   </Box>
                 ) : (
-                  userOrders.map((order) => {
+                  displayedOrders.map((order) => {
                     const stepNum = getStatusStep(order.orderStatus);
                     return (
                       <Box key={order.id} sx={{ p: { xs: 3, sm: 4 }, bgcolor: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 1, boxShadow: '0 10px 25px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 3 }}>

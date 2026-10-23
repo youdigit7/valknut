@@ -450,8 +450,9 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     try {
       const logsSaved = localStorage.getItem('valknut_logs');
       if (logsSaved) setNotificationLogs(JSON.parse(logsSaved));
+
     } catch (e) {
-      // ignore
+      console.warn('Failed to update products state after order:', e);
     }
 
     try {

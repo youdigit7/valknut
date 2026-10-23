@@ -166,13 +166,13 @@ export const CheckoutModal: React.FC = () => {
                   </Typography>
                   <Grid container spacing={2}>
                     <Grid size={{ xs: 12, sm: 6 }}>
-                      <TextField fullWidth required label="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="e.g. Kasun Perera" variant="outlined" size="small" sx={textFieldStyles} />
+                      <TextField fullWidth required label="Full Name" value={fullName || ''} onChange={(e) => setFullName(e.target.value)} placeholder="e.g. Kasun Perera" variant="outlined" size="small" sx={textFieldStyles} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6 }}>
-                      <TextField fullWidth required type="tel" label="Mobile Phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+94771234567" variant="outlined" size="small" sx={textFieldStyles} />
+                      <TextField fullWidth required type="tel" label="Mobile Phone" value={phone || ''} onChange={(e) => setPhone(e.target.value)} placeholder="+94771234567" variant="outlined" size="small" sx={textFieldStyles} />
                     </Grid>
                     <Grid size={12}>
-                      <TextField fullWidth required type="email" label="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="kasun@example.com" variant="outlined" size="small" sx={textFieldStyles} />
+                      <TextField fullWidth required type="email" label="Email Address" value={email || ''} onChange={(e) => setEmail(e.target.value)} placeholder="kasun@example.com" variant="outlined" size="small" sx={textFieldStyles} />
                     </Grid>
                   </Grid>
                 </Box>
@@ -184,23 +184,23 @@ export const CheckoutModal: React.FC = () => {
                   </Typography>
                   <Grid container spacing={2}>
                     <Grid size={12}>
-                      <TextField fullWidth required label="Street Address" value={addressLine1} onChange={(e) => setAddressLine1(e.target.value)} placeholder="House No., Street Name, Apartment" variant="outlined" size="small" sx={textFieldStyles} />
+                      <TextField fullWidth required label="Street Address" value={addressLine1 || ''} onChange={(e) => setAddressLine1(e.target.value)} placeholder="House No., Street Name, Apartment" variant="outlined" size="small" sx={textFieldStyles} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6 }}>
-                      <TextField fullWidth required label="City" value={city} onChange={(e) => setCity(e.target.value)} placeholder="Colombo" variant="outlined" size="small" sx={textFieldStyles} />
+                      <TextField fullWidth required label="City" value={city || ''} onChange={(e) => setCity(e.target.value)} placeholder="Colombo" variant="outlined" size="small" sx={textFieldStyles} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6 }}>
-                      <TextField select fullWidth label="District" value={district} onChange={(e) => setDistrict(e.target.value)} variant="outlined" size="small" sx={textFieldStyles}>
+                      <TextField select fullWidth label="District" value={district || 'Colombo'} onChange={(e) => setDistrict(e.target.value || 'Colombo')} variant="outlined" size="small" sx={textFieldStyles}>
                         {SRI_LANKAN_DISTRICTS.map((d) => (
                           <MenuItem key={d} value={d} sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>{d}</MenuItem>
                         ))}
                       </TextField>
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6 }}>
-                      <TextField fullWidth label="Postal Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="00300" variant="outlined" size="small" sx={textFieldStyles} />
+                      <TextField fullWidth label="Postal Code" value={postalCode || ''} onChange={(e) => setPostalCode(e.target.value)} placeholder="00300" variant="outlined" size="small" sx={textFieldStyles} />
                     </Grid>
                     <Grid size={12}>
-                      <TextField fullWidth label="Delivery Notes (Optional)" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="e.g. Near commercial bank, call before delivery" variant="outlined" size="small" sx={textFieldStyles} />
+                      <TextField fullWidth label="Delivery Notes (Optional)" value={notes || ''} onChange={(e) => setNotes(e.target.value)} placeholder="e.g. Near commercial bank, call before delivery" variant="outlined" size="small" sx={textFieldStyles} />
                     </Grid>
                   </Grid>
                 </Box>
