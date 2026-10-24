@@ -7,6 +7,7 @@ import type {
   Order, 
   OrderStatus, 
   PaymentGateway, 
+  PaymentStatus,
   ShippingAddress, 
   CategoryType, 
   SubCategoryType,
@@ -20,7 +21,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { saveProductToSupabase, deleteProductFromSupabase, mapSupabaseRowToProduct } from '../services/productService';
 import { calculateShippingFee, getAvailableShippingMethods } from '../services/shippingService';
 import type { ShippingMethod } from '../services/shippingService';
-import { createOrderSecurely, updateOrderStatusWithAudit, getAllOrders, deductStockFromProducts } from '../services/orderService';
+import { createOrderSecurely, updateOrderStatusWithAudit, updateOrderPaymentStatus, getAllOrders, deductStockFromProducts } from '../services/orderService';
 
 interface StoreContextType {
   // Products
@@ -79,6 +80,7 @@ interface StoreContextType {
   orders: Order[];
   createOrder: (customerInfo: ShippingAddress, paymentGateway: PaymentGateway, notes?: string, customShippingMethod?: 'standard' | 'express') => Promise<Order>;
   updateOrderStatus: (orderId: string, status: OrderStatus, courierName?: string, awbNumber?: string, trackingLink?: string) => Promise<void>;
+  updateOrderPayment: (orderNumber: string, status: PaymentStatus, transactionId?: string) => Promise<Order | null>;
 
   // Products Admin
   addProduct: (product: Product) => Promise<void>;
@@ -454,8 +456,9 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     try {
       const logsSaved = localStorage.getItem('valknut_logs');
       if (logsSaved) setNotificationLogs(JSON.parse(logsSaved));
+
     } catch (e) {
-      // ignore
+      console.warn('Failed to update products state after order:', e);
     }
 
     try {
@@ -500,6 +503,20 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
       showToast(`Order #${updated.orderNumber} status updated to '${status}'.`, 'success');
     }
+  };
+
+  const updateOrderPayment = async (
+    orderNumber: string,
+    status: PaymentStatus,
+    transactionId?: string
+  ): Promise<Order | null> => {
+    const updated = await updateOrderPaymentStatus(orderNumber, status, transactionId);
+    if (updated) {
+      const allLatestOrders = await getAllOrders();
+      setOrders(allLatestOrders);
+      showToast(`Payment confirmed for order #${updated.orderNumber}.`, 'success');
+    }
+    return updated;
   };
 
   // Products CRUD
@@ -625,6 +642,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       orders,
       createOrder,
       updateOrderStatus,
+      updateOrderPayment,
       addProduct,
       updateProduct,
       deleteProduct,

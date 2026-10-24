@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import { Box, Typography, Button, Grid, TextField, MenuItem, CircularProgress, InputBase, FormControlLabel, Checkbox } from '@mui/material';
 import { registerCustomer } from '../../services/authService';
+import { initiateOnePayPayment } from '../../services/onepayService';
+import { OnePaySandboxModal } from './OnePaySandboxModal';
 
 const SRI_LANKAN_DISTRICTS = [
   'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya',
@@ -47,6 +49,7 @@ export const CheckoutPage: React.FC = () => {
     setShippingMethodId,
     availableShippingMethods,
     createOrder,
+    updateOrderPayment,
     user,
     setIsAccountOpen,
     setUserProfile
@@ -61,6 +64,10 @@ export const CheckoutPage: React.FC = () => {
   // Guest Account Creation Option
   const [createAccountWithOrder, setCreateAccountWithOrder] = useState(false);
   const [accountPassword, setAccountPassword] = useState('');
+
+  // OnePay Modal State
+  const [onePayModalOpen, setOnePayModalOpen] = useState(false);
+  const [pendingOnePayOrder, setPendingOnePayOrder] = useState<Order | null>(null);
 
   // Form State
   const [fullName, setFullName] = useState(user?.name || '');
@@ -80,18 +87,47 @@ export const CheckoutPage: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      if (!fullName) setFullName(user.name);
-      if (!email) setEmail(user.email);
-      if (user.phone && phone === '+94771234567') setPhone(user.phone);
+      if (user.name) setFullName((prev) => prev || user.name || '');
+      if (user.email) setEmail((prev) => prev || user.email || '');
+      if (user.phone && phone === '+94771234567') setPhone(user.phone || '');
       if (user.address) {
-        setAddressLine1(user.address.addressLine1);
+        if (user.address.addressLine1) setAddressLine1(user.address.addressLine1);
         if (user.address.addressLine2) setAddressLine2(user.address.addressLine2);
-        setCity(user.address.city);
-        setDistrict(user.address.district);
-        setPostalCode(user.address.postalCode);
+        if (user.address.city) setCity(user.address.city);
+        if (user.address.district) setDistrict(user.address.district);
+        if (user.address.postalCode) setPostalCode(user.address.postalCode);
       }
     }
   }, [user]);
+
+  // Handle return redirect from live OnePay IPG
+  useEffect(() => {
+    const hash = window.location.hash || '';
+    const queryStr = hash.includes('?') ? hash.split('?')[1] : window.location.search.replace(/^\?/, '');
+    if (queryStr) {
+      const params = new URLSearchParams(queryStr);
+      const orderNum = params.get('orderNumber') || params.get('reference');
+      const status = params.get('status');
+      const txnId = params.get('transaction_id') || params.get('txnId');
+
+      if (orderNum && (status === 'SUCCESS' || status === 'success' || status === 'PAID')) {
+        updateOrderPayment(orderNum, 'PAID', txnId || undefined).then((confirmedOrder) => {
+          if (confirmedOrder) {
+            setPlacedOrder(confirmedOrder);
+            setStep('CONFIRMATION');
+            try {
+              confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.55 },
+                colors: ['#D4AF37', '#FFFFFF', '#A38025', '#FFDF00']
+              });
+            } catch (err) {}
+          }
+        });
+      }
+    }
+  }, [updateOrderPayment]);
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,6 +189,38 @@ export const CheckoutPage: React.FC = () => {
         }
       }
 
+      // OnePay Payment Gateway Flow
+      if (paymentGateway === 'OnePay') {
+        const onePayRes = await initiateOnePayPayment({
+          orderNumber: order.orderNumber,
+          amount: order.totalAmount,
+          customerName: shippingInfo.fullName,
+          customerEmail: shippingInfo.email,
+          customerPhone: shippingInfo.phone,
+          redirectUrl: `${window.location.origin}/#/order-confirmation?orderNumber=${order.orderNumber}&gateway=OnePay`
+        });
+
+        // 1. Simulated / Sandbox Test Modal
+        if (onePayRes.isSimulated) {
+          setPendingOnePayOrder(order);
+          setOnePayModalOpen(true);
+          return;
+        }
+
+        // 2. Live Redirection to OnePay Hosted Gateway
+        if (onePayRes.success && onePayRes.paymentUrl) {
+          window.location.href = onePayRes.paymentUrl;
+          return;
+        }
+
+        // 3. Error handling
+        if (!onePayRes.success) {
+          setFormError(onePayRes.error || 'Failed to initialize OnePay payment session.');
+          return;
+        }
+      }
+
+      setPlacedOrder(order);
       setStep('CONFIRMATION');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -169,6 +237,35 @@ export const CheckoutPage: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleOnePaySuccess = async (txnId: string) => {
+    if (!pendingOnePayOrder) return;
+    setIsSubmitting(true);
+    try {
+      const paidOrder = await updateOrderPayment(pendingOnePayOrder.orderNumber, 'PAID', txnId);
+      setPlacedOrder(paidOrder || { ...pendingOnePayOrder, paymentStatus: 'PAID' });
+      setOnePayModalOpen(false);
+      setStep('CONFIRMATION');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      try {
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.55 },
+          colors: ['#D4AF37', '#FFFFFF', '#A38025', '#FFDF00']
+        });
+      } catch (err) {}
+    } catch (err: any) {
+      setFormError(err?.message || 'Payment confirmation error.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleOnePayCancel = () => {
+    setOnePayModalOpen(false);
+    setFormError('OnePay payment was cancelled or declined. Your items remain reserved; you can retry payment or choose another payment method.');
   };
 
   const handleCopyOrderNumber = () => {
@@ -442,13 +539,13 @@ export const CheckoutPage: React.FC = () => {
 
                 <Grid container spacing={2}>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField fullWidth required label="Full Name *" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="e.g. Kasun Perera" variant="outlined" sx={textFieldStyles} />
+                    <TextField fullWidth required label="Full Name *" value={fullName || ''} onChange={(e) => setFullName(e.target.value)} placeholder="e.g. Kasun Perera" variant="outlined" sx={textFieldStyles} />
                   </Grid>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField fullWidth required type="email" label="Email Address *" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="kasun@example.com" variant="outlined" sx={textFieldStyles} />
+                    <TextField fullWidth required type="email" label="Email Address *" value={email || ''} onChange={(e) => setEmail(e.target.value)} placeholder="kasun@example.com" variant="outlined" sx={textFieldStyles} />
                   </Grid>
                   <Grid size={12}>
-                    <TextField fullWidth required type="tel" label="Contact Phone Number *" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+94 77 123 4567" variant="outlined" sx={textFieldStyles} helperText="Pronto Lanka & Fargo Express courier drivers will contact this number before delivering." slotProps={{ formHelperText: { sx: {} } }} />
+                    <TextField fullWidth required type="tel" label="Contact Phone Number *" value={phone || ''} onChange={(e) => setPhone(e.target.value)} placeholder="+94 77 123 4567" variant="outlined" sx={textFieldStyles} helperText="Pronto Lanka & Fargo Express courier drivers will contact this number before delivering." slotProps={{ formHelperText: { sx: {} } }} />
                   </Grid>
 
                   {!user && (
@@ -475,7 +572,7 @@ export const CheckoutPage: React.FC = () => {
                               required
                               type="password"
                               label="Create Account Password *"
-                              value={accountPassword}
+                              value={accountPassword || ''}
                               onChange={(e) => setAccountPassword(e.target.value)}
                               placeholder="••••••••••••"
                               variant="outlined"
@@ -499,26 +596,26 @@ export const CheckoutPage: React.FC = () => {
 
                 <Grid container spacing={2}>
                   <Grid size={12}>
-                    <TextField fullWidth required label="Street Address / House No. *" value={addressLine1} onChange={(e) => setAddressLine1(e.target.value)} placeholder="No. 88, Galle Road, Apt 4B" variant="outlined" sx={textFieldStyles} />
+                    <TextField fullWidth required label="Street Address / House No. *" value={addressLine1 || ''} onChange={(e) => setAddressLine1(e.target.value)} placeholder="No. 88, Galle Road, Apt 4B" variant="outlined" sx={textFieldStyles} />
                   </Grid>
                   <Grid size={12}>
-                    <TextField fullWidth label="Apartment / Suite / Landmark (Optional)" value={addressLine2} onChange={(e) => setAddressLine2(e.target.value)} placeholder="Opposite Cinnamon Grand / Near Majestic City" variant="outlined" sx={textFieldStyles} />
+                    <TextField fullWidth label="Apartment / Suite / Landmark (Optional)" value={addressLine2 || ''} onChange={(e) => setAddressLine2(e.target.value)} placeholder="Opposite Cinnamon Grand / Near Majestic City" variant="outlined" sx={textFieldStyles} />
                   </Grid>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField fullWidth required label="City / Town *" value={city} onChange={(e) => setCity(e.target.value)} placeholder="Colombo 03" variant="outlined" sx={textFieldStyles} />
+                    <TextField fullWidth required label="City / Town *" value={city || ''} onChange={(e) => setCity(e.target.value)} placeholder="Colombo 03" variant="outlined" sx={textFieldStyles} />
                   </Grid>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField select fullWidth label="District *" value={district} onChange={(e) => setDistrict(e.target.value)} variant="outlined" sx={textFieldStyles}>
+                    <TextField select fullWidth label="District *" value={district || 'Colombo'} onChange={(e) => setDistrict(e.target.value || 'Colombo')} variant="outlined" sx={textFieldStyles}>
                       {SRI_LANKAN_DISTRICTS.map((d) => (
                         <MenuItem key={d} value={d} sx={{ fontSize: '0.75rem', fontFamily: '"Inter", sans-serif' }}>{d} District</MenuItem>
                       ))}
                     </TextField>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField fullWidth label="Postal Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="00300" variant="outlined" sx={textFieldStyles} />
+                    <TextField fullWidth label="Postal Code" value={postalCode || ''} onChange={(e) => setPostalCode(e.target.value)} placeholder="00300" variant="outlined" sx={textFieldStyles} />
                   </Grid>
                   <Grid size={12}>
-                    <TextField fullWidth label="Delivery Instructions (Optional)" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="e.g. Leave with building security if unavailable" variant="outlined" sx={textFieldStyles} />
+                    <TextField fullWidth label="Delivery Instructions (Optional)" value={notes || ''} onChange={(e) => setNotes(e.target.value)} placeholder="e.g. Leave with building security if unavailable" variant="outlined" sx={textFieldStyles} />
                   </Grid>
                 </Grid>
               </Box>
@@ -759,6 +856,14 @@ export const CheckoutPage: React.FC = () => {
         )}
 
       </Box>
+
+      {/* OnePay Testing Simulator Modal */}
+      <OnePaySandboxModal
+        open={onePayModalOpen}
+        order={pendingOnePayOrder}
+        onSuccess={handleOnePaySuccess}
+        onCancel={handleOnePayCancel}
+      />
     </Box>
   );
 };
