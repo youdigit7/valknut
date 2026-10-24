@@ -235,7 +235,40 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           }
           if (!error && Array.isArray(data) && data.length > 0) {
             const mapped = data.map(mapSupabaseRowToProduct);
-            setProducts(mapped);
+            setProducts((prev) => {
+              const cachedRaw = localStorage.getItem('valknut_products_v3');
+              const localCatalog: Product[] = cachedRaw ? JSON.parse(cachedRaw) : prev;
+
+              // Reconcile: If local stock was deducted by placed orders, do NOT revert it to higher remote stock
+              const reconciled = mapped.map((cloudProd) => {
+                const localProd = localCatalog.find((p) => p.id === cloudProd.id);
+                if (!localProd) return cloudProd;
+
+                const cloudVariants = Array.isArray(cloudProd.variants) ? cloudProd.variants : [];
+                const localVariants = Array.isArray(localProd.variants) ? localProd.variants : [];
+
+                const reconciledVariants = cloudVariants.map((cv) => {
+                  const lv = localVariants.find(
+                    (v) =>
+                      (v.id && cv.id && v.id === cv.id) ||
+                      (v.sku && cv.sku && v.sku.toLowerCase() === cv.sku.toLowerCase()) ||
+                      (v.size.toLowerCase() === cv.size.toLowerCase() && v.color.toLowerCase() === cv.color.toLowerCase()) ||
+                      (v.size.toLowerCase() === cv.size.toLowerCase())
+                  );
+                  if (!lv) return cv;
+
+                  const cloudStock = cv.stock ?? cv.stockCount ?? 0;
+                  const localStock = lv.stock ?? lv.stockCount ?? 0;
+                  const effectiveStock = Math.min(cloudStock, localStock);
+                  return { ...cv, stock: effectiveStock, stockCount: effectiveStock };
+                });
+
+                return { ...cloudProd, variants: reconciledVariants };
+              });
+
+              localStorage.setItem('valknut_products_v3', JSON.stringify(reconciled));
+              return reconciled;
+            });
           }
         } catch (error: unknown) {
           console.warn('Supabase product fetch unavailable:', error);
@@ -285,6 +318,13 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     if (bc) {
       bc.onmessage = async (evt) => {
         if (evt.data?.type === 'ORDER_PLACED') {
+          if (Array.isArray(evt.data.deductedItems) && evt.data.deductedItems.length > 0) {
+            setProducts((prev) => {
+              const updated = deductStockFromProducts(prev, evt.data.deductedItems);
+              localStorage.setItem('valknut_products_v3', JSON.stringify(updated));
+              return updated;
+            });
+          }
           const freshOrders = await getAllOrders();
           setOrders(freshOrders);
           showToast(`Order Placed: ${evt.data.orderNumber}`, 'info');
@@ -296,6 +336,14 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       if (e.key === 'valknut_orders') {
         const freshOrders = await getAllOrders();
         setOrders(freshOrders);
+      }
+      if (e.key === 'valknut_products_v3' && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setProducts(parsed);
+          }
+        } catch (_) {}
       }
     };
     window.addEventListener('storage', onStorageChange);
@@ -439,24 +487,22 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setOrders(allLatestOrders);
 
     // Deduct stock in real-time across the app state
+    const orderItemsToDeduct = cart.map((c) => ({
+      productId: c.productId,
+      size: c.selectedSize,
+      color: c.selectedColor,
+      quantity: c.quantity
+    }));
+
     setProducts((prev) => {
-      const updated = deductStockFromProducts(
-        prev,
-        cart.map((c) => ({
-          productId: c.productId,
-          size: c.selectedSize,
-          color: c.selectedColor,
-          quantity: c.quantity
-        }))
-      );
-      localStorage.setItem('valknut_products_v2', JSON.stringify(updated));
+      const updated = deductStockFromProducts(prev, orderItemsToDeduct);
+      localStorage.setItem('valknut_products_v3', JSON.stringify(updated));
       return updated;
     });
 
     try {
       const logsSaved = localStorage.getItem('valknut_logs');
       if (logsSaved) setNotificationLogs(JSON.parse(logsSaved));
-
     } catch (e) {
       console.warn('Failed to update products state after order:', e);
     }
@@ -464,7 +510,11 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     try {
       if (typeof BroadcastChannel !== 'undefined') {
         const bc = new BroadcastChannel('valknut_orders_sync');
-        bc.postMessage({ type: 'ORDER_PLACED', orderNumber: result.order.orderNumber });
+        bc.postMessage({
+          type: 'ORDER_PLACED',
+          orderNumber: result.order.orderNumber,
+          deductedItems: orderItemsToDeduct
+        });
         bc.close();
       }
     } catch (bcErr) {

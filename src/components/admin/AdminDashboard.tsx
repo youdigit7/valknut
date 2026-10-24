@@ -99,6 +99,7 @@ import {
   FormControl,
   InputLabel,
   InputAdornment,
+  Autocomplete,
   Grid,
   Dialog,
   DialogTitle,
@@ -649,6 +650,20 @@ export const AdminDashboard: React.FC = () => {
     const calculatedSlug = prodSlug.trim() || prodName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const splitTags = prodTags.split(',').map(t => t.trim()).filter(Boolean);
 
+    const sanitizedVariants: ProductVariant[] = (prodVariants.length > 0 ? prodVariants : [
+      { id: `v-${Date.now()}`, size: 'One Size', color: 'Onyx Black', colorHex: '#0a0a0c', sku: `VK-${calculatedSlug.toUpperCase().slice(0, 6)}-ONE`, stock: 20 }
+    ]).map((v, i) => ({
+      ...v,
+      id: v.id || `v-${Date.now()}-${i}`,
+      size: (v.size || 'One Size').trim(),
+      color: (v.color || 'Onyx Black').trim(),
+      colorHex: v.colorHex || '#0a0a0c',
+      sku: v.sku?.trim() || `VK-${calculatedSlug.toUpperCase().slice(0, 6)}-${(v.size || `${i + 1}`).toUpperCase().replace(/\s+/g, '')}`,
+      stock: Number(v.stock) >= 0 ? Number(v.stock) : 0,
+      stockCount: Number(v.stock) >= 0 ? Number(v.stock) : 0,
+      price: v.price ? Number(v.price) : undefined
+    }));
+
     const productPayload: Product = {
       id: editingProduct ? editingProduct.id : crypto.randomUUID(),
       name: prodName.trim(),
@@ -668,7 +683,7 @@ export const AdminDashboard: React.FC = () => {
       isNewArrival: prodIsNewArrival,
       isLimitedEdition: prodIsLimitedEdition,
       createdAt: editingProduct ? editingProduct.createdAt : new Date().toISOString(),
-      variants: prodVariants
+      variants: sanitizedVariants
     };
 
     if (editingProduct) {
@@ -3831,62 +3846,126 @@ export const AdminDashboard: React.FC = () => {
 
             {/* 4. Variants Matrix */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 800, color: goldColor, letterSpacing: '0.1em' }}>
-                  4. SIZE & COLOR VARIANTS ({prodVariants.length})
-                </Typography>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => {
-                    const newV: ProductVariant = {
-                      id: `v-${Date.now()}`,
-                      size: 'M',
-                      color: 'Onyx Black',
-                      colorHex: '#0a0a0c',
-                      sku: `VK-${Date.now().toString().slice(-4)}`,
-                      stock: 20
-                    };
-                    setProdVariants([...prodVariants, newV]);
-                  }}
-                  sx={{ color: goldColor, borderColor: 'rgba(212, 175, 55, 0.4)', fontSize: '0.75rem', borderRadius: '6px' }}
-                >
-                  + Add Variant
-                </Button>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
+                <Box>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 800, color: goldColor, letterSpacing: '0.1em' }}>
+                    4. SIZE & STOCK VARIANTS ({prodVariants.length})
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#94A3B8', fontSize: '0.7rem' }}>
+                    Type custom size/variant name, stock count, SKU, or click presets below:
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => {
+                      const newV: ProductVariant = {
+                        id: `v-${Date.now()}`,
+                        size: 'M',
+                        color: prodVariants[0]?.color || 'Onyx Black',
+                        colorHex: prodVariants[0]?.colorHex || '#0a0a0c',
+                        sku: `VK-${(prodSlug || 'ITEM').toUpperCase().slice(0, 6)}-${Date.now().toString().slice(-4)}`,
+                        stock: 20
+                      };
+                      setProdVariants([...prodVariants, newV]);
+                    }}
+                    sx={{ color: goldColor, borderColor: 'rgba(212, 175, 55, 0.4)', fontSize: '0.75rem', borderRadius: '6px' }}
+                  >
+                    + Add Custom Variant
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="text"
+                    onClick={() => {
+                      const baseColor = prodVariants[0]?.color || 'Onyx Black';
+                      const baseHex = prodVariants[0]?.colorHex || '#0a0a0c';
+                      const standardSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+                      const gen = standardSizes.map((sz, i) => ({
+                        id: `v-${Date.now()}-${i}`,
+                        size: sz,
+                        color: baseColor,
+                        colorHex: baseHex,
+                        sku: `VK-${(prodSlug || 'ITEM').toUpperCase().slice(0, 6)}-${sz}`,
+                        stock: 25
+                      }));
+                      setProdVariants(gen);
+                    }}
+                    sx={{ color: '#94A3B8', fontSize: '0.75rem', '&:hover': { color: goldColor } }}
+                  >
+                    ⚡ Populate XS–XXXL
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="text"
+                    onClick={() => {
+                      const baseColor = prodVariants[0]?.color || 'Onyx Black';
+                      const baseHex = prodVariants[0]?.colorHex || '#0a0a0c';
+                      setProdVariants([{
+                        id: `v-${Date.now()}`,
+                        size: 'One Size',
+                        color: baseColor,
+                        colorHex: baseHex,
+                        sku: `VK-${(prodSlug || 'ITEM').toUpperCase().slice(0, 6)}-ONE`,
+                        stock: 30
+                      }]);
+                    }}
+                    sx={{ color: '#94A3B8', fontSize: '0.75rem', '&:hover': { color: goldColor } }}
+                  >
+                    ⚡ One Size
+                  </Button>
+                  {prodVariants.length > 0 && (
+                    <Button
+                      size="small"
+                      variant="text"
+                      onClick={() => setProdVariants([])}
+                      sx={{ color: '#EF4444', fontSize: '0.75rem', '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.1)' } }}
+                    >
+                      Clear All
+                    </Button>
+                  )}
+                </Box>
               </Box>
 
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 {prodVariants.map((v, idx) => (
                   <Paper key={v.id || idx} sx={{ p: 2, bgcolor: '#121420', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                     <Grid container spacing={1.5} sx={{ alignItems: 'center' }}>
-                      <Grid size={{ xs: 6, sm: 1.5 }}>
-                        <FormControl fullWidth size="small" sx={darkInputSx}>
-                          <InputLabel>Size</InputLabel>
-                          <Select
-                            value={v.size}
-                            label="Size"
-                            onChange={(e) => {
-                              const copy = [...prodVariants];
-                              copy[idx].size = e.target.value as any;
-                              setProdVariants(copy);
-                            }}
-                          >
-                            <MenuItem value="XS">XS</MenuItem>
-                            <MenuItem value="S">S</MenuItem>
-                            <MenuItem value="M">M</MenuItem>
-                            <MenuItem value="L">L</MenuItem>
-                            <MenuItem value="XL">XL</MenuItem>
-                            <MenuItem value="XXL">XXL</MenuItem>
-                            <MenuItem value="XXXL">XXXL</MenuItem>
-                          </Select>
-                        </FormControl>
+                      {/* Freeform Typed Size or Standard Selection */}
+                      <Grid size={{ xs: 12, sm: 2.25 }}>
+                        <Autocomplete
+                          freeSolo
+                          size="small"
+                          options={['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'One Size', 'Free Size']}
+                          value={v.size}
+                          onChange={(_, newValue) => {
+                            const copy = [...prodVariants];
+                            copy[idx].size = newValue || '';
+                            setProdVariants(copy);
+                          }}
+                          onInputChange={(_, newInputValue) => {
+                            const copy = [...prodVariants];
+                            copy[idx].size = newInputValue;
+                            setProdVariants(copy);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Size / Name"
+                              placeholder="e.g. M, One Size"
+                              sx={darkInputSx}
+                            />
+                          )}
+                        />
                       </Grid>
 
-                      <Grid size={{ xs: 6, sm: 2.5 }}>
+                      {/* Color Name */}
+                      <Grid size={{ xs: 6, sm: 2 }}>
                         <TextField
                           fullWidth
                           size="small"
                           label="Color Name"
+                          placeholder="e.g. Onyx Black"
                           value={v.color}
                           onChange={(e) => {
                             const copy = [...prodVariants];
@@ -3897,7 +3976,8 @@ export const AdminDashboard: React.FC = () => {
                         />
                       </Grid>
 
-                      <Grid size={{ xs: 6, sm: 2.5 }}>
+                      {/* Color Picker + Hex */}
+                      <Grid size={{ xs: 6, sm: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <Box
                             component="input"
@@ -3938,7 +4018,8 @@ export const AdminDashboard: React.FC = () => {
                         </Box>
                       </Grid>
 
-                      <Grid size={{ xs: 6, sm: 2.5 }}>
+                      {/* SKU Code */}
+                      <Grid size={{ xs: 6, sm: 2 }}>
                         <TextField
                           fullWidth
                           size="small"
@@ -3953,12 +4034,13 @@ export const AdminDashboard: React.FC = () => {
                         />
                       </Grid>
 
-                      <Grid size={{ xs: 4, sm: 2 }}>
+                      {/* Stock Quantity */}
+                      <Grid size={{ xs: 6, sm: 1.5 }}>
                         <TextField
                           fullWidth
                           size="small"
                           type="number"
-                          label="Stock"
+                          label="Stock Qty"
                           value={v.stock}
                           onChange={(e) => {
                             const copy = [...prodVariants];
@@ -3969,7 +4051,26 @@ export const AdminDashboard: React.FC = () => {
                         />
                       </Grid>
 
-                      <Grid size={{ xs: 2, sm: 1 }} sx={{ textAlign: 'right' }}>
+                      {/* Optional Variant Price */}
+                      <Grid size={{ xs: 8, sm: 1.5 }}>
+                        <TextField
+                          fullWidth
+                          size="small"
+                          type="number"
+                          label="Price (opt)"
+                          placeholder={String(prodPrice)}
+                          value={v.price ?? ''}
+                          onChange={(e) => {
+                            const copy = [...prodVariants];
+                            copy[idx].price = e.target.value ? Number(e.target.value) : undefined;
+                            setProdVariants(copy);
+                          }}
+                          sx={darkInputSx}
+                        />
+                      </Grid>
+
+                      {/* Delete */}
+                      <Grid size={{ xs: 4, sm: 0.75 }} sx={{ textAlign: 'right' }}>
                         <IconButton
                           size="small"
                           onClick={() => setProdVariants(prodVariants.filter((_, i) => i !== idx))}

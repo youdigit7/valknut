@@ -591,11 +591,12 @@ export async function searchCatalog(
  * Fetches all authoritative products (from Supabase or LocalStorage/Defaults)
  */
 export async function getAllProducts(): Promise<Product[]> {
+  let cloudProducts: Product[] = [];
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase.from('products').select('*, product_variants(*)');
       if (!error && Array.isArray(data) && data.length > 0) {
-        return data.map(mapSupabaseRowToProduct);
+        cloudProducts = data.map(mapSupabaseRowToProduct);
       }
     } catch (e) {
       console.warn('Failed to fetch from Supabase:', e);
@@ -603,19 +604,33 @@ export async function getAllProducts(): Promise<Product[]> {
   }
 
   try {
-    const cached = localStorage.getItem('valknut_products_v2');
+    const cached = localStorage.getItem('valknut_products_v3') || localStorage.getItem('valknut_products_v2');
     if (cached) {
       const parsed = JSON.parse(cached);
       if (Array.isArray(parsed) && parsed.length > 0) {
         const filtered = parsed.filter((p: Product) => !p.id.startsWith('prod-'));
-        if (filtered.length > 0) return filtered;
+        if (filtered.length > 0) {
+          if (cloudProducts.length === 0) return filtered;
+          // Reconcile: Preserve the lower stock count so orders placed locally are honored
+          return cloudProducts.map((cp) => {
+            const lp: Product | undefined = filtered.find((p: Product) => p.id === cp.id);
+            if (!lp || !Array.isArray(lp.variants)) return cp;
+            const reconciledVariants = cp.variants.map((cv) => {
+              const lv = lp.variants.find((v) => v.size.toLowerCase() === cv.size.toLowerCase());
+              if (!lv) return cv;
+              const effectiveStock = Math.min(cv.stock ?? 0, lv.stock ?? 0);
+              return { ...cv, stock: effectiveStock, stockCount: effectiveStock };
+            });
+            return { ...cp, variants: reconciledVariants };
+          });
+        }
       }
     }
   } catch (e) {
     console.warn('Failed to read cached products:', e);
   }
 
-  return INITIAL_PRODUCTS;
+  return cloudProducts.length > 0 ? cloudProducts : INITIAL_PRODUCTS;
 }
 
 /**

@@ -13,7 +13,8 @@ export type SubCategoryType =
   | 'Core products'
   | 'Everyday essentials';
 
-export type ProductSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
+export type StandardProductSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
+export type ProductSize = StandardProductSize | 'One Size' | 'Free Size' | (string & {});
 export type SizeOption = ProductSize;
 
 export interface ProductVariant {

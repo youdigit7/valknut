@@ -120,8 +120,12 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
   const allPossibleSizes: ProductSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
   const isApparel = Boolean(activeProduct && (activeProduct.category === 'MEN' || activeProduct.category === 'WOMEN' || activeProduct.isCustomizable));
   const availableSizes = useMemo(() => {
+    const fromVariants = Array.from(new Set(variants.map(v => v.size).filter(Boolean)));
+    if (fromVariants.length > 0) {
+      const hasCustom = fromVariants.some(sz => !allPossibleSizes.includes(sz as any));
+      if (hasCustom) return fromVariants;
+    }
     if (isApparel) return allPossibleSizes;
-    const fromVariants = Array.from(new Set(variants.map(v => v.size)));
     return fromVariants.length > 0 ? fromVariants : allPossibleSizes;
   }, [variants, isApparel]);
 

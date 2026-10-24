@@ -114,8 +114,22 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
     ).values()
   );
 
-  // Available sizes across product
-  const allPossibleSizes: ProductSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+  // Available sizes across product: display custom typed sizes or standard apparel spectrum
+  const standardApparelSizes: ProductSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+  const allPossibleSizes: ProductSize[] = useMemo(() => {
+    const fromVariants = Array.from(new Set(variants.map((v) => v.size).filter(Boolean)));
+    if (fromVariants.length > 0) {
+      const hasCustom = fromVariants.some(sz => !standardApparelSizes.includes(sz as any));
+      if (hasCustom) {
+        return fromVariants;
+      }
+    }
+    const isApparel = product.category === 'MEN' || product.category === 'WOMEN' || Boolean(product.isCustomizable);
+    if (isApparel) {
+      return standardApparelSizes;
+    }
+    return fromVariants.length > 0 ? fromVariants : standardApparelSizes;
+  }, [variants, product.category, product.isCustomizable]);
 
   // Current active variant matching current color + size
   const activeVariant: ProductVariant | undefined = variants.find(
@@ -369,7 +383,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                       <Ruler size={13} /> Size Guide
                     </Button>
                   </Box>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(4, 1fr)', sm: 'repeat(7, 1fr)' }, gap: 1 }}>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: allPossibleSizes.length <= 4 ? `repeat(${Math.max(1, allPossibleSizes.length)}, 1fr)` : { xs: 'repeat(4, 1fr)', sm: `repeat(${Math.min(allPossibleSizes.length, 7)}, 1fr)` }, gap: 1 }}>
                     {allPossibleSizes.map((sz) => {
                       const isAvailableForSize = variants.some((v) => v.color === selectedColor && v.size === sz && (v.stock > 0 || v.stockCount! > 0));
                       const isSelected = selectedSize === sz;

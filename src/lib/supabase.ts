@@ -285,6 +285,70 @@ ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow public subscribe newsletter" ON public.newsletter_subscribers FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow admin view newsletter" ON public.newsletter_subscribers FOR SELECT USING (true);
 
--- Allow public stock decrement on checkout
+-- 13. AUTOMATED STOCK DEDUCTION (RPC & TRIGGER)
+-- Ensures stock decrements safely whenever orders are placed
+DROP POLICY IF EXISTS "Allow public update variant stock" ON public.product_variants;
 CREATE POLICY "Allow public update variant stock" ON public.product_variants FOR UPDATE USING (true) WITH CHECK (true);
+
+CREATE OR REPLACE FUNCTION public.deduct_variant_stock(p_variant_id UUID, p_quantity INT)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_stock INT;
+BEGIN
+  UPDATE public.product_variants
+  SET stock = GREATEST(0, stock - p_quantity),
+      updated_at = NOW()
+  WHERE id = p_variant_id
+  RETURNING stock INTO v_stock;
+  
+  RETURN jsonb_build_object('success', true, 'remaining_stock', v_stock);
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.deduct_variant_stock_by_sku(p_sku TEXT, p_quantity INT)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_stock INT;
+BEGIN
+  UPDATE public.product_variants
+  SET stock = GREATEST(0, stock - p_quantity),
+      updated_at = NOW()
+  WHERE sku = p_sku
+  RETURNING stock INTO v_stock;
+  
+  RETURN jsonb_build_object('success', true, 'remaining_stock', v_stock);
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.deduct_variant_stock(UUID, INT) TO anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.deduct_variant_stock_by_sku(TEXT, INT) TO anon, authenticated, service_role;
+
+-- Automated Trigger: Automatically deducts stock when order items are placed
+CREATE OR REPLACE FUNCTION public.handle_order_stock_deduction()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  UPDATE public.product_variants
+  SET stock = GREATEST(0, stock - NEW.quantity),
+      updated_at = NOW()
+  WHERE (id::text = NEW.variant_id)
+     OR (sku = NEW.sku)
+     OR (product_id::text = NEW.product_id AND size = NEW.size);
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_deduct_stock_on_order_item ON public.order_items;
+CREATE TRIGGER trg_deduct_stock_on_order_item
+AFTER INSERT ON public.order_items
+FOR EACH ROW
+EXECUTE FUNCTION public.handle_order_stock_deduction();
 `;

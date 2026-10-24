@@ -560,27 +560,81 @@ export async function createOrderSecurely(payload: CreateOrderPayload): Promise<
   };
 }
 
+export interface OrderedStockItem {
+  productId: string;
+  variantId?: string;
+  sku?: string;
+  size: string;
+  color?: string;
+  quantity: number;
+}
+
 /**
- * Pure function to deduct stock counts for ordered items across an array of products
+ * Pure function to deduct stock counts for ordered items across an array of products.
+ * Handles custom variant names, studio color selections, SKU matching, and multi-quantity aggregations.
  */
 export function deductStockFromProducts(
   products: Product[],
-  items: { productId: string; size: string; color?: string; quantity: number }[]
+  items: OrderedStockItem[]
 ): Product[] {
   return products.map((prod) => {
     const orderItemsForProd = items.filter((i) => i.productId === prod.id);
     if (orderItemsForProd.length === 0) return prod;
 
     const prodVariants = Array.isArray(prod.variants) ? prod.variants : [];
-    const updatedVariants = prodVariants.map((v) => {
-      const match = orderItemsForProd.find(
-        (oi) =>
-          oi.size.toUpperCase() === v.size.toUpperCase() &&
-          (!oi.color || oi.color.toLowerCase() === v.color.toLowerCase())
-      );
-      if (match) {
+    if (prodVariants.length === 0) return prod;
+
+    // Track deductions per variant index to handle duplicate items accurately
+    const deductionsPerVariantIndex = new Map<number, number>();
+
+    for (const item of orderItemsForProd) {
+      const targetSize = (item.size || '').trim().toLowerCase();
+      const targetColor = (item.color || '').trim().toLowerCase();
+      const targetSku = (item.sku || '').trim().toLowerCase();
+      const targetVariantId = item.variantId;
+
+      let matchedIdx = -1;
+
+      // 1. Match by variant ID if present
+      if (targetVariantId) {
+        matchedIdx = prodVariants.findIndex((v) => v.id && v.id === targetVariantId);
+      }
+
+      // 2. Match by SKU if present
+      if (matchedIdx === -1 && targetSku) {
+        matchedIdx = prodVariants.findIndex((v) => v.sku && v.sku.trim().toLowerCase() === targetSku);
+      }
+
+      // 3. Match by exact size AND color
+      if (matchedIdx === -1 && targetSize && targetColor) {
+        matchedIdx = prodVariants.findIndex(
+          (v) =>
+            v.size.trim().toLowerCase() === targetSize &&
+            v.color.trim().toLowerCase() === targetColor
+        );
+      }
+
+      // 4. Match by size alone (e.g. customized studio garment where color was picked from studio shades)
+      if (matchedIdx === -1 && targetSize) {
+        matchedIdx = prodVariants.findIndex((v) => v.size.trim().toLowerCase() === targetSize);
+      }
+
+      // 5. Fallback: If product has only 1 variant (e.g. One Size / Free Size), deduct from it
+      if (matchedIdx === -1 && prodVariants.length === 1) {
+        matchedIdx = 0;
+      }
+
+      if (matchedIdx !== -1) {
+        const currentDeduction = deductionsPerVariantIndex.get(matchedIdx) || 0;
+        deductionsPerVariantIndex.set(matchedIdx, currentDeduction + (item.quantity || 1));
+      }
+    }
+
+    const updatedVariants = prodVariants.map((v, idx) => {
+      const deduction = deductionsPerVariantIndex.get(idx);
+      if (deduction && deduction > 0) {
         const currentStock = v.stock ?? v.stockCount ?? 0;
-        const newStock = Math.max(0, currentStock - match.quantity);
+        const newStock = Math.max(0, currentStock - deduction);
         return { ...v, stock: newStock, stockCount: newStock };
       }
       return v;
@@ -595,29 +649,43 @@ export function deductStockFromProducts(
  */
 async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
   try {
-    const saved = localStorage.getItem('valknut_products_v2') || localStorage.getItem('valknut_products');
+    const saved = localStorage.getItem('valknut_products_v3') || localStorage.getItem('valknut_products_v2') || localStorage.getItem('valknut_products');
     if (saved) {
       const products: Product[] = JSON.parse(saved);
       const updatedProducts = deductStockFromProducts(products, items);
+      localStorage.setItem('valknut_products_v3', JSON.stringify(updatedProducts));
       localStorage.setItem('valknut_products_v2', JSON.stringify(updatedProducts));
-      localStorage.setItem('valknut_products', JSON.stringify(updatedProducts));
     }
 
     // Deduct stock in Supabase cloud database if available
     if (isSupabaseConfigured && supabase) {
+      const client = supabase;
+      try {
+        const rawToken = localStorage.getItem('sb-urwhkkrozmlpadjmiqpc-auth-token');
+        if (rawToken) {
+          const parsed = JSON.parse(rawToken);
+          if (parsed?.access_token && parsed?.refresh_token) {
+            await client.auth.setSession({
+              access_token: parsed.access_token,
+              refresh_token: parsed.refresh_token
+            });
+          }
+        }
+      } catch (_) {}
+
       for (const item of items) {
         try {
           const isUuid = item.variantId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.variantId);
 
           // 1. Try atomic database RPC function first
           if (isUuid) {
-            const { error: rpcErr } = await supabase.rpc('deduct_variant_stock', {
+            const { error: rpcErr } = await client.rpc('deduct_variant_stock', {
               p_variant_id: item.variantId,
               p_quantity: item.quantity
             });
             if (!rpcErr) continue;
           } else if (item.sku) {
-            const { error: rpcSkuErr } = await supabase.rpc('deduct_variant_stock_by_sku', {
+            const { error: rpcSkuErr } = await client.rpc('deduct_variant_stock_by_sku', {
               p_sku: item.sku,
               p_quantity: item.quantity
             });
@@ -625,7 +693,7 @@ async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
           }
 
           // 2. Direct update fallback
-          let query = supabase.from('product_variants').select('stock, id');
+          let query = client.from('product_variants').select('stock, id');
           if (isUuid) {
             query = query.eq('id', item.variantId);
           } else if (item.sku) {
@@ -640,7 +708,7 @@ async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
 
           if (vRow && typeof vRow.stock === 'number') {
             const newStock = Math.max(0, vRow.stock - item.quantity);
-            await supabase
+            await client
               .from('product_variants')
               .update({ stock: newStock })
               .eq('id', vRow.id);

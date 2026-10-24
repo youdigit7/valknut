@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import type { CustomStudioOptions, PrintTechniqueType, ProductSize } from '../../types/ecommerce';
 import { useStore } from '../../context/StoreContext';
 import { 
@@ -43,11 +43,22 @@ export const CustomStudio: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<ProductSize>('M');
   const [placement, setPlacement] = useState<'FRONT' | 'BACK' | 'LEFT_SLEEVE' | 'RIGHT_SLEEVE'>('FRONT');
 
+  const studioSizes: ProductSize[] = useMemo(() => {
+    const fromVariants = Array.from(new Set(activeProduct?.variants?.map(v => v.size).filter(Boolean) || []));
+    if (fromVariants.length > 0 && fromVariants.some(sz => !STUDIO_SIZES.includes(sz as any))) {
+      return fromVariants;
+    }
+    return STUDIO_SIZES;
+  }, [activeProduct]);
+
   useEffect(() => {
     if (activeProduct) {
       if (!selectedColor && activeProduct.variants?.[0]?.color) {
         setSelectedColor(activeProduct.variants[0].color);
         setSelectedColorHex(activeProduct.variants[0].colorHex || '#0A0B0E');
+      }
+      if (activeProduct.variants?.[0]?.size) {
+        setSelectedSize(activeProduct.variants[0].size);
       }
     }
   }, [activeProduct]);
@@ -388,8 +399,8 @@ export const CustomStudio: React.FC = () => {
                   <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>
                     3. SELECT SIZE ({selectedSize})
                   </Typography>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(4, 1fr)', sm: 'repeat(7, 1fr)' }, gap: 1 }}>
-                    {STUDIO_SIZES.map(sz => {
+                  <Box sx={{ display: 'grid', gridTemplateColumns: studioSizes.length <= 4 ? `repeat(${Math.max(1, studioSizes.length)}, 1fr)` : { xs: 'repeat(4, 1fr)', sm: `repeat(${Math.min(studioSizes.length, 7)}, 1fr)` }, gap: 1 }}>
+                    {studioSizes.map(sz => {
                       const isSelected = selectedSize === sz;
                       return (
                         <Box

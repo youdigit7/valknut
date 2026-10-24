@@ -162,4 +162,28 @@ describe('Order Security, Calculations & Checkout QA Suite', () => {
     expect(sizeM?.stock).toBe(6); // 10 - 4 = 6
     expect(sizeL?.stock).toBe(0); // Unchanged
   });
+
+  it('deducts stock for custom variant names and studio color selections', () => {
+    const customProduct: Product = {
+      ...testProduct,
+      id: 'custom-prod-1',
+      variants: [
+        { id: 'cv-1', size: 'One Size', color: 'Onyx Black', colorHex: '#000000', sku: 'VK-CUSTOM-ONE', stock: 15 },
+        { id: 'cv-2', size: 'XXXL', color: 'Onyx Black', colorHex: '#000000', sku: 'VK-CUSTOM-XXXL', stock: 8 }
+      ]
+    };
+
+    // Customer ordered custom color "Solar Gold" on size "One Size", plus 2 units of "XXXL"
+    const orderItems = [
+      { productId: 'custom-prod-1', size: 'One Size', color: 'Solar Gold', quantity: 3 },
+      { productId: 'custom-prod-1', size: 'XXXL', color: 'Onyx Black', quantity: 2 }
+    ];
+
+    const updated = deductStockFromProducts([customProduct], orderItems);
+    const oneSize = updated[0].variants.find(v => v.size === 'One Size');
+    const xxxl = updated[0].variants.find(v => v.size === 'XXXL');
+
+    expect(oneSize?.stock).toBe(12); // 15 - 3 = 12
+    expect(xxxl?.stock).toBe(6);     // 8 - 2 = 6
+  });
 });
