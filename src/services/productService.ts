@@ -41,16 +41,42 @@ export interface ShopQueryResult {
  * Normalizes Supabase database row to our TypeScript Product type
  */
 export function mapSupabaseRowToProduct(row: any): Product {
-  const rawVariants = Array.isArray(row.variants) && row.variants.length > 0
+  let rawVariants = Array.isArray(row.variants) && row.variants.length > 0
     ? row.variants
     : Array.isArray(row.product_variants) && row.product_variants.length > 0
     ? row.product_variants.map(mapSupabaseVariant)
-    : [
-        { id: `${row.id}-s`, size: 'S', color: 'Onyx Black', colorHex: '#0a0a0c', sku: `${row.slug}-s`, stock: 15 },
-        { id: `${row.id}-m`, size: 'M', color: 'Onyx Black', colorHex: '#0a0a0c', sku: `${row.slug}-m`, stock: 25 },
-        { id: `${row.id}-l`, size: 'L', color: 'Onyx Black', colorHex: '#0a0a0c', sku: `${row.slug}-l`, stock: 20 },
-        { id: `${row.id}-xl`, size: 'XL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: `${row.slug}-xl`, stock: 10 }
-      ];
+    : null;
+
+  if (!rawVariants) {
+    try {
+      const saved = typeof localStorage !== 'undefined' ? localStorage.getItem('valknut_products_v2') : null;
+      if (saved) {
+        const cached: Product[] = JSON.parse(saved);
+        const match = cached.find((p) => p.id === row.id || p.slug === row.slug);
+        if (match && Array.isArray(match.variants) && match.variants.length > 0) {
+          rawVariants = match.variants;
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  if (!rawVariants) {
+    const initMatch = INITIAL_PRODUCTS.find((p) => p.id === row.id || p.slug === row.slug);
+    if (initMatch && Array.isArray(initMatch.variants)) {
+      rawVariants = initMatch.variants;
+    }
+  }
+
+  if (!rawVariants) {
+    rawVariants = [
+      { id: `${row.id}-s`, size: 'S', color: 'Onyx Black', colorHex: '#0a0a0c', sku: `${row.slug}-s`, stock: 15 },
+      { id: `${row.id}-m`, size: 'M', color: 'Onyx Black', colorHex: '#0a0a0c', sku: `${row.slug}-m`, stock: 25 },
+      { id: `${row.id}-l`, size: 'L', color: 'Onyx Black', colorHex: '#0a0a0c', sku: `${row.slug}-l`, stock: 20 },
+      { id: `${row.id}-xl`, size: 'XL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: `${row.slug}-xl`, stock: 10 }
+    ];
+  }
 
   return {
     id: row.id,

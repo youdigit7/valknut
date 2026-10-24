@@ -564,9 +564,10 @@ export interface OrderedStockItem {
   productId: string;
   variantId?: string;
   sku?: string;
-  size: string;
+  size?: string;
   color?: string;
   quantity: number;
+  customization?: any;
 }
 
 /**
@@ -578,7 +579,16 @@ export function deductStockFromProducts(
   items: OrderedStockItem[]
 ): Product[] {
   return products.map((prod) => {
-    const orderItemsForProd = items.filter((i) => i.productId === prod.id);
+    // Match product by ID, slug, or nested variant reference
+    const orderItemsForProd = items.filter((i: any) =>
+      i.productId === prod.id ||
+      i.productId === prod.slug ||
+      i.productSlug === prod.slug ||
+      i.product?.id === prod.id ||
+      (i.sku && prod.variants?.some((v) => v.sku === i.sku)) ||
+      (i.variantId && prod.variants?.some((v) => v.id === i.variantId))
+    );
+
     if (orderItemsForProd.length === 0) return prod;
 
     const prodVariants = Array.isArray(prod.variants) ? prod.variants : [];
@@ -614,7 +624,16 @@ export function deductStockFromProducts(
         );
       }
 
-      // 4. Match by size alone (e.g. customized studio garment where color was picked from studio shades)
+      // 3b. Match by fuzzy/partial color
+      if (matchedIdx === -1 && targetSize && targetColor) {
+        matchedIdx = prodVariants.findIndex((v) => {
+          if (v.size.trim().toLowerCase() !== targetSize) return false;
+          const vColor = v.color.trim().toLowerCase();
+          return vColor.includes(targetColor) || targetColor.includes(vColor);
+        });
+      }
+
+      // 4. Match by size alone (e.g. customized studio garment where color was picked from studio shades, or single variant for size)
       if (matchedIdx === -1 && targetSize) {
         matchedIdx = prodVariants.findIndex((v) => v.size.trim().toLowerCase() === targetSize);
       }

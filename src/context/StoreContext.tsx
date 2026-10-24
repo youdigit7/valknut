@@ -487,17 +487,34 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setOrders(allLatestOrders);
 
     // Deduct stock in real-time across the app state
-    const orderItemsToDeduct = cart.map((c) => ({
-      productId: c.productId,
-      size: c.selectedSize,
-      color: c.selectedColor,
-      quantity: c.quantity
-    }));
+    const itemsToDeduct = (result.order?.items && result.order.items.length > 0)
+      ? result.order.items.map((it) => ({
+          productId: it.productId,
+          variantId: it.variantId,
+          sku: it.sku,
+          size: it.size,
+          color: it.color,
+          quantity: it.quantity,
+          customization: it.customization
+        }))
+      : cart.map((c) => ({
+          productId: c.productId,
+          size: c.selectedSize,
+          color: c.selectedColor,
+          quantity: c.quantity,
+          customization: c.customization
+        }));
 
     setProducts((prev) => {
-      const updated = deductStockFromProducts(prev, orderItemsToDeduct);
+      const updated = deductStockFromProducts(prev, itemsToDeduct);
       localStorage.setItem('valknut_products_v3', JSON.stringify(updated));
       return updated;
+    });
+
+    setSelectedProduct((prev) => {
+      if (!prev) return null;
+      const updatedList = deductStockFromProducts([prev], itemsToDeduct);
+      return updatedList[0] || prev;
     });
 
     try {
@@ -513,7 +530,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         bc.postMessage({
           type: 'ORDER_PLACED',
           orderNumber: result.order.orderNumber,
-          deductedItems: orderItemsToDeduct
+          deductedItems: itemsToDeduct
         });
         bc.close();
       }

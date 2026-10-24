@@ -167,14 +167,15 @@ export async function initiateOnePayPayment(
           'Content-Type': 'application/json',
           'Authorization': config.appToken
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(3000)
       });
 
       if (response && response.ok) {
         responseData = await response.json();
       }
     } catch (fetchErr: any) {
-      console.warn('[OnePay] Direct browser-to-gateway fetch intercepted (likely CORS in local dev):', fetchErr?.message);
+      console.warn('[OnePay] Direct gateway fetch skipped or timed out (fallback to sandbox):', fetchErr?.message);
     }
 
     // 3. Process live response if successful
