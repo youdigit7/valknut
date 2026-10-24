@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { PRINT_TECHNIQUES, STUDIO_FONTS, VALKNUT_SIGIL_PRESETS } from '../components/customStudio/studioAssets';
-import type { CustomStudioOptions } from '../types/ecommerce';
+import type { CustomStudioOptions, ProductSize } from '../types/ecommerce';
 
 describe('VALKNUT Custom Studio QA Suite', () => {
   it('contains valid print techniques with accurate fee schedules', () => {
@@ -67,5 +67,26 @@ describe('VALKNUT Custom Studio QA Suite', () => {
 
     expect(studioOption.additionalPrice).toBe(1300);
     expect(studioOption.totalCustomPrice).toBe(9800);
+  });
+
+  it('supports full size spectrum including XS and XXXL in bespoke studio options', () => {
+    const validSizes: ProductSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+    expect(validSizes).toHaveLength(7);
+    for (const size of validSizes) {
+      const option: CustomStudioOptions = {
+        productBaseId: 'test-garment-spectrum',
+        garmentColor: 'Pitch Black',
+        garmentColorHex: '#101012',
+        selectedSize: size,
+        placement: 'FRONT',
+        printTechnique: 'Screen Print',
+        basePrice: 6800,
+        techniqueFee: 0,
+        placementFee: 0,
+        additionalPrice: 0,
+        totalCustomPrice: 6800
+      };
+      expect(option.selectedSize).toBe(size);
+    }
   });
 });

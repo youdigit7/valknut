@@ -13,9 +13,12 @@ export type SubCategoryType =
   | 'Core products'
   | 'Everyday essentials';
 
+export type ProductSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
+export type SizeOption = ProductSize;
+
 export interface ProductVariant {
   id: string;
-  size: 'S' | 'M' | 'L' | 'XL' | 'XXL';
+  size: ProductSize;
   color: string;
   colorHex: string;
   sku: string;
@@ -73,7 +76,7 @@ export interface CustomStudioOptions {
   productName?: string;
   garmentColor: string;
   garmentColorHex: string;
-  selectedSize: 'S' | 'M' | 'L' | 'XL' | 'XXL';
+  selectedSize: ProductSize;
   placement: 'FRONT' | 'BACK' | 'LEFT_SLEEVE' | 'RIGHT_SLEEVE';
   customText?: string;
   textColor?: string;
@@ -101,7 +104,7 @@ export interface CartItem {
   id: string; // unique item id (product + variant + custom hash)
   productId: string;
   product: Product;
-  selectedSize: 'S' | 'M' | 'L' | 'XL' | 'XXL';
+  selectedSize: ProductSize;
   selectedColor: string;
   selectedColorHex: string;
   quantity: number;
@@ -265,7 +268,7 @@ export interface OrderItemSnapshot {
   productSlug: string;
   sku: string;
   variantId?: string;
-  size: 'S' | 'M' | 'L' | 'XL' | 'XXL';
+  size: ProductSize;
   color: string;
   colorHex: string;
   unitPrice: number;

@@ -50,7 +50,7 @@ interface ShopSidebarFiltersProps {
   isMobileDrawer?: boolean;
 }
 
-const ALL_SIZES = ['S', 'M', 'L', 'XL', 'XXL'] as const;
+const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'] as const;
 
 export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
   filters,
@@ -348,7 +348,7 @@ export const ShopSidebarFilters: React.FC<ShopSidebarFiltersProps> = ({
         </Button>
 
         <Collapse in={openSections.sizes}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 1, pt: 2 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, pt: 2 }}>
             {ALL_SIZES.map((size) => {
               const isSelected = filters.sizes.includes(size);
               const count = facets.sizes[size] || 0;

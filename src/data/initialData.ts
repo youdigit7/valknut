@@ -38,11 +38,13 @@ export const INITIAL_PRODUCTS: Product[] = [
     isNewArrival: true,
     createdAt: '2026-09-01T00:00:00Z',
     variants: [
+      { id: 'v1-0', size: 'XS', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-XS', stock: 10 },
       { id: 'v1-1', size: 'S', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-S', stock: 15 },
       { id: 'v1-2', size: 'M', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-M', stock: 28 },
       { id: 'v1-3', size: 'L', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-L', stock: 22 },
       { id: 'v1-4', size: 'XL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-XL', stock: 14 },
-      { id: 'v1-5', size: 'XXL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-XXL', stock: 8 }
+      { id: 'v1-5', size: 'XXL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-XXL', stock: 8 },
+      { id: 'v1-6', size: 'XXXL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-HD-BLK-XXXL', stock: 6 }
     ]
   },
   // 2. MEN: Mind Control Oversized Tee (Customizable)
@@ -64,11 +66,13 @@ export const INITIAL_PRODUCTS: Product[] = [
     isNewArrival: false,
     createdAt: '2026-08-15T00:00:00Z',
     variants: [
+      { id: 'v2-0', size: 'XS', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-XS', stock: 20 },
       { id: 'v2-1', size: 'S', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-S', stock: 35 },
       { id: 'v2-2', size: 'M', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-M', stock: 50 },
       { id: 'v2-3', size: 'L', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-L', stock: 40 },
       { id: 'v2-4', size: 'XL', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-XL', stock: 25 },
-      { id: 'v2-5', size: 'XXL', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-XXL', stock: 12 }
+      { id: 'v2-5', size: 'XXL', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-XXL', stock: 12 },
+      { id: 'v2-6', size: 'XXXL', color: 'Pitch Black', colorHex: '#101012', sku: 'VK-TS-BLK-XXXL', stock: 10 }
     ]
   },
   // 3. MEN: Celestial Mountain Acid Wash Tee (Customizable)
@@ -91,10 +95,13 @@ export const INITIAL_PRODUCTS: Product[] = [
     isNewArrival: true,
     createdAt: '2026-09-10T00:00:00Z',
     variants: [
+      { id: 'v3-0', size: 'XS', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-XS', stock: 15 },
       { id: 'v3-1', size: 'S', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-S', stock: 20 },
       { id: 'v3-2', size: 'M', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-M', stock: 35 },
       { id: 'v3-3', size: 'L', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-L', stock: 30 },
-      { id: 'v3-4', size: 'XL', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-XL', stock: 15 }
+      { id: 'v3-4', size: 'XL', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-XL', stock: 15 },
+      { id: 'v3-5', size: 'XXL', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-XXL', stock: 10 },
+      { id: 'v3-6', size: 'XXXL', color: 'Washed Charcoal', colorHex: '#25262a', sku: 'VK-CLST-CHR-XXXL', stock: 8 }
     ]
   },
   // 4. MEN: Tactical Joggers
@@ -117,10 +124,13 @@ export const INITIAL_PRODUCTS: Product[] = [
     isNewArrival: true,
     createdAt: '2026-09-15T00:00:00Z',
     variants: [
+      { id: 'v7-0', size: 'XS', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-XS', stock: 10 },
       { id: 'v7-1', size: 'S', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-S', stock: 12 },
       { id: 'v7-2', size: 'M', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-M', stock: 22 },
       { id: 'v7-3', size: 'L', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-L', stock: 18 },
-      { id: 'v7-4', size: 'XL', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-XL', stock: 8 }
+      { id: 'v7-4', size: 'XL', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-XL', stock: 8 },
+      { id: 'v7-5', size: 'XXL', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-XXL', stock: 6 },
+      { id: 'v7-6', size: 'XXXL', color: 'Shadow Black', colorHex: '#141416', sku: 'VK-JG-BLK-XXXL', stock: 5 }
     ]
   },
   // 5. WOMEN: Sculpted Crop Hoodie (Customizable)
@@ -142,9 +152,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     isNewArrival: true,
     createdAt: '2026-09-12T00:00:00Z',
     variants: [
+      { id: 'v8-0', size: 'XS', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-XS', stock: 12 },
       { id: 'v8-1', size: 'S', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-S', stock: 18 },
       { id: 'v8-2', size: 'M', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-M', stock: 25 },
-      { id: 'v8-3', size: 'L', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-L', stock: 14 }
+      { id: 'v8-3', size: 'L', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-L', stock: 14 },
+      { id: 'v8-4', size: 'XL', color: 'Matte Black', colorHex: '#0d0d0f', sku: 'VK-W-HD-BLK-XL', stock: 10 }
     ]
   },
   // 6. WOMEN: Femme Minimalist Oversized Tee (Customizable)
@@ -166,9 +178,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     isNewArrival: true,
     createdAt: '2026-09-18T00:00:00Z',
     variants: [
+      { id: 'v9-0', size: 'XS', color: 'Washed Black', colorHex: '#121214', sku: 'VK-W-TS-BLK-XS', stock: 16 },
       { id: 'v9-1', size: 'S', color: 'Washed Black', colorHex: '#121214', sku: 'VK-W-TS-BLK-S', stock: 24 },
       { id: 'v9-2', size: 'M', color: 'Washed Black', colorHex: '#121214', sku: 'VK-W-TS-BLK-M', stock: 32 },
-      { id: 'v9-3', size: 'L', color: 'Washed Black', colorHex: '#121214', sku: 'VK-W-TS-BLK-L', stock: 18 }
+      { id: 'v9-3', size: 'L', color: 'Washed Black', colorHex: '#121214', sku: 'VK-W-TS-BLK-L', stock: 18 },
+      { id: 'v9-4', size: 'XL', color: 'Washed Black', colorHex: '#121214', sku: 'VK-W-TS-BLK-XL', stock: 12 }
     ]
   },
   // 7. ESSENTIALS: Tactical Crossbody Bag

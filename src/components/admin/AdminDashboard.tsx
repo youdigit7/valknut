@@ -356,10 +356,13 @@ export const AdminDashboard: React.FC = () => {
 
   // Variant Manager inside Product Modal
   const [prodVariants, setProdVariants] = useState<ProductVariant[]>([
+    { id: 'v-0', size: 'XS', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-XS', stock: 15 },
     { id: 'v-1', size: 'S', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-S', stock: 20 },
     { id: 'v-2', size: 'M', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-M', stock: 35 },
     { id: 'v-3', size: 'L', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-L', stock: 25 },
-    { id: 'v-4', size: 'XL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-XL', stock: 15 }
+    { id: 'v-4', size: 'XL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-XL', stock: 15 },
+    { id: 'v-5', size: 'XXL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-XXL', stock: 10 },
+    { id: 'v-6', size: 'XXXL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-XXXL', stock: 8 }
   ]);
 
   // Category Modal State
@@ -619,10 +622,13 @@ export const AdminDashboard: React.FC = () => {
       setProdIsNewArrival(true);
       setProdIsLimitedEdition(false);
       setProdVariants([
+        { id: `v-${Date.now()}-0`, size: 'XS', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-XS', stock: 15 },
         { id: `v-${Date.now()}-1`, size: 'S', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-S', stock: 20 },
         { id: `v-${Date.now()}-2`, size: 'M', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-M', stock: 35 },
         { id: `v-${Date.now()}-3`, size: 'L', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-L', stock: 25 },
-        { id: `v-${Date.now()}-4`, size: 'XL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-XL', stock: 15 }
+        { id: `v-${Date.now()}-4`, size: 'XL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-XL', stock: 15 },
+        { id: `v-${Date.now()}-5`, size: 'XXL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-XXL', stock: 10 },
+        { id: `v-${Date.now()}-6`, size: 'XXXL', color: 'Onyx Black', colorHex: '#0a0a0c', sku: 'VK-NEW-BLK-XXXL', stock: 8 }
       ]);
     }
     setIsProductModalOpen(true);
@@ -3865,11 +3871,13 @@ export const AdminDashboard: React.FC = () => {
                               setProdVariants(copy);
                             }}
                           >
+                            <MenuItem value="XS">XS</MenuItem>
                             <MenuItem value="S">S</MenuItem>
                             <MenuItem value="M">M</MenuItem>
                             <MenuItem value="L">L</MenuItem>
                             <MenuItem value="XL">XL</MenuItem>
                             <MenuItem value="XXL">XXL</MenuItem>
+                            <MenuItem value="XXXL">XXXL</MenuItem>
                           </Select>
                         </FormControl>
                       </Grid>

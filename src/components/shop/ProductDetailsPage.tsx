@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useStore } from '../../context/StoreContext';
-import type { ProductVariant } from '../../types/ecommerce';
+import type { ProductVariant, ProductSize } from '../../types/ecommerce';
 import { ProductImageGallery } from './ProductImageGallery';
 import { SizeChartModal } from './SizeChartModal';
 import { ProductCard } from '../ui/ProductCard';
@@ -64,7 +64,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
 
   // Variant selections
   const [selectedColor, setSelectedColor] = useState<string>('');
-  const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | 'XL' | 'XXL'>('M');
+  const [selectedSize, setSelectedSize] = useState<ProductSize>('M');
   const [quantity, setQuantity] = useState<number>(1);
 
   // Initialize selected color and size from product variants
@@ -115,7 +115,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
   );
 
   // Available sizes across product
-  const allPossibleSizes: ('S' | 'M' | 'L' | 'XL' | 'XXL')[] = ['S', 'M', 'L', 'XL', 'XXL'];
+  const allPossibleSizes: ProductSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
 
   // Current active variant matching current color + size
   const activeVariant: ProductVariant | undefined = variants.find(
@@ -149,14 +149,20 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
 
   // Cart operations
   const handleAddToCart = () => {
-    if (isOutOfStock) return;
+    if (isOutOfStock) {
+      showToast('Selected size is out of stock. Please select an available size.', 'error');
+      return;
+    }
     const colorHex = activeVariant?.colorHex || '#000000';
     addToCart(product, selectedSize, selectedColor, colorHex, quantity);
     setIsCartOpen(true);
   };
 
   const handleBuyNow = () => {
-    if (isOutOfStock) return;
+    if (isOutOfStock) {
+      showToast('Selected size is out of stock. Please select an available size.', 'error');
+      return;
+    }
     const colorHex = activeVariant?.colorHex || '#000000';
     addToCart(product, selectedSize, selectedColor, colorHex, quantity);
     setIsCheckoutOpen(true);
@@ -363,36 +369,35 @@ export const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({ slug }) 
                       <Ruler size={13} /> Size Guide
                     </Button>
                   </Box>
-                  <Grid container spacing={1.5}>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(4, 1fr)', sm: 'repeat(7, 1fr)' }, gap: 1 }}>
                     {allPossibleSizes.map((sz) => {
                       const isAvailableForSize = variants.some((v) => v.color === selectedColor && v.size === sz && (v.stock > 0 || v.stockCount! > 0));
                       const isSelected = selectedSize === sz;
                       return (
-                        <Grid size={{ xs: 2.4 }} key={sz}>
-                          <Box
-                            component="button"
-                            disabled={!isAvailableForSize}
-                            onClick={() => { setSelectedSize(sz); setQuantity(1); }}
-                            sx={{
-                              width: '100%', py: 1.75, borderRadius: '12px', border: '1px solid', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5, cursor: isAvailableForSize ? 'pointer' : 'not-allowed', transition: 'all 0.3s ease', position: 'relative', overflow: 'hidden',
-                              ...(isSelected ? {
-                                bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main', boxShadow: '0 10px 20px rgba(212,175,55,0.3)', transform: 'scale(1.02)'
-                              } : isAvailableForSize ? {
-                                bgcolor: 'var(--bg-main)', color: 'var(--text-primary)', borderColor: 'var(--border-subtle)', '&:hover': { borderColor: 'var(--border-strong)', bgcolor: 'var(--bg-card)' }
-                              } : {
-                                bgcolor: 'var(--bg-surface)', color: 'text.disabled', borderColor: 'var(--border-subtle)', textDecoration: 'line-through'
-                              })
-                            }}
-                          >
-                            <Typography sx={{ fontSize: '0.875rem', fontWeight: 800, fontFamily: '"Outfit", sans-serif' }}>{sz}</Typography>
-                            <Typography sx={{ fontSize: '0.5625rem', fontFamily: '"Plus Jakarta Sans", sans-serif', color: isSelected ? 'rgba(0,0,0,0.8)' : isAvailableForSize ? 'var(--text-secondary)' : 'error.main', fontWeight: 700 }}>
-                              {isAvailableForSize ? 'IN STOCK' : 'OUT'}
-                            </Typography>
-                          </Box>
-                        </Grid>
+                        <Box
+                          component="button"
+                          key={sz}
+                          disabled={!isAvailableForSize}
+                          onClick={() => { setSelectedSize(sz); setQuantity(1); }}
+                          sx={{
+                            width: '100%', py: 1.5, borderRadius: '10px', border: '1px solid', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.25, cursor: isAvailableForSize ? 'pointer' : 'not-allowed', transition: 'all 0.3s ease', position: 'relative', overflow: 'hidden',
+                            ...(isSelected ? {
+                              bgcolor: 'primary.main', color: 'black', borderColor: 'primary.main', boxShadow: '0 8px 18px rgba(212,175,55,0.35)', transform: 'scale(1.02)'
+                            } : isAvailableForSize ? {
+                              bgcolor: 'var(--bg-main)', color: 'var(--text-primary)', borderColor: 'var(--border-subtle)', '&:hover': { borderColor: 'var(--border-strong)', bgcolor: 'var(--bg-card)' }
+                            } : {
+                              bgcolor: 'var(--bg-surface)', color: 'text.disabled', borderColor: 'var(--border-subtle)', textDecoration: 'line-through'
+                            })
+                          }}
+                        >
+                          <Typography sx={{ fontSize: '0.8125rem', fontWeight: 800, fontFamily: '"Outfit", sans-serif' }}>{sz}</Typography>
+                          <Typography sx={{ fontSize: '0.5rem', fontFamily: '"Plus Jakarta Sans", sans-serif', color: isSelected ? 'rgba(0,0,0,0.8)' : isAvailableForSize ? 'var(--text-secondary)' : 'error.main', fontWeight: 700 }}>
+                            {isAvailableForSize ? 'IN STOCK' : 'OUT'}
+                          </Typography>
+                        </Box>
                       );
                     })}
-                  </Grid>
+                  </Box>
                 </Box>
 
                 {/* 3. Quantity & Action Buttons */}

@@ -124,8 +124,8 @@ async function seed() {
     }
     console.log(`✓ Upserted product: ${p.name}`);
 
-    // Variants for S, M, L, XL, XXL in Onyx Black
-    const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+    // Variants for XS, S, M, L, XL, XXL, XXXL in Onyx Black
+    const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
     for (const sz of sizes) {
       const v = {
         product_id: p.id,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import type { Product } from '../../types/ecommerce';
+import type { Product, ProductSize } from '../../types/ecommerce';
 import { useStore } from '../../context/StoreContext';
 import { SizeChartModal } from './SizeChartModal';
 import { 
@@ -50,7 +50,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
 
   // Selections
   const [activeImgIndex, setActiveImgIndex] = useState(0);
-  const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | 'XL' | 'XXL'>('M');
+  const [selectedSize, setSelectedSize] = useState<ProductSize>('M');
   const [selectedColor, setSelectedColor] = useState<string>('Onyx Black');
   const [quantity, setQuantity] = useState(1);
   const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
@@ -61,7 +61,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
     if (!product) return;
     const firstVariant = product.variants?.[0];
     const initialColor = firstVariant?.color || 'Onyx Black';
-    const initialSize = (firstVariant?.size as 'S' | 'M' | 'L' | 'XL' | 'XXL') || 'M';
+    const initialSize = (firstVariant?.size as ProductSize) || 'M';
 
     setSelectedColor(initialColor);
     setSelectedSize(initialSize);
@@ -117,17 +117,21 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
   const hasSale = Boolean(currentSalePrice && currentSalePrice < currentPrice);
   const displayPrice = currentSalePrice ?? currentPrice;
 
-  // Sizes for the active product
-  const allPossibleSizes: ('S' | 'M' | 'L' | 'XL' | 'XXL')[] = ['S', 'M', 'L', 'XL', 'XXL'];
+  const allPossibleSizes: ProductSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+  const isApparel = Boolean(activeProduct && (activeProduct.category === 'MEN' || activeProduct.category === 'WOMEN' || activeProduct.isCustomizable));
   const availableSizes = useMemo(() => {
+    if (isApparel) return allPossibleSizes;
     const fromVariants = Array.from(new Set(variants.map(v => v.size)));
     return fromVariants.length > 0 ? fromVariants : allPossibleSizes;
-  }, [variants]);
+  }, [variants, isApparel]);
 
   if (!activeProduct) return null;
 
   const handleAddToCart = () => {
-    if (isOutOfStock) return;
+    if (isOutOfStock) {
+      showToast('Selected size is out of stock. Please select an available size.', 'error');
+      return;
+    }
     addToCart(
       activeProduct,
       selectedSize,
@@ -139,7 +143,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
   };
 
   const handleBuyNow = () => {
-    if (isOutOfStock) return;
+    if (isOutOfStock) {
+      showToast('Selected size is out of stock. Please select an available size.', 'error');
+      return;
+    }
     addToCart(
       activeProduct,
       selectedSize,

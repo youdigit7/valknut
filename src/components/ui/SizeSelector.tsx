@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, Typography, Button as MuiButton, Link as MuiLink } from '@mui/material';
+import type { ProductSize } from '../../types/ecommerce';
 
-export type SizeOption = 'S' | 'M' | 'L' | 'XL' | 'XXL';
+export type SizeOption = ProductSize;
 
 export interface SizeSelectorProps {
   sizes?: SizeOption[];
@@ -13,7 +14,7 @@ export interface SizeSelectorProps {
   onOpenGuide?: () => void;
 }
 
-const DEFAULT_SIZES: SizeOption[] = ['S', 'M', 'L', 'XL', 'XXL'];
+const DEFAULT_SIZES: SizeOption[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
 
 export const SizeSelector: React.FC<SizeSelectorProps> = ({
   sizes = DEFAULT_SIZES,

@@ -42,25 +42,31 @@ export const SizeChartModal: React.FC<SizeChartModalProps> = ({ isOpen, onClose,
   }, [subCategory, isOpen]);
 
   const menSizes = [
+    { size: 'XS', col1Cm: '98-104', col2Cm: '70', col3Cm: '52', col1In: '38-41', col2In: '27.5', col3In: '20.5' },
     { size: 'S', col1Cm: '106-112', col2Cm: '72', col3Cm: '54', col1In: '42-44', col2In: '28.3', col3In: '21.2' },
     { size: 'M', col1Cm: '114-120', col2Cm: '74', col3Cm: '56', col1In: '45-47', col2In: '29.1', col3In: '22.0' },
     { size: 'L', col1Cm: '122-128', col2Cm: '76', col3Cm: '58', col1In: '48-50', col2In: '29.9', col3In: '22.8' },
     { size: 'XL', col1Cm: '130-136', col2Cm: '78', col3Cm: '60', col1In: '51-53', col2In: '30.7', col3In: '23.6' },
-    { size: 'XXL', col1Cm: '138-144', col2Cm: '80', col3Cm: '62', col1In: '54-56', col2In: '31.5', col3In: '24.4' }
+    { size: 'XXL', col1Cm: '138-144', col2Cm: '80', col3Cm: '62', col1In: '54-56', col2In: '31.5', col3In: '24.4' },
+    { size: 'XXXL', col1Cm: '146-152', col2Cm: '82', col3Cm: '64', col1In: '57-60', col2In: '32.3', col3In: '25.2' }
   ];
 
   const womenSizes = [
+    { size: 'XS', col1Cm: '88-92', col2Cm: '44', col3Cm: '40', col1In: '34.5-36', col2In: '17.3', col3In: '15.7' },
     { size: 'S', col1Cm: '94-98', col2Cm: '46', col3Cm: '42', col1In: '37-38.5', col2In: '18.1', col3In: '16.5' },
     { size: 'M', col1Cm: '100-104', col2Cm: '48', col3Cm: '44', col1In: '39-41', col2In: '18.9', col3In: '17.3' },
-    { size: 'L', col1Cm: '106-110', col2Cm: '50', col3Cm: '46', col1In: '41.5-43', col2In: '19.7', col3In: '18.1' }
+    { size: 'L', col1Cm: '106-110', col2Cm: '50', col3Cm: '46', col1In: '41.5-43', col2In: '19.7', col3In: '18.1' },
+    { size: 'XL', col1Cm: '112-116', col2Cm: '52', col3Cm: '48', col1In: '44-45.5', col2In: '20.5', col3In: '18.9' }
   ];
 
   const bottomSizes = [
+    { size: 'XS', col1Cm: '68-73', col2Cm: '100', col3Cm: '73', col1In: '27-29', col2In: '39.4', col3In: '28.7' },
     { size: 'S', col1Cm: '74-78', col2Cm: '102', col3Cm: '74', col1In: '29-31', col2In: '40.1', col3In: '29.1' },
     { size: 'M', col1Cm: '79-84', col2Cm: '104', col3Cm: '75', col1In: '31-33', col2In: '40.9', col3In: '29.5' },
     { size: 'L', col1Cm: '85-90', col2Cm: '106', col3Cm: '76', col1In: '33-35', col2In: '41.7', col3In: '29.9' },
     { size: 'XL', col1Cm: '91-96', col2Cm: '108', col3Cm: '77', col1In: '36-38', col2In: '42.5', col3In: '30.3' },
-    { size: 'XXL', col1Cm: '97-102', col2Cm: '110', col3Cm: '78', col1In: '38-40', col2In: '43.3', col3In: '30.7' }
+    { size: 'XXL', col1Cm: '97-102', col2Cm: '110', col3Cm: '78', col1In: '38-40', col2In: '43.3', col3In: '30.7' },
+    { size: 'XXXL', col1Cm: '103-108', col2Cm: '112', col3Cm: '79', col1In: '41-43', col2In: '44.1', col3In: '31.1' }
   ];
 
   const currentData = activeTab === 'MEN' ? menSizes : activeTab === 'WOMEN' ? womenSizes : bottomSizes;

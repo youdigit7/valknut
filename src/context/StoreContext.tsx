@@ -12,7 +12,8 @@ import type {
   SubCategoryType,
   UserProfile,
   NotificationLog,
-  CustomStudioOptions
+  CustomStudioOptions,
+  ProductSize
 } from '../types/ecommerce';
 import { INITIAL_PRODUCTS, INITIAL_COUPONS, SAMPLE_ORDERS, DEMO_CUSTOMER_EMAILS, DEMO_ORDER_IDS } from '../data/initialData';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
@@ -62,7 +63,7 @@ interface StoreContextType {
 
   // Cart
   cart: CartItem[];
-  addToCart: (product: Product, size: 'S' | 'M' | 'L' | 'XL' | 'XXL', color: string, colorHex: string, quantity?: number, customization?: CustomStudioOptions) => void;
+  addToCart: (product: Product, size: ProductSize, color: string, colorHex: string, quantity?: number, customization?: CustomStudioOptions) => void;
   removeFromCart: (cartItemId: string) => void;
   updateCartQuantity: (cartItemId: string, delta: number) => void;
   clearCart: () => void;
@@ -107,7 +108,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   // Load initial state from LocalStorage (real products only) or reliable default catalog
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      const saved = localStorage.getItem('valknut_products_v2');
+      const saved = localStorage.getItem('valknut_products_v3');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -115,6 +116,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           if (realOnly.length > 0) return realOnly;
         }
       }
+      localStorage.removeItem('valknut_products_v2');
+      localStorage.removeItem('valknut_products');
     } catch (e) {
       console.warn('Failed to parse cached products:', e);
     }
@@ -194,7 +197,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   // Sync to local storage
   useEffect(() => {
-    localStorage.setItem('valknut_products_v2', JSON.stringify(products));
+    localStorage.setItem('valknut_products_v3', JSON.stringify(products));
+    localStorage.removeItem('valknut_products_v2');
     localStorage.removeItem('valknut_products');
   }, [products]);
 
@@ -324,7 +328,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   // Cart Operations
   const addToCart = (
     product: Product, 
-    size: 'S' | 'M' | 'L' | 'XL' | 'XXL', 
+    size: ProductSize, 
     color: string, 
     colorHex: string, 
     quantity: number = 1,

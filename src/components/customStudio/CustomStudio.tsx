@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import type { CustomStudioOptions, PrintTechniqueType } from '../../types/ecommerce';
+import type { CustomStudioOptions, PrintTechniqueType, ProductSize } from '../../types/ecommerce';
 import { useStore } from '../../context/StoreContext';
 import { 
   Sparkles, 
@@ -28,6 +28,8 @@ import {
 
 type StudioControlTab = 'ARTWORK' | 'TYPOGRAPHY' | 'TECHNIQUE';
 
+const STUDIO_SIZES: ProductSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+
 export const CustomStudio: React.FC = () => {
   const { products, customStudioProduct, setCustomStudioProduct, addToCart, setIsCartOpen, showToast } = useStore();
 
@@ -38,7 +40,7 @@ export const CustomStudio: React.FC = () => {
 
   const [selectedColor, setSelectedColor] = useState(activeProduct?.variants?.[0]?.color || 'Onyx Black');
   const [selectedColorHex, setSelectedColorHex] = useState(activeProduct?.variants?.[0]?.colorHex || '#0A0B0E');
-  const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | 'XL' | 'XXL'>('M');
+  const [selectedSize, setSelectedSize] = useState<ProductSize>('M');
   const [placement, setPlacement] = useState<'FRONT' | 'BACK' | 'LEFT_SLEEVE' | 'RIGHT_SLEEVE'>('FRONT');
 
   useEffect(() => {
@@ -384,37 +386,36 @@ export const CustomStudio: React.FC = () => {
                 {/* 3. Size Selector */}
                 <Box>
                   <Typography sx={{ fontSize: '0.625rem', fontWeight: 'bold', color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', mb: 1 }}>
-                    3. SELECT SIZE
+                    3. SELECT SIZE ({selectedSize})
                   </Typography>
-                  <Grid container spacing={1}>
-                    {(['S', 'M', 'L', 'XL', 'XXL'] as const).map(sz => {
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(4, 1fr)', sm: 'repeat(7, 1fr)' }, gap: 1 }}>
+                    {STUDIO_SIZES.map(sz => {
                       const isSelected = selectedSize === sz;
                       return (
-                        <Grid size={{ xs: 2.4 }} key={sz}>
-                          <Box
-                            component="button"
-                            onClick={() => setSelectedSize(sz)}
-                            sx={{
-                              width: '100%',
-                              py: 1,
-                              borderRadius: 1,
-                              border: '1px solid',
-                              borderColor: isSelected ? 'primary.main' : 'var(--border-subtle)',
-                              bgcolor: isSelected ? 'primary.main' : 'var(--bg-card)',
-                              color: isSelected ? '#000000' : 'var(--text-secondary)',
-                              fontWeight: 'bold',
-                              fontSize: '0.75rem',
-                              cursor: 'pointer',
-                              transition: 'all 0.3s ease',
-                              '&:hover': { borderColor: isSelected ? 'primary.main' : 'var(--border-strong)' }
-                            }}
-                          >
-                            {sz}
-                          </Box>
-                        </Grid>
+                        <Box
+                          component="button"
+                          key={sz}
+                          onClick={() => setSelectedSize(sz)}
+                          sx={{
+                            width: '100%',
+                            py: 1,
+                            borderRadius: 1,
+                            border: '1px solid',
+                            borderColor: isSelected ? 'primary.main' : 'var(--border-subtle)',
+                            bgcolor: isSelected ? 'primary.main' : 'var(--bg-card)',
+                            color: isSelected ? '#000000' : 'var(--text-secondary)',
+                            fontWeight: 'bold',
+                            fontSize: '0.75rem',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            '&:hover': { borderColor: isSelected ? 'primary.main' : 'var(--border-strong)' }
+                          }}
+                        >
+                          {sz}
+                        </Box>
                       );
                     })}
-                  </Grid>
+                  </Box>
                 </Box>
 
                 {/* 4. Placement Selector */}
