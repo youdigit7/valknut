@@ -1,12 +1,12 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import type { 
-  Order, 
-  OrderItemSnapshot, 
-  CartItem, 
-  OrderStatus, 
-  PaymentGateway, 
+import type {
+  Order,
+  OrderItemSnapshot,
+  CartItem,
+  OrderStatus,
+  PaymentGateway,
   PaymentStatus,
-  ShippingAddress, 
+  ShippingAddress,
   ShippingInformation,
   PaymentRecord,
   OrderStatusHistoryEntry,
@@ -112,39 +112,39 @@ export function mapPaymentStatusFromDb(dbStatus?: string): PaymentStatus {
 export function mapSupabaseOrderRowToOrder(row: any): Order {
   let items: OrderItemSnapshot[] = Array.isArray(row.order_items)
     ? row.order_items.map((it: any) => ({
-        id: it.id,
-        productId: it.product_id,
+      id: it.id,
+      productId: it.product_id,
+      productName: it.product_name,
+      productSlug: it.product_slug,
+      sku: it.sku,
+      size: it.size,
+      color: it.color,
+      colorHex: it.color_hex,
+      unitPrice: Number(it.unit_price),
+      originalPrice: it.original_price ? Number(it.original_price) : undefined,
+      quantity: it.quantity,
+      subtotal: Number(it.subtotal),
+      imageUrl: it.image_url,
+      customization: it.customization_details || (row.shipping_info?.customization && {
+        productBaseId: it.product_id,
         productName: it.product_name,
-        productSlug: it.product_slug,
-        sku: it.sku,
-        size: it.size,
-        color: it.color,
-        colorHex: it.color_hex,
-        unitPrice: Number(it.unit_price),
-        originalPrice: it.original_price ? Number(it.original_price) : undefined,
-        quantity: it.quantity,
-        subtotal: Number(it.subtotal),
-        imageUrl: it.image_url,
-        customization: it.customization_details || (row.shipping_info?.customization && {
-          productBaseId: it.product_id,
-          productName: it.product_name,
-          garmentColor: it.color,
-          garmentColorHex: it.color_hex,
-          selectedSize: it.size,
-          placement: row.shipping_info.customization.placement || 'FRONT',
-          customText: row.shipping_info.customization.frontText || row.shipping_info.customization.customText,
-          textColor: row.shipping_info.customization.frontColor || row.shipping_info.customization.textColor,
-          textFont: row.shipping_info.customization.frontFont || row.shipping_info.customization.textFont,
-          uploadedArtworkUrl: row.shipping_info.customization.artworkUrl || row.shipping_info.customization.uploadedArtworkUrl,
-          printTechnique: row.shipping_info.customization.printTechnique || 'High-Density 3D Puff Rubber',
-          basePrice: Number(it.unit_price),
-          techniqueFee: 0,
-          placementFee: 0,
-          additionalPrice: 0,
-          totalCustomPrice: Number(it.subtotal)
-        }),
-        createdAt: it.created_at
-      }))
+        garmentColor: it.color,
+        garmentColorHex: it.color_hex,
+        selectedSize: it.size,
+        placement: row.shipping_info.customization.placement || 'FRONT',
+        customText: row.shipping_info.customization.frontText || row.shipping_info.customization.customText,
+        textColor: row.shipping_info.customization.frontColor || row.shipping_info.customization.textColor,
+        textFont: row.shipping_info.customization.frontFont || row.shipping_info.customization.textFont,
+        uploadedArtworkUrl: row.shipping_info.customization.artworkUrl || row.shipping_info.customization.uploadedArtworkUrl,
+        printTechnique: row.shipping_info.customization.printTechnique || 'High-Density 3D Puff Rubber',
+        basePrice: Number(it.unit_price),
+        techniqueFee: 0,
+        placementFee: 0,
+        additionalPrice: 0,
+        totalCustomPrice: Number(it.subtotal)
+      }),
+      createdAt: it.created_at
+    }))
     : [];
 
   // Fallback if order_items relation wasn't loaded or order came directly with shipping_info.customization
@@ -690,7 +690,7 @@ async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
             });
           }
         }
-      } catch (_) {}
+      } catch (_) { }
 
       for (const item of items) {
         try {
@@ -818,7 +818,7 @@ export async function getAllOrders(): Promise<Order[]> {
     localStorage.removeItem('valknut_orders_v2');
     const saved = localStorage.getItem(LOCAL_ORDERS_KEY);
     const localOrders: Order[] = saved ? JSON.parse(saved) : [];
-    
+
     // Merge remote and local by orderNumber, remote taking precedence
     const orderMap = new Map<string, Order>();
     for (const ord of remoteOrders) {
