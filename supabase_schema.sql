@@ -255,6 +255,10 @@ CREATE POLICY "Admins can update orders"
 ON public.orders FOR UPDATE 
 USING (is_admin());
 
+CREATE POLICY "Admins can delete orders" 
+ON public.orders FOR DELETE 
+USING (is_admin());
+
 CREATE POLICY "Customers can view items of their own orders" 
 ON public.order_items FOR SELECT 
 USING (
@@ -268,6 +272,10 @@ USING (
 CREATE POLICY "Public order items creation permitted on checkout" 
 ON public.order_items FOR INSERT 
 WITH CHECK (true);
+
+CREATE POLICY "Admins can delete order items" 
+ON public.order_items FOR DELETE 
+USING (is_admin());
 
 -- ------------------------------------------------------------------------------
 -- 8. PERFORMANCE INDEXES FOR FAST ORGANIC QUERIES

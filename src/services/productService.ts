@@ -2,6 +2,23 @@ import type { Product, CategoryType } from '../types/ecommerce';
 import { INITIAL_PRODUCTS } from '../data/initialData';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
+const GREEN_PLACEHOLDER_ASSET = 'adyecc19detj4eacowf5';
+
+/**
+ * Excludes legacy mock items (`prod-*`) and QA green-placeholder test posts
+ */
+export function isExcludedDummyProduct(product: Product | null | undefined): boolean {
+  if (!product) return true;
+  if (typeof product.id === 'string' && product.id.startsWith('prod-')) return true;
+  if (
+    Array.isArray(product.images) &&
+    product.images.some((img) => typeof img === 'string' && img.includes(GREEN_PLACEHOLDER_ASSET))
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export interface ShopFilterParams {
   category?: CategoryType | 'ALL';
   subCategory?: string | 'ALL';
@@ -341,7 +358,7 @@ export function filterProductsInMemory(
 
   // 1. Filter items (strictly real items, ignore any legacy prod- mock items)
   const filtered = allProducts
-    .filter((p) => !p.id.startsWith('prod-'))
+    .filter((p) => !isExcludedDummyProduct(p))
     .filter((product) => {
     // Category filter
     if (category !== 'ALL' && product.category.toUpperCase() !== category.toUpperCase()) {
@@ -433,7 +450,7 @@ export function filterProductsInMemory(
   });
 
   // 3. Facets calculated on all matching items (for accurate UI stats)
-  const facets = calculateFacets(allProducts);
+  const facets = calculateFacets(allProducts.filter((p) => !isExcludedDummyProduct(p)));
 
   // 4. Pagination
   const totalCount = filtered.length;
@@ -550,7 +567,7 @@ export async function queryShopProducts(
 
     if (error) {
       console.warn('Supabase query error, falling back to local real products:', error);
-      return filterProductsInMemory(fallbackLocalProducts.filter(p => !p.id.startsWith('prod-')), params);
+      return filterProductsInMemory(fallbackLocalProducts.filter(p => !isExcludedDummyProduct(p)), params);
     }
 
     if (!data || data.length === 0) {
@@ -559,11 +576,11 @@ export async function queryShopProducts(
         totalCount: 0,
         totalPages: 1,
         currentPage: page,
-        facets: calculateFacets(fallbackLocalProducts.filter(p => !p.id.startsWith('prod-')))
+        facets: calculateFacets(fallbackLocalProducts.filter(p => !isExcludedDummyProduct(p)))
       };
     }
 
-    let mappedProducts = data.map(mapSupabaseRowToProduct);
+    let mappedProducts = data.map(mapSupabaseRowToProduct).filter((p) => !isExcludedDummyProduct(p));
     if (inStockOnly) {
       mappedProducts = mappedProducts.filter(p => {
         const variants = Array.isArray(p.variants) ? p.variants : [];
@@ -571,7 +588,7 @@ export async function queryShopProducts(
         return totalStock > 0;
       });
     }
-    const totalCount = count ?? mappedProducts.length;
+    const totalCount = Math.max(0, (count ?? mappedProducts.length) - (data.length - data.map(mapSupabaseRowToProduct).filter((p) => !isExcludedDummyProduct(p)).length));
     const totalPages = Math.ceil(totalCount / limit) || 1;
 
     return {
@@ -579,11 +596,11 @@ export async function queryShopProducts(
       totalCount,
       totalPages,
       currentPage: page,
-      facets: calculateFacets(fallbackLocalProducts.filter(p => !p.id.startsWith('prod-')))
+      facets: calculateFacets(fallbackLocalProducts.filter(p => !isExcludedDummyProduct(p)))
     };
   } catch (err) {
     console.warn('Supabase query failed, falling back to real products:', err);
-    return filterProductsInMemory(fallbackLocalProducts.filter(p => !p.id.startsWith('prod-')), params);
+    return filterProductsInMemory(fallbackLocalProducts.filter(p => !isExcludedDummyProduct(p)), params);
   }
 }
 
@@ -598,7 +615,7 @@ export async function searchCatalog(
   const q = searchQuery.trim().toLowerCase();
   if (!q) return [];
 
-  const matches = allProducts.filter((p) => {
+  const matches = allProducts.filter((p) => !isExcludedDummyProduct(p)).filter((p) => {
     const nameMatch = p.name.toLowerCase().includes(q);
     const descMatch = p.description.toLowerCase().includes(q);
     const catMatch = p.category.toLowerCase().includes(q);
@@ -621,8 +638,9 @@ export async function getAllProducts(): Promise<Product[]> {
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase.from('products').select('*, product_variants(*)');
-      if (!error && Array.isArray(data) && data.length > 0) {
-        cloudProducts = data.map(mapSupabaseRowToProduct);
+      if (!error && Array.isArray(data)) {
+        cloudProducts = data.map(mapSupabaseRowToProduct).filter((p) => !isExcludedDummyProduct(p));
+        if (cloudProducts.length === 0) return [];
       }
     } catch (e) {
       console.warn('Failed to fetch from Supabase:', e);
@@ -630,11 +648,11 @@ export async function getAllProducts(): Promise<Product[]> {
   }
 
   try {
-    const cached = localStorage.getItem('valknut_products_v3') || localStorage.getItem('valknut_products_v2');
+    const cached = localStorage.getItem('valknut_products_v4') || localStorage.getItem('valknut_products_v2');
     if (cached) {
       const parsed = JSON.parse(cached);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        const filtered = parsed.filter((p: Product) => !p.id.startsWith('prod-'));
+        const filtered = parsed.filter((p: Product) => !isExcludedDummyProduct(p));
         if (filtered.length > 0) {
           if (cloudProducts.length === 0) return filtered;
           // Reconcile: Preserve the lower stock count so orders placed locally are honored

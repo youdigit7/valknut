@@ -18,10 +18,10 @@ import type {
 } from '../types/ecommerce';
 import { INITIAL_PRODUCTS, INITIAL_COUPONS, SAMPLE_ORDERS, DEMO_CUSTOMER_EMAILS, DEMO_ORDER_IDS } from '../data/initialData';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { saveProductToSupabase, deleteProductFromSupabase, mapSupabaseRowToProduct } from '../services/productService';
+import { saveProductToSupabase, deleteProductFromSupabase, mapSupabaseRowToProduct, isExcludedDummyProduct } from '../services/productService';
 import { calculateShippingFee, getAvailableShippingMethods } from '../services/shippingService';
 import type { ShippingMethod } from '../services/shippingService';
-import { createOrderSecurely, updateOrderStatusWithAudit, updateOrderPaymentStatus, getAllOrders, deductStockFromProducts } from '../services/orderService';
+import { createOrderSecurely, updateOrderStatusWithAudit, updateOrderPaymentStatus, getAllOrders, deductStockFromProducts, deleteOrderFromSystem, clearAllOrdersFromSystem } from '../services/orderService';
 
 interface StoreContextType {
   // Products
@@ -81,6 +81,8 @@ interface StoreContextType {
   createOrder: (customerInfo: ShippingAddress, paymentGateway: PaymentGateway, notes?: string, customShippingMethod?: 'standard' | 'express') => Promise<Order>;
   updateOrderStatus: (orderId: string, status: OrderStatus, courierName?: string, awbNumber?: string, trackingLink?: string) => Promise<void>;
   updateOrderPayment: (orderNumber: string, status: PaymentStatus, transactionId?: string) => Promise<Order | null>;
+  deleteOrder: (orderId: string) => Promise<void>;
+  clearAllOrders: () => Promise<void>;
 
   // Products Admin
   addProduct: (product: Product) => Promise<void>;
@@ -110,24 +112,27 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   // Load initial state from LocalStorage (real products only) or reliable default catalog
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      const saved = localStorage.getItem('valknut_products_v3');
+      const saved = localStorage.getItem('valknut_products_v4');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          const realOnly = parsed.filter(p => !p.id.startsWith('prod-'));
+          const realOnly = parsed.filter((p: Product) => !isExcludedDummyProduct(p));
           if (realOnly.length > 0) return realOnly;
         }
       }
+      localStorage.removeItem('valknut_products_v3');
       localStorage.removeItem('valknut_products_v2');
       localStorage.removeItem('valknut_products');
     } catch (e) {
       console.warn('Failed to parse cached products:', e);
     }
-    return INITIAL_PRODUCTS;
+    return isSupabaseConfigured ? [] : INITIAL_PRODUCTS;
   });
 
   const [orders, setOrders] = useState<Order[]>(() => {
-    const saved = localStorage.getItem('valknut_orders');
+    localStorage.removeItem('valknut_orders');
+    localStorage.removeItem('valknut_orders_v2');
+    const saved = localStorage.getItem('valknut_orders_v3');
     const source = saved ? JSON.parse(saved) : SAMPLE_ORDERS;
     if (!Array.isArray(source)) return [];
     const cleaned = source.filter((order: Order) =>
@@ -135,7 +140,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       !DEMO_CUSTOMER_EMAILS.includes(order.customerInfo?.email?.toLowerCase())
     );
     if (saved && cleaned.length !== source.length) {
-      localStorage.setItem('valknut_orders', JSON.stringify(cleaned));
+      localStorage.setItem('valknut_orders_v3', JSON.stringify(cleaned));
     }
     return cleaned;
   });
@@ -147,7 +152,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const [cart, setCart] = useState<CartItem[]>(() => {
     const saved = localStorage.getItem('valknut_cart');
-    return saved ? JSON.parse(saved) : [];
+    return saved ? (JSON.parse(saved) as CartItem[]).filter((item) => !isExcludedDummyProduct(item?.product)) : [];
   });
 
   const [user, setUser] = useState<UserProfile | null>(() => {
@@ -169,8 +174,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   });
 
   const [notificationLogs, setNotificationLogs] = useState<NotificationLog[]>(() => {
-    const saved = localStorage.getItem('valknut_logs');
-    return saved ? JSON.parse(saved) : [];
+    const savedLogs = localStorage.getItem('valknut_logs');
+    return savedLogs ? JSON.parse(savedLogs) : [];
   });
 
   // Filter States
@@ -199,13 +204,14 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   // Sync to local storage
   useEffect(() => {
-    localStorage.setItem('valknut_products_v3', JSON.stringify(products));
+    localStorage.setItem('valknut_products_v4', JSON.stringify(products));
+    localStorage.removeItem('valknut_products_v3');
     localStorage.removeItem('valknut_products_v2');
     localStorage.removeItem('valknut_products');
   }, [products]);
 
   useEffect(() => {
-    localStorage.setItem('valknut_orders', JSON.stringify(orders));
+    localStorage.setItem('valknut_orders_v3', JSON.stringify(orders));
   }, [orders]);
 
   useEffect(() => {
@@ -233,10 +239,10 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             data = retry.data;
             error = retry.error;
           }
-          if (!error && Array.isArray(data) && data.length > 0) {
-            const mapped = data.map(mapSupabaseRowToProduct);
+          if (!error && Array.isArray(data)) {
+            const mapped = data.map(mapSupabaseRowToProduct).filter((p) => !isExcludedDummyProduct(p));
             setProducts((prev) => {
-              const cachedRaw = localStorage.getItem('valknut_products_v3');
+              const cachedRaw = localStorage.getItem('valknut_products_v4');
               const localCatalog: Product[] = cachedRaw ? JSON.parse(cachedRaw) : prev;
 
               // Reconcile: If local stock was deducted by placed orders, do NOT revert it to higher remote stock
@@ -266,7 +272,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                 return { ...cloudProd, variants: reconciledVariants };
               });
 
-              localStorage.setItem('valknut_products_v3', JSON.stringify(reconciled));
+              localStorage.setItem('valknut_products_v4', JSON.stringify(reconciled));
               return reconciled;
             });
           }
@@ -276,7 +282,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
         try {
           const latestOrders = await getAllOrders();
-          if (latestOrders && latestOrders.length > 0) {
+          if (Array.isArray(latestOrders)) {
             setOrders(latestOrders);
           }
         } catch (ordErr) {
@@ -321,7 +327,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           if (Array.isArray(evt.data.deductedItems) && evt.data.deductedItems.length > 0) {
             setProducts((prev) => {
               const updated = deductStockFromProducts(prev, evt.data.deductedItems);
-              localStorage.setItem('valknut_products_v3', JSON.stringify(updated));
+              localStorage.setItem('valknut_products_v4', JSON.stringify(updated));
               return updated;
             });
           }
@@ -333,15 +339,15 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
 
     const onStorageChange = async (e: StorageEvent) => {
-      if (e.key === 'valknut_orders') {
+      if (e.key === 'valknut_orders_v3') {
         const freshOrders = await getAllOrders();
         setOrders(freshOrders);
       }
-      if (e.key === 'valknut_products_v3' && e.newValue) {
+      if (e.key === 'valknut_products_v4' && e.newValue) {
         try {
           const parsed = JSON.parse(e.newValue);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setProducts(parsed);
+          if (Array.isArray(parsed)) {
+            setProducts(parsed.filter((p: Product) => !isExcludedDummyProduct(p)));
           }
         } catch (_) {}
       }
@@ -507,7 +513,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     setProducts((prev) => {
       const updated = deductStockFromProducts(prev, itemsToDeduct);
-      localStorage.setItem('valknut_products_v3', JSON.stringify(updated));
+      localStorage.setItem('valknut_products_v4', JSON.stringify(updated));
       return updated;
     });
 
@@ -584,6 +590,18 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       showToast(`Payment confirmed for order #${updated.orderNumber}.`, 'success');
     }
     return updated;
+  };
+
+  const deleteOrder = async (orderId: string): Promise<void> => {
+    await deleteOrderFromSystem(orderId);
+    setOrders((prev) => prev.filter((o) => o.id !== orderId && o.orderNumber !== orderId));
+    showToast('Order removed.', 'info');
+  };
+
+  const clearAllOrders = async (): Promise<void> => {
+    await clearAllOrdersFromSystem();
+    setOrders([]);
+    showToast('All orders cleared.', 'info');
   };
 
   // Products CRUD
@@ -710,6 +728,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       createOrder,
       updateOrderStatus,
       updateOrderPayment,
+      deleteOrder,
+      clearAllOrders,
       addProduct,
       updateProduct,
       deleteProduct,

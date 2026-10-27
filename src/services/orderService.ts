@@ -18,7 +18,7 @@ import type {
 import { calculateShippingFee, getAvailableShippingMethods } from './shippingService';
 import { getAllProducts } from './productService';
 
-const LOCAL_ORDERS_KEY = 'valknut_orders';
+const LOCAL_ORDERS_KEY = 'valknut_orders_v3';
 const LOCAL_LOGS_KEY = 'valknut_logs';
 
 /**
@@ -668,11 +668,11 @@ export function deductStockFromProducts(
  */
 async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
   try {
-    const saved = localStorage.getItem('valknut_products_v3') || localStorage.getItem('valknut_products_v2') || localStorage.getItem('valknut_products');
+    const saved = localStorage.getItem('valknut_products_v4') || localStorage.getItem('valknut_products_v3') || localStorage.getItem('valknut_products_v2') || localStorage.getItem('valknut_products');
     if (saved) {
       const products: Product[] = JSON.parse(saved);
       const updatedProducts = deductStockFromProducts(products, items);
-      localStorage.setItem('valknut_products_v3', JSON.stringify(updatedProducts));
+      localStorage.setItem('valknut_products_v4', JSON.stringify(updatedProducts));
       localStorage.setItem('valknut_products_v2', JSON.stringify(updatedProducts));
     }
 
@@ -747,6 +747,8 @@ async function deductStockForOrder(items: OrderItemSnapshot[]): Promise<void> {
  */
 function persistOrderLocally(order: Order): void {
   try {
+    localStorage.removeItem('valknut_orders');
+    localStorage.removeItem('valknut_orders_v2');
     const saved = localStorage.getItem(LOCAL_ORDERS_KEY);
     const orders: Order[] = saved ? JSON.parse(saved) : [];
     const updated = [order, ...orders.filter((o) => o.id !== order.id && o.orderNumber !== order.orderNumber)];
@@ -802,7 +804,9 @@ export async function getAllOrders(): Promise<Order[]> {
         .order('created_at', { ascending: false });
 
       if (!error && Array.isArray(data)) {
-        remoteOrders = data.map(mapSupabaseOrderRowToOrder);
+        remoteOrders = data
+          .filter((row: any) => !row?.shipping_info?.isArchived)
+          .map(mapSupabaseOrderRowToOrder);
       }
     } catch (e) {
       console.warn('Failed to fetch remote orders from Supabase:', e);
@@ -810,6 +814,8 @@ export async function getAllOrders(): Promise<Order[]> {
   }
 
   try {
+    localStorage.removeItem('valknut_orders');
+    localStorage.removeItem('valknut_orders_v2');
     const saved = localStorage.getItem(LOCAL_ORDERS_KEY);
     const localOrders: Order[] = saved ? JSON.parse(saved) : [];
     
@@ -1014,4 +1020,89 @@ export async function updateOrderPaymentStatus(
   }
 
   return updatedOrder;
+}
+
+
+/**
+ * Deletes or archives a single order across Supabase and local cache
+ */
+export async function deleteOrderFromSystem(orderId: string): Promise<void> {
+  try {
+    const saved = localStorage.getItem(LOCAL_ORDERS_KEY);
+    if (saved) {
+      const parsed: Order[] = JSON.parse(saved);
+      const remaining = parsed.filter((o) => o.id !== orderId && o.orderNumber !== orderId);
+      localStorage.setItem(LOCAL_ORDERS_KEY, JSON.stringify(remaining));
+    }
+  } catch (e) {
+    console.warn('Failed updating local orders cache on delete:', e);
+  }
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      await supabase.from('order_items').delete().eq('order_id', orderId);
+      await supabase.from('orders').delete().eq('id', orderId);
+      const { data: existing } = await supabase
+        .from('orders')
+        .select('id, shipping_info')
+        .eq('id', orderId)
+        .maybeSingle();
+      if (existing) {
+        await supabase
+          .from('orders')
+          .update({
+            shipping_info: {
+              ...(existing.shipping_info || {}),
+              isArchived: true,
+              archivedAt: new Date().toISOString()
+            }
+          })
+          .eq('id', orderId);
+      }
+    } catch (e) {
+      console.warn('Failed removing order from Supabase:', e);
+    }
+  }
+}
+
+/**
+ * Clears all orders across Supabase and local cache
+ */
+export async function clearAllOrdersFromSystem(): Promise<void> {
+  try {
+    localStorage.removeItem('valknut_orders');
+    localStorage.removeItem('valknut_orders_v2');
+    localStorage.setItem(LOCAL_ORDERS_KEY, JSON.stringify([]));
+  } catch (e) {
+    console.warn('Failed clearing local orders cache:', e);
+  }
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      await supabase.from('order_items').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabase.from('orders').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      const { data: rows } = await supabase.from('orders').select('id, shipping_info');
+      if (Array.isArray(rows)) {
+        const now = new Date().toISOString();
+        await Promise.all(
+          rows
+            .filter((row: any) => !row?.shipping_info?.isArchived)
+            .map((row: any) =>
+              supabase!
+                .from('orders')
+                .update({
+                  shipping_info: {
+                    ...(row.shipping_info || {}),
+                    isArchived: true,
+                    archivedAt: now
+                  }
+                })
+                .eq('id', row.id)
+            )
+        );
+      }
+    } catch (e) {
+      console.warn('Failed clearing orders in Supabase:', e);
+    }
+  }
 }

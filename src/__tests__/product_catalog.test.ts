@@ -78,6 +78,17 @@ describe('Product Catalog & Service QA Suite', () => {
     expect(result.products.some(p => p.id.startsWith('prod-'))).toBe(false);
   });
 
+  it('excludes QA green-placeholder test posts from the catalog', () => {
+    const greenTestPost: Product = {
+      ...sampleRealProduct,
+      id: '00000000-0000-0000-0000-000000000009',
+      images: ['https://res.cloudinary.com/ofrariny/image/upload/v1792186461/valknut/adyecc19detj4eacowf5.png']
+    };
+    const result = filterProductsInMemory([sampleRealProduct, greenTestPost], { category: 'ALL' });
+    expect(result.products).toHaveLength(1);
+    expect(result.products[0].id).toBe(sampleRealProduct.id);
+  });
+
   it('filters by size and stock availability correctly', () => {
     const catalog = [sampleRealProduct];
 

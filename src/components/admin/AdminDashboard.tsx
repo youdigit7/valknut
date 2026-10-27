@@ -184,6 +184,8 @@ export const AdminDashboard: React.FC = () => {
     deleteProduct,
     orders: storeOrders,
     updateOrderStatus,
+    deleteOrder,
+    clearAllOrders,
     coupons,
     addCoupon,
     deleteCoupon,
@@ -197,6 +199,7 @@ export const AdminDashboard: React.FC = () => {
 
   // Live remote orders, customer profiles, and VIP club subscribers
   const [remoteOrders, setRemoteOrders] = useState<Order[]>([]);
+  const [hasLoadedRemoteOrders, setHasLoadedRemoteOrders] = useState(false);
   const [remoteCustomers, setRemoteCustomers] = useState<CustomerAccountRecord[]>([]);
   const [subscribers, setSubscribers] = useState<ClubSubscriber[]>([]);
   const [subscriberSearch, setSubscriberSearch] = useState('');
@@ -227,9 +230,9 @@ export const AdminDashboard: React.FC = () => {
   }, [user]);
 
   const orders = useMemo(() => {
-    if (remoteOrders.length > 0) return remoteOrders;
+    if (hasLoadedRemoteOrders) return remoteOrders;
     return storeOrders;
-  }, [remoteOrders, storeOrders]);
+  }, [hasLoadedRemoteOrders, remoteOrders, storeOrders]);
 
   const loadSubscribersList = async () => {
     setLoadingSubscribers(true);
@@ -254,7 +257,7 @@ export const AdminDashboard: React.FC = () => {
         ]);
         if (isMounted) {
           if (profiles && profiles.length > 0) setRemoteCustomers(profiles);
-          if (cloudOrders && cloudOrders.length > 0) setRemoteOrders(cloudOrders);
+          if (Array.isArray(cloudOrders)) { setRemoteOrders(cloudOrders); setHasLoadedRemoteOrders(true); }
           if (subsList) setSubscribers(subsList);
         }
       } catch (err) {
@@ -2242,6 +2245,28 @@ export const AdminDashboard: React.FC = () => {
                       }}
                     />
                   ))}
+                  {orders.length > 0 && (
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={async () => {
+                        await clearAllOrders();
+                        setRemoteOrders([]);
+                      }}
+                      startIcon={<Trash2 size={13} />}
+                      sx={{
+                        color: '#F87171',
+                        borderColor: 'rgba(248, 113, 113, 0.35)',
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        borderRadius: '6px',
+                        ml: 0.5,
+                        '&:hover': { bgcolor: 'rgba(248, 113, 113, 0.12)', borderColor: '#F87171' },
+                      }}
+                    >
+                      Clear All
+                    </Button>
+                  )}
                 </Box>
               </Box>
 
@@ -2418,6 +2443,21 @@ export const AdminDashboard: React.FC = () => {
                           >
                             Dispatch AWB
                           </Button>
+                          <IconButton
+                            size="small"
+                            onClick={async () => {
+                              await deleteOrder(ord.id);
+                              setRemoteOrders((prev) => prev.filter((o) => o.id !== ord.id));
+                            }}
+                            title="Remove order"
+                            sx={{
+                              ml: 1,
+                              color: '#94A3B8',
+                              '&:hover': { color: '#F87171', bgcolor: 'rgba(248, 113, 113, 0.12)' },
+                            }}
+                          >
+                            <Trash2 size={15} />
+                          </IconButton>
                         </TableCell>
                       </TableRow>
                       );
