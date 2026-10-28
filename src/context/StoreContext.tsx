@@ -18,7 +18,7 @@ import type {
 } from '../types/ecommerce';
 import { INITIAL_PRODUCTS, INITIAL_COUPONS, SAMPLE_ORDERS, DEMO_CUSTOMER_EMAILS, DEMO_ORDER_IDS } from '../data/initialData';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { saveProductToSupabase, deleteProductFromSupabase, mapSupabaseRowToProduct, isExcludedDummyProduct } from '../services/productService';
+import { saveProductToSupabase, deleteProductFromSupabase, mapSupabaseRowToProduct, isExcludedDummyProduct, USE_DUMMY_PRODUCTS } from '../services/productService';
 import { calculateShippingFee, getAvailableShippingMethods } from '../services/shippingService';
 import type { ShippingMethod } from '../services/shippingService';
 import { createOrderSecurely, updateOrderStatusWithAudit, updateOrderPaymentStatus, getAllOrders, deductStockFromProducts, deleteOrderFromSystem, clearAllOrdersFromSystem } from '../services/orderService';
@@ -126,7 +126,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     } catch (e) {
       console.warn('Failed to parse cached products:', e);
     }
-    return isSupabaseConfigured ? [] : INITIAL_PRODUCTS;
+    return isSupabaseConfigured && !USE_DUMMY_PRODUCTS ? [] : INITIAL_PRODUCTS;
   });
 
   const [orders, setOrders] = useState<Order[]>(() => {
@@ -232,7 +232,9 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       const client = supabase;
       const loadCloudData = async () => {
         try {
-          let { data, error } = await client.from('products').select('*, product_variants(*)');
+          let { data, error } = USE_DUMMY_PRODUCTS
+            ? { data: null, error: null } // Dev dummy catalog: keep local products, skip cloud product fetch
+            : await client.from('products').select('*, product_variants(*)');
           if (error && (error.code === 'PGRST301' || (error as any).status === 401)) {
             await client.auth.signOut().catch(() => {});
             const retry = await client.from('products').select('*, product_variants(*)');
@@ -606,19 +608,20 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   // Products CRUD
   const addProduct = async (p: Product) => {
-    const savedProduct = await saveProductToSupabase(p);
+    // Dev dummy catalog: keep product edits local so nothing is written to Supabase
+    const savedProduct = USE_DUMMY_PRODUCTS ? p : await saveProductToSupabase(p);
     setProducts(prev => [savedProduct, ...prev.filter(item => item.id !== savedProduct.id)]);
     showToast(`Product "${savedProduct.name}" created.`, 'success');
   };
 
   const updateProduct = async (p: Product) => {
-    const savedProduct = await saveProductToSupabase(p);
+    const savedProduct = USE_DUMMY_PRODUCTS ? p : await saveProductToSupabase(p);
     setProducts(prev => prev.map(item => item.id === savedProduct.id ? savedProduct : item));
     showToast(`Product "${savedProduct.name}" updated.`, 'success');
   };
 
   const deleteProduct = async (id: string) => {
-    await deleteProductFromSupabase(id);
+    if (!USE_DUMMY_PRODUCTS) await deleteProductFromSupabase(id);
     setProducts(prev => prev.filter(p => p.id !== id));
     showToast('Product deleted from database.', 'info');
   };

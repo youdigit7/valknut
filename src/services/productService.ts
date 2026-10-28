@@ -5,6 +5,17 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 const GREEN_PLACEHOLDER_ASSET = 'adyecc19detj4eacowf5';
 
 /**
+ * Dev-only dummy catalog switch.
+ * When `VITE_USE_DUMMY_PRODUCTS=true` is set (e.g. in `.env.development.local`) and the app runs
+ * via `npm run dev`, the storefront uses the local INITIAL_PRODUCTS catalog (photos from
+ * src/assets/products) instead of the Supabase products table. Product create/edit/delete
+ * stays local so nothing is written to the cloud. Always false in production builds.
+ */
+export const USE_DUMMY_PRODUCTS: boolean =
+  Boolean(import.meta.env.DEV) &&
+  String(import.meta.env.VITE_USE_DUMMY_PRODUCTS ?? '').trim().toLowerCase() === 'true';
+
+/**
  * Excludes legacy mock items (`prod-*`) and QA green-placeholder test posts
  */
 export function isExcludedDummyProduct(product: Product | null | undefined): boolean {
@@ -476,7 +487,7 @@ export async function queryShopProducts(
   params: ShopFilterParams,
   fallbackLocalProducts: Product[] = INITIAL_PRODUCTS
 ): Promise<ShopQueryResult> {
-  if (!isSupabaseConfigured || !supabase) {
+  if (USE_DUMMY_PRODUCTS || !isSupabaseConfigured || !supabase) {
     return filterProductsInMemory(fallbackLocalProducts, params);
   }
 
@@ -635,7 +646,7 @@ export async function searchCatalog(
  */
 export async function getAllProducts(): Promise<Product[]> {
   let cloudProducts: Product[] = [];
-  if (isSupabaseConfigured && supabase) {
+  if (!USE_DUMMY_PRODUCTS && isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase.from('products').select('*, product_variants(*)');
       if (!error && Array.isArray(data)) {

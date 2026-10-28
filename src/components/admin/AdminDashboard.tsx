@@ -46,6 +46,7 @@ import {
   Package,
   ShoppingBag,
   Tag,
+
   Plus,
   Trash2,
   Database,
@@ -215,7 +216,7 @@ export const AdminDashboard: React.FC = () => {
         const email = parsed?.user?.email?.toLowerCase();
         return email === 'valknutofficial4@gmail.com' || Boolean(email?.includes('admin'));
       }
-    } catch (_) {}
+    } catch (_) { }
     return false;
   });
 
@@ -380,7 +381,7 @@ export const AdminDashboard: React.FC = () => {
   const [catSeoTitle, setCatSeoTitle] = useState('');
   const [catSeoDesc, setCatSeoDesc] = useState('');
 
-// Coupon Modal State
+  // Coupon Modal State
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   const [newCouponCode, setNewCouponCode] = useState('');
   const [newCouponType, setNewCouponType] = useState<'PERCENTAGE' | 'FIXED'>('PERCENTAGE');
@@ -524,8 +525,8 @@ export const AdminDashboard: React.FC = () => {
     const artworkInfo = cust?.uploadedArtworkUrl
       ? `Client Uploaded Vector Artwork (${cust.artworkName || 'Custom File'}) [Asset URL: ${cust.uploadedArtworkUrl}]`
       : sigilPreset !== 'None'
-      ? `VALKNUT Norse Sigil Preset: ${sigilPreset}`
-      : 'None';
+        ? `VALKNUT Norse Sigil Preset: ${sigilPreset}`
+        : 'None';
 
     const sheet = [
       '================================================================',
@@ -838,13 +839,13 @@ export const AdminDashboard: React.FC = () => {
   const isAuthorizedAdmin = isSupabaseConfigured && supabase
     ? supabaseSessionAdmin
     : Boolean(
-        user?.isAdmin || 
-        (user?.email && (
-          user.email.toLowerCase() === 'valknutofficial4@gmail.com' ||
-          user.email.toLowerCase().includes('admin') || 
-          user.email.toLowerCase() === 'founder@valknutofficial.com'
-        ))
-      );
+      user?.isAdmin ||
+      (user?.email && (
+        user.email.toLowerCase() === 'valknutofficial4@gmail.com' ||
+        user.email.toLowerCase().includes('admin') ||
+        user.email.toLowerCase() === 'founder@valknutofficial.com'
+      ))
+    );
 
   // ==========================================
   // AUTHENTICATION GUARD SCREEN
@@ -2317,149 +2318,149 @@ export const AdminDashboard: React.FC = () => {
                         Boolean((ord.shippingInfo as any)?.customization);
 
                       return (
-                      <TableRow key={ord.id} hover sx={{ '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.03)' } }}>
-                        <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-                            <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', fontFamily: 'monospace' }}>
-                              {ord.orderNumber}
-                            </Typography>
-                            {isCustom && (
-                              <Tooltip title="Custom Studio Made-to-Order Piece • Click to view in 3D Studios">
-                                <Chip
-                                  size="small"
-                                  label="3D BESPOKE"
-                                  onClick={() => setActiveTab('STUDIOS')}
-                                  sx={{
-                                    height: 18,
-                                    fontSize: '0.6rem',
-                                    fontWeight: 900,
-                                    bgcolor: 'rgba(212, 175, 55, 0.2)',
-                                    color: goldColor,
-                                    border: '1px solid rgba(212, 175, 55, 0.4)',
-                                    cursor: 'pointer',
-                                    '&:hover': { bgcolor: 'rgba(212, 175, 55, 0.35)' }
-                                  }}
-                                />
-                              </Tooltip>
-                            )}
-                          </Box>
-                          <Typography sx={{ color: '#94A3B8', fontSize: '0.7rem' }}>
-                            {new Date(ord.createdAt).toLocaleDateString()}
-                          </Typography>
-                        </TableCell>
-
-                        <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                          <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#F8FAFC' }}>
-                            {ord.customerInfo?.fullName || 'Customer'}
-                          </Typography>
-                          <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem' }}>
-                            {ord.customerInfo?.city || 'Sri Lanka'}{ord.customerInfo?.district ? `, ${ord.customerInfo.district}` : ''}
-                          </Typography>
-                          <Typography sx={{ color: '#64748B', fontSize: '0.7rem' }}>
-                            {ord.customerInfo?.phone || 'N/A'}
-                          </Typography>
-                        </TableCell>
-
-                        <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                          <Typography sx={{ fontWeight: 800, fontSize: '0.8rem' }}>
-                            {(ord.items || []).reduce((s: number, i: any) => s + (i.quantity || 1), 0)} Pcs
-                          </Typography>
-                          <Typography sx={{ color: isCustom ? goldColor : '#94A3B8', fontWeight: isCustom ? 700 : 400, fontSize: '0.7rem', maxWidth: 140, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {isCustom ? '★ Bespoke Studio Piece' : (ord.items[0]?.productName || 'Garment')}
-                          </Typography>
-                        </TableCell>
-
-                        <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                          <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', fontFamily: 'monospace', color: goldColor }}>
-                            LKR {ord.totalAmount.toLocaleString()}
-                          </Typography>
-                          <Typography sx={{ color: '#94A3B8', fontSize: '0.7rem' }}>
-                            {ord.paymentGateway} ({ord.paymentStatus})
-                          </Typography>
-                        </TableCell>
-
-                        <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                          <Select
-                            size="small"
-                            value={ord.orderStatus}
-                            onChange={(e) => updateOrderStatus(ord.id, e.target.value as OrderStatus)}
-                            sx={{
-                              bgcolor: '#121420',
-                              color: '#F8FAFC',
-                              fontSize: '0.75rem',
-                              fontWeight: 700,
-                              height: 32,
-                              borderRadius: '6px',
-                              '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.15)' },
-                            }}
-                          >
-                            <MenuItem value="Pending">Pending</MenuItem>
-                            <MenuItem value="Payment Pending">Payment Pending</MenuItem>
-                            <MenuItem value="Payment Confirmed">Payment Confirmed</MenuItem>
-                            <MenuItem value="Processing">Processing</MenuItem>
-                            <MenuItem value="Packed">Packed</MenuItem>
-                            <MenuItem value="Shipped">Shipped</MenuItem>
-                            <MenuItem value="Delivered">Delivered</MenuItem>
-                            <MenuItem value="Cancelled">Cancelled</MenuItem>
-                          </Select>
-                        </TableCell>
-
-                        <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                          {ord.awbNumber ? (
-                            <Box>
-                              <Typography sx={{ fontWeight: 800, fontSize: '0.8rem', fontFamily: 'monospace' }}>
-                                {ord.awbNumber}
+                        <TableRow key={ord.id} hover sx={{ '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.03)' } }}>
+                          <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                              <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', fontFamily: 'monospace' }}>
+                                {ord.orderNumber}
                               </Typography>
-                              <Typography sx={{ color: '#94A3B8', fontSize: '0.7rem' }}>
-                                {ord.courierName || 'Courier'}
-                              </Typography>
+                              {isCustom && (
+                                <Tooltip title="Custom Studio Made-to-Order Piece • Click to view in 3D Studios">
+                                  <Chip
+                                    size="small"
+                                    label="3D BESPOKE"
+                                    onClick={() => setActiveTab('STUDIOS')}
+                                    sx={{
+                                      height: 18,
+                                      fontSize: '0.6rem',
+                                      fontWeight: 900,
+                                      bgcolor: 'rgba(212, 175, 55, 0.2)',
+                                      color: goldColor,
+                                      border: '1px solid rgba(212, 175, 55, 0.4)',
+                                      cursor: 'pointer',
+                                      '&:hover': { bgcolor: 'rgba(212, 175, 55, 0.35)' }
+                                    }}
+                                  />
+                                </Tooltip>
+                              )}
                             </Box>
-                          ) : (
-                            <Typography sx={{ color: '#F59E0B', fontSize: '0.75rem', fontWeight: 700 }}>
-                              Unassigned
+                            <Typography sx={{ color: '#94A3B8', fontSize: '0.7rem' }}>
+                              {new Date(ord.createdAt).toLocaleDateString()}
                             </Typography>
-                          )}
-                        </TableCell>
+                          </TableCell>
 
-                        <TableCell align="right" sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => {
-                              setSelectedOrderForAwb(ord);
-                              setAwbCourier(ord.courierName || 'Pronto Lanka Express');
-                              setAwbNumberInput(ord.awbNumber || '');
-                              setAwbTrackingLinkInput(ord.trackingLink || '');
-                              setAwbStatusSelect(ord.orderStatus);
-                            }}
-                            sx={{
-                              color: goldColor,
-                              borderColor: 'rgba(212, 175, 55, 0.4)',
-                              fontSize: '0.7rem',
-                              fontWeight: 700,
-                              borderRadius: '6px',
-                              '&:hover': { bgcolor: 'rgba(212, 175, 55, 0.1)', borderColor: goldColor },
-                            }}
-                          >
-                            Dispatch AWB
-                          </Button>
-                          <IconButton
-                            size="small"
-                            onClick={async () => {
-                              await deleteOrder(ord.id);
-                              setRemoteOrders((prev) => prev.filter((o) => o.id !== ord.id));
-                            }}
-                            title="Remove order"
-                            sx={{
-                              ml: 1,
-                              color: '#94A3B8',
-                              '&:hover': { color: '#F87171', bgcolor: 'rgba(248, 113, 113, 0.12)' },
-                            }}
-                          >
-                            <Trash2 size={15} />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
+                          <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                            <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#F8FAFC' }}>
+                              {ord.customerInfo?.fullName || 'Customer'}
+                            </Typography>
+                            <Typography sx={{ color: '#94A3B8', fontSize: '0.75rem' }}>
+                              {ord.customerInfo?.city || 'Sri Lanka'}{ord.customerInfo?.district ? `, ${ord.customerInfo.district}` : ''}
+                            </Typography>
+                            <Typography sx={{ color: '#64748B', fontSize: '0.7rem' }}>
+                              {ord.customerInfo?.phone || 'N/A'}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                            <Typography sx={{ fontWeight: 800, fontSize: '0.8rem' }}>
+                              {(ord.items || []).reduce((s: number, i: any) => s + (i.quantity || 1), 0)} Pcs
+                            </Typography>
+                            <Typography sx={{ color: isCustom ? goldColor : '#94A3B8', fontWeight: isCustom ? 700 : 400, fontSize: '0.7rem', maxWidth: 140, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {isCustom ? '★ Bespoke Studio Piece' : (ord.items[0]?.productName || 'Garment')}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                            <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', fontFamily: 'monospace', color: goldColor }}>
+                              LKR {ord.totalAmount.toLocaleString()}
+                            </Typography>
+                            <Typography sx={{ color: '#94A3B8', fontSize: '0.7rem' }}>
+                              {ord.paymentGateway} ({ord.paymentStatus})
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                            <Select
+                              size="small"
+                              value={ord.orderStatus}
+                              onChange={(e) => updateOrderStatus(ord.id, e.target.value as OrderStatus)}
+                              sx={{
+                                bgcolor: '#121420',
+                                color: '#F8FAFC',
+                                fontSize: '0.75rem',
+                                fontWeight: 700,
+                                height: 32,
+                                borderRadius: '6px',
+                                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.15)' },
+                              }}
+                            >
+                              <MenuItem value="Pending">Pending</MenuItem>
+                              <MenuItem value="Payment Pending">Payment Pending</MenuItem>
+                              <MenuItem value="Payment Confirmed">Payment Confirmed</MenuItem>
+                              <MenuItem value="Processing">Processing</MenuItem>
+                              <MenuItem value="Packed">Packed</MenuItem>
+                              <MenuItem value="Shipped">Shipped</MenuItem>
+                              <MenuItem value="Delivered">Delivered</MenuItem>
+                              <MenuItem value="Cancelled">Cancelled</MenuItem>
+                            </Select>
+                          </TableCell>
+
+                          <TableCell sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                            {ord.awbNumber ? (
+                              <Box>
+                                <Typography sx={{ fontWeight: 800, fontSize: '0.8rem', fontFamily: 'monospace' }}>
+                                  {ord.awbNumber}
+                                </Typography>
+                                <Typography sx={{ color: '#94A3B8', fontSize: '0.7rem' }}>
+                                  {ord.courierName || 'Courier'}
+                                </Typography>
+                              </Box>
+                            ) : (
+                              <Typography sx={{ color: '#F59E0B', fontSize: '0.75rem', fontWeight: 700 }}>
+                                Unassigned
+                              </Typography>
+                            )}
+                          </TableCell>
+
+                          <TableCell align="right" sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() => {
+                                setSelectedOrderForAwb(ord);
+                                setAwbCourier(ord.courierName || 'Pronto Lanka Express');
+                                setAwbNumberInput(ord.awbNumber || '');
+                                setAwbTrackingLinkInput(ord.trackingLink || '');
+                                setAwbStatusSelect(ord.orderStatus);
+                              }}
+                              sx={{
+                                color: goldColor,
+                                borderColor: 'rgba(212, 175, 55, 0.4)',
+                                fontSize: '0.7rem',
+                                fontWeight: 700,
+                                borderRadius: '6px',
+                                '&:hover': { bgcolor: 'rgba(212, 175, 55, 0.1)', borderColor: goldColor },
+                              }}
+                            >
+                              Dispatch AWB
+                            </Button>
+                            <IconButton
+                              size="small"
+                              onClick={async () => {
+                                await deleteOrder(ord.id);
+                                setRemoteOrders((prev) => prev.filter((o) => o.id !== ord.id));
+                              }}
+                              title="Remove order"
+                              sx={{
+                                ml: 1,
+                                color: '#94A3B8',
+                                '&:hover': { color: '#F87171', bgcolor: 'rgba(248, 113, 113, 0.12)' },
+                              }}
+                            >
+                              <Trash2 size={15} />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
                       );
                     })
                   )}
@@ -3454,13 +3455,13 @@ export const AdminDashboard: React.FC = () => {
                     </Box>
 
                     {cloudinaryStatus && (
-                      <Alert 
+                      <Alert
                         severity={cloudinaryStatus.status === 'online' ? 'success' : 'error'}
-                        sx={{ 
-                          bgcolor: cloudinaryStatus.status === 'online' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', 
+                        sx={{
+                          bgcolor: cloudinaryStatus.status === 'online' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
                           color: cloudinaryStatus.status === 'online' ? '#34D399' : '#F87171',
                           border: `1px solid ${cloudinaryStatus.status === 'online' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-                          fontSize: '0.75rem' 
+                          fontSize: '0.75rem'
                         }}
                       >
                         {cloudinaryStatus.message}
